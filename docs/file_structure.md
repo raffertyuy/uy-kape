@@ -20,7 +20,8 @@ uy-kape/
 ├── CODE_OF_CONDUCT.md              # Community code of conduct
 ├── CONTRIBUTING.md                 # Contribution guidelines
 ├── docs/                           # Documentation
-│   ├── plans/                      # (empty) - Project planning documents
+│   ├── plans/                      # Project planning documents
+│   │   └── initial_bootstrap_implementation.plan.md # Implementation plan for bootstrap base
 │   ├── screens/                    # Screenshots and UI mockups
 │   │   └── google-forms.png        # Google Forms interface mockup
 │   ├── specs/                      # Specifications and requirements
@@ -46,7 +47,8 @@ uy-kape/
   - **`workflows/`** - GitHub Actions CI/CD workflows (currently empty)
 - **`.vscode/`** - Visual Studio Code workspace settings and configurations
 - **`docs/`** - Project documentation and specifications
-  - **`plans/`** - Project planning and roadmap documents (currently empty)
+  - **`plans/`** - Project planning and roadmap documents
+    - `initial_bootstrap_implementation.plan.md` - Implementation plan for the core bootstrap application
   - **`screens/`** - Screenshots and UI mockups for project visualization
   - **`specs/`** - Technical specifications and requirements
 - **`scripts/`** - Utility scripts for development and maintenance

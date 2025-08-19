@@ -1,8 +1,10 @@
 ---
-description: 'Plan an implementation'
+description: 'Plan for a coding implementation for an AI coding assistant to follow.'
 ---
 
-Your goal is to generate an implementation plan, in a new markdown .md file, for the requirement provided to you. Create this file in `/docs/plans/<requirement_name>.plan.md`.
+Your goal is to generate an coding implementation plan for an AI coding assistant to follow.
+Create this plan in a new markdown .md file in `/docs/plans/<requirement_name>.plan.md`, for the requirement provided to you. You can decide on the appropriate requirement name.
+For example, if the requirement name is "Implement User Authentication", the file should be created as `/docs/plans/user_authentication.plan.md`.
 
 ## RULES:
 - Keep implementations simple, do not over architect
