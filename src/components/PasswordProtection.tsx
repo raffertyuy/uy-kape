@@ -21,6 +21,14 @@ function PasswordProtection({
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value)
+    // Clear error when user starts typing
+    if (error) {
+      setError('')
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsLoading(true)
@@ -67,7 +75,7 @@ function PasswordProtection({
               id="password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePasswordChange}
               className="w-full px-3 py-2 border border-coffee-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:border-transparent"
               placeholder="Enter password"
               required

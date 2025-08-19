@@ -1,5 +1,5 @@
 ---
-description: 'Plan for a coding implementation for an AI coding assistant to follow.'
+description: "Plan for a coding implementation for an AI coding assistant to follow."
 ---
 
 Your goal is to generate an coding implementation plan for an AI coding assistant to follow.
@@ -7,6 +7,7 @@ Create this plan in a new markdown .md file in `/docs/plans/<requirement_name>.p
 For example, if the requirement name is "Implement User Authentication", the file should be created as `/docs/plans/user_authentication.plan.md`.
 
 ## RULES:
+
 - Keep implementations simple, do not over architect
 - Do not generate real code for your plan, pseudocode is OK
 - For each step in your plan, include the objective of the step, the steps to achieve that objective, and any necessary pseudocode.
@@ -14,11 +15,14 @@ For example, if the requirement name is "Implement User Authentication", the fil
 - Consider accessibility part of each step and not a separate step
 
 ## Steps to Follow
+
 ### 1. FIRST
+
 - Review the attached specification document to understand the requirements and objectives.
 - If needed, use context7 to get the latest documentation of the technology stack (e.g., Supabase, React.js, Vite).
 
 ### 2. THEN
+
 - Create a detailed implementation plan that outlines the steps needed to achieve the objectives of the specification document.
 - The plan should be structured, clear, and easy to follow.
 - Always add validation steps in your plan to ensure the implementation meets the requirements.
@@ -36,9 +40,15 @@ For example, if the requirement name is "Implement User Authentication", the fil
 [Additional steps...]
 ```
 
+- After the steps to implement the feature, add a step to build and run the app
+- Add a step to write unit and UI tests for the feature
+- Add a step to run all unit and UI tests as last step (with no -destination set to ensure active simulator is used)
+
 ### 3. NEXT:
+
 - Validate and self-review your plan to ensure it meets the requirements and is ready for implementation.
 - Iterate with me until I am satisifed with the plan
 
 ### 4. FINALLY:
+
 - DO NOT start implementation without my permission.
