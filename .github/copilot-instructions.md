@@ -69,6 +69,4 @@ For example:
 - Obfuscation of sensitive information (e.g., Subscription IDs, usernames)
 - Backward compatibility or proper breaking change documentation
 
-### Coding Standards:
-
-[coding-standards](/.github/prompt-snippets/coding-standards.md)
+Follow [coding-standards](/.github/prompt-snippets/coding-standards.md)

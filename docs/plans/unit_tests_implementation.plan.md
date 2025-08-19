@@ -1,3 +1,7 @@
+---
+description: 'Implementation Plan for Unit Tests'
+created-date: 2025-08-19
+---
 # Implementation Plan for Unit Tests
 
 ## Overview

@@ -25,6 +25,18 @@ For example, if the requirement name is "Implement User Authentication", the fil
 
 - Create a detailed implementation plan that outlines the steps needed to achieve the objectives of the specification document.
 - The plan should be structured, clear, and easy to follow.
+
+- Add a frontmatter to the implementation plan
+
+```markdown
+---
+description: "Implementation plan for <requirement>"
+created-date: YYYY-MM-DD
+---
+
+PLAN HERE
+```
+
 - Always add validation steps in your plan to ensure the implementation meets the requirements.
 - Structure your plan as follows, and output as Markdown code block
 

@@ -1,3 +1,7 @@
+---
+description: 'Implementation Plan for Uy, Kape! Bootstrap Base Implementation'
+created-date: 2025-08-19
+---
 # Implementation Plan for Uy, Kape! Bootstrap Base Implementation
 
 ## Overview
