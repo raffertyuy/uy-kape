@@ -1,9 +1,10 @@
 ---
-mode: "debug-agent"
-description: "Debug the application by running it locally and fixing any errors encountered."
+mode: "run-agent"
+description: "Run the application locally and fix any errors encountered."
 ---
 
 Your task is to run this application locally to test the specified requirement, and then fix any issues that arise during the process.
+When running the application using the terminal, run as a background process. For example, instead of `npm run dev`, use `npm run dev &` to run it in the background.
 
 Refer to the following to better understand the implementation done before fixing:
 

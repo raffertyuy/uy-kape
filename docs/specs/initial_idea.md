@@ -36,7 +36,7 @@ It has 2 links:
 **User Interface:**  
 - A password-protected page. The password is retrieved from the application config file, with key "guest-password".
 - A mobile responsive intuitive page for a person to choose a drink, select options, enter their name, and place an order.
-- This page should have modern look and feel to it, it should be a big improvement to the current ![Google Forms](../screens/google-forms.png) design.
+- This page should have modern look and feel to it, it should be a big improvement to the ![old ordering system](../screens/old_ordering_system.png).
 
 **Functionality:**
 1. **Name Input:**  

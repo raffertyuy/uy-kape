@@ -1,6 +1,11 @@
 # File Structure
 
-This document outlines the complete file and folder structure of the uy-kape codebase.
+This document outlines the complete file and folder structure of the Uy Kape project codebase.
+
+This contains:
+- The description of all the files in the `/` root directory
+- The description of every root folder
+- The description of all the files and subdirectories in the `docs/`
 
 ```
 uy-kape/
@@ -17,64 +22,82 @@ uy-kape/
 ├── tsconfig.json                   # TypeScript configuration
 ├── tsconfig.node.json              # TypeScript configuration for Node.js files
 ├── vite.config.ts                  # Vite build tool configuration
-├── docs/                           # Documentation
-│   ├── plans/                      # Project planning documents
-│   │   └── initial_bootstrap_implementation.plan.md # Implementation plan for bootstrap base
-│   ├── screens/                    # Screenshots and UI mockups
-│   │   └── google-forms.png        # Google Forms interface mockup
-│   ├── specs/                      # Specifications and requirements
-│   │   └── initial_idea.md         # Initial project idea documentation
-│   └── file_structure.md           # This file - project structure overview
+├── docs/                           # Main project documentation folder. This is referred to heavily by the AI Agent.
+│   ├── deployment/                # Deployment guides and checklists
+│   │   └── menu-management-deployment-checklist.md # Deployment checklist for menu management feature
+│   ├── features/                  # Feature-specific documentation
+│   │   └── barista-admin-menu-management.md # Complete technical documentation for menu management
+│   ├── plans/                     # Project planning documents
+│   │   ├── barista_admin_menu_management.plan.md # COMPLETE - Implementation plan for menu management
+│   │   ├── initial_bootstrap_implementation.plan.md # Implementation plan for bootstrap base
+│   │   └── unit_tests_implementation.plan.md # Implementation plan for unit tests
+│   ├── screens/                   # Screenshots and UI mockups
+│   │   └── old_ordering_system.png # Screenshot of the old ordering system before this application.
+│   ├── specs/                     # Specifications and requirements
+│   │   ├── db_schema.md           # Supabase DB schema
+│   │   └── initial_idea.md        # Initial project idea documentation
+│   ├── user-guides/               # End-user documentation
+│   │   └── menu-management-quick-start.md # Quick start guide for baristas using menu management
+│   └── file_structure.md          # This file - project structure overview
 ├── LICENSE                         # Project license
 ├── README.md                       # Project overview and setup instructions
 ├── scripts/                        # Utility scripts
 ├── SECURITY.md                     # Security policy and reporting guidelines
 ├── src/                            # Source code directory
+│   ├── components/                # React components
+│   │   ├── menu/                  # Menu management components (15+ components)
+│   │   │   ├── categories/        # Drink category management components
+│   │   │   ├── drinks/            # Drink management components
+│   │   │   ├── options/           # Option management components
+│   │   │   └── shared/            # Shared menu components
+│   │   ├── Layout.tsx             # Main application layout
+│   │   ├── PasswordProtection.tsx # Password protection component
+│   │   └── __tests__/             # Component tests
+│   ├── config/                    # Application configuration
+│   │   ├── app.config.ts          # App configuration settings
+│   │   └── __tests__/             # Config tests
+│   ├── hooks/                     # Custom React hooks
+│   │   ├── useMenuData.ts         # Menu data management hook
+│   │   ├── useMenuSubscriptions.ts # Real-time subscription management
+│   │   ├── useErrorHandling.ts    # Error handling hook
+│   │   ├── usePasswordAuth.ts     # Password authentication hook
+│   │   └── __tests__/             # Hook tests
+│   ├── lib/                       # Utility libraries
+│   │   └── supabase.ts            # Supabase client configuration
+│   ├── pages/                     # Page components
+│   │   ├── BaristaModule.tsx      # Barista admin interface (updated with menu management)
+│   │   ├── GuestModule.tsx        # Guest ordering interface
+│   │   ├── MenuManagement.tsx     # Main menu management page
+│   │   └── WelcomePage.tsx        # Welcome/landing page
+│   ├── services/                  # Service layer for data operations
+│   │   ├── menuService.ts         # Comprehensive menu CRUD operations
+│   │   └── __tests__/             # Service tests
+│   ├── types/                     # TypeScript type definitions
+│   │   ├── app.types.ts           # Application types
+│   │   ├── database.types.ts      # Database types (Supabase generated)
+│   │   ├── menu.types.ts          # Menu-specific types and interfaces
+│   │   └── __tests__/             # Type tests
+│   ├── utils/                     # Utility functions
+│   │   ├── conflictResolution.ts  # Real-time conflict resolution utilities
+│   │   ├── menuValidation.ts      # Menu validation utilities
+│   │   └── __tests__/             # Utility tests
+│   ├── App.tsx                    # Main React application component
+│   ├── index.css                  # Global styles with Tailwind CSS
+│   ├── main.tsx                   # Application entry point
+│   ├── setupTests.ts              # Test configuration
+│   ├── test-utils.tsx             # Testing utilities and helpers
+│   └── vite-env.d.ts              # Vite environment types
 ├── database/                       # Database schema and seed files
 └── .env.example                    # Environment variables template
 ```
 
-## Directory Descriptions
-
-### Root Directory Files
-
-- **`.env.example`** - Template for environment variables including Supabase configuration
-- **`.gitignore`** - Git ignore patterns for excluding files from version control
-- **`CODE_OF_CONDUCT.md`** - Community standards and behavioral expectations
-- **`CONTRIBUTING.md`** - Guidelines for contributing to the project
-- **`index.html`** - Main HTML template served by Vite development server
-- **`LICENSE`** - Software license terms
-- **`package.json`** - NPM package configuration with React, TypeScript, Vite, and Tailwind dependencies
-- **`postcss.config.js`** - PostCSS configuration for processing Tailwind CSS
-- **`README.md`** - Main project documentation and getting started guide
-- **`SECURITY.md`** - Security policies and vulnerability reporting procedures
-- **`tailwind.config.js`** - Tailwind CSS configuration with custom coffee color theme
-- **`tsconfig.json`** - TypeScript configuration with strict settings for React development
-- **`tsconfig.node.json`** - TypeScript configuration for Node.js build tools
-- **`vite.config.ts`** - Vite build tool configuration with React plugin and path aliases
-
-### docs/ Directory Files
-
-- **`file_structure.md`** - This file - complete project structure overview and file descriptions
-- **`plans/initial_bootstrap_implementation.plan.md`** - Implementation plan for the core bootstrap application
-- **`screens/google-forms.png`** - Google Forms interface mockup for project visualization
-- **`specs/initial_idea.md`** - Initial project idea documentation and requirements
-
-### Other Directories (Folder Structure and Purpose)
-
-- **`.git/`** - Git version control system metadata and history
-- **`.github/`** - GitHub-specific configuration files and templates
-- **`.vscode/`** - Visual Studio Code workspace settings and configurations
-- **`database/`** - Database schema and seed files for Supabase
-- **`docs/`** - Project documentation and specifications
-- **`scripts/`** - Utility scripts for development and maintenance
-- **`src/`** - Source code directory containing React components and application logic
-
 ## Notes
 
+- **Menu Management Feature**: Fully implemented with comprehensive CRUD operations, real-time collaboration, and barista admin integration
 - Several directories are currently empty but provide structure for future development
 - The project appears to be in early stages with foundational documentation and configuration
 - Focus on GitHub Copilot integration with specific instructions and MCP configuration
 - Cross-platform line ending fixes available in scripts directory for development consistency
-- Development follows structured approach with file-type-specific instructions referenced from copilot-instructions.md
-- All new files should follow the standards in relevant `.instructions.md` files based on file extension
+- Uses GitHub Copilot and its advanced features such as `.github/copilot-instructions.md`, `.github/chatmodes/`, `.github/instructions/`, and `.github/prompts/`
+- Complete test coverage for menu management functionality with React Testing Library and Vitest
+- Comprehensive documentation including feature docs, user guides, and deployment checklists

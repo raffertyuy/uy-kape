@@ -13,18 +13,7 @@ Check the files in `/.github/instructions/*.instructions.md` for any additional 
 
 ### File and Folder Structure
 
-**Creating New Files and Folders**
-
-- When you are creating new files or folders, follow the standards in #file:/docs/file_structure.md
-- For files in the `/` root directory and `docs/` directory, each individual file is described in #file:/docs/file_structure.md
-- For the other files, only describe the folder structure and purpose (e.g. `src/` contains the source code for the application)
-
-**Understanding the Project Structure**:
-If you need a reference for what each file or folder does, refer #file:/docs/file_structure.md and the files in the /docs folder.
-For example:
-
-- `/README.md` contains the overview of this application
-- `/docs/specs/initial_idea.md` contains the initial idea for this application
+Refer to [file_structure](/docs/file_structure.md)
 
 ## Communication Standards
 

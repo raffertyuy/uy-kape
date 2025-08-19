@@ -1,11 +1,37 @@
 # Uy, Kape!
+
 **Uy, Kape!** is a coffee-ordering system for _coffee prosumers_ who want to give **visitors** to their **home** a fancy online ordering system. All menu items are free, the intent is to give the coffee barista a way to track guest orders based on what is available at home for the day.
 
+## Features
+
+### Guest Ordering System
+- **Welcome Page**: Coffee-themed interface for visitors
+- **Menu Display**: Browse available beverages and customizations
+- **Order Placement**: Simple and intuitive ordering process
+- **Real-time Updates**: Live menu availability and status
+
+### Barista Admin Module
+- **Menu Management**: Complete control over coffee shop menu
+  - Drink categories (Coffee, Tea, Specialty, etc.)
+  - Individual beverages with pricing and descriptions
+  - Customization options (Size, Milk type, Add-ons)
+  - Real-time synchronization across all admin interfaces
+- **Order Management**: Track and fulfill customer orders
+- **Administrative Tools**: User management and system configuration
+
+### Technical Features
+- **Real-time Synchronization**: Live updates across all connected devices
+- **Password Protection**: Secure access to admin features
+- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile
+- **Accessibility**: Full keyboard navigation and screen reader support
+- **Offline Support**: Basic functionality when internet is unavailable
+
 ## Technology Stack
-- **Frontend:** React.js with TypeScript
+- **Frontend:** React 19 with TypeScript
 - **Build Tool:** Vite (for a fast development experience)
-- **Styling:** Utility-first CSS (e.g., Tailwind CSS)
-- **Database:** Supabase (for a completely free, real-time, NoSQL-like database)
+- **Styling:** Tailwind CSS with coffee-themed design system
+- **Database:** Supabase (PostgreSQL with real-time subscriptions)
+- **Testing:** Vitest with React Testing Library
 - **Hosting:** Vercel (for free and easy front-end hosting)
 
 ## Running Locally
@@ -47,6 +73,22 @@
 
 5. **Open your browser:**
    - Navigate to `http://localhost:5173` (or the port shown in the terminal)
+
+### Accessing Features
+
+**Guest Interface:**
+- Default landing page provides the guest ordering experience
+- No authentication required for browsing and ordering
+
+**Barista Admin Interface:**
+1. Navigate to `/barista` or click "Barista Login" from the welcome page
+2. Enter the admin password (configurable in environment variables)
+3. Access the menu management system and order tracking tools
+
+**Menu Management:**
+- From the Barista Module, click "Menu Management"
+- Manage drink categories, beverages, and customization options
+- Changes sync in real-time across all connected devices
 
 ### Available Scripts
 
