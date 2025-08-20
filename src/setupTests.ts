@@ -170,34 +170,29 @@ afterEach(() => {
 // Global error handler for unhandled promise rejections in tests
 const unhandledRejections: Array<{ reason: unknown, promise: Promise<unknown> }> = []
 
-process.on('unhandledRejection', (reason, promise) => {
+// Single global handler that won't be duplicated
+const handleUnhandledRejection = (reason: unknown, promise: Promise<unknown>) => {
   unhandledRejections.push({ reason, promise })
-  // Log but don't fail tests immediately
-  console.warn('Unhandled Promise Rejection:', reason)
-})
+  // Suppress noisy warnings in test environment unless critical
+  if (process.env.NODE_ENV !== 'test' || process.env.VITEST_DEBUG) {
+    console.warn('Unhandled Promise Rejection:', reason)
+  }
+}
+
+// Add the listener only once
+if (!process.listenerCount('unhandledRejection')) {
+  process.on('unhandledRejection', handleUnhandledRejection)
+}
 
 // Check for unhandled rejections after each test
 afterEach(() => {
   if (unhandledRejections.length > 0) {
     const rejections = [...unhandledRejections]
     unhandledRejections.length = 0 // Clear the array
-    console.warn(`${rejections.length} unhandled promise rejection(s) detected:`, rejections)
-  }
-})
-
-// React 19 specific test utilities
-// Mock React's act function to ensure it's available
-vi.mock('react', async () => {
-  const actual = await vi.importActual('react')
-  return {
-    ...actual,
-    act: vi.fn().mockImplementation(async (callback: () => Promise<void> | void) => {
-      const result = callback()
-      if (result && typeof result.then === 'function') {
-        await result
-      }
-      return result
-    }),
+    // Only log in debug mode to reduce noise
+    if (process.env.VITEST_DEBUG) {
+      console.warn(`${rejections.length} unhandled promise rejection(s) detected:`, rejections)
+    }
   }
 })
 

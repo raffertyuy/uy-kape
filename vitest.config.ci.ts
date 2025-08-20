@@ -44,7 +44,8 @@ export default defineConfig({
     exclude: [
       'node_modules/**',
       'src/components/menu/__tests__/DrinkCategoryForm.test.tsx',
-      'src/components/menu/__tests__/DrinkCategoryForm.simple.test.tsx'
+      // Temporarily exclude backup files
+      'src/**/*.backup'
     ],
     coverage: {
       provider: 'v8',
