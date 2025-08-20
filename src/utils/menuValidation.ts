@@ -35,7 +35,7 @@ export const validationRules = {
 
   maxLength: (max: number) => (value: string): string | null => {
     if (value && value.length > max) {
-      return `Must not exceed ${max} characters`
+      return `Must be at most ${max} characters long`
     }
     return null
   },

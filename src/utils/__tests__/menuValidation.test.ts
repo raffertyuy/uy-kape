@@ -60,7 +60,7 @@ describe('Menu Validation Utilities', () => {
       const validDrink: CreateDrinkDto = {
         name: 'Espresso',
         description: 'Strong coffee shot',
-        category_id: 'cat-1',
+        category_id: '123e4567-e89b-12d3-a456-426614174000',
         display_order: 1,
         is_active: true
       }
@@ -130,7 +130,7 @@ describe('Menu Validation Utilities', () => {
   describe('validateOptionValue', () => {
     it('validates a valid option value', () => {
       const validOptionValue: CreateOptionValueDto = {
-        option_category_id: 'opt-cat-1',
+        option_category_id: '123e4567-e89b-12d3-a456-426614174000',
         name: 'Large',
         description: 'Large size',
         display_order: 1,

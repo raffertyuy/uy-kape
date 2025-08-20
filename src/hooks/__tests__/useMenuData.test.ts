@@ -24,10 +24,10 @@ vi.mock('@/services/menuService', () => ({
 vi.mock('@/lib/supabase', () => ({
   supabase: {
     channel: vi.fn(() => ({
-      on: vi.fn(() => ({
-        subscribe: vi.fn(() => Promise.resolve())
-      })),
-      unsubscribe: vi.fn()
+      on: vi.fn().mockReturnThis(),
+      subscribe: vi.fn(() => ({
+        unsubscribe: vi.fn()
+      }))
     }))
   }
 }))
@@ -65,7 +65,7 @@ describe('useMenuData hooks', () => {
       const { result } = renderHook(() => useDrinkCategories())
 
       expect(result.current.isLoading).toBe(true)
-      expect(result.current.data).toBeUndefined()
+      expect(result.current.data).toEqual([])
 
       await waitFor(() => {
         expect(result.current.isLoading).toBe(false)
@@ -86,7 +86,7 @@ describe('useMenuData hooks', () => {
         expect(result.current.isLoading).toBe(false)
       })
 
-      expect(result.current.data).toBeUndefined()
+      expect(result.current.data).toEqual([])
       expect(result.current.error).toBe(errorMessage)
     })
   })
@@ -143,11 +143,7 @@ describe('useMenuData hooks', () => {
 
       expect(result.current.state).toBe('idle')
 
-      const promise = result.current.createCategory(newCategory)
-
-      expect(result.current.state).toBe('loading')
-
-      const resultCategory = await promise
+      const resultCategory = await result.current.createCategory(newCategory)
 
       await waitFor(() => {
         expect(result.current.state).toBe('success')

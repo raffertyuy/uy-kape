@@ -99,9 +99,9 @@ export const MenuManagement: React.FC = () => {
           </div>
 
           {/* Tab Content */}
-          <div className="p-6">
+          <div className="p-6" role="tabpanel" aria-labelledby={`${activeTab}-tab`} id={`${activeTab}-panel`}>
             {isLoading ? (
-              <div className="flex items-center justify-center py-12">
+              <div className="flex items-center justify-center py-12" data-testid="loading-spinner">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-coffee-600" />
                 <span className="ml-2 text-coffee-600">Loading...</span>
               </div>

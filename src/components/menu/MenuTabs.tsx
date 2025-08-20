@@ -52,7 +52,7 @@ export const MenuTabs: React.FC<MenuTabsProps> = ({
 
   return (
     <div className="border-b border-coffee-200">
-      <nav className="-mb-px flex space-x-8" aria-label="Menu management tabs">
+      <nav className="-mb-px flex space-x-8" aria-label="Menu management tabs" role="tablist">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -62,6 +62,11 @@ export const MenuTabs: React.FC<MenuTabsProps> = ({
                 ? 'border-coffee-500 text-coffee-600'
                 : 'border-transparent text-coffee-500 hover:text-coffee-700 hover:border-coffee-300'
             }`}
+            role="tab"
+            aria-selected={activeTab === tab.id}
+            aria-controls={`${tab.id}-panel`}
+            id={`${tab.id}-tab`}
+            tabIndex={activeTab === tab.id ? 0 : -1}
             aria-current={activeTab === tab.id ? 'page' : undefined}
           >
             <span className={activeTab === tab.id ? 'text-coffee-600' : 'text-coffee-400'}>
