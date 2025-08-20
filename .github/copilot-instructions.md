@@ -13,7 +13,7 @@ Check the files in `/.github/instructions/*.instructions.md` for any additional 
 
 ### File and Folder Structure
 
-Refer to [file_structure](/docs/file_structure.md)
+To know what each file and folder does, or to look for any project documentation information, refer to [file_structure](/docs/file_structure.md)
 
 ## Communication Standards
 
@@ -34,13 +34,6 @@ Refer to [file_structure](/docs/file_structure.md)
 
 - When running commands, always do so from the root of the project directory and not within a subdirectory.
 - When running commands, be mindful of the operating system as the paths and environment variables may differ. Use relative paths when possible.
-
-## MCP Server Integration
-
-**IF AVAILABLE**, use these Model Context Protocol servers:
-
-- **Terraform MCP Server**: Seamless integration with Terraform Registry APIs for IaC automation
-- **Azure MCP Server**: Connection to Azure services (Dev Center, Dev Box, Storage, Cosmos DB, etc.)
 
 ## Quality Standards
 

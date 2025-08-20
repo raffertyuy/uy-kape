@@ -13,6 +13,7 @@ Your task is to run this application locally for functional testing.
 
 - When the app is properly running, use Playwright to navigate to the specified module/requirement to test if it is functioning correctly.
 - Fix any issues that arise during the process.
+- If you need a password, check out the `.env` file in the root directory.
 
 Refer to the following to better understand the implementation done before fixing:
 

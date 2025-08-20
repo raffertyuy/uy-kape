@@ -1,103 +1,93 @@
 # File Structure
 
-This document outlines the complete file and folder structure of the Uy Kape project codebase.
+This document outlines the current (authoritative) top‑level file and folder structure of the Uy Kape project codebase.
 
-This contains:
-- The description of all the files in the `/` root directory
-- The description of every root folder
-- The description of all the files and subdirectories in the `docs/`
+Level of Detail Policy:
 
-```
+We intentionally avoid listing second‑level (individual file) details for application/source folders (e.g. `src/`, `supabase/`, `scripts/`, etc.) to keep this document maintainable. Only the `docs/` directory is expanded to the file level because: (1) it is used heavily by AI assistants, (2) its contents are relatively small and stable, and (3) each document has distinct purpose.
+
+Scope:
+
+1. Root directory files/folders (concise purpose statements only)
+2. Full enumeration (files + purpose) of `docs/` subtree
+3. High‑level description (not file listing) of all other root folders
+
+```text
 uy-kape/
-├── .git/                           # Git repository metadata
-├── .github/                        # GitHub configuration and workflows
-├── .gitignore                      # Git ignore rules
-├── .vscode/                        # VS Code workspace configuration
-├── CODE_OF_CONDUCT.md              # Community code of conduct
-├── CONTRIBUTING.md                 # Contribution guidelines
-├── index.html                      # Main HTML template for Vite
-├── package.json                    # NPM package configuration and dependencies
-├── postcss.config.js               # PostCSS configuration for Tailwind CSS
-├── tailwind.config.js              # Tailwind CSS configuration with coffee theme
-├── tsconfig.json                   # TypeScript configuration
-├── tsconfig.node.json              # TypeScript configuration for Node.js files
-├── vite.config.ts                  # Vite build tool configuration
-├── docs/                           # Main project documentation folder. This is referred to heavily by the AI Agent.
-│   ├── deployment/                # Deployment guides and checklists
-│   │   └── menu-management-deployment-checklist.md # Deployment checklist for menu management feature
-│   ├── features/                  # Feature-specific documentation
-│   │   └── barista-admin-menu-management.md # Complete technical documentation for menu management
-│   ├── plans/                     # Project planning documents
-│   │   ├── barista_admin_menu_management.plan.md # COMPLETE - Implementation plan for menu management
-│   │   ├── initial_bootstrap_implementation.plan.md # Implementation plan for bootstrap base
-│   │   └── unit_tests_implementation.plan.md # Implementation plan for unit tests
-│   ├── screens/                   # Screenshots and UI mockups
-│   │   └── old_ordering_system.png # Screenshot of the old ordering system before this application.
-│   ├── specs/                     # Specifications and requirements
-│   │   ├── db_schema.md           # Supabase DB schema
-│   │   └── initial_idea.md        # Initial project idea documentation
-│   ├── user-guides/               # End-user documentation
-│   │   └── menu-management-quick-start.md # Quick start guide for baristas using menu management
-│   └── file_structure.md          # This file - project structure overview
-├── LICENSE                         # Project license
-├── README.md                       # Project overview and setup instructions
-├── scripts/                        # Utility scripts
-├── SECURITY.md                     # Security policy and reporting guidelines
-├── src/                            # Source code directory
-│   ├── components/                # React components
-│   │   ├── menu/                  # Menu management components (15+ components)
-│   │   │   ├── categories/        # Drink category management components
-│   │   │   ├── drinks/            # Drink management components
-│   │   │   ├── options/           # Option management components
-│   │   │   └── shared/            # Shared menu components
-│   │   ├── Layout.tsx             # Main application layout
-│   │   ├── PasswordProtection.tsx # Password protection component
-│   │   └── __tests__/             # Component tests
-│   ├── config/                    # Application configuration
-│   │   ├── app.config.ts          # App configuration settings
-│   │   └── __tests__/             # Config tests
-│   ├── hooks/                     # Custom React hooks
-│   │   ├── useMenuData.ts         # Menu data management hook
-│   │   ├── useMenuSubscriptions.ts # Real-time subscription management
-│   │   ├── useErrorHandling.ts    # Error handling hook
-│   │   ├── usePasswordAuth.ts     # Password authentication hook
-│   │   └── __tests__/             # Hook tests
-│   ├── lib/                       # Utility libraries
-│   │   └── supabase.ts            # Supabase client configuration
-│   ├── pages/                     # Page components
-│   │   ├── BaristaModule.tsx      # Barista admin interface (updated with menu management)
-│   │   ├── GuestModule.tsx        # Guest ordering interface
-│   │   ├── MenuManagement.tsx     # Main menu management page
-│   │   └── WelcomePage.tsx        # Welcome/landing page
-│   ├── services/                  # Service layer for data operations
-│   │   ├── menuService.ts         # Comprehensive menu CRUD operations
-│   │   └── __tests__/             # Service tests
-│   ├── types/                     # TypeScript type definitions
-│   │   ├── app.types.ts           # Application types
-│   │   ├── database.types.ts      # Database types (Supabase generated)
-│   │   ├── menu.types.ts          # Menu-specific types and interfaces
-│   │   └── __tests__/             # Type tests
-│   ├── utils/                     # Utility functions
-│   │   ├── conflictResolution.ts  # Real-time conflict resolution utilities
-│   │   ├── menuValidation.ts      # Menu validation utilities
-│   │   └── __tests__/             # Utility tests
-│   ├── App.tsx                    # Main React application component
-│   ├── index.css                  # Global styles with Tailwind CSS
-│   ├── main.tsx                   # Application entry point
-│   ├── setupTests.ts              # Test configuration
-│   ├── test-utils.tsx             # Testing utilities and helpers
-│   └── vite-env.d.ts              # Vite environment types
-├── database/                       # Database schema and seed files
-└── .env.example                    # Environment variables template
+├── .git/                  # Git metadata
+├── .github/               # GitHub configs, workflows, AI instructions
+├── .gitignore             # Ignore rules
+├── .vscode/               # Editor settings
+├── .env                   # Local (ignored) env vars
+├── .env.example           # Template env vars
+├── CODE_OF_CONDUCT.md     # Community guidelines
+├── CONTRIBUTING.md        # Contribution workflow
+├── SECURITY.md            # Security policy
+├── LICENSE                # OSS license
+├── README.md              # Overview & onboarding
+├── index.html             # Vite HTML entry
+├── package.json           # Dependencies & scripts
+├── package-lock.json      # Locked dependency graph
+├── postcss.config.js      # PostCSS (Tailwind)
+├── tailwind.config.js     # Tailwind theme/config
+├── tsconfig.json          # TS config (app)
+├── tsconfig.node.json     # TS config (node scripts)
+├── vite.config.ts         # Vite build config
+├── vitest.config.ts       # Vitest test config
+├── docs/                  # (Fully expanded below)
+│   ├── file_structure.md  # This document
+│   ├── plans/
+│   │   ├── barista_admin_menu_management.plan.md
+│   │   ├── initial_bootstrap_implementation.plan.md
+│   │   └── unit_tests_implementation.plan.md
+│   ├── screens/
+│   │   └── old_ordering_system.png
+│   ├── specs/
+│   │   ├── barista-admin-menu-management.md
+│   │   ├── db_schema.md
+│   │   └── initial_idea.md
+│   └── user-guides/
+│       └── menu-management-quick-start.md
+├── scripts/               # Operational / helper scripts (not expanded)
+├── database/              # Legacy SQL schema + seed (reference only)
+├── supabase/              # Supabase project (config, migrations, seed)
+├── src/                   # React + TS application source (not expanded)
+├── dist/                  # Build output (generated)
+└── node_modules/          # Installed dependencies (ignored)
 ```
 
-## Notes
+## Notes & Conventions
 
-- **Menu Management Feature**: Fully implemented with comprehensive CRUD operations, real-time collaboration, and barista admin integration
-- Several directories are currently empty but provide structure for future development
-- The project appears to be in early stages with foundational documentation and configuration
-- Focus on GitHub Copilot integration with specific instructions and MCP configuration
-- Cross-platform line ending fixes available in scripts directory for development consistency
-- Uses GitHub Copilot and its advanced features such as `.github/copilot-instructions.md`, `.github/chatmodes/`, `.github/instructions/`, and `.github/prompts/`
-- Complete test coverage for menu management functionality with React Testing Library and Vitest
-- Comprehensive documentation including feature docs, user guides, and deployment checklists
+1. Source of Truth (Database): Always introduce schema changes via a new timestamped file in `supabase/migrations/` (never retro‑edit existing migrations). The old `database/` folder is historical.
+2. Seeding: Prefer `supabase/seed.sql`. The legacy `database/seed.sql` should not be extended further.
+3. Testing Layout: Tests colocated in `__tests__` directories inside feature folders (components, hooks, services, pages, types, utils). Global setup in `src/setupTests.ts`.
+4. Environment Variables: Keep secrets local (`.env` not committed). Update `.env.example` when new required variables are introduced.
+5. Styling: Tailwind first; add component‑level overrides sparingly. Central theme config lives in `tailwind.config.js`.
+6. Real‑Time Features: Supabase channels & presence are encapsulated in hooks (`useMenuSubscriptions`) and service abstractions; UI surfaces connection via components like `RealtimeIndicator`.
+7. AI Assistant Context: The `.github/instructions/` directory contains augmentation rules leveraged by automated agents—keep these synchronized with code changes that alter public contracts.
+8. Build Artifacts: `dist/` is disposable; never commit manual edits there.
+9. Scripts: Keep cross‑platform operational scripts idempotent. For new scripts, provide Windows (`.ps1`) and POSIX (`.sh`) variants when feasible.
+10. Documentation Hygiene: Update this file when (a) adding/removing a top‑level folder, (b) materially restructuring `docs/`, or (c) introducing a new architectural layer.
+
+## Quick Reference: Adding a New Domain Feature
+
+When adding a feature (example: inventory tracking):
+
+1. Spec: Draft `docs/specs/<feature-name>.md` (use existing spec as template).
+2. Plan: Create `docs/plans/<feature-name>.plan.md` with phased tasks.
+3. Types: Add base types in `src/types/` (avoid circular imports; keep pure types).
+4. Service: Introduce API/data logic under `src/services/` with unit tests.
+5. Hooks: Wrap service interactions + state mgmt in a custom hook.
+6. Components: Build presentational & container components in `src/components/<domain>/`.
+7. Tests: Colocate tests in parallel `__tests__/` folders.
+8. Migration: Add new SQL migration file under `supabase/migrations/` if schema change required.
+9. Docs: Update this file if new high‑level folder or structure is introduced.
+10. Env: Amend `.env.example` if new variables are needed.
+
+## Change Log (File Structure)
+
+- 2025-08-20: Removed outdated `deployment/` & `features/` documentation references; aligned with current `specs/` layout; added `dist/`, `.env`, `package-lock.json`, Supabase `.temp/` explanation, and Quick Reference section.
+
+---
+
+If anything here becomes stale, treat updating this document as part of the definition of done for the related PR.
