@@ -1,5 +1,5 @@
 ---
-description: Initial idea and specifications of this application
+description: 'Initial idea and specifications of this application'
 last-modified: 2025-08-19
 ---
 
@@ -36,7 +36,7 @@ It has 2 links:
 **User Interface:**  
 - A password-protected page. The password is retrieved from the application config file, with key "guest-password".
 - A mobile responsive intuitive page for a person to choose a drink, select options, enter their name, and place an order.
-- This page should have modern look and feel to it, it should be a big improvement to the current ![Google Forms](../screens/google-forms.png) design.
+- This page should have modern look and feel to it, it should be a big improvement to the ![old ordering system](../screens/old_ordering_system.png).
 
 **Functionality:**
 1. **Name Input:**  
@@ -82,28 +82,3 @@ It has 2 links:
 
 4. **Clear Orders:**  
    A button to cancel all pending orders from the `orders` table, allowing for a fresh start each day.
-
----
-
-## Data Structure (Supabase Tables)
-
-### `drinks` Table
-
-A simple table to store the available menu items.
-
-| Column | Type   | Description                      |
-|--------|--------|----------------------------------|
-| id     | int    | unique ID                        |
-| name   | string | e.g., "Espresso", "Latte", etc.  |
-
-### `orders` Table
-
-A table to store all incoming guest orders.
-
-| Column    | Type      | Description                                        |
-|-----------|-----------|----------------------------------------------------|
-| id        | int       | unique ID                                          |
-| name      | string    | the guest's name                                   |
-| drink     | string    | the name of the ordered drink                      |
-| status    | string    | e.g., "pending", "ready", "completed", "cancelled" |
-| timestamp | timestamp | timestamp of the order                             |

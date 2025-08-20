@@ -1,21 +1,37 @@
 # Coding Standards
 
+## Language-Specific Guidelines
+
+### ReactJS & TypeScript
+
+For comprehensive ReactJS, TypeScript, and frontend development standards, refer to:
+**[ReactJS Instructions](../.github/instructions/reactjs.instructions.md)**
+
+Key areas covered:
+
+- React 19+ features and modern patterns
+- TypeScript-first development approach
+- Component design and architecture
+- State management and hooks
+- Performance optimization
+- Supabase integration patterns
+
+### PostgreSQL & Database
+
+For comprehensive PostgreSQL and database development standards, refer to:
+**[SQL Instructions](../.github/instructions/sql.instructions.md)**
+
+Key areas covered:
+
+- PostgreSQL 15+ best practices
+- Security-first with Row Level Security (RLS)
+- Performance optimization and indexing
+- Schema design and migrations
+- Supabase platform integration
+
 ## General Guidelines
 
-- Use descriptive variable, functi## Supabase Guidelines
-
-- Create a single supabase client instance (e.g., `lib/supabaseClient.ts`) and reuse.
-- Generate and use Supabase's TypeScript types (`supabase gen types typescript ...`) for all database operations.
-- Create strongly-typed domain models that extend or transform Supabase types.
-- Always specify columns you need (`select('id,name,status')`) with proper TypeScript return types.
-- Use `upsert` only when required; prefer explicit `insert`/`update` for clarity and better type inference.
-- Clean up real-time channel subscriptions in `useEffect` return handlers.
-- Debounce rapid write operations (e.g., live form editing) to avoid rate issues.
-- Prefer server-side filtering (`.eq()`, `.in()`, `.lte()`) over client filtering for performance.
-- Handle pagination for potentially growing tables (orders history) using `range` with proper typing.
-- Treat timestamps as UTC; format at render time with a utility function.
-- Use generic types for reusable Supabase query functions.
-- Implement type guards for Supabase response validation.ss names. Avoid abbreviations.
+- Use descriptive variable, function, and class names. Avoid abbreviations.
 - Follow consistent casing: camelCase for variables/functions, PascalCase for classes/components/types/interfaces, ALL_CAPS for constants.
 - Avoid magic numbers and strings; define them as typed constants.
 - Write small, single-purpose functions and classes with proper TypeScript signatures.
@@ -90,9 +106,10 @@
 
 ## Additional Guidelines
 
-- Refer to the appropriate file in .github/instructions/ for specific language guidelines.
+- Refer to the language-specific instruction files in `.github/instructions/` for detailed coding standards.
+- Follow the patterns and examples provided in the respective instruction files.
 
-## Supabase Guidelines
+## Supabase Integration Guidelines
 
 - Create a single supabase client instance (e.g., `lib/supabaseClient.ts`) and reuse.
 - Define TypeScript types using Supabase’s generated types (`supabase gen types typescript ...`) and map to domain models if needed.
@@ -101,14 +118,14 @@
 - Clean up real-time channel subscriptions in `useEffect` return handlers.
 - Debounce rapid write operations (e.g., live form editing) to avoid rate issues.
 - Prefer server-side filtering (`.eq()`, `.in()`, `.lte()`) over client filtering for performance.
-- Handle pagination for potentially growing tables (orders history) using `range`.
+- Handle pagination for potentially growing tables using `range`.
 - Treat timestamps as UTC; format at render time with a utility.
+- Wrap Supabase calls in try/catch; surface user-friendly error messages.
+- Use type guards for Supabase response validation.
 
 ## Environment Variables
 
-- Prefix only non-sensitive values with VITE_ for frontend use.
-- Document required env vars in README (e.g., SUPABASE_URL, SUPABASE_ANON_KEY).
+- Prefix only non-sensitive values with `VITE_` for frontend use.
+- Document required env vars in README (e.g., `SUPABASE_URL`, `SUPABASE_ANON_KEY`).
 - Never log env values at runtime.
-
----
-[/docs/file_structure.md](/docs/file_structure.md)
+- Keep service_role key ONLY on the server, never shipped to the browser.
