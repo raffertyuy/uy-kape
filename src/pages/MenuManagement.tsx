@@ -6,6 +6,7 @@ import { ChangeNotification } from '@/components/menu/ChangeNotification'
 import { DrinkCategoryManagement } from '@/components/menu/DrinkCategoryManagement'
 import { DrinkManagement } from '@/components/menu/DrinkManagement'
 import { OptionManagement } from '@/components/menu/OptionManagement'
+import { Logo } from '@/components/ui/Logo'
 import { 
   useDrinkCategories, 
   useDrinks, 
@@ -59,11 +60,14 @@ export const MenuManagement: React.FC = () => {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-coffee-900">Menu Management</h1>
-              <p className="text-coffee-600 mt-2">
-                Manage your coffee shop menu categories, drinks, and customization options.
-              </p>
+            <div className="flex items-center">
+              <Logo size="md" className="mr-4" alt="Uy, Kape!" />
+              <div>
+                <h1 className="text-3xl font-bold text-coffee-900">Menu Management</h1>
+                <p className="text-coffee-600 mt-2">
+                  Manage your coffee shop menu categories, drinks, and customization options.
+                </p>
+              </div>
             </div>
             <RealtimeIndicator 
               connectionStatus={connectionStatus}

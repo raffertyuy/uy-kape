@@ -3,21 +3,26 @@ import Layout from './components/Layout'
 import WelcomePage from './pages/WelcomePage'
 import GuestModule from './pages/GuestModule'
 import BaristaModule from './pages/BaristaModule'
+import NotFound from './pages/NotFound'
 import { ToastProvider } from './hooks/useToast'
+import { ErrorBoundary } from './components/ui/ErrorBoundary'
 
 function App() {
   return (
-    <ToastProvider>
-      <BrowserRouter>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<WelcomePage />} />
-            <Route path="/order" element={<GuestModule />} />
-            <Route path="/admin" element={<BaristaModule />} />
-          </Routes>
-        </Layout>
-      </BrowserRouter>
-    </ToastProvider>
+    <ErrorBoundary>
+      <ToastProvider>
+        <BrowserRouter>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<WelcomePage />} />
+              <Route path="/order" element={<GuestModule />} />
+              <Route path="/admin" element={<BaristaModule />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Layout>
+        </BrowserRouter>
+      </ToastProvider>
+    </ErrorBoundary>
   )
 }
 

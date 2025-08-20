@@ -1,14 +1,130 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Brand Color Variables for Dynamic Usage */
+  --coffee-cream: #f9f7f4;
+  --coffee-light: #f0ebe3;
+  --coffee-medium: #9c7c54;
+  --coffee-primary: #7d5a34;
+  --coffee-dark: #4a2c1a;
+  --coffee-darkest: #2d1810;
+
+  /* Accent Colors */
+  --accent-orange: #e67e22;
+  --accent-green: #27ae60;
+  --accent-red: #e74c3c;
+  --accent-blue: #3498db;
+
+  /* Typography Scale */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+
+  /* Spacing Variables */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  /* Border Radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+
+  /* Shadows */
+  --shadow-coffee: 0 4px 6px -1px rgba(77, 44, 26, 0.1),
+    0 2px 4px -1px rgba(77, 44, 26, 0.06);
+  --shadow-coffee-lg: 0 10px 15px -3px rgba(77, 44, 26, 0.1),
+    0 4px 6px -2px rgba(77, 44, 26, 0.05);
+}
+
 body {
   margin: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--coffee-cream);
+  color: var(--coffee-darkest);
+  line-height: 1.6;
+}
+
+/* Brand-specific Component Styles */
+.coffee-card {
+  @apply bg-coffee-50 border border-coffee-200 rounded-xl shadow-coffee;
+}
+
+.coffee-button-primary {
+  @apply bg-coffee-600 hover:bg-coffee-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200;
+}
+
+.coffee-button-secondary {
+  @apply bg-coffee-100 hover:bg-coffee-200 text-coffee-800 px-4 py-2 rounded-lg font-medium transition-colors duration-200 border border-coffee-300;
+}
+
+.coffee-input {
+  @apply border border-coffee-300 rounded-lg px-3 py-2 bg-coffee-50 focus:ring-2 focus:ring-coffee-500 focus:border-coffee-500 transition-colors duration-200;
+}
+
+.coffee-text-primary {
+  @apply text-coffee-800;
+}
+
+.coffee-text-secondary {
+  @apply text-coffee-600;
+}
+
+.coffee-text-muted {
+  @apply text-coffee-400;
+}
+
+/* Loading State Animations */
+@keyframes coffee-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.coffee-loading {
+  animation: coffee-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Brand-specific Hover Effects */
+.coffee-hover {
+  @apply transition-all duration-200 hover:shadow-coffee-lg hover:scale-105;
+}
+
+/* Accessibility Focus Styles */
+.coffee-focus {
+  @apply focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:ring-offset-2 focus:ring-offset-coffee-50;
+}
+
+/* Screen Reader Only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

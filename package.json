@@ -11,7 +11,7 @@
     "build": "tsc && vite build",
     "lint": "eslint . --max-warnings 5",
     "preview": "vite preview",
-    "test": "node --max-old-space-size=8192 ./node_modules/vitest/vitest.mjs",
+    "test": "npm run test:run",
     "test:run": "node --max-old-space-size=8192 ./node_modules/vitest/vitest.mjs run",
     "test:ui": "node --max-old-space-size=8192 ./node_modules/vitest/vitest.mjs --ui",
     "test:coverage": "node --max-old-space-size=8192 ./node_modules/vitest/vitest.mjs run --coverage",
