@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import type { Drink } from '@/types/menu.types'
 import { DrinkList } from './DrinkList'
 import { DrinkOptionsManager } from './DrinkOptionsManager'
 import { useDrinks, useDrinkCategories, useDeleteDrink } from '@/hooks/useMenuData'
@@ -11,9 +12,10 @@ export const DrinkManagement: React.FC = () => {
   const [selectedDrink, setSelectedDrink] = useState<{ id: string; name: string } | null>(null)
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | undefined>(undefined)
 
-  const handleEditDrink = async (drink: any) => {
+  const handleEditDrink = async (_drink: Drink) => {
     // Handle edit - this would typically open a form modal
-    console.log('Edit drink:', drink)
+    // console.log('Edit drink:', drink)
+    // TODO: Implement edit functionality
   }
 
   const handleDeleteDrink = async (id: string) => {

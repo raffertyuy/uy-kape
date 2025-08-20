@@ -30,7 +30,7 @@ function ProtectedGuestModule() {
       requiredPassword={appConfig.guestPassword}
       title="Guest Access"
       description="Enter the guest password to place your coffee order"
-      role="guest"
+      role="guest" // eslint-disable-line jsx-a11y/aria-role
     >
       <GuestModulePage />
     </PasswordProtection>

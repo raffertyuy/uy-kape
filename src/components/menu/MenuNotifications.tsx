@@ -16,7 +16,7 @@ export interface Notification {
 
 interface MenuNotificationsProps {
   notifications: Notification[]
-  onDismiss: (id: string) => void
+  onDismiss: (_id: string) => void
   className?: string
 }
 
@@ -40,7 +40,7 @@ export const MenuNotifications: React.FC<MenuNotificationsProps> = ({
 
 interface NotificationItemProps {
   notification: Notification
-  onDismiss: (id: string) => void
+  onDismiss: (_id: string) => void
 }
 
 const NotificationItem: React.FC<NotificationItemProps> = ({
@@ -154,6 +154,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
 }
 
 // Hook for managing notifications
+// eslint-disable-next-line react-refresh/only-export-components
 export const useMenuNotifications = () => {
   const [notifications, setNotifications] = useState<Notification[]>([])
 

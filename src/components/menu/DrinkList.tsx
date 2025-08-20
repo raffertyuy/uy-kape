@@ -6,11 +6,11 @@ import { DrinkForm } from './DrinkForm'
 interface DrinkListProps {
   drinks: Drink[]
   categories: DrinkCategory[]
-  onEdit: (drink: Drink) => void
-  onDelete: (id: string) => void
-  onManageOptions: (drinkId: string) => void
+  onEdit: (_drink: Drink) => void
+  onDelete: (_id: string) => void
+  onManageOptions: (_drinkId: string) => void
   selectedCategoryId?: string
-  onCategoryFilter: (categoryId: string | undefined) => void
+  onCategoryFilter: (_categoryId: string | undefined) => void
   isLoading?: boolean
 }
 

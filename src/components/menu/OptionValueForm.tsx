@@ -9,7 +9,7 @@ import type {
 interface OptionValueFormProps {
   category: OptionCategory
   initialData?: OptionValue
-  onSubmit: (data: CreateOptionValueDto | UpdateOptionValueDto) => Promise<void>
+  onSubmit: (_data: CreateOptionValueDto | UpdateOptionValueDto) => Promise<void>
   onCancel: () => void
   isLoading?: boolean
 }

@@ -160,7 +160,8 @@ export const useOperationErrorHandling = () => {
     
     if (result && successMessage) {
       // Could integrate with toast/notification system here
-      console.log(successMessage)
+      // TODO: Replace with proper notification system
+      // console.log(successMessage)
     }
     
     return result

@@ -7,7 +7,7 @@ import type {
 
 interface OptionCategoryFormProps {
   initialData?: OptionCategory
-  onSubmit: (data: CreateOptionCategoryDto | UpdateOptionCategoryDto) => Promise<void>
+  onSubmit: (_data: CreateOptionCategoryDto | UpdateOptionCategoryDto) => Promise<void>
   onCancel: () => void
   isLoading?: boolean
 }

@@ -33,7 +33,7 @@ function BaristaModulePage() {
 }
 
 // Admin Dashboard (main landing page)
-function AdminDashboard({ onNavigate }: { onNavigate: (view: AdminView) => void }) {
+function AdminDashboard({ onNavigate }: { onNavigate: (_view: AdminView) => void }) {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="bg-white rounded-lg shadow-lg p-8">
@@ -105,7 +105,7 @@ function AdminDashboard({ onNavigate }: { onNavigate: (view: AdminView) => void 
 // Navigation component for admin views
 function AdminNavigation({ activeView, onNavigate }: { 
   activeView: AdminView
-  onNavigate: (view: AdminView) => void 
+  onNavigate: (_view: AdminView) => void 
 }) {
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200">
@@ -200,7 +200,7 @@ function ProtectedBaristaModule() {
       requiredPassword={appConfig.adminPassword}
       title="Barista Administration"
       description="Enter the admin password to access the barista dashboard"
-      role="admin"
+      role="admin" // eslint-disable-line jsx-a11y/aria-role
     >
       <BaristaModulePage />
     </PasswordProtection>

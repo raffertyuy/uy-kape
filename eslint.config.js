@@ -145,7 +145,9 @@ export default [
     files: ['**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}', 'src/setupTests.ts', 'src/test-utils.tsx'],
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
       'no-console': 'off',
+      'react-refresh/only-export-components': 'off',
     },
   },
   
@@ -155,6 +157,16 @@ export default [
     rules: {
       'no-console': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
+    },
+  },
+  
+  // Utility and service files - more lenient for complex types
+  {
+    files: ['src/utils/**/*.ts', 'src/services/**/*.ts', 'src/hooks/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'no-prototype-builtins': 'off',
     },
   },
   

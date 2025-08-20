@@ -252,10 +252,11 @@ export const DrinkOptionsManager: React.FC<DrinkOptionsManagerProps> = ({
                       <div className="space-y-4">
                         {/* Default Value Selection */}
                         <div>
-                          <label className="block text-sm font-medium text-coffee-700 mb-1">
+                          <label htmlFor={`default-value-${state.optionCategory.id}`} className="block text-sm font-medium text-coffee-700 mb-1">
                             Default Value
                           </label>
                           <select
+                            id={`default-value-${state.optionCategory.id}`}
                             value={state.defaultValueId || ''}
                             onChange={(e) => handleUpdateOption(state.optionCategory.id, { 
                               defaultValueId: e.target.value || undefined 

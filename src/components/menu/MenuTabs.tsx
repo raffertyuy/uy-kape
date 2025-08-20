@@ -4,7 +4,7 @@ export type MenuTab = 'categories' | 'drinks' | 'options'
 
 interface MenuTabsProps {
   activeTab: MenuTab
-  onTabChange: (tab: MenuTab) => void
+  onTabChange: (_tab: MenuTab) => void
   categoriesCount?: number
   drinksCount?: number
   optionCategoriesCount?: number

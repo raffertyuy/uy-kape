@@ -8,8 +8,8 @@ export interface MenuFilters {
 }
 
 interface MenuSearchProps {
-  onSearch: (query: string) => void
-  onFilter: (filters: MenuFilters) => void
+  onSearch: (_query: string) => void
+  onFilter: (_filters: MenuFilters) => void
   searchQuery: string
   activeFilters: MenuFilters
   showCategoryFilter?: boolean
@@ -38,7 +38,7 @@ export const MenuSearch: React.FC<MenuSearchProps> = ({
     return () => clearTimeout(timeoutId)
   }, [query, onSearch])
 
-  const handleFilterChange = (filterKey: keyof MenuFilters, value: any) => {
+  const handleFilterChange = (filterKey: keyof MenuFilters, value: string | boolean | undefined) => {
     const newFilters = { ...activeFilters, [filterKey]: value }
     onFilter(newFilters)
   }
@@ -116,10 +116,11 @@ export const MenuSearch: React.FC<MenuSearchProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {/* Status Filter */}
             <div>
-              <label className="block text-sm font-medium text-coffee-700 mb-1">
+              <label htmlFor="status-filter" className="block text-sm font-medium text-coffee-700 mb-1">
                 Status
               </label>
               <select
+                id="status-filter"
                 value={activeFilters.isActive === undefined ? '' : activeFilters.isActive ? 'active' : 'inactive'}
                 onChange={(e) => handleFilterChange('isActive', e.target.value === '' ? undefined : e.target.value === 'active')}
                 className="w-full px-3 py-2 border border-coffee-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500 text-sm"
@@ -133,10 +134,11 @@ export const MenuSearch: React.FC<MenuSearchProps> = ({
             {/* Category Filter */}
             {showCategoryFilter && categories.length > 0 && (
               <div>
-                <label className="block text-sm font-medium text-coffee-700 mb-1">
+                <label htmlFor="category-filter" className="block text-sm font-medium text-coffee-700 mb-1">
                   Category
                 </label>
                 <select
+                  id="category-filter"
                   value={activeFilters.categoryId || ''}
                   onChange={(e) => handleFilterChange('categoryId', e.target.value || undefined)}
                   className="w-full px-3 py-2 border border-coffee-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500 text-sm"
@@ -153,10 +155,11 @@ export const MenuSearch: React.FC<MenuSearchProps> = ({
 
             {/* Sort By Filter */}
             <div>
-              <label className="block text-sm font-medium text-coffee-700 mb-1">
+              <label htmlFor="sort-by-filter" className="block text-sm font-medium text-coffee-700 mb-1">
                 Sort By
               </label>
               <select
+                id="sort-by-filter"
                 value={activeFilters.sortBy || 'display_order'}
                 onChange={(e) => handleFilterChange('sortBy', e.target.value)}
                 className="w-full px-3 py-2 border border-coffee-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500 text-sm"
@@ -169,10 +172,11 @@ export const MenuSearch: React.FC<MenuSearchProps> = ({
 
             {/* Sort Order Filter */}
             <div>
-              <label className="block text-sm font-medium text-coffee-700 mb-1">
+              <label htmlFor="sort-order-filter" className="block text-sm font-medium text-coffee-700 mb-1">
                 Order
               </label>
               <select
+                id="sort-order-filter"
                 value={activeFilters.sortOrder || 'asc'}
                 onChange={(e) => handleFilterChange('sortOrder', e.target.value)}
                 className="w-full px-3 py-2 border border-coffee-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500 text-sm"

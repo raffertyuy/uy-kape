@@ -15,6 +15,7 @@ export const DrinkCategoryManagement: React.FC = () => {
   }
 
   const handleDelete = async (id: string) => {
+    // eslint-disable-next-line no-alert
     if (window.confirm('Are you sure you want to delete this category?')) {
       await deleteCategory(id)
     }

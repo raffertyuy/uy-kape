@@ -13,7 +13,7 @@ export interface ValidationResult {
 
 export interface ValidationRule<T> {
   field: keyof T
-  validate: (value: any, data: T) => string | null
+  validate: (_value: any, _data: T) => string | null
   message?: string
 }
 
@@ -237,7 +237,7 @@ export const formValidation = {
    */
   async validateWithBusinessRules<T>(
     data: T,
-    validator: (data: T) => ValidationResult,
+    validator: (_data: T) => ValidationResult,
     businessRules: Array<() => Promise<string | null>> = []
   ): Promise<ValidationResult> {
     // Run basic validation

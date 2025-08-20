@@ -5,7 +5,7 @@ import { OptionCategoryForm } from './OptionCategoryForm'
 import type { OptionCategory, CreateOptionCategoryDto, UpdateOptionCategoryDto } from '@/types/menu.types'
 
 interface OptionCategoryListProps {
-  onManageValues: (category: OptionCategory) => void
+  onManageValues: (_category: OptionCategory) => void
 }
 
 export const OptionCategoryList: React.FC<OptionCategoryListProps> = ({

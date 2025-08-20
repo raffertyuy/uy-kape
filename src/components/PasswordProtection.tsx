@@ -80,7 +80,6 @@ function PasswordProtection({
               className="w-full px-3 py-2 border border-coffee-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:border-transparent"
               placeholder="Enter password"
               required
-              autoFocus
             />
           </div>
 
