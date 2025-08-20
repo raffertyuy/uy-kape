@@ -107,6 +107,9 @@ storybook-static
 tmp/
 temp/
 
+# Test backup files
+*.backup
+
 # Supabase
 .supabase/
 

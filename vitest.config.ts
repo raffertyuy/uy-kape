@@ -29,10 +29,9 @@ export default defineConfig({
     // Better error handling
     dangerouslyIgnoreUnhandledErrors: false,
     passWithNoTests: false,
-    // Exclude backup files and problematic tests
+    // Exclude problematic tests
     exclude: [
       'node_modules/**',
-      'src/**/*.backup',
       'src/components/menu/__tests__/DrinkCategoryForm.test.tsx'
     ],
     // Simplified coverage
@@ -47,8 +46,7 @@ export default defineConfig({
         'src/**/*.spec.{ts,tsx}',
         'vite.config.ts',
         'vitest.config.ts',
-        'vitest.config.ci.ts',
-        'src/**/*.backup'
+        'vitest.config.ci.ts'
       ],
       thresholds: {
         global: {
@@ -60,7 +58,7 @@ export default defineConfig({
       }
     },
     // Simple reporting
-    reporters: ['basic'],
+    reporters: [['default', { summary: false }]],
     // Memory monitoring
     logHeapUsage: true,
     // Minimal dependencies

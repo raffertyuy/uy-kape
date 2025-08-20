@@ -43,9 +43,7 @@ export default defineConfig({
     // Exclude problematic tests for CI stability
     exclude: [
       'node_modules/**',
-      'src/components/menu/__tests__/DrinkCategoryForm.test.tsx',
-      // Temporarily exclude backup files
-      'src/**/*.backup'
+      'src/components/menu/__tests__/DrinkCategoryForm.test.tsx'
     ],
     coverage: {
       provider: 'v8',

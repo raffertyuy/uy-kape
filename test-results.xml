@@ -1,325 +1,322 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites name="vitest tests" tests="127" failures="0" errors="0" time="3.9604611">
-    <testsuite name="src/components/__tests__/PasswordProtection.test.tsx" timestamp="2025-08-20T14:03:45.328Z" hostname="LAPTOP-VJTJT6SE" tests="20" failures="0" errors="0" skipped="0" time="3.0879509">
-        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection &gt; Rendering &gt; should render password form when not authenticated" time="0.0536392">
+<testsuites name="vitest tests" tests="137" failures="0" errors="0" time="0.660067157">
+    <testsuite name="src/components/__tests__/Layout.test.tsx" timestamp="2025-08-20T16:06:28.290Z" hostname="pkrvmubgrv54qmi" tests="7" failures="0" errors="0" skipped="0" time="0.039042471">
+        <testcase classname="src/components/__tests__/Layout.test.tsx" name="Layout &gt; renders children correctly" time="0.004817488">
             <system-err>
 ⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
 ⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
 
             </system-err>
         </testcase>
-        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection &gt; Rendering &gt; should render children when authenticated" time="0.0020772">
+        <testcase classname="src/components/__tests__/Layout.test.tsx" name="Layout &gt; applies correct CSS classes for responsive design" time="0.002640111">
         </testcase>
-        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection &gt; Rendering &gt; should render with custom title and description" time="0.0024243">
+        <testcase classname="src/components/__tests__/Layout.test.tsx" name="Layout &gt; maintains proper semantic structure" time="0.003741724">
         </testcase>
-        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection &gt; Rendering &gt; should have proper accessibility attributes" time="0.0027802">
+        <testcase classname="src/components/__tests__/Layout.test.tsx" name="Layout &gt; displays navigation when not on welcome page" time="0.01274715">
         </testcase>
-        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection &gt; Form Interaction &gt; should update password input value" time="0.2246671">
+        <testcase classname="src/components/__tests__/Layout.test.tsx" name="Layout &gt; hides navigation on welcome page" time="0.001454703">
         </testcase>
-        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection &gt; Form Interaction &gt; should disable submit button when password is empty" time="0.004902">
+        <testcase classname="src/components/__tests__/Layout.test.tsx" name="Layout &gt; highlights active navigation links" time="0.004729523">
         </testcase>
-        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection &gt; Form Interaction &gt; should enable submit button when password is entered" time="0.1056048">
+        <testcase classname="src/components/__tests__/Layout.test.tsx" name="Layout &gt; has proper accessibility for navigation" time="0.008420602">
         </testcase>
-        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection &gt; Form Interaction &gt; should disable submit button for whitespace-only password" time="0.1061128">
+    </testsuite>
+    <testsuite name="src/components/__tests__/PasswordProtection.test.tsx" timestamp="2025-08-20T16:06:28.292Z" hostname="pkrvmubgrv54qmi" tests="5" failures="0" errors="0" skipped="0" time="0.229971657">
+        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection - Basic Functionality &gt; should render password form when not authenticated" time="0.084101614">
         </testcase>
-        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection &gt; Form Submission &gt; should handle form submission correctly" time="0.2514466">
+        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection - Basic Functionality &gt; should render children when authenticated" time="0.002235354">
+        </testcase>
+        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection - Basic Functionality &gt; should update password input value" time="0.075244665">
+        </testcase>
+        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection - Basic Functionality &gt; should handle form submission correctly" time="0.056351931">
             <system-err>
 Warning: The current testing environment is not configured to support act(...)
 
             </system-err>
         </testcase>
-        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection &gt; Form Submission &gt; should show loading state during authentication" time="0.3252369">
-        </testcase>
-        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection &gt; Form Submission &gt; should show error on wrong password" time="0.3298593">
-            <system-err>
-Warning: The current testing environment is not configured to support act(...)
-Warning: The current testing environment is not configured to support act(...)
-Warning: The current testing environment is not configured to support act(...)
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection &gt; Form Submission &gt; should clear password field after unsuccessful authentication" time="0.3252908">
-            <system-err>
-Warning: The current testing environment is not configured to support act(...)
-Warning: The current testing environment is not configured to support act(...)
-Warning: The current testing environment is not configured to support act(...)
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection &gt; Form Submission &gt; should handle authentication errors gracefully" time="0.1954663">
-            <system-err>
-Warning: The current testing environment is not configured to support act(...)
-Warning: The current testing environment is not configured to support act(...)
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection &gt; Form Submission &gt; should submit form on Enter key press" time="0.1802177">
-            <system-err>
-Warning: The current testing environment is not configured to support act(...)
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection &gt; Navigation &gt; should call history.back() when back button is clicked" time="0.0647307">
-        </testcase>
-        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection &gt; Error Handling &gt; should clear error message when typing new password" time="0.2981325">
-            <system-err>
-Warning: The current testing environment is not configured to support act(...)
-Warning: The current testing environment is not configured to support act(...)
-Warning: The current testing environment is not configured to support act(...)
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection &gt; Error Handling &gt; should have proper ARIA attributes for error messages" time="0.2971888">
-            <system-err>
-Warning: The current testing environment is not configured to support act(...)
-Warning: The current testing environment is not configured to support act(...)
-Warning: The current testing environment is not configured to support act(...)
-
-            </system-err>
-        </testcase>
-        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection &gt; Hook Integration &gt; should call usePasswordAuth with correct parameters" time="0.0014837">
-        </testcase>
-        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection &gt; Hook Integration &gt; should call usePasswordAuth with admin role" time="0.0011169">
-        </testcase>
-        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection &gt; Loading State &gt; should disable form elements during loading" time="0.3137265">
+        <testcase classname="src/components/__tests__/PasswordProtection.test.tsx" name="PasswordProtection - Basic Functionality &gt; should have proper accessibility attributes" time="0.010162443">
         </testcase>
     </testsuite>
-    <testsuite name="src/config/__tests__/app.config.test.ts" timestamp="2025-08-20T14:03:45.338Z" hostname="LAPTOP-VJTJT6SE" tests="13" failures="0" errors="0" skipped="0" time="0.0022888">
-        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; appConfig &gt; should load passwords correctly (either from env or defaults)" time="0.0003465">
+    <testsuite name="src/config/__tests__/app.config.test.ts" timestamp="2025-08-20T16:06:28.294Z" hostname="pkrvmubgrv54qmi" tests="13" failures="0" errors="0" skipped="0" time="0.004331788">
+        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; appConfig &gt; should load passwords correctly (either from env or defaults)" time="0.000467074">
         </testcase>
-        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; appConfig &gt; should have required password properties" time="0.0002816">
+        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; appConfig &gt; should have required password properties" time="0.000339655">
         </testcase>
-        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; appConfig &gt; should have non-empty password values" time="0.0001166">
+        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; appConfig &gt; should have non-empty password values" time="0.000182592">
         </testcase>
-        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; Application Constants &gt; should export correct APP_NAME" time="0.000086">
+        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; Application Constants &gt; should export correct APP_NAME" time="0.000183203">
         </testcase>
-        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; Application Constants &gt; should export correct APP_DESCRIPTION" time="0.0000793">
+        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; Application Constants &gt; should export correct APP_DESCRIPTION" time="0.000164989">
         </testcase>
-        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; Application Constants &gt; should export correct ORDER_STATUS_LABELS" time="0.0001758">
+        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; Application Constants &gt; should export correct ORDER_STATUS_LABELS" time="0.000436307">
         </testcase>
-        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; Application Constants &gt; should have all required order status labels" time="0.0001417">
+        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; Application Constants &gt; should have all required order status labels" time="0.000262021">
         </testcase>
-        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; DEFAULT_DRINK_OPTIONS &gt; should have all required drink option categories" time="0.0001028">
+        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; DEFAULT_DRINK_OPTIONS &gt; should have all required drink option categories" time="0.000210685">
         </testcase>
-        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; DEFAULT_DRINK_OPTIONS &gt; should have correctly structured size option" time="0.0001132">
+        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; DEFAULT_DRINK_OPTIONS &gt; should have correctly structured size option" time="0.000257371">
         </testcase>
-        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; DEFAULT_DRINK_OPTIONS &gt; should have correctly structured milk option" time="0.0001049">
+        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; DEFAULT_DRINK_OPTIONS &gt; should have correctly structured milk option" time="0.000221305">
         </testcase>
-        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; DEFAULT_DRINK_OPTIONS &gt; should have correctly structured sugar option" time="0.0001059">
+        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; DEFAULT_DRINK_OPTIONS &gt; should have correctly structured sugar option" time="0.0002353">
         </testcase>
-        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; DEFAULT_DRINK_OPTIONS &gt; should have correctly structured hot option" time="0.0001121">
+        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; DEFAULT_DRINK_OPTIONS &gt; should have correctly structured hot option" time="0.000191859">
         </testcase>
-        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; DEFAULT_DRINK_OPTIONS &gt; should have consistent option structure" time="0.0003834">
-        </testcase>
-    </testsuite>
-    <testsuite name="src/hooks/__tests__/useMenuData.test.ts" timestamp="2025-08-20T14:03:45.339Z" hostname="LAPTOP-VJTJT6SE" tests="9" failures="0" errors="0" skipped="0" time="0.3273663">
-        <testcase classname="src/hooks/__tests__/useMenuData.test.ts" name="useMenuData hooks &gt; useDrinkCategories &gt; should fetch and return drink categories" time="0.0754198">
-        </testcase>
-        <testcase classname="src/hooks/__tests__/useMenuData.test.ts" name="useMenuData hooks &gt; useDrinkCategories &gt; should handle errors when fetching categories" time="0.078089">
-        </testcase>
-        <testcase classname="src/hooks/__tests__/useMenuData.test.ts" name="useMenuData hooks &gt; useDrinks &gt; should fetch and return drinks" time="0.0791778">
-        </testcase>
-        <testcase classname="src/hooks/__tests__/useMenuData.test.ts" name="useMenuData hooks &gt; useCreateDrinkCategory &gt; should create a new category successfully" time="0.0151844">
-        </testcase>
-        <testcase classname="src/hooks/__tests__/useMenuData.test.ts" name="useMenuData hooks &gt; useCreateDrinkCategory &gt; should handle creation errors" time="0.0152656">
-        </testcase>
-        <testcase classname="src/hooks/__tests__/useMenuData.test.ts" name="useMenuData hooks &gt; useUpdateDrinkCategory &gt; should update a category successfully" time="0.0160019">
-        </testcase>
-        <testcase classname="src/hooks/__tests__/useMenuData.test.ts" name="useMenuData hooks &gt; useUpdateDrinkCategory &gt; should handle update errors" time="0.016034">
-        </testcase>
-        <testcase classname="src/hooks/__tests__/useMenuData.test.ts" name="useMenuData hooks &gt; useDeleteDrinkCategory &gt; should delete a category successfully" time="0.0158666">
-        </testcase>
-        <testcase classname="src/hooks/__tests__/useMenuData.test.ts" name="useMenuData hooks &gt; useDeleteDrinkCategory &gt; should handle deletion errors" time="0.0159628">
+        <testcase classname="src/config/__tests__/app.config.test.ts" name="App Configuration &gt; DEFAULT_DRINK_OPTIONS &gt; should have consistent option structure" time="0.00065704">
         </testcase>
     </testsuite>
-    <testsuite name="src/hooks/__tests__/useMenuSubscriptions.test.ts" timestamp="2025-08-20T14:03:45.340Z" hostname="LAPTOP-VJTJT6SE" tests="5" failures="0" errors="0" skipped="0" time="0.0045">
-        <testcase classname="src/hooks/__tests__/useMenuSubscriptions.test.ts" name="useMenuSubscriptions &gt; should initialize with default state" time="0.0010973">
+    <testsuite name="src/hooks/__tests__/useMenuData.test.ts" timestamp="2025-08-20T16:06:28.296Z" hostname="pkrvmubgrv54qmi" tests="9" failures="0" errors="0" skipped="0" time="0.179587111">
+        <testcase classname="src/hooks/__tests__/useMenuData.test.ts" name="useMenuData hooks &gt; useDrinkCategories &gt; should fetch and return drink categories" time="0.054751749">
         </testcase>
-        <testcase classname="src/hooks/__tests__/useMenuSubscriptions.test.ts" name="useMenuSubscriptions &gt; should set up subscriptions for all menu tables" time="0.0013122">
+        <testcase classname="src/hooks/__tests__/useMenuData.test.ts" name="useMenuData hooks &gt; useDrinkCategories &gt; should handle errors when fetching categories" time="0.052644813">
         </testcase>
-        <testcase classname="src/hooks/__tests__/useMenuSubscriptions.test.ts" name="useMenuSubscriptions &gt; should manage conflict items" time="0.0008063">
+        <testcase classname="src/hooks/__tests__/useMenuData.test.ts" name="useMenuData hooks &gt; useDrinks &gt; should fetch and return drinks" time="0.053216132">
         </testcase>
-        <testcase classname="src/hooks/__tests__/useMenuSubscriptions.test.ts" name="useMenuSubscriptions &gt; should clear recent changes" time="0.0006899">
+        <testcase classname="src/hooks/__tests__/useMenuData.test.ts" name="useMenuData hooks &gt; useCreateDrinkCategory &gt; should create a new category successfully" time="0.003365649">
         </testcase>
-        <testcase classname="src/hooks/__tests__/useMenuSubscriptions.test.ts" name="useMenuSubscriptions &gt; should clean up subscriptions on unmount" time="0.0004849">
+        <testcase classname="src/hooks/__tests__/useMenuData.test.ts" name="useMenuData hooks &gt; useCreateDrinkCategory &gt; should handle creation errors" time="0.003319523">
         </testcase>
-    </testsuite>
-    <testsuite name="src/hooks/__tests__/usePasswordAuth.test.ts" timestamp="2025-08-20T14:03:45.340Z" hostname="LAPTOP-VJTJT6SE" tests="17" failures="0" errors="0" skipped="0" time="0.011771">
-        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Initial State &gt; should initialize with unauthenticated state" time="0.001016">
+        <testcase classname="src/hooks/__tests__/useMenuData.test.ts" name="useMenuData hooks &gt; useUpdateDrinkCategory &gt; should update a category successfully" time="0.003262587">
         </testcase>
-        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Initial State &gt; should initialize with unauthenticated state for admin role" time="0.0013444">
+        <testcase classname="src/hooks/__tests__/useMenuData.test.ts" name="useMenuData hooks &gt; useUpdateDrinkCategory &gt; should handle update errors" time="0.002471717">
         </testcase>
-        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Authentication from sessionStorage &gt; should restore auth state from sessionStorage for guest" time="0.0005842">
+        <testcase classname="src/hooks/__tests__/useMenuData.test.ts" name="useMenuData hooks &gt; useDeleteDrinkCategory &gt; should delete a category successfully" time="0.002605046">
         </testcase>
-        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Authentication from sessionStorage &gt; should restore auth state from sessionStorage for admin" time="0.000491">
-        </testcase>
-        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Authentication from sessionStorage &gt; should not restore auth state when sessionStorage value is not &quot;true&quot;" time="0.0004785">
-        </testcase>
-        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Authentication from sessionStorage &gt; should maintain separate auth states for guest and admin" time="0.0010363">
-        </testcase>
-        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Authentication Process &gt; should authenticate with correct password" time="0.0006158">
-        </testcase>
-        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Authentication Process &gt; should reject authentication with wrong password" time="0.0004898">
-        </testcase>
-        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Authentication Process &gt; should authenticate admin with correct admin password" time="0.0004727">
-        </testcase>
-        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Authentication Process &gt; should handle empty password correctly" time="0.0004381">
-        </testcase>
-        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Authentication Process &gt; should handle case-sensitive passwords" time="0.0004697">
-        </testcase>
-        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Logout Functionality &gt; should logout and clear sessionStorage" time="0.0005343">
-        </testcase>
-        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Logout Functionality &gt; should logout admin and clear admin sessionStorage" time="0.0005625">
-        </testcase>
-        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Logout Functionality &gt; should be safe to logout when not authenticated" time="0.0009216">
-        </testcase>
-        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Role-based Authentication Isolation &gt; should maintain separate authentication states for different roles" time="0.0008621">
-        </testcase>
-        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Hook Re-initialization &gt; should handle role changes by re-initializing the hook" time="0.0005577">
-        </testcase>
-        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Hook Re-initialization &gt; should re-check sessionStorage when role changes" time="0.0005488">
+        <testcase classname="src/hooks/__tests__/useMenuData.test.ts" name="useMenuData hooks &gt; useDeleteDrinkCategory &gt; should handle deletion errors" time="0.003048396">
         </testcase>
     </testsuite>
-    <testsuite name="src/pages/__tests__/MenuManagement.test.tsx" timestamp="2025-08-20T14:03:45.343Z" hostname="LAPTOP-VJTJT6SE" tests="10" failures="0" errors="0" skipped="0" time="0.5153604">
-        <testcase classname="src/pages/__tests__/MenuManagement.test.tsx" name="MenuManagement Integration &gt; renders the menu management page correctly" time="0.0280037">
+    <testsuite name="src/hooks/__tests__/useMenuSubscriptions.test.ts" timestamp="2025-08-20T16:06:28.298Z" hostname="pkrvmubgrv54qmi" tests="5" failures="0" errors="0" skipped="0" time="0.008503387">
+        <testcase classname="src/hooks/__tests__/useMenuSubscriptions.test.ts" name="useMenuSubscriptions &gt; should initialize with default state" time="0.00219597">
         </testcase>
-        <testcase classname="src/pages/__tests__/MenuManagement.test.tsx" name="MenuManagement Integration &gt; switches between tabs correctly" time="0.1346688">
+        <testcase classname="src/hooks/__tests__/useMenuSubscriptions.test.ts" name="useMenuSubscriptions &gt; should set up subscriptions for all menu tables" time="0.001986108">
         </testcase>
-        <testcase classname="src/pages/__tests__/MenuManagement.test.tsx" name="MenuManagement Integration &gt; shows add category form when add button is clicked" time="0.0629585">
+        <testcase classname="src/hooks/__tests__/useMenuSubscriptions.test.ts" name="useMenuSubscriptions &gt; should manage conflict items" time="0.001731451">
         </testcase>
-        <testcase classname="src/pages/__tests__/MenuManagement.test.tsx" name="MenuManagement Integration &gt; closes add category form when cancel is clicked" time="0.0770055">
+        <testcase classname="src/hooks/__tests__/useMenuSubscriptions.test.ts" name="useMenuSubscriptions &gt; should clear recent changes" time="0.001307267">
         </testcase>
-        <testcase classname="src/pages/__tests__/MenuManagement.test.tsx" name="MenuManagement Integration &gt; shows add drink form when in drinks tab" time="0.1094302">
-        </testcase>
-        <testcase classname="src/pages/__tests__/MenuManagement.test.tsx" name="MenuManagement Integration &gt; displays loading state when data is loading" time="0.0031279">
-        </testcase>
-        <testcase classname="src/pages/__tests__/MenuManagement.test.tsx" name="MenuManagement Integration &gt; displays data in category list" time="0.0045687">
-        </testcase>
-        <testcase classname="src/pages/__tests__/MenuManagement.test.tsx" name="MenuManagement Integration &gt; displays data in drinks list when drinks tab is active" time="0.0843346">
-        </testcase>
-        <testcase classname="src/pages/__tests__/MenuManagement.test.tsx" name="MenuManagement Integration &gt; shows real-time connection status" time="0.0031076">
-        </testcase>
-        <testcase classname="src/pages/__tests__/MenuManagement.test.tsx" name="MenuManagement Integration &gt; provides proper accessibility attributes" time="0.007882">
+        <testcase classname="src/hooks/__tests__/useMenuSubscriptions.test.ts" name="useMenuSubscriptions &gt; should clean up subscriptions on unmount" time="0.000985103">
         </testcase>
     </testsuite>
-    <testsuite name="src/types/__tests__/app.types.test.ts" timestamp="2025-08-20T14:03:45.344Z" hostname="LAPTOP-VJTJT6SE" tests="12" failures="0" errors="0" skipped="0" time="0.0017711">
-        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; DrinkOption interface &gt; should have correct required properties" time="0.0003709">
+    <testsuite name="src/hooks/__tests__/usePasswordAuth.test.ts" timestamp="2025-08-20T16:06:28.299Z" hostname="pkrvmubgrv54qmi" tests="17" failures="0" errors="0" skipped="0" time="0.019887887">
+        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Initial State &gt; should initialize with unauthenticated state" time="0.001459953">
         </testcase>
-        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; DrinkOption interface &gt; should support all valid types" time="0.0002042">
+        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Initial State &gt; should initialize with unauthenticated state for admin role" time="0.001152487">
         </testcase>
-        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; DrinkOption interface &gt; should allow optional properties" time="0.0000971">
+        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Authentication from sessionStorage &gt; should restore auth state from sessionStorage for guest" time="0.001080423">
         </testcase>
-        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; PasswordAuthState interface &gt; should have correct authentication states" time="0.0001239">
+        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Authentication from sessionStorage &gt; should restore auth state from sessionStorage for admin" time="0.00123376">
         </testcase>
-        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; PasswordAuthState interface &gt; should allow undefined role when unauthenticated" time="0.000076">
+        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Authentication from sessionStorage &gt; should not restore auth state when sessionStorage value is not &quot;true&quot;" time="0.000887261">
         </testcase>
-        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; AppConfig interface &gt; should have required password properties" time="0.0000864">
+        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Authentication from sessionStorage &gt; should maintain separate auth states for guest and admin" time="0.001612749">
         </testcase>
-        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; OrderFormData interface &gt; should have correct structure for order form" time="0.0001025">
+        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Authentication Process &gt; should authenticate with correct password" time="0.001177264">
         </testcase>
-        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; OrderFormData interface &gt; should support various option types in options field" time="0.0000827">
+        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Authentication Process &gt; should reject authentication with wrong password" time="0.000925302">
         </testcase>
-        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; DrinkFormData interface &gt; should have correct structure for drink form" time="0.0001023">
+        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Authentication Process &gt; should authenticate admin with correct admin password" time="0.000860781">
         </testcase>
-        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; DrinkFormData interface &gt; should support empty options object" time="0.0001181">
+        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Authentication Process &gt; should handle empty password correctly" time="0.000807291">
         </testcase>
-        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; Type compatibility &gt; should allow DrinkOption to be used in DrinkFormData" time="0.0001244">
+        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Authentication Process &gt; should handle case-sensitive passwords" time="0.000926775">
         </testcase>
-        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; Type compatibility &gt; should maintain type safety for option types" time="0.0001363">
+        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Logout Functionality &gt; should logout and clear sessionStorage" time="0.000936723">
         </testcase>
-    </testsuite>
-    <testsuite name="src/utils/__tests__/menuValidation.test.ts" timestamp="2025-08-20T14:03:45.345Z" hostname="LAPTOP-VJTJT6SE" tests="28" failures="0" errors="0" skipped="0" time="0.0038169">
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateDrinkCategory &gt; validates a valid drink category" time="0.0004963">
+        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Logout Functionality &gt; should logout admin and clear admin sessionStorage" time="0.000896077">
         </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateDrinkCategory &gt; validates required name field" time="0.0002306">
+        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Logout Functionality &gt; should be safe to logout when not authenticated" time="0.001781024">
         </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateDrinkCategory &gt; allows null description" time="0.0001555">
+        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Role-based Authentication Isolation &gt; should maintain separate authentication states for different roles" time="0.001533862">
         </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateDrink &gt; validates a valid drink" time="0.0002528">
+        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Hook Re-initialization &gt; should handle role changes by re-initializing the hook" time="0.000868887">
         </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateDrink &gt; validates required name field" time="0.0001785">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateDrink &gt; validates required category_id" time="0.0001174">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateOptionCategory &gt; validates a valid option category" time="0.0001857">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateOptionCategory &gt; validates required name field" time="0.00013">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateOptionValue &gt; validates a valid option value" time="0.0001931">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateOptionValue &gt; validates required option_category_id" time="0.000119">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateOptionValue &gt; validates required name field" time="0.0000943">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; required &gt; returns error for empty string" time="0.0001141">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; required &gt; returns error for null" time="0.000073">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; required &gt; returns error for undefined" time="0.0000937">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; required &gt; returns null for valid value" time="0.0000638">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; minLength &gt; returns error for string too short" time="0.000076">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; minLength &gt; returns null for string of correct length" time="0.0000773">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; minLength &gt; returns null for longer string" time="0.0000925">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; maxLength &gt; returns error for string too long" time="0.0000741">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; maxLength &gt; returns null for string of correct length" time="0.0000768">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; maxLength &gt; returns null for shorter string" time="0.0000629">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; positiveInteger &gt; returns error for negative number" time="0.0000883">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; positiveInteger &gt; returns error for non-integer" time="0.0000647">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; positiveInteger &gt; returns null for positive integer" time="0.0000539">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; positiveInteger &gt; returns null for zero" time="0.0000601">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; validDisplayOrder &gt; returns error for negative number" time="0.0000807">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; validDisplayOrder &gt; returns error for number too large" time="0.0000784">
-        </testcase>
-        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; validDisplayOrder &gt; returns null for valid number" time="0.0000994">
+        <testcase classname="src/hooks/__tests__/usePasswordAuth.test.ts" name="usePasswordAuth &gt; Hook Re-initialization &gt; should re-check sessionStorage when role changes" time="0.000842196">
         </testcase>
     </testsuite>
-    <testsuite name="src/services/__tests__/menuService.test.ts" timestamp="2025-08-20T14:03:45.348Z" hostname="LAPTOP-VJTJT6SE" tests="13" failures="0" errors="0" skipped="0" time="0.0056357">
-        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; drinkCategoriesService &gt; should get all categories" time="0.0004575">
+    <testsuite name="src/pages/__tests__/MenuManagement.test.tsx" timestamp="2025-08-20T16:06:28.302Z" hostname="pkrvmubgrv54qmi" tests="2" failures="0" errors="0" skipped="0" time="0.06814209">
+        <testcase classname="src/pages/__tests__/MenuManagement.test.tsx" name="MenuManagement - Basic Rendering &gt; renders the menu management page correctly" time="0.045145745">
         </testcase>
-        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; drinkCategoriesService &gt; should handle errors when getting categories" time="0.0015926">
+        <testcase classname="src/pages/__tests__/MenuManagement.test.tsx" name="MenuManagement - Basic Rendering &gt; has proper accessibility attributes" time="0.022746006">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/pages/__tests__/WelcomePage.test.tsx" timestamp="2025-08-20T16:06:28.302Z" hostname="pkrvmubgrv54qmi" tests="6" failures="0" errors="0" skipped="0" time="0.033155802">
+        <testcase classname="src/pages/__tests__/WelcomePage.test.tsx" name="WelcomePage &gt; renders welcome message and app title" time="0.005832588">
+        </testcase>
+        <testcase classname="src/pages/__tests__/WelcomePage.test.tsx" name="WelcomePage &gt; displays order and admin navigation links" time="0.006550932">
+        </testcase>
+        <testcase classname="src/pages/__tests__/WelcomePage.test.tsx" name="WelcomePage &gt; has proper accessibility attributes" time="0.007945743">
+        </testcase>
+        <testcase classname="src/pages/__tests__/WelcomePage.test.tsx" name="WelcomePage &gt; is responsive on different screen sizes" time="0.005056094">
+        </testcase>
+        <testcase classname="src/pages/__tests__/WelcomePage.test.tsx" name="WelcomePage &gt; displays technology stack badges" time="0.003681441">
+        </testcase>
+        <testcase classname="src/pages/__tests__/WelcomePage.test.tsx" name="WelcomePage &gt; has proper semantic structure" time="0.003802097">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/services/__tests__/menuService.test.ts" timestamp="2025-08-20T16:06:28.303Z" hostname="pkrvmubgrv54qmi" tests="13" failures="0" errors="0" skipped="0" time="0.009715937">
+        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; drinkCategoriesService &gt; should get all categories" time="0.000600214">
+        </testcase>
+        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; drinkCategoriesService &gt; should handle errors when getting categories" time="0.002545194">
             <system-err>
 Supabase operation failed: { message: [32m&apos;Database error&apos;[39m }
 
             </system-err>
         </testcase>
-        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; drinkCategoriesService &gt; should create a new category" time="0.0003554">
+        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; drinkCategoriesService &gt; should create a new category" time="0.000515585">
         </testcase>
-        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; drinkCategoriesService &gt; should update an existing category" time="0.0003149">
+        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; drinkCategoriesService &gt; should update an existing category" time="0.000580917">
         </testcase>
-        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; drinkCategoriesService &gt; should delete a category" time="0.0003981">
+        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; drinkCategoriesService &gt; should delete a category" time="0.000652171">
         </testcase>
-        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; drinksService &gt; should get all drinks" time="0.0002697">
+        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; drinksService &gt; should get all drinks" time="0.000506668">
         </testcase>
-        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; drinksService &gt; should get drinks by category" time="0.0003504">
+        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; drinksService &gt; should get drinks by category" time="0.000496309">
         </testcase>
-        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; drinksService &gt; should create a new drink" time="0.0002644">
+        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; drinksService &gt; should create a new drink" time="0.00048042">
         </testcase>
-        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; optionCategoriesService &gt; should get all option categories" time="0.0002189">
+        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; optionCategoriesService &gt; should get all option categories" time="0.000437559">
         </testcase>
-        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; optionCategoriesService &gt; should create a new option category" time="0.0002224">
+        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; optionCategoriesService &gt; should create a new option category" time="0.000464209">
         </testcase>
-        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; optionValuesService &gt; should get values by category" time="0.0002165">
+        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; optionValuesService &gt; should get values by category" time="0.000460001">
         </testcase>
-        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; optionValuesService &gt; should create a new option value" time="0.0002718">
+        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; optionValuesService &gt; should create a new option value" time="0.000487382">
         </testcase>
-        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; optionValuesService &gt; should handle validation errors" time="0.0004703">
+        <testcase classname="src/services/__tests__/menuService.test.ts" name="menuService &gt; optionValuesService &gt; should handle validation errors" time="0.000902609">
             <system-err>
 Supabase operation failed: { message: [32m&apos;name is required&apos;[39m }
 
             </system-err>
+        </testcase>
+    </testsuite>
+    <testsuite name="src/types/__tests__/app.types.test.ts" timestamp="2025-08-20T16:06:28.306Z" hostname="pkrvmubgrv54qmi" tests="12" failures="0" errors="0" skipped="0" time="0.003224416">
+        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; DrinkOption interface &gt; should have correct required properties" time="0.000340738">
+        </testcase>
+        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; DrinkOption interface &gt; should support all valid types" time="0.000214792">
+        </testcase>
+        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; DrinkOption interface &gt; should allow optional properties" time="0.000173334">
+        </testcase>
+        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; PasswordAuthState interface &gt; should have correct authentication states" time="0.000241993">
+        </testcase>
+        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; PasswordAuthState interface &gt; should allow undefined role when unauthenticated" time="0.000221956">
+        </testcase>
+        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; AppConfig interface &gt; should have required password properties" time="0.000216636">
+        </testcase>
+        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; OrderFormData interface &gt; should have correct structure for order form" time="0.000235731">
+        </testcase>
+        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; OrderFormData interface &gt; should support various option types in options field" time="0.000202499">
+        </testcase>
+        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; DrinkFormData interface &gt; should have correct structure for drink form" time="0.000229079">
+        </testcase>
+        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; DrinkFormData interface &gt; should support empty options object" time="0.000236262">
+        </testcase>
+        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; Type compatibility &gt; should allow DrinkOption to be used in DrinkFormData" time="0.000177723">
+        </testcase>
+        <testcase classname="src/types/__tests__/app.types.test.ts" name="App Types &gt; Type compatibility &gt; should maintain type safety for option types" time="0.000201447">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/utils/__tests__/menuValidation.test.ts" timestamp="2025-08-20T16:06:28.308Z" hostname="pkrvmubgrv54qmi" tests="28" failures="0" errors="0" skipped="0" time="0.00854251">
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateDrinkCategory &gt; validates a valid drink category" time="0.000754553">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateDrinkCategory &gt; validates required name field" time="0.000253775">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateDrinkCategory &gt; allows null description" time="0.000267872">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateDrink &gt; validates a valid drink" time="0.000337041">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateDrink &gt; validates required name field" time="0.000264145">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateDrink &gt; validates required category_id" time="0.000305332">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateOptionCategory &gt; validates a valid option category" time="0.000287509">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateOptionCategory &gt; validates required name field" time="0.00019231">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateOptionValue &gt; validates a valid option value" time="0.000283752">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateOptionValue &gt; validates required option_category_id" time="0.000199383">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validateOptionValue &gt; validates required name field" time="0.000182081">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; required &gt; returns error for empty string" time="0.000162735">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; required &gt; returns error for null" time="0.000184395">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; required &gt; returns error for undefined" time="0.000260087">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; required &gt; returns null for valid value" time="0.000230802">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; minLength &gt; returns error for string too short" time="0.000246902">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; minLength &gt; returns null for string of correct length" time="0.000266108">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; minLength &gt; returns null for longer string" time="0.00024569">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; maxLength &gt; returns error for string too long" time="0.000234168">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; maxLength &gt; returns null for string of correct length" time="0.0002134">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; maxLength &gt; returns null for shorter string" time="0.000241743">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; positiveInteger &gt; returns error for negative number" time="0.000255298">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; positiveInteger &gt; returns error for non-integer" time="0.000219041">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; positiveInteger &gt; returns null for positive integer" time="0.000241041">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; positiveInteger &gt; returns null for zero" time="0.000220352">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; validDisplayOrder &gt; returns error for negative number" time="0.000217397">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; validDisplayOrder &gt; returns error for number too large" time="0.000217046">
+        </testcase>
+        <testcase classname="src/utils/__tests__/menuValidation.test.ts" name="Menu Validation Utilities &gt; validationRules &gt; validDisplayOrder &gt; returns null for valid number" time="0.000240249">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/ui/__tests__/EmptyState.test.tsx" timestamp="2025-08-20T16:06:28.313Z" hostname="pkrvmubgrv54qmi" tests="6" failures="0" errors="0" skipped="0" time="0.01222859">
+        <testcase classname="src/components/ui/__tests__/EmptyState.test.tsx" name="EmptyState &gt; renders with title and description" time="0.002196992">
+        </testcase>
+        <testcase classname="src/components/ui/__tests__/EmptyState.test.tsx" name="EmptyState &gt; renders logo when showLogo is true" time="0.004073024">
+        </testcase>
+        <testcase classname="src/components/ui/__tests__/EmptyState.test.tsx" name="EmptyState &gt; does not render logo when showLogo is false" time="0.001151175">
+        </testcase>
+        <testcase classname="src/components/ui/__tests__/EmptyState.test.tsx" name="EmptyState &gt; has proper styling classes" time="0.001726652">
+        </testcase>
+        <testcase classname="src/components/ui/__tests__/EmptyState.test.tsx" name="EmptyState &gt; displays title with proper styling" time="0.001384662">
+        </testcase>
+        <testcase classname="src/components/ui/__tests__/EmptyState.test.tsx" name="EmptyState &gt; displays description with proper styling" time="0.001445245">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/ui/__tests__/LoadingSpinner.test.tsx" timestamp="2025-08-20T16:06:28.314Z" hostname="pkrvmubgrv54qmi" tests="4" failures="0" errors="0" skipped="0" time="0.008495682">
+        <testcase classname="src/components/ui/__tests__/LoadingSpinner.test.tsx" name="LoadingSpinner &gt; renders loading spinner with logo" time="0.002945314">
+        </testcase>
+        <testcase classname="src/components/ui/__tests__/LoadingSpinner.test.tsx" name="LoadingSpinner &gt; displays loading text" time="0.001286297">
+        </testcase>
+        <testcase classname="src/components/ui/__tests__/LoadingSpinner.test.tsx" name="LoadingSpinner &gt; has proper animation classes" time="0.002374195">
+        </testcase>
+        <testcase classname="src/components/ui/__tests__/LoadingSpinner.test.tsx" name="LoadingSpinner &gt; is centered properly" time="0.001681318">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/ui/__tests__/Logo.test.tsx" timestamp="2025-08-20T16:06:28.315Z" hostname="pkrvmubgrv54qmi" tests="10" failures="0" errors="0" skipped="0" time="0.035237829">
+        <testcase classname="src/components/ui/__tests__/Logo.test.tsx" name="Logo Component &gt; renders with correct size variant" time="0.002933641">
+        </testcase>
+        <testcase classname="src/components/ui/__tests__/Logo.test.tsx" name="Logo Component &gt; renders hero size with responsive classes" time="0.00197163">
+        </testcase>
+        <testcase classname="src/components/ui/__tests__/Logo.test.tsx" name="Logo Component &gt; applies custom className properly" time="0.002047141">
+        </testcase>
+        <testcase classname="src/components/ui/__tests__/Logo.test.tsx" name="Logo Component &gt; displays appropriate alt text for accessibility" time="0.004206583">
+        </testcase>
+        <testcase classname="src/components/ui/__tests__/Logo.test.tsx" name="Logo Component &gt; uses default alt text when none provided" time="0.002086005">
+        </testcase>
+        <testcase classname="src/components/ui/__tests__/Logo.test.tsx" name="Logo Component &gt; handles click events when onChick prop is provided" time="0.003268688">
+        </testcase>
+        <testcase classname="src/components/ui/__tests__/Logo.test.tsx" name="Logo Component &gt; is keyboard accessible when clickable" time="0.002357943">
+        </testcase>
+        <testcase classname="src/components/ui/__tests__/Logo.test.tsx" name="Logo Component &gt; maintains aspect ratio across all sizes" time="0.012288161">
+        </testcase>
+        <testcase classname="src/components/ui/__tests__/Logo.test.tsx" name="Logo Component &gt; renders without onClick as a non-interactive element" time="0.001840094">
+        </testcase>
+        <testcase classname="src/components/ui/__tests__/Logo.test.tsx" name="Logo Component &gt; has proper loading attributes for performance" time="0.001748122">
         </testcase>
     </testsuite>
 </testsuites>

@@ -1,10 +1,9 @@
 import type { ReactElement } from 'react';
 import React from 'react'
 import type { RenderOptions } from '@testing-library/react';
-import { render, act, waitFor, screen } from '@testing-library/react'
+import { render, act, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import userEvent from '@testing-library/user-event'
-import { vi } from 'vitest'
 
 /**
  * Enhanced provider wrapper for testing with React 19 features
