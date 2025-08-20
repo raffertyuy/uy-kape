@@ -159,9 +159,8 @@ export const useOperationErrorHandling = () => {
     const result = await errorHandling.handleAsyncOperation(operation, operationName)
     
     if (result && successMessage) {
-      // Could integrate with toast/notification system here
-      // TODO: Replace with proper notification system
-      // console.log(successMessage)
+      // Integration with toast system will be added when ToastProvider is available
+      // For now, we'll leave this as a placeholder for future enhancement
     }
     
     return result

@@ -11,10 +11,14 @@
     "build": "tsc && vite build",
     "lint": "eslint . --max-warnings 5",
     "preview": "vite preview",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
-    "test:coverage": "vitest run --coverage",
-    "test:watch": "vitest --watch"
+    "test": "node --max-old-space-size=8192 ./node_modules/vitest/vitest.mjs",
+    "test:run": "node --max-old-space-size=8192 ./node_modules/vitest/vitest.mjs run",
+    "test:ui": "node --max-old-space-size=8192 ./node_modules/vitest/vitest.mjs --ui",
+    "test:coverage": "node --max-old-space-size=8192 ./node_modules/vitest/vitest.mjs run --coverage",
+    "test:watch": "node --max-old-space-size=8192 ./node_modules/vitest/vitest.mjs --watch",
+    "test:ci": "node --max-old-space-size=10240 ./node_modules/vitest/vitest.mjs run --config=vitest.config.ci.ts --coverage --reporter=verbose --reporter=junit --outputFile=test-results.xml",
+    "test:ci-no-coverage": "node --max-old-space-size=10240 ./node_modules/vitest/vitest.mjs run --config=vitest.config.ci.ts --reporter=verbose --reporter=junit --outputFile=test-results.xml",
+    "test:memory": "node --max-old-space-size=10240 --expose-gc ./node_modules/vitest/vitest.mjs run --config=vitest.config.ci.ts --reporter=verbose --logHeapUsage"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.55.0",

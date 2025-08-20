@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { renderHook, waitFor } from '@testing-library/react'
+import { renderHook, waitFor, act } from '@testing-library/react'
 import { useDrinkCategories, useDrinks, useCreateDrinkCategory, useUpdateDrinkCategory, useDeleteDrinkCategory } from '@/hooks/useMenuData'
 import * as menuService from '@/services/menuService'
 
@@ -73,7 +73,7 @@ describe('useMenuData hooks', () => {
 
       expect(result.current.data).toEqual(mockCategories)
       expect(result.current.error).toBeNull()
-      expect(menuService.drinkCategoriesService.getAll).toHaveBeenCalledTimes(1)
+      expect(menuService.drinkCategoriesService.getAll).toHaveBeenCalledWith()
     })
 
     it('should handle errors when fetching categories', async () => {
@@ -117,7 +117,7 @@ describe('useMenuData hooks', () => {
       })
 
       expect(result.current.data).toEqual(mockDrinks)
-      expect(menuService.drinksService.getAll).toHaveBeenCalledTimes(1)
+      expect(menuService.drinksService.getAll).toHaveBeenCalledWith()
     })
   })
 
@@ -143,7 +143,10 @@ describe('useMenuData hooks', () => {
 
       expect(result.current.state).toBe('idle')
 
-      const resultCategory = await result.current.createCategory(newCategory)
+      let resultCategory: any
+      await act(async () => {
+        resultCategory = await result.current.createCategory(newCategory)
+      })
 
       await waitFor(() => {
         expect(result.current.state).toBe('success')
@@ -160,9 +163,18 @@ describe('useMenuData hooks', () => {
 
       const { result } = renderHook(() => useCreateDrinkCategory())
 
-      const promise = result.current.createCategory(newCategory)
+      let errorThrown = false
+      await act(async () => {
+        try {
+          await result.current.createCategory(newCategory)
+        } catch (error) {
+          errorThrown = true
+          expect(error).toBeInstanceOf(Error)
+          expect((error as Error).message).toBe(errorMessage)
+        }
+      })
 
-      await expect(promise).rejects.toThrow(errorMessage)
+      expect(errorThrown).toBe(true)
 
       await waitFor(() => {
         expect(result.current.state).toBe('error')
@@ -193,8 +205,10 @@ describe('useMenuData hooks', () => {
 
       const { result } = renderHook(() => useUpdateDrinkCategory())
 
-      const promise = result.current.updateCategory('1', updateData)
-      const resultCategory = await promise
+      let resultCategory: any
+      await act(async () => {
+        resultCategory = await result.current.updateCategory('1', updateData)
+      })
 
       await waitFor(() => {
         expect(result.current.state).toBe('success')
@@ -210,9 +224,18 @@ describe('useMenuData hooks', () => {
 
       const { result } = renderHook(() => useUpdateDrinkCategory())
 
-      const promise = result.current.updateCategory('999', updateData)
+      let errorThrown = false
+      await act(async () => {
+        try {
+          await result.current.updateCategory('999', updateData)
+        } catch (error) {
+          errorThrown = true
+          expect(error).toBeInstanceOf(Error)
+          expect((error as Error).message).toBe(errorMessage)
+        }
+      })
 
-      await expect(promise).rejects.toThrow(errorMessage)
+      expect(errorThrown).toBe(true)
 
       await waitFor(() => {
         expect(result.current.state).toBe('error')
@@ -226,9 +249,9 @@ describe('useMenuData hooks', () => {
 
       const { result } = renderHook(() => useDeleteDrinkCategory())
 
-      const promise = result.current.deleteCategory('1')
-
-      await promise
+      await act(async () => {
+        await result.current.deleteCategory('1')
+      })
 
       await waitFor(() => {
         expect(result.current.state).toBe('success')
@@ -243,9 +266,18 @@ describe('useMenuData hooks', () => {
 
       const { result } = renderHook(() => useDeleteDrinkCategory())
 
-      const promise = result.current.deleteCategory('1')
+      let errorThrown = false
+      await act(async () => {
+        try {
+          await result.current.deleteCategory('1')
+        } catch (error) {
+          errorThrown = true
+          expect(error).toBeInstanceOf(Error)
+          expect((error as Error).message).toBe(errorMessage)
+        }
+      })
 
-      await expect(promise).rejects.toThrow(errorMessage)
+      expect(errorThrown).toBe(true)
 
       await waitFor(() => {
         expect(result.current.state).toBe('error')

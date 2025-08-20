@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { render, screen, waitFor } from '@/test-utils'
-import userEvent from '@testing-library/user-event'
+import { render, screen, waitFor, act, userEvent } from '@/test-utils'
 import PasswordProtection from '../PasswordProtection'
 
 // Mock the password auth hook
@@ -38,21 +37,23 @@ describe('PasswordProtection', () => {
     children: <div data-testid="protected-content">Protected Content</div>,
   }
 
-  const mockAuthenticate = vi.fn()
+  const mockAuthenticateLocal = vi.fn()
 
   beforeEach(() => {
     vi.clearAllMocks()
     mockUsePasswordAuth.mockReturnValue({
       isAuthenticated: false,
       role: undefined,
-      authenticate: mockAuthenticate,
+      authenticate: mockAuthenticateLocal,
       logout: mockLogout
     })
   })
 
   describe('Rendering', () => {
-    it('should render password form when not authenticated', () => {
-      render(<PasswordProtection {...defaultProps} />)
+    it('should render password form when not authenticated', async () => {
+      await act(async () => {
+        render(<PasswordProtection {...defaultProps} />)
+      })
 
       expect(screen.getByText('Test Access')).toBeInTheDocument()
       expect(screen.getByText('Enter password to continue')).toBeInTheDocument()
@@ -62,15 +63,17 @@ describe('PasswordProtection', () => {
       expect(screen.queryByTestId('protected-content')).not.toBeInTheDocument()
     })
 
-    it('should render children when authenticated', () => {
+    it('should render children when authenticated', async () => {
       mockUsePasswordAuth.mockReturnValue({
         isAuthenticated: true,
         role: 'guest',
-        authenticate: mockAuthenticate,
+        authenticate: mockAuthenticateLocal,
         logout: mockLogout
       })
 
-      render(<PasswordProtection {...defaultProps} />)
+      await act(async () => {
+        render(<PasswordProtection {...defaultProps} />)
+      })
 
       expect(screen.getByTestId('protected-content')).toBeInTheDocument()
       expect(screen.getByText('Protected Content')).toBeInTheDocument()
@@ -78,21 +81,25 @@ describe('PasswordProtection', () => {
       expect(screen.queryByLabelText('Password')).not.toBeInTheDocument()
     })
 
-    it('should render with custom title and description', () => {
+    it('should render with custom title and description', async () => {
       const customProps = {
         ...defaultProps,
         title: 'Admin Panel',
         description: 'Administrator access required',
       }
 
-      render(<PasswordProtection {...customProps} />)
+      await act(async () => {
+        render(<PasswordProtection {...customProps} />)
+      })
 
       expect(screen.getByText('Admin Panel')).toBeInTheDocument()
       expect(screen.getByText('Administrator access required')).toBeInTheDocument()
     })
 
-    it('should have proper accessibility attributes', () => {
-      render(<PasswordProtection {...defaultProps} />)
+    it('should have proper accessibility attributes', async () => {
+      await act(async () => {
+        render(<PasswordProtection {...defaultProps} />)
+      })
 
       const passwordInput = screen.getByLabelText('Password')
       expect(passwordInput).toHaveAttribute('type', 'password')
@@ -107,16 +114,24 @@ describe('PasswordProtection', () => {
   describe('Form Interaction', () => {
     it('should update password input value', async () => {
       const user = userEvent.setup()
-      render(<PasswordProtection {...defaultProps} />)
+      
+      await act(async () => {
+        render(<PasswordProtection {...defaultProps} />)
+      })
 
       const passwordInput = screen.getByLabelText('Password')
-      await user.type(passwordInput, 'mypassword')
+      
+      await act(async () => {
+        await user.type(passwordInput, 'mypassword')
+      })
 
       expect(passwordInput).toHaveValue('mypassword')
     })
 
-    it('should disable submit button when password is empty', () => {
-      render(<PasswordProtection {...defaultProps} />)
+    it('should disable submit button when password is empty', async () => {
+      await act(async () => {
+        render(<PasswordProtection {...defaultProps} />)
+      })
 
       const submitButton = screen.getByRole('button', { name: 'Access' })
       expect(submitButton).toBeDisabled()
@@ -124,23 +139,35 @@ describe('PasswordProtection', () => {
 
     it('should enable submit button when password is entered', async () => {
       const user = userEvent.setup()
-      render(<PasswordProtection {...defaultProps} />)
+      
+      await act(async () => {
+        render(<PasswordProtection {...defaultProps} />)
+      })
 
       const passwordInput = screen.getByLabelText('Password')
       const submitButton = screen.getByRole('button', { name: 'Access' })
 
-      await user.type(passwordInput, 'test')
+      await act(async () => {
+        await user.type(passwordInput, 'test')
+      })
+      
       expect(submitButton).toBeEnabled()
     })
 
     it('should disable submit button for whitespace-only password', async () => {
       const user = userEvent.setup()
-      render(<PasswordProtection {...defaultProps} />)
+      
+      await act(async () => {
+        render(<PasswordProtection {...defaultProps} />)
+      })
 
       const passwordInput = screen.getByLabelText('Password')
       const submitButton = screen.getByRole('button', { name: 'Access' })
 
-      await user.type(passwordInput, '   ')
+      await act(async () => {
+        await user.type(passwordInput, '   ')
+      })
+      
       expect(submitButton).toBeDisabled()
     })
   })
@@ -148,30 +175,44 @@ describe('PasswordProtection', () => {
   describe('Form Submission', () => {
     it('should handle form submission correctly', async () => {
       const user = userEvent.setup()
-      mockAuthenticate.mockResolvedValue(true)
+      mockAuthenticateLocal.mockResolvedValue(true)
 
-      render(<PasswordProtection {...defaultProps} />)
+      await act(async () => {
+        render(<PasswordProtection {...defaultProps} />)
+      })
 
       const passwordInput = screen.getByLabelText('Password')
       const submitButton = screen.getByRole('button', { name: 'Access' })
 
-      await user.type(passwordInput, 'correct123')
-      await user.click(submitButton)
+      await act(async () => {
+        await user.type(passwordInput, 'correct123')
+      })
 
-      expect(mockAuthenticate).toHaveBeenCalledWith('correct123')
+      await act(async () => {
+        await user.click(submitButton)
+      })
+
+      expect(mockAuthenticateLocal).toHaveBeenCalledWith('correct123')
     })
 
     it('should show loading state during authentication', async () => {
       const user = userEvent.setup()
-      mockAuthenticate.mockImplementation(() => new Promise(resolve => setTimeout(() => resolve(true), 100)))
+      mockAuthenticateLocal.mockImplementation(() => new Promise(resolve => setTimeout(() => resolve(true), 100)))
 
-      render(<PasswordProtection {...defaultProps} />)
+      await act(async () => {
+        render(<PasswordProtection {...defaultProps} />)
+      })
 
       const passwordInput = screen.getByLabelText('Password')
       const submitButton = screen.getByRole('button', { name: 'Access' })
 
-      await user.type(passwordInput, 'test123')
-      await user.click(submitButton)
+      await act(async () => {
+        await user.type(passwordInput, 'test123')
+      })
+
+      await act(async () => {
+        await user.click(submitButton)
+      })
 
       expect(screen.getByText('Checking...')).toBeInTheDocument()
       expect(submitButton).toBeDisabled()
@@ -183,15 +224,22 @@ describe('PasswordProtection', () => {
 
     it('should show error on wrong password', async () => {
       const user = userEvent.setup()
-      mockAuthenticate.mockResolvedValue(false)
+      mockAuthenticateLocal.mockResolvedValue(false)
 
-      render(<PasswordProtection {...defaultProps} />)
+      await act(async () => {
+        render(<PasswordProtection {...defaultProps} />)
+      })
 
       const passwordInput = screen.getByLabelText('Password')
       const submitButton = screen.getByRole('button', { name: 'Access' })
 
-      await user.type(passwordInput, 'wrongpassword')
-      await user.click(submitButton)
+      await act(async () => {
+        await user.type(passwordInput, 'wrongpassword')
+      })
+
+      await act(async () => {
+        await user.click(submitButton)
+      })
 
       await waitFor(() => {
         expect(screen.getByRole('alert')).toBeInTheDocument()
@@ -204,13 +252,21 @@ describe('PasswordProtection', () => {
 
     it('should clear password field after unsuccessful authentication', async () => {
       const user = userEvent.setup()
-      mockAuthenticate.mockResolvedValue(false)
+      mockAuthenticateLocal.mockResolvedValue(false)
 
-      render(<PasswordProtection {...defaultProps} />)
+      await act(async () => {
+        render(<PasswordProtection {...defaultProps} />)
+      })
 
       const passwordInput = screen.getByLabelText('Password')
-      await user.type(passwordInput, 'wrongpassword')
-      await user.click(screen.getByRole('button', { name: 'Access' }))
+      
+      await act(async () => {
+        await user.type(passwordInput, 'wrongpassword')
+      })
+
+      await act(async () => {
+        await user.click(screen.getByRole('button', { name: 'Access' }))
+      })
 
       await waitFor(() => {
         expect(passwordInput).toHaveValue('')
@@ -219,13 +275,21 @@ describe('PasswordProtection', () => {
 
     it('should handle authentication errors gracefully', async () => {
       const user = userEvent.setup()
-      mockAuthenticate.mockRejectedValue(new Error('Network error'))
+      mockAuthenticateLocal.mockRejectedValue(new Error('Network error'))
 
-      render(<PasswordProtection {...defaultProps} />)
+      await act(async () => {
+        render(<PasswordProtection {...defaultProps} />)
+      })
 
       const passwordInput = screen.getByLabelText('Password')
-      await user.type(passwordInput, 'test123')
-      await user.click(screen.getByRole('button', { name: 'Access' }))
+      
+      await act(async () => {
+        await user.type(passwordInput, 'test123')
+      })
+
+      await act(async () => {
+        await user.click(screen.getByRole('button', { name: 'Access' }))
+      })
 
       await waitFor(() => {
         expect(screen.getByRole('alert')).toBeInTheDocument()
@@ -235,49 +299,72 @@ describe('PasswordProtection', () => {
 
     it('should submit form on Enter key press', async () => {
       const user = userEvent.setup()
-      mockAuthenticate.mockResolvedValue(true)
+      mockAuthenticateLocal.mockResolvedValue(true)
 
-      render(<PasswordProtection {...defaultProps} />)
+      await act(async () => {
+        render(<PasswordProtection {...defaultProps} />)
+      })
 
       const passwordInput = screen.getByLabelText('Password')
-      await user.type(passwordInput, 'test123')
-      await user.keyboard('{Enter}')
+      
+      await act(async () => {
+        await user.type(passwordInput, 'test123')
+      })
 
-      expect(mockAuthenticate).toHaveBeenCalledWith('test123')
+      await act(async () => {
+        await user.keyboard('{Enter}')
+      })
+
+      expect(mockAuthenticateLocal).toHaveBeenCalledWith('test123')
     })
   })
 
   describe('Navigation', () => {
     it('should call history.back() when back button is clicked', async () => {
       const user = userEvent.setup()
-      render(<PasswordProtection {...defaultProps} />)
+      
+      await act(async () => {
+        render(<PasswordProtection {...defaultProps} />)
+      })
 
       const backButton = screen.getByRole('button', { name: '← Back' })
-      await user.click(backButton)
+      
+      await act(async () => {
+        await user.click(backButton)
+      })
 
-      expect(mockHistoryBack).toHaveBeenCalled()
+      expect(mockHistoryBack).toHaveBeenCalledTimes(1)
     })
   })
 
   describe('Error Handling', () => {
     it('should clear error message when typing new password', async () => {
       const user = userEvent.setup()
-      mockAuthenticate.mockResolvedValueOnce(false).mockResolvedValueOnce(true)
+      mockAuthenticateLocal.mockResolvedValueOnce(false).mockResolvedValueOnce(true)
 
-      render(<PasswordProtection {...defaultProps} />)
+      await act(async () => {
+        render(<PasswordProtection {...defaultProps} />)
+      })
 
       const passwordInput = screen.getByLabelText('Password')
 
       // First attempt - wrong password
-      await user.type(passwordInput, 'wrong')
-      await user.click(screen.getByRole('button', { name: 'Access' }))
+      await act(async () => {
+        await user.type(passwordInput, 'wrong')
+      })
+
+      await act(async () => {
+        await user.click(screen.getByRole('button', { name: 'Access' }))
+      })
 
       await waitFor(() => {
         expect(screen.getByText('Incorrect password. Please try again.')).toBeInTheDocument()
       })
 
       // Start typing new password - error should clear
-      await user.type(passwordInput, 'new')
+      await act(async () => {
+        await user.type(passwordInput, 'new')
+      })
 
       expect(screen.queryByRole('alert')).not.toBeInTheDocument()
     })
@@ -286,17 +373,24 @@ describe('PasswordProtection', () => {
       const user = userEvent.setup()
       
       // Configure mock to ensure authentication fails
-      mockAuthenticate.mockReset()
-      mockAuthenticate.mockResolvedValue(false)
+      mockAuthenticateLocal.mockReset()
+      mockAuthenticateLocal.mockResolvedValue(false)
 
-      render(<PasswordProtection {...defaultProps} />)
+      await act(async () => {
+        render(<PasswordProtection {...defaultProps} />)
+      })
 
       // Enter a password and submit
       const passwordInput = screen.getByLabelText('Password')
       const submitButton = screen.getByRole('button', { name: 'Access' })
       
-      await user.type(passwordInput, 'wrongpassword')
-      await user.click(submitButton)
+      await act(async () => {
+        await user.type(passwordInput, 'wrongpassword')
+      })
+
+      await act(async () => {
+        await user.click(submitButton)
+      })
 
       // Wait for error message to appear
       await waitFor(() => {
@@ -308,16 +402,21 @@ describe('PasswordProtection', () => {
   })
 
   describe('Hook Integration', () => {
-    it('should call usePasswordAuth with correct parameters', () => {
-      render(<PasswordProtection {...defaultProps} />)
+    it('should call usePasswordAuth with correct parameters', async () => {
+      await act(async () => {
+        render(<PasswordProtection {...defaultProps} />)
+      })
 
       // The hook should have been called once during render
       expect(mockUsePasswordAuth).toHaveBeenCalledWith('test123', 'guest')
     })
 
-    it('should call usePasswordAuth with admin role', () => {
+    it('should call usePasswordAuth with admin role', async () => {
       const adminProps = { ...defaultProps, role: 'admin' as const }
-      render(<PasswordProtection {...adminProps} />)
+      
+      await act(async () => {
+        render(<PasswordProtection {...adminProps} />)
+      })
 
       expect(mockUsePasswordAuth).toHaveBeenCalledWith('test123', 'admin')
     })
@@ -326,15 +425,22 @@ describe('PasswordProtection', () => {
   describe('Loading State', () => {
     it('should disable form elements during loading', async () => {
       const user = userEvent.setup()
-      mockAuthenticate.mockImplementation(() => new Promise(resolve => setTimeout(() => resolve(true), 100)))
+      mockAuthenticateLocal.mockImplementation(() => new Promise(resolve => setTimeout(() => resolve(true), 100)))
 
-      render(<PasswordProtection {...defaultProps} />)
+      await act(async () => {
+        render(<PasswordProtection {...defaultProps} />)
+      })
 
       const passwordInput = screen.getByLabelText('Password')
       const submitButton = screen.getByRole('button', { name: 'Access' })
 
-      await user.type(passwordInput, 'test123')
-      await user.click(submitButton)
+      await act(async () => {
+        await user.type(passwordInput, 'test123')
+      })
+
+      await act(async () => {
+        await user.click(submitButton)
+      })
 
       expect(submitButton).toBeDisabled()
       expect(submitButton).toHaveTextContent('Checking...')
