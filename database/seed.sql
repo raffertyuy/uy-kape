@@ -11,7 +11,7 @@ INSERT INTO drink_categories (name, description, display_order, is_active) VALUE
 -- Insert option categories
 INSERT INTO option_categories (name, description, is_required, display_order) VALUES
 ('Number of Shots', 'Espresso shot quantity', false, 1),
-('Milk Type', 'Type of milk for coffee drinks', false, 2),
+('Milk Type', 'Type of milk for coffee drinks (required for milk-based drinks)', true, 2),
 ('Tea Type', 'Variety of tea', true, 3),
 ('Temperature', 'Hot or cold serving', false, 4);
 
@@ -72,74 +72,83 @@ INSERT INTO drinks (name, description, category_id, display_order, is_active) VA
 -- Link drinks to their available option categories
 -- Espresso-based drinks that can have shot options and milk options
 INSERT INTO drink_options (drink_id, option_category_id, default_option_value_id) VALUES
--- Espresso: shots + optional milk
-((SELECT id FROM drinks WHERE name = 'Espresso'), 
- (SELECT id FROM option_categories WHERE name = 'Number of Shots'), 
+-- Espresso: shots only (no milk customization available)
+((SELECT id FROM drinks WHERE name = 'Espresso'),
+ (SELECT id FROM option_categories WHERE name = 'Number of Shots'),
  (SELECT id FROM option_values WHERE name = 'Single')),
-((SELECT id FROM drinks WHERE name = 'Espresso'), 
- (SELECT id FROM option_categories WHERE name = 'Milk Type'), 
- (SELECT id FROM option_values WHERE name = 'None')),
 
--- Espresso Macchiato: shots + optional milk
-((SELECT id FROM drinks WHERE name = 'Espresso Macchiato'), 
- (SELECT id FROM option_categories WHERE name = 'Number of Shots'), 
+-- Espresso Macchiato: shots + required milk (default full cream)
+((SELECT id FROM drinks WHERE name = 'Espresso Macchiato'),
+ (SELECT id FROM option_categories WHERE name = 'Number of Shots'),
  (SELECT id FROM option_values WHERE name = 'Single')),
-((SELECT id FROM drinks WHERE name = 'Espresso Macchiato'), 
- (SELECT id FROM option_categories WHERE name = 'Milk Type'), 
- (SELECT id FROM option_values WHERE name = 'None')),
-
--- Milk-based drinks: shots + required milk (excluding "None")
-((SELECT id FROM drinks WHERE name = 'Piccolo Latte'), 
- (SELECT id FROM option_categories WHERE name = 'Number of Shots'), 
- (SELECT id FROM option_values WHERE name = 'Single')),
-((SELECT id FROM drinks WHERE name = 'Piccolo Latte'), 
- (SELECT id FROM option_categories WHERE name = 'Milk Type'), 
+((SELECT id FROM drinks WHERE name = 'Espresso Macchiato'),
+ (SELECT id FROM option_categories WHERE name = 'Milk Type'),
  (SELECT id FROM option_values WHERE name = 'Meiji Full Cream Milk')),
 
-((SELECT id FROM drinks WHERE name = 'Caffe Latte'), 
- (SELECT id FROM option_categories WHERE name = 'Number of Shots'), 
+-- Milk-based drinks: shots + required milk (excluding "None") + temperature
+((SELECT id FROM drinks WHERE name = 'Piccolo Latte'),
+ (SELECT id FROM option_categories WHERE name = 'Number of Shots'),
  (SELECT id FROM option_values WHERE name = 'Single')),
-((SELECT id FROM drinks WHERE name = 'Caffe Latte'), 
- (SELECT id FROM option_categories WHERE name = 'Milk Type'), 
+((SELECT id FROM drinks WHERE name = 'Piccolo Latte'),
+ (SELECT id FROM option_categories WHERE name = 'Milk Type'),
  (SELECT id FROM option_values WHERE name = 'Meiji Full Cream Milk')),
-
-((SELECT id FROM drinks WHERE name = 'Cappuccino'), 
- (SELECT id FROM option_categories WHERE name = 'Number of Shots'), 
- (SELECT id FROM option_values WHERE name = 'Single')),
-((SELECT id FROM drinks WHERE name = 'Cappuccino'), 
- (SELECT id FROM option_categories WHERE name = 'Milk Type'), 
- (SELECT id FROM option_values WHERE name = 'Meiji Full Cream Milk')),
-
--- Black coffee drinks: optional milk
-((SELECT id FROM drinks WHERE name = 'Americano'), 
- (SELECT id FROM option_categories WHERE name = 'Milk Type'), 
- (SELECT id FROM option_values WHERE name = 'None')),
-
-((SELECT id FROM drinks WHERE name = 'Black Coffee (Moka Pot)'), 
- (SELECT id FROM option_categories WHERE name = 'Milk Type'), 
- (SELECT id FROM option_values WHERE name = 'None')),
-
-((SELECT id FROM drinks WHERE name = 'Black Coffee (V60)'), 
- (SELECT id FROM option_categories WHERE name = 'Milk Type'), 
- (SELECT id FROM option_values WHERE name = 'None')),
-
--- Ice-Blended Coffee: required milk
-((SELECT id FROM drinks WHERE name = 'Ice-Blended Coffee'), 
- (SELECT id FROM option_categories WHERE name = 'Milk Type'), 
- (SELECT id FROM option_values WHERE name = 'Meiji Full Cream Milk')),
-
--- Chinese Tea: tea type selection
-((SELECT id FROM drinks WHERE name = 'Chinese Tea'), 
- (SELECT id FROM option_categories WHERE name = 'Tea Type'), 
- (SELECT id FROM option_values WHERE name = 'Jasmine Green Tea')),
-
--- Kids drinks with temperature options
-((SELECT id FROM drinks WHERE name = 'Babyccino'), 
- (SELECT id FROM option_categories WHERE name = 'Temperature'), 
+((SELECT id FROM drinks WHERE name = 'Piccolo Latte'),
+ (SELECT id FROM option_categories WHERE name = 'Temperature'),
  (SELECT id FROM option_values WHERE name = 'Hot')),
 
-((SELECT id FROM drinks WHERE name = 'Milo'), 
- (SELECT id FROM option_categories WHERE name = 'Temperature'), 
+((SELECT id FROM drinks WHERE name = 'Caffe Latte'),
+ (SELECT id FROM option_categories WHERE name = 'Number of Shots'),
+ (SELECT id FROM option_values WHERE name = 'Single')),
+((SELECT id FROM drinks WHERE name = 'Caffe Latte'),
+ (SELECT id FROM option_categories WHERE name = 'Milk Type'),
+ (SELECT id FROM option_values WHERE name = 'Meiji Full Cream Milk')),
+((SELECT id FROM drinks WHERE name = 'Caffe Latte'),
+ (SELECT id FROM option_categories WHERE name = 'Temperature'),
+ (SELECT id FROM option_values WHERE name = 'Hot')),
+
+((SELECT id FROM drinks WHERE name = 'Cappuccino'),
+ (SELECT id FROM option_categories WHERE name = 'Number of Shots'),
+ (SELECT id FROM option_values WHERE name = 'Single')),
+((SELECT id FROM drinks WHERE name = 'Cappuccino'),
+ (SELECT id FROM option_categories WHERE name = 'Milk Type'),
+ (SELECT id FROM option_values WHERE name = 'Meiji Full Cream Milk')),
+((SELECT id FROM drinks WHERE name = 'Cappuccino'),
+ (SELECT id FROM option_categories WHERE name = 'Temperature'),
+ (SELECT id FROM option_values WHERE name = 'Hot')),
+
+-- Ice-Blended Coffee: required milk + temperature (cold)
+((SELECT id FROM drinks WHERE name = 'Ice-Blended Coffee'),
+ (SELECT id FROM option_categories WHERE name = 'Milk Type'),
+ (SELECT id FROM option_values WHERE name = 'Meiji Full Cream Milk')),
+((SELECT id FROM drinks WHERE name = 'Ice-Blended Coffee'),
+ (SELECT id FROM option_categories WHERE name = 'Temperature'),
+ (SELECT id FROM option_values WHERE name = 'Cold')),
+
+-- Black coffee drinks: no milk customization (only temperature)
+((SELECT id FROM drinks WHERE name = 'Americano'),
+ (SELECT id FROM option_categories WHERE name = 'Temperature'),
+ (SELECT id FROM option_values WHERE name = 'Hot')),
+((SELECT id FROM drinks WHERE name = 'Black Coffee (Moka Pot)'),
+ (SELECT id FROM option_categories WHERE name = 'Temperature'),
+ (SELECT id FROM option_values WHERE name = 'Hot')),
+((SELECT id FROM drinks WHERE name = 'Black Coffee (V60)'),
+ (SELECT id FROM option_categories WHERE name = 'Temperature'),
+ (SELECT id FROM option_values WHERE name = 'Hot')),
+
+-- Chinese Tea: tea type + temperature
+((SELECT id FROM drinks WHERE name = 'Chinese Tea'),
+ (SELECT id FROM option_categories WHERE name = 'Tea Type'),
+ (SELECT id FROM option_values WHERE name = 'Jasmine Green Tea')),
+((SELECT id FROM drinks WHERE name = 'Chinese Tea'),
+ (SELECT id FROM option_categories WHERE name = 'Temperature'),
+ (SELECT id FROM option_values WHERE name = 'Hot')),
+
+-- Kids drinks with temperature options (unchanged)
+((SELECT id FROM drinks WHERE name = 'Babyccino'),
+ (SELECT id FROM option_categories WHERE name = 'Temperature'),
+ (SELECT id FROM option_values WHERE name = 'Hot')),
+((SELECT id FROM drinks WHERE name = 'Milo'),
+ (SELECT id FROM option_categories WHERE name = 'Temperature'),
  (SELECT id FROM option_values WHERE name = 'Hot'));
 
 -- Sample test orders (optional, for development)

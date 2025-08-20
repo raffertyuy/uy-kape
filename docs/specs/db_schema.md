@@ -25,9 +25,9 @@ erDiagram
     
     option_categories {
         int id PK "unique ID"
-        string name "e.g., Number of Shots, Milk Type, Tea Type"
+        string name "e.g., Number of Shots, Milk Type, Tea Type, Temperature"
         string description "option category description"
-        boolean is_required "whether this option must be selected"
+        boolean is_required "whether this option must be selected (Milk Type now required for milk drinks)"
         int display_order "order for display"
     }
     
@@ -103,14 +103,14 @@ Stores all available menu items with category relationships.
 
 ### `option_categories` Table
 
-Defines the types of options available (e.g., "Number of Shots", "Milk Type").
+Defines the types of options available (e.g., "Number of Shots", "Milk Type", "Temperature").
 
 | Column       | Type    | Description                                  |
 |--------------|---------|----------------------------------------------|
 | id           | int     | unique ID (Primary Key)                      |
 | name         | string  | e.g., "Number of Shots", "Milk Type"         |
 | description  | string  | option category description                  |
-| is_required  | boolean | whether this option must be selected        |
+| is_required  | boolean | whether this option must be selected (Milk Type is required for milk-based drinks) |
 | display_order| int     | order for display                           |
 
 ### `option_values` Table
@@ -167,30 +167,40 @@ Stores the specific options selected for each order.
 ### Scenario 1: Espresso Order
 
 - **Drink**: Espresso (Coffee category)
-- **Available Options**: Number of Shots (Single/Double)
+- **Available Options**: Number of Shots (Single/Double). Milk not configurable (implicitly none).
 - **Guest Selection**: Double shot
 - **Order Record**: Links to Espresso drink + order_options record for "Double" shot
 
 ### Scenario 2: Latte Order
 
-- **Drink**: Latte (Coffee category)
-- **Available Options**: Number of Shots (Single/Double) + Milk Type (Whole/Low-fat/Non-fat/Oat)
-- **Guest Selection**: Single shot + Oat milk
-- **Order Record**: Links to Latte drink + 2 order_options records
+- **Drink**: Caffe Latte (Coffee category)
+- **Available Options**: Number of Shots (Single/Double) + Milk Type (required, cannot be None) + Temperature (Hot/Cold; default Hot)
+- **Guest Selection**: Single shot + Oat milk + Hot
+- **Order Record**: 3 order_options records
 
-### Scenario 3: Tea Order
+### Scenario 3: Chinese Tea Order
 
-- **Drink**: Tea (Tea category)
-- **Available Options**: Tea Type (Chamomile/Peppermint/Earl Grey)
-- **Guest Selection**: Chamomile
-- **Order Record**: Links to Tea drink + order_options record for "Chamomile"
+- **Drink**: Chinese Tea (Tea category)
+- **Available Options**: Tea Type (Jasmine/Oolong/Pu-erh/Chamomile) + Temperature (Hot/Cold)
+- **Guest Selection**: Jasmine Green Tea + Hot
+- **Order Record**: 2 order_options records
 
 ### Scenario 4: Kids Drink Order
 
 - **Drink**: Milo (Kids Drinks category)
-- **Available Options**: None
-- **Guest Selection**: Just the drink
-- **Order Record**: Links to Milo drink + no order_options records
+- **Available Options**: Temperature (Hot/Cold) (default Hot)
+- **Guest Selection**: Hot
+- **Order Record**: 1 order_options record
+
+## Updated Option Logic Summary
+
+- Espresso: Shots only
+- Espresso Macchiato: Shots + Milk (required) (temperature not currently configured)
+- Milk-based lattes/cappuccinos/piccolo: Shots + Milk (required) + Temperature
+- Ice-Blended Coffee: Milk (required) + Temperature (default Cold)
+- Black Coffee variants & Americano: Temperature only
+- Chinese Tea: Tea Type + Temperature
+- Kids Drinks (Milo, Babyccino): Temperature only (Babyccino already had temperature; Milo now also has)
 
 ## Queue Number Calculation
 
