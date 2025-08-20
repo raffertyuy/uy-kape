@@ -70,7 +70,7 @@ export const OptionCategoryList: React.FC<OptionCategoryListProps> = ({
           <h2 className="text-xl font-semibold text-coffee-800">Option Categories</h2>
         </div>
         <div className="flex items-center justify-center py-12">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-coffee-600"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-coffee-600" />
           <span className="ml-2 text-coffee-600">Loading option categories...</span>
         </div>
       </div>

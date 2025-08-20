@@ -153,7 +153,7 @@ export const DrinkOptionsManager: React.FC<DrinkOptionsManagerProps> = ({
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
         <div className="bg-white rounded-lg p-6 w-full max-w-4xl">
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-coffee-600"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-coffee-600" />
             <span className="ml-2 text-coffee-600">Loading drink options...</span>
           </div>
         </div>

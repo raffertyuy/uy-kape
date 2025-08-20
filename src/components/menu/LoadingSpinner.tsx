@@ -88,7 +88,7 @@ export const TableLoader: React.FC<{ rows?: number }> = ({ rows = 3 }) => (
   <div className="space-y-3">
     {Array.from({ length: rows }).map((_, index) => (
       <div key={index} className="animate-pulse">
-        <div className="h-4 bg-gray-200 rounded w-full"></div>
+        <div className="h-4 bg-gray-200 rounded w-full" />
       </div>
     ))}
   </div>
@@ -97,16 +97,16 @@ export const TableLoader: React.FC<{ rows?: number }> = ({ rows = 3 }) => (
 export const FormLoader: React.FC = () => (
   <div className="space-y-4">
     <div className="animate-pulse space-y-3">
-      <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-      <div className="h-10 bg-gray-200 rounded w-full"></div>
+      <div className="h-4 bg-gray-200 rounded w-1/4" />
+      <div className="h-10 bg-gray-200 rounded w-full" />
     </div>
     <div className="animate-pulse space-y-3">
-      <div className="h-4 bg-gray-200 rounded w-1/3"></div>
-      <div className="h-24 bg-gray-200 rounded w-full"></div>
+      <div className="h-4 bg-gray-200 rounded w-1/3" />
+      <div className="h-24 bg-gray-200 rounded w-full" />
     </div>
     <div className="animate-pulse space-y-3">
-      <div className="h-4 bg-gray-200 rounded w-1/5"></div>
-      <div className="h-10 bg-gray-200 rounded w-full"></div>
+      <div className="h-4 bg-gray-200 rounded w-1/5" />
+      <div className="h-10 bg-gray-200 rounded w-full" />
     </div>
   </div>
 )

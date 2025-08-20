@@ -36,14 +36,14 @@ export const RealtimeIndicator: React.FC<RealtimeIndicatorProps> = ({
     if (connected) {
       return (
         <div className="relative">
-          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-          <div className="absolute top-0 left-0 w-3 h-3 bg-green-500 rounded-full animate-ping"></div>
+          <div className="w-3 h-3 bg-green-500 rounded-full" />
+          <div className="absolute top-0 left-0 w-3 h-3 bg-green-500 rounded-full animate-ping" />
         </div>
       )
     }
     
     return (
-      <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></div>
+      <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse" />
     )
   }
 

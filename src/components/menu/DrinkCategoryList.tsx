@@ -5,9 +5,9 @@ import { DrinkCategoryForm } from './DrinkCategoryForm'
 
 interface DrinkCategoryListProps {
   categories: DrinkCategory[]
-  onEdit: (category: DrinkCategory) => void
-  onDelete: (id: string) => void
-  onReorder: (reorderedCategories: DrinkCategory[]) => void
+  onEdit: (_category: DrinkCategory) => void
+  onDelete: (_id: string) => void
+  onReorder: (_reorderedCategories: DrinkCategory[]) => void
   isLoading?: boolean
 }
 

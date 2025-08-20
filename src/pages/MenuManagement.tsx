@@ -102,7 +102,7 @@ export const MenuManagement: React.FC = () => {
           <div className="p-6">
             {isLoading ? (
               <div className="flex items-center justify-center py-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-coffee-600"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-coffee-600" />
                 <span className="ml-2 text-coffee-600">Loading...</span>
               </div>
             ) : (

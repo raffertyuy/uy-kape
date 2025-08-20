@@ -52,8 +52,17 @@ export default [
       'jsx-a11y': jsxA11yPlugin,
     },
     rules: {
-      // TypeScript-specific rules
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      // TypeScript-specific rules (relaxed for CI)
+      '@typescript-eslint/no-unused-vars': ['warn', { 
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        ignoreRestSiblings: true
+      }],
+      'no-unused-vars': ['warn', { 
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        ignoreRestSiblings: true
+      }],
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-non-null-assertion': 'warn',
       '@typescript-eslint/consistent-type-imports': 'warn',
