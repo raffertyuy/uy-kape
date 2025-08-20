@@ -188,7 +188,7 @@ export default defineConfig({
 ## Local Development Setup with Supabase
 
 ### Initial Setup
-1. Install Supabase CLI: `npm install -g supabase`
+1. Install Supabase CLI: `curl -fsSL https://supabase.com/install.sh | sh` (or download from GitHub releases)
 2. Login: `supabase login`
 3. Initialize project: `supabase init` (if not already done)
 4. Link to remote project: `supabase link --project-ref your-project-ref`
@@ -236,7 +236,7 @@ getLCP(console.log)
 - Update Node.js versions in matrix strategy
 - Review and update ESLint rules quarterly
 - Monitor bundle size trends in performance reports
-- Update Supabase CLI version in workflows
+- Update Supabase CLI installation method in workflows as needed
 
 ### Security Considerations
 - Rotate secrets regularly

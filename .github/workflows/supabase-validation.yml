@@ -3,8 +3,22 @@ name: Supabase Integration
 on:
   push:
     branches: [main]
+    paths:
+      - "supabase/**"
+      - ".env.example"
+      - "src/lib/supabase.ts"
+      - "src/types/database.types.ts"
+      - "src/**/*supabase*"
+      - ".github/workflows/supabase-validation.yml"
   pull_request:
     branches: [main]
+    paths:
+      - "supabase/**"
+      - ".env.example"
+      - "src/lib/supabase.ts"
+      - "src/types/database.types.ts"
+      - "src/**/*supabase*"
+      - ".github/workflows/supabase-validation.yml"
 
 permissions:
   contents: read
@@ -29,7 +43,11 @@ jobs:
 
       - name: Install Supabase CLI
         run: |
-          npm install -g supabase@latest
+          # Install Supabase CLI using the official installation script
+          curl -fsSL https://supabase.com/install.sh | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+          # Verify installation and show version
           supabase --version
 
       - name: Validate Supabase configuration files
