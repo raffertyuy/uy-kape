@@ -1,0 +1,20 @@
+name: "CodeQL Configuration for React + Supabase"
+
+disable-default-queries: false
+
+queries:
+  - uses: security-and-quality
+  - uses: security-extended
+
+paths:
+  - src/
+
+paths-ignore:
+  - node_modules/
+  - dist/
+  - "**/*.test.ts"
+  - "**/*.test.tsx"
+  - "**/*.spec.ts"
+  - "**/*.spec.tsx"
+  - src/test-utils.tsx
+  - src/setupTests.ts

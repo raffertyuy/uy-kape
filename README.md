@@ -1,5 +1,9 @@
 # Uy, Kape!
 
+![CI](https://github.com/raffertyuy/uy-kape/workflows/CI/badge.svg)
+![Security Scan](https://github.com/raffertyuy/uy-kape/workflows/Security%20Scan/badge.svg)
+![Line Endings](https://github.com/raffertyuy/uy-kape/workflows/Check%20Line%20Endings/badge.svg)
+
 **Uy, Kape!** is a coffee-ordering system for _coffee prosumers_ who want to give **visitors** to their **home** a fancy online ordering system. All menu items are free, the intent is to give the coffee barista a way to track guest orders based on what is available at home for the day.
 
 ## Features

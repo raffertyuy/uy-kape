@@ -36,8 +36,10 @@ uy-kape/
 ├── vitest.config.ts       # Vitest test config
 ├── docs/                  # (Fully expanded below)
 │   ├── file_structure.md  # This document
+│   ├── ci-workflow-guide.md  # CI/CD workflow documentation for React + Supabase
 │   ├── plans/
 │   │   ├── barista_admin_menu_management.plan.md
+│   │   ├── continuous_integration_workflow.plan.md
 │   │   ├── initial_bootstrap_implementation.plan.md
 │   │   └── unit_tests_implementation.plan.md
 │   ├── screens/

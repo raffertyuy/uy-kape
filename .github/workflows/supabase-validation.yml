@@ -1,0 +1,191 @@
+name: Supabase Integration
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  supabase-validation:
+    name: Supabase Configuration and Integration Testing
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Supabase CLI
+        run: |
+          npm install -g supabase@latest
+          supabase --version
+
+      - name: Validate Supabase configuration files
+        run: |
+          echo "🔍 Validating Supabase configuration..."
+
+          # Check if supabase config exists
+          if [ ! -f "supabase/config.toml" ]; then
+            echo "❌ supabase/config.toml not found!"
+            exit 1
+          fi
+
+          echo "✅ Supabase config.toml found"
+
+          # Validate config structure
+          if grep -q "project_id" supabase/config.toml; then
+            echo "✅ Project ID configured"
+          else
+            echo "⚠️  Project ID not found in config.toml"
+          fi
+
+          # Check for migrations directory
+          if [ -d "supabase/migrations" ]; then
+            echo "✅ Migrations directory exists"
+            MIGRATION_COUNT=$(find supabase/migrations -name "*.sql" | wc -l)
+            echo "📊 Found $MIGRATION_COUNT migration files"
+          else
+            echo "❌ Migrations directory not found!"
+            exit 1
+          fi
+
+      - name: Check database schema migrations
+        run: |
+          echo "🔍 Analyzing database schema migrations..."
+
+          # List all migration files
+          echo "Migration files:"
+          find supabase/migrations -name "*.sql" -exec basename {} \; | sort
+
+          # Check for required tables based on the React app
+          echo ""
+          echo "🔍 Checking for required database objects..."
+
+          # Check if migrations contain required tables for the coffee app
+          REQUIRED_TABLES=("drink_categories" "drinks" "option_categories" "option_values" "drink_options")
+
+          for table in "${REQUIRED_TABLES[@]}"; do
+            if grep -r -i "create.*table.*$table" supabase/migrations/; then
+              echo "✅ Table '$table' creation found"
+            else
+              echo "⚠️  Table '$table' creation not found in migrations"
+            fi
+          done
+
+          # Check for RLS policies
+          if grep -r -i "row level security\|enable.*rls\|create.*policy" supabase/migrations/; then
+            echo "✅ Row Level Security (RLS) policies found"
+          else
+            echo "⚠️  No RLS policies found - security consideration needed"
+          fi
+
+      - name: Validate environment variable setup
+        run: |
+          echo "🔍 Validating environment variable configuration..."
+
+          # Check .env.example for required Supabase variables
+          if [ -f ".env.example" ]; then
+            echo "✅ .env.example file found"
+            
+            if grep -q "VITE_SUPABASE_URL" .env.example; then
+              echo "✅ VITE_SUPABASE_URL configured in .env.example"
+            else
+              echo "❌ VITE_SUPABASE_URL missing from .env.example"
+              exit 1
+            fi
+            
+            if grep -q "VITE_SUPABASE_ANON_KEY" .env.example; then
+              echo "✅ VITE_SUPABASE_ANON_KEY configured in .env.example"
+            else
+              echo "❌ VITE_SUPABASE_ANON_KEY missing from .env.example"
+              exit 1
+            fi
+          else
+            echo "❌ .env.example file not found!"
+            exit 1
+          fi
+
+          # Check TypeScript files for proper environment variable usage
+          echo ""
+          echo "🔍 Checking TypeScript files for proper env var usage..."
+
+          if grep -r "import\.meta\.env\.VITE_SUPABASE" src/ --include="*.ts" --include="*.tsx"; then
+            echo "✅ Vite environment variables used correctly"
+          else
+            echo "⚠️  No Vite environment variables found in source code"
+          fi
+
+      - name: Test Supabase client integration
+        run: |
+          echo "🔍 Testing Supabase client integration..."
+
+          # Check if Supabase client is properly configured
+          if grep -r "createClient" src/ --include="*.ts" --include="*.tsx"; then
+            echo "✅ Supabase client creation found"
+          else
+            echo "❌ Supabase client creation not found!"
+            exit 1
+          fi
+
+          # Check for proper TypeScript integration
+          if find src/ -name "*.types.ts" -exec grep -l "supabase\|database" {} \;; then
+            echo "✅ Supabase TypeScript types found"
+          else
+            echo "⚠️  Supabase TypeScript types not found"
+          fi
+
+          # Check for real-time subscriptions usage
+          if grep -r "subscribe\|channel\|on.*INSERT\|on.*UPDATE\|on.*DELETE" src/ --include="*.ts" --include="*.tsx"; then
+            echo "✅ Real-time subscriptions implementation found"
+          else
+            echo "⚠️  No real-time subscriptions found"
+          fi
+
+      - name: Validate seed data
+        run: |
+          echo "🔍 Validating seed data..."
+
+          if [ -f "supabase/seed.sql" ]; then
+            echo "✅ Supabase seed.sql found"
+            
+            # Check if seed data is valid SQL
+            if grep -q "INSERT\|VALUES" supabase/seed.sql; then
+              echo "✅ Seed data contains INSERT statements"
+            else
+              echo "⚠️  No INSERT statements found in seed data"
+            fi
+          else
+            echo "⚠️  supabase/seed.sql not found"
+          fi
+
+      - name: Check for coffee shop specific schema
+        run: |
+          echo "🔍 Validating coffee shop specific database schema..."
+
+          # Check for coffee-specific columns and constraints
+          COFFEE_PATTERNS=("price" "description" "category" "available" "options")
+
+          for pattern in "${COFFEE_PATTERNS[@]}"; do
+            if grep -r -i "$pattern" supabase/migrations/ supabase/seed.sql 2>/dev/null; then
+              echo "✅ Coffee shop pattern '$pattern' found in schema"
+            else
+              echo "⚠️  Coffee shop pattern '$pattern' not found"
+            fi
+          done
+
+          echo ""
+          echo "📋 Schema validation complete"
+          echo "🔗 Ensure your local Supabase project matches these migrations"
+          echo "💡 Run 'supabase db push' to sync local schema with migrations"
