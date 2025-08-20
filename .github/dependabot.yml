@@ -1,7 +1,43 @@
 version: 2
 updates:
+  # Monitor GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      # Check for updates to GitHub Actions every week
+      interval: "monthly"  # Less frequent for Actions
+    open-pull-requests-limit: 5
+    
+  # Monitor npm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
       interval: "weekly"
+      day: "monday"
+      time: "04:00"
+    open-pull-requests-limit: 10
+    # Only update patch and minor versions for dependencies
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    # Group updates to reduce PR noise
+    groups:
+      production-dependencies:
+        patterns:
+          - "@supabase/*"
+          - "react*"
+        update-types:
+          - "minor"
+          - "patch"
+      development-dependencies:
+        patterns:
+          - "@types/*"
+          - "@testing-library/*"
+          - "@vitejs/*"
+          - "@vitest/*"
+          - "eslint*"
+          - "typescript"
+          - "vite*"
+          - "vitest*"
+        update-types:
+          - "minor"
+          - "patch"
