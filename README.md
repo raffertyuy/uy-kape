@@ -31,18 +31,23 @@
 - **Offline Support**: Basic functionality when internet is unavailable
 
 ## Technology Stack
-- **Frontend:** React 19 with TypeScript
-- **Build Tool:** Vite (for a fast development experience)
-- **Styling:** Tailwind CSS with coffee-themed design system
-- **Database:** Supabase (PostgreSQL with real-time subscriptions)
-- **Testing:** Vitest with React Testing Library
-- **Hosting:** Vercel (for free and easy front-end hosting)
+
+**Uy, Kape!** is built with modern web technologies optimized for performance and real-time collaboration:
+
+- **Frontend**: React 18 + TypeScript + Vite + Tailwind CSS
+- **Database**: Supabase (PostgreSQL with real-time subscriptions)  
+- **Testing**: Vitest + React Testing Library
+- **Hosting**: Vercel with Node.js 20.x runtime
+
+📋 **[View Complete Technology Stack Documentation →](docs/specs/technology_stack.md)**
+
+_For detailed version information, architectural decisions, and configuration details, see the comprehensive technology stack documentation._
 
 ## Running Locally
 
 ### Prerequisites
 
-- **Node.js** (version 18 or higher)
+- **Node.js** (version 20 or higher)
 - **npm** (comes with Node.js)
 
 ### Installation and Setup
@@ -81,15 +86,18 @@
 ### Accessing Features
 
 **Guest Interface:**
+
 - Default landing page provides the guest ordering experience
 - No authentication required for browsing and ordering
 
 **Barista Admin Interface:**
+
 1. Navigate to `/barista` or click "Barista Login" from the welcome page
 2. Enter the admin password (configurable in environment variables)
 3. Access the menu management system and order tracking tools
 
 **Menu Management:**
+
 - From the Barista Module, click "Menu Management"
 - Manage drink categories, beverages, and customization options
 - Changes sync in real-time across all connected devices

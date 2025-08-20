@@ -47,7 +47,8 @@ uy-kape/
 │   ├── specs/
 │   │   ├── barista-admin-menu-management.md
 │   │   ├── db_schema.md
-│   │   └── initial_idea.md
+│   │   ├── initial_idea.md
+│   │   └── technology_stack.md
 │   └── user-guides/
 │       └── menu-management-quick-start.md
 ├── scripts/               # Operational / helper scripts (not expanded)
@@ -89,6 +90,7 @@ When adding a feature (example: inventory tracking):
 ## Change Log (File Structure)
 
 - 2025-08-20: Removed outdated `deployment/` & `features/` documentation references; aligned with current `specs/` layout; added `dist/`, `.env`, `package-lock.json`, Supabase `.temp/` explanation, and Quick Reference section.
+- 2025-08-20: Added `technology_stack.md` to `docs/specs/` directory documenting comprehensive technology stack decisions and versions.
 
 ---
 
