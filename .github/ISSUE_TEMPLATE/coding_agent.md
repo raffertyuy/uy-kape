@@ -1,15 +1,15 @@
 ---
 name: 'New Issue for the GitHub Copilot Coding Agent'
 about: 'Assign a new task for the GitHub Copilot Coding Agent to implement'
-title: 'Implement {module_name}'
+title: 'Implement {requirement}'
 labels: 'enhancement'
 assignees: 'copilot'
 ---
 
 Your goal is to implement the specified requirement by following the steps below.
 
-## Module to implement
-requirement=REPLACE_WITH_YOUR_REQUIREMENT
+## Requirement to implement
+REPLACE_WITH_YOUR_REQUIREMENT
 
 ## STEPS
 1. Read and follow the instructions in `.github/copilot-instructions.md`.

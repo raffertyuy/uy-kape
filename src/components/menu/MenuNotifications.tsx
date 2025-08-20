@@ -115,7 +115,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   }
 
   return (
-    <div className={`${getNotificationStyles()} ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'}`}>
+    <div className={`${getNotificationStyles()} opacity-100 translate-x-0`}>
       <div className="flex items-start space-x-3">
         {getIcon()}
         
