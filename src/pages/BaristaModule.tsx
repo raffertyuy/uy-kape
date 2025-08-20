@@ -2,6 +2,7 @@ import { useState } from 'react'
 import PasswordProtection from '@/components/PasswordProtection'
 import { MenuManagement } from '@/pages/MenuManagement'
 import { appConfig } from '@/config/app.config'
+import { Logo } from '@/components/ui/Logo'
 
 type AdminView = 'dashboard' | 'menu' | 'orders'
 
@@ -37,9 +38,12 @@ function AdminDashboard({ onNavigate }: { onNavigate: (_view: AdminView) => void
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="bg-white rounded-lg shadow-lg p-8">
-        <h2 className="text-3xl font-bold text-coffee-800 mb-6">
-          Barista Administration Dashboard
-        </h2>
+        <div className="flex items-center mb-6">
+          <Logo size="md" className="mr-3" alt="Uy, Kape! Logo" />
+          <h2 className="text-3xl font-bold text-coffee-800">
+            Barista Administration Dashboard
+          </h2>
+        </div>
         
         <div className="grid md:grid-cols-2 gap-8">
           <button
@@ -116,10 +120,11 @@ function AdminNavigation({ activeView, onNavigate }: {
               onClick={() => onNavigate('dashboard')}
               className="flex items-center px-4 text-coffee-700 hover:text-coffee-900 font-medium"
             >
-              <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M9.707 14.707a1 1 0 01-1.414 0L3 9.414V17a1 1 0 001 1h4a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h4a1 1 0 001-1V9.414l-5.293 5.293a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                <path d="M2 10l8-8 8 8" />
-              </svg>
+              <Logo 
+                size="xs" 
+                className="h-5 w-5 mr-2" 
+                alt="Uy, Kape!"
+              />
               Dashboard
             </button>
             <div className="flex space-x-8 ml-6">

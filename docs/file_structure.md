@@ -41,6 +41,7 @@ uy-kape/
 │   │   ├── barista_admin_menu_management.plan.md
 │   │   ├── continuous_integration_workflow.plan.md
 │   │   ├── initial_bootstrap_implementation.plan.md
+│   │   ├── logo_integration_ui_enhancement.plan.md  # Logo integration implementation plan
 │   │   └── unit_tests_implementation.plan.md
 │   ├── screens/
 │   │   └── old_ordering_system.png
@@ -50,11 +51,19 @@ uy-kape/
 │   │   ├── initial_idea.md
 │   │   └── technology_stack.md
 │   └── user-guides/
+│       ├── logo-usage-guide.md  # Comprehensive logo integration usage documentation
 │       └── menu-management-quick-start.md
 ├── scripts/               # Operational / helper scripts (not expanded)
 ├── database/              # Legacy SQL schema + seed (reference only)
+├── media/                 # Static media assets: official "Uy, Kape!" logos (108px-1024px)
 ├── supabase/              # Supabase project (config, migrations, seed)
-├── src/                   # React + TS application source (not expanded)
+├── src/                   # React + TS application source
+│   ├── assets/            # Optimized logo assets organized by size (24px-256px)
+│   ├── components/        # React components including reusable Logo component
+│   │   └── ui/            # UI components (Logo, LoadingSpinner, EmptyState)
+│   ├── types/             # TypeScript definitions including logo component types
+│   └── ...                # Other source directories (not expanded)
+├── public/                # Static assets including favicon and PWA icons derived from logo
 ├── dist/                  # Build output (generated)
 └── node_modules/          # Installed dependencies (ignored)
 ```
@@ -67,10 +76,12 @@ uy-kape/
 4. Environment Variables: Keep secrets local (`.env` not committed). Update `.env.example` when new required variables are introduced.
 5. Styling: Tailwind first; add component‑level overrides sparingly. Central theme config lives in `tailwind.config.js`.
 6. Real‑Time Features: Supabase channels & presence are encapsulated in hooks (`useMenuSubscriptions`) and service abstractions; UI surfaces connection via components like `RealtimeIndicator`.
-7. AI Assistant Context: The `.github/instructions/` directory contains augmentation rules leveraged by automated agents—keep these synchronized with code changes that alter public contracts.
-8. Build Artifacts: `dist/` is disposable; never commit manual edits there.
-9. Scripts: Keep cross‑platform operational scripts idempotent. For new scripts, provide Windows (`.ps1`) and POSIX (`.sh`) variants when feasible.
-10. Documentation Hygiene: Update this file when (a) adding/removing a top‑level folder, (b) materially restructuring `docs/`, or (c) introducing a new architectural layer.
+7. Media Assets: Brand logos and icons are stored in `media/` in multiple resolutions for different use cases (favicons, app icons, social media, etc.). Optimized logo assets are organized in `src/assets/logos/` for application use. Logo integration follows a hybrid approach combining logos with text for optimal brand recognition.
+8. Logo Integration: The reusable Logo component (`src/components/ui/Logo.tsx`) provides consistent branding across the application with responsive sizing variants (xs, sm, md, lg, xl, hero) and accessibility features.
+8. AI Assistant Context: The `.github/instructions/` directory contains augmentation rules leveraged by automated agents—keep these synchronized with code changes that alter public contracts.
+9. Build Artifacts: `dist/` is disposable; never commit manual edits there.
+10. Scripts: Keep cross‑platform operational scripts idempotent. For new scripts, provide Windows (`.ps1`) and POSIX (`.sh`) variants when feasible.
+11. Documentation Hygiene: Update this file when (a) adding/removing a top‑level folder, (b) materially restructuring `docs/`, or (c) introducing a new architectural layer.
 
 ## Quick Reference: Adding a New Domain Feature
 
@@ -89,6 +100,8 @@ When adding a feature (example: inventory tracking):
 
 ## Change Log (File Structure)
 
+- 2025-08-20: Added logo integration documentation and updated file structure to include optimized logo assets (`src/assets/logos/`), Logo component (`src/components/ui/Logo.tsx`), logo usage guide (`docs/user-guides/logo-usage-guide.md`), and implementation plan (`docs/plans/logo_integration_ui_enhancement.plan.md`).
+- 2025-08-20: Added `media/` folder documentation for brand assets (logos in multiple resolutions); updated Notes & Conventions section.
 - 2025-08-20: Removed outdated `deployment/` & `features/` documentation references; aligned with current `specs/` layout; added `dist/`, `.env`, `package-lock.json`, Supabase `.temp/` explanation, and Quick Reference section.
 - 2025-08-20: Added `technology_stack.md` to `docs/specs/` directory documenting comprehensive technology stack decisions and versions.
 

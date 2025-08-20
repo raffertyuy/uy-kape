@@ -1,13 +1,17 @@
 import PasswordProtection from '@/components/PasswordProtection'
 import { appConfig } from '@/config/app.config'
+import { Logo } from '@/components/ui/Logo'
 
 function GuestModulePage() {
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="bg-white rounded-lg shadow-lg p-8">
-        <h2 className="text-2xl font-bold text-coffee-800 mb-6">
-          Order Your Coffee ☕
-        </h2>
+    <div className="max-w-2xl mx-auto px-4">
+      <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 lg:p-8">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start mb-6 space-y-2 sm:space-y-0 sm:space-x-3">
+          <Logo size="md" className="flex-shrink-0" alt="Uy, Kape!" />
+          <h2 className="text-xl sm:text-2xl font-bold text-coffee-800 text-center sm:text-left">
+            Order Your Coffee
+          </h2>
+        </div>
         
         <div className="text-center py-12">
           <div className="text-6xl mb-4">🚧</div>

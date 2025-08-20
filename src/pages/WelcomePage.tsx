@@ -1,15 +1,23 @@
 import { Link } from 'react-router-dom'
-import { APP_NAME, APP_DESCRIPTION } from '@/config/app.config'
+import { APP_DESCRIPTION } from '@/config/app.config'
+import { Logo } from '@/components/ui/Logo'
 
 function WelcomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-coffee-50 to-coffee-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
+      <div className="max-w-sm sm:max-w-md w-full bg-white rounded-lg shadow-lg p-6 sm:p-8 text-center">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-coffee-800 mb-2">
-            {APP_NAME} ☕
-          </h1>
-          <p className="text-coffee-600 text-lg">
+          <div className="flex flex-col sm:flex-row items-center justify-center mb-4 space-y-2 sm:space-y-0 sm:space-x-3">
+            <Logo 
+              size="xl" 
+              className="flex-shrink-0" 
+              alt="Uy, Kape! Logo"
+            />
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-coffee-800 text-center sm:text-left">
+              Uy, Kape! ☕
+            </h1>
+          </div>
+          <p className="text-coffee-600 text-base sm:text-lg">
             {APP_DESCRIPTION}
           </p>
         </div>

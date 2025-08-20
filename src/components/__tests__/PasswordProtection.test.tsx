@@ -59,7 +59,7 @@ describe('PasswordProtection', () => {
       expect(screen.getByText('Enter password to continue')).toBeInTheDocument()
       expect(screen.getByLabelText('Password')).toBeInTheDocument()
       expect(screen.getByRole('button', { name: 'Access' })).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: '← Back' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Go back to previous page' })).toBeInTheDocument()
       expect(screen.queryByTestId('protected-content')).not.toBeInTheDocument()
     })
 
@@ -327,7 +327,7 @@ describe('PasswordProtection', () => {
         render(<PasswordProtection {...defaultProps} />)
       })
 
-      const backButton = screen.getByRole('button', { name: '← Back' })
+      const backButton = screen.getByRole('button', { name: 'Go back to previous page' })
       
       await act(async () => {
         await user.click(backButton)
