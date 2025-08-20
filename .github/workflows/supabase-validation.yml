@@ -41,14 +41,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Supabase CLI
+      - name: Verify Supabase CLI access
         run: |
-          # Install Supabase CLI using the official installation script
-          curl -fsSL https://supabase.com/install.sh | sh
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-
-          # Verify installation and show version
-          supabase --version
+          # Use npx to access Supabase CLI (no global installation needed)
+          # Verify we can access Supabase CLI and show version
+          npx supabase --version
 
       - name: Validate Supabase configuration files
         run: |
@@ -206,4 +203,4 @@ jobs:
           echo ""
           echo "📋 Schema validation complete"
           echo "🔗 Ensure your local Supabase project matches these migrations"
-          echo "💡 Run 'supabase db push' to sync local schema with migrations"
+          echo "💡 Run 'npx supabase db push' to sync local schema with migrations"
