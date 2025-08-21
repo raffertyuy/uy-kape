@@ -119,3 +119,4 @@ config.*.json
 
 # Local development files
 *.local.*
+test-results.xml
