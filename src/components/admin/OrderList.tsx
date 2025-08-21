@@ -13,9 +13,9 @@ interface OrderListProps {
   showSelection?: boolean
   showActions?: boolean
   selectedOrders?: string[]
-  onOrderSelect?: (orderId: string, selected: boolean) => void
-  onOrderStatusUpdate?: (orderId: string, status: OrderStatus) => void
-  onSelectAll?: (selected: boolean) => void
+  onOrderSelect?: (_orderId: string, _selected: boolean) => void
+  onOrderStatusUpdate?: (_orderId: string, _status: OrderStatus) => void
+  onSelectAll?: (_selected: boolean) => void
   emptyMessage?: string
   emptyIcon?: string
 }

@@ -140,10 +140,10 @@ export const OrderFilters = ({
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* Date Range */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label htmlFor="date-range-inputs" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Date Range
               </label>
-              <div className="space-y-2">
+              <div id="date-range-inputs" className="space-y-2">
                 {/* Preset Ranges */}
                 <div className="flex flex-wrap gap-2">
                   {presetRanges.map((range) => (
@@ -188,10 +188,10 @@ export const OrderFilters = ({
 
             {/* Queue Position Range */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label htmlFor="queue-position-inputs" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Queue Position
               </label>
-              <div className="flex space-x-2">
+              <div id="queue-position-inputs" className="flex space-x-2">
                 <div>
                   <label htmlFor="queue-min" className="sr-only">Minimum queue position</label>
                   <input

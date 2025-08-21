@@ -30,8 +30,8 @@ export const ConfirmationDialog = ({
   loading = false,
   className
 }: ConfirmationDialogProps) => {
-  const dialogRef = useRef<HTMLDivElement>(null)
-  const confirmButtonRef = useRef<HTMLButtonElement>(null)
+  const dialogRef = useRef<globalThis.HTMLDivElement>(null)
+  const confirmButtonRef = useRef<globalThis.HTMLButtonElement>(null)
 
   // Focus management
   useEffect(() => {
@@ -55,8 +55,8 @@ export const ConfirmationDialog = ({
             'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
           )
           
-          const firstElement = focusableElements[0] as HTMLElement
-          const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement
+          const firstElement = focusableElements[0] as globalThis.HTMLElement
+          const lastElement = focusableElements[focusableElements.length - 1] as globalThis.HTMLElement
 
           if (e.shiftKey) {
             if (document.activeElement === firstElement) {

@@ -10,8 +10,8 @@ interface OrderCardProps {
   className?: string
   compact?: boolean
   showActions?: boolean
-  onStatusUpdate?: ((orderId: string, status: OrderStatus) => void) | undefined
-  onSelect?: ((orderId: string, selected: boolean) => void) | undefined
+  onStatusUpdate?: ((_orderId: string, _status: OrderStatus) => void) | undefined
+  onSelect?: ((_orderId: string, _selected: boolean) => void) | undefined
   isSelected?: boolean
 }
 

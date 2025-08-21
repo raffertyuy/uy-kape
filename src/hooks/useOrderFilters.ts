@@ -11,12 +11,12 @@ interface UseOrderFiltersState {
 }
 
 interface UseOrderFiltersReturn extends UseOrderFiltersState {
-  updateFilter: <K extends keyof OrderFilters>(key: K, value: OrderFilters[K]) => void
-  updateSearchTerm: (term: string) => void
+  updateFilter: <K extends keyof OrderFilters>(_key: K, _value: OrderFilters[K]) => void
+  updateSearchTerm: (_term: string) => void
   clearFilters: () => void
   clearSearch: () => void
   resetAllFilters: () => void
-  isFilterActive: (key: keyof OrderFilters) => boolean
+  isFilterActive: (_key: keyof OrderFilters) => boolean
   getFilteredFilters: () => OrderFilters
 }
 
@@ -42,18 +42,18 @@ export const useOrderFilters = (
 
   // Update individual filter
   const updateFilter = useCallback(<K extends keyof OrderFilters>(
-    key: K,
-    value: OrderFilters[K]
+    _key: K,
+    _value: OrderFilters[K]
   ) => {
     setFilters(prev => ({
       ...prev,
-      [key]: value
+      [_key]: _value
     }))
   }, [])
 
   // Update search term
-  const updateSearchTerm = useCallback((term: string) => {
-    setSearchTerm(term)
+  const updateSearchTerm = useCallback((_term: string) => {
+    setSearchTerm(_term)
   }, [])
 
   // Clear specific filter
@@ -76,11 +76,11 @@ export const useOrderFilters = (
   }, [])
 
   // Check if a specific filter is active
-  const isFilterActive = useCallback((key: keyof OrderFilters): boolean => {
-    const value = filters[key]
-    const defaultValue = DEFAULT_FILTERS[key]
+  const isFilterActive = useCallback((_key: keyof OrderFilters): boolean => {
+    const value = filters[_key]
+    const defaultValue = DEFAULT_FILTERS[_key]
     
-    if (key === 'status') {
+    if (_key === 'status') {
       return value !== 'all'
     }
     
@@ -99,9 +99,9 @@ export const useOrderFilters = (
     // Remove undefined values and 'all' status
     const cleanedFilters: OrderFilters = {}
     
-    Object.entries(result).forEach(([key, value]) => {
-      if (value !== undefined && value !== '' && value !== 'all') {
-        (cleanedFilters as any)[key] = value
+    Object.entries(result).forEach(([_key, _value]) => {
+      if (_value !== undefined && _value !== '' && _value !== 'all') {
+        (cleanedFilters as any)[_key] = _value
       }
     })
     
@@ -113,8 +113,8 @@ export const useOrderFilters = (
     let count = 0
     
     // Count non-default filters
-    Object.keys(filters).forEach(key => {
-      if (isFilterActive(key as keyof OrderFilters)) {
+    Object.keys(filters).forEach(_key => {
+      if (isFilterActive(_key as keyof OrderFilters)) {
         count++
       }
     })
