@@ -188,27 +188,27 @@ export function useOrderForm(): UseOrderFormReturn {
       ...(guestInfo.specialRequest.trim() && { special_request: guestInfo.specialRequest.trim() })
     }
 
-    return await orderSubmission.submitGuestOrder(orderData)
-  }, [selectedDrink, guestInfo, optionSelection, orderSubmission])
+    return await orderSubmission.submitGuestOrder(orderData);
+  }, [selectedDrink, guestInfo, optionSelection, orderSubmission]);
 
   const startNewOrder = useCallback(() => {
-    resetForm()
-  }, [resetForm])
+    resetForm();
+  }, [resetForm]);
 
   // Computed state
-  const isFormValid = isStepValid('review')
+  const isFormValid = isStepValid('review');
   
   const orderData: GuestOrderForm | null = selectedDrink && guestInfo.trimmedName ? {
     guest_name: guestInfo.trimmedName,
     drink_id: selectedDrink.id,
     selected_options: optionSelection.selectedOptions,
     ...(guestInfo.specialRequest.trim() && { special_request: guestInfo.specialRequest.trim() })
-  } : null
+  } : null;
 
   // Progress calculation (excluding success step)
-  const progressSteps = stepOrder.slice(0, -1) // Remove 'success'
-  const currentProgressIndex = progressSteps.indexOf(currentStep)
-  const progress = currentProgressIndex >= 0 ? ((currentProgressIndex + 1) / progressSteps.length) * 100 : 0
+  const progressSteps = stepOrder.slice(0, -1); // Remove 'success'
+  const currentProgressIndex = progressSteps.indexOf(currentStep);
+  const progress = currentProgressIndex >= 0 ? ((currentProgressIndex + 1) / progressSteps.length) * 100 : 0;
 
   return {
     // Form state
