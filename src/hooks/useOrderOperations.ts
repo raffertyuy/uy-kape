@@ -72,7 +72,7 @@ export function useOrderOperations(): UseOrderOperationsReturn {
   
   // Store the last operation for manual retry
   const lastOperationRef = useRef<{
-    operation: () => Promise<T>
+    operation: () => Promise<any>
     options: OrderOperationOptions
   } | null>(null)
   

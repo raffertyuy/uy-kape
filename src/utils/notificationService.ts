@@ -164,7 +164,7 @@ class BrowserNotificationService implements NotificationServiceInterface {
     try {
       // Create a simple audio beep using Web Audio API
       if (typeof window !== 'undefined' && 'AudioContext' in window) {
-        const AudioContext = window.AudioContext || window.webkitAudioContext
+        const AudioContext = window.AudioContext || (window as any).webkitAudioContext
         const context = new AudioContext()
         
         const oscillator = context.createOscillator()

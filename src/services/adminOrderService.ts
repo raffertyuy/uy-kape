@@ -361,7 +361,7 @@ export const adminOrderService = {
    */
   getOrderStatistics: async (dateRange?: { from: string; to: string }): Promise<OrderStatistics> => {
     try {
-      let query = supabase.from('orders').select('status, created_at')
+      let query = supabase.from('orders').select('status, created_at, updated_at')
 
       if (dateRange) {
         query = query
@@ -392,11 +392,12 @@ export const adminOrderService = {
         total_cancelled: orders.filter(o => o.status === 'cancelled').length,
         average_wait_time: (() => {
           // Calculate average wait time for completed orders
-          const completedOrders = orders.filter(o => o.status === 'completed' && o.created_at && o.completed_at)
+          const completedOrders = orders.filter(o => o.status === 'completed' && o.created_at && o.updated_at)
           if (completedOrders.length === 0) return 0
           const totalWaitTimeMinutes = completedOrders.reduce((sum, o) => {
+            if (!o.created_at || !o.updated_at) return sum
             const created = new Date(o.created_at)
-            const completed = new Date(o.completed_at)
+            const completed = new Date(o.updated_at)
             const diffMs = completed.getTime() - created.getTime()
             const diffMinutes = diffMs / (1000 * 60)
             return sum + diffMinutes
