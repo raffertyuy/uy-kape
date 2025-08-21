@@ -19,7 +19,7 @@ import type {
 } from '@/types/menu.types'
 
 // Mock data based on the seed.sql file
-let mockDrinkCategories: DrinkCategory[] = [
+const mockDrinkCategories: DrinkCategory[] = [
   {
     id: '1',
     name: 'Coffee',
@@ -58,7 +58,7 @@ let mockDrinkCategories: DrinkCategory[] = [
   }
 ]
 
-let mockOptionCategories: OptionCategory[] = [
+const mockOptionCategories: OptionCategory[] = [
   {
     id: 'opt1',
     name: 'Number of Shots',
@@ -204,7 +204,7 @@ let mockOptionValues: OptionValue[] = [
   }
 ]
 
-let mockDrinks: Drink[] = [
+const mockDrinks: Drink[] = [
   {
     id: 'drink1',
     name: 'Espresso',
@@ -398,20 +398,31 @@ export const mockDrinksService = {
 
     const category = mockDrinkCategories.find(c => c.id === drink.category_id)
 
+    if (!category) {
+      throw new Error(`Category not found for drink ${id}`)
+    }
+
     return {
       ...drink,
-      category: category!,
+      category,
       drink_options: mockDrinkOptions
         .filter(opt => opt.drink_id === id)
-        .map(opt => ({
-          id: opt.id,
-          drink_id: opt.drink_id,
-          option_category_id: opt.option_category_id,
-          default_option_value_id: opt.default_option_value_id,
-          created_at: opt.created_at,
-          option_category: mockOptionCategories.find(cat => cat.id === opt.option_category_id)!,
-          default_value: mockOptionValues.find(val => val.id === opt.default_option_value_id) || null
-        }))
+        .map(opt => {
+          const optionCategory = mockOptionCategories.find(cat => cat.id === opt.option_category_id)
+          if (!optionCategory) {
+            throw new Error(`Option category not found: ${opt.option_category_id}`)
+          }
+          
+          return {
+            id: opt.id,
+            drink_id: opt.drink_id,
+            option_category_id: opt.option_category_id,
+            default_option_value_id: opt.default_option_value_id,
+            created_at: opt.created_at,
+            option_category: optionCategory,
+            default_value: mockOptionValues.find(val => val.id === opt.default_option_value_id) || null
+          }
+        })
     }
   },
 

@@ -50,10 +50,12 @@ const initializeServiceMode = async (): Promise<void> => {
     const supabaseWorking = await testSupabaseConnection()
     useMockData = !supabaseWorking
     serviceInitialized = true
+    
+    // Service mode set - using mock data in development/testing if Supabase unavailable
     if (useMockData) {
-      console.info('🔄 Using mock data service for development/testing')
+      // Mock data mode active
     } else {
-      console.info('✅ Connected to Supabase database')
+      // Supabase connection established
     }
   }
 }
