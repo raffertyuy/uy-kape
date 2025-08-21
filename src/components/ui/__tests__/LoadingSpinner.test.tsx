@@ -5,7 +5,10 @@ import { LoadingSpinner } from '../LoadingSpinner'
 
 const renderWithRouter = (component: React.ReactElement) => {
   return render(
-    <BrowserRouter>
+    <BrowserRouter future={{
+      v7_startTransition: true,
+      v7_relativeSplatPath: true
+    }}>
       {component}
     </BrowserRouter>
   )

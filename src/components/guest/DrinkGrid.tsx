@@ -6,7 +6,7 @@ import { DrinkCard } from './DrinkCard'
 interface DrinkGridProps {
   selectedCategoryId?: string
   selectedDrinkId?: string
-  onDrinkSelect: (drinkId: string) => void
+  onDrinkSelect: (_drinkId: string) => void
   className?: string
 }
 

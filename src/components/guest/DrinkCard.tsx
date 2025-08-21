@@ -4,7 +4,7 @@ import type { DrinkWithOptionsPreview } from '@/types/menu.types'
 interface DrinkCardProps {
   drink: DrinkWithOptionsPreview
   isSelected: boolean
-  onSelect: (drinkId: string) => void
+  onSelect: (_drinkId: string) => void
   className?: string
 }
 

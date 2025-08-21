@@ -4,7 +4,7 @@ import { useDrinkCategories } from '@/hooks/useMenuData'
 
 interface DrinkCategoryTabsProps {
   selectedCategoryId?: string
-  onCategorySelect: (categoryId: string | undefined) => void
+  onCategorySelect: (_categoryId: string | undefined) => void
   className?: string
 }
 
