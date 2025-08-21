@@ -167,7 +167,7 @@ export const useDrinkWithOptions = (drinkId?: string) => {
     try {
       setIsLoading(true)
       setError(null)
-      const data = await drinksService.getWithOptions(drinkId)
+      const data = await drinksService.getWithOptionsAndCategory(drinkId)
       setDrink(data)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch drink'
