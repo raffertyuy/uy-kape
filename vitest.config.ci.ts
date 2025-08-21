@@ -43,6 +43,7 @@ export default defineConfig({
     // Exclude problematic tests for CI stability
     exclude: [
       'node_modules/**',
+      'playwright-tests/**',
       'src/components/menu/__tests__/DrinkCategoryForm.test.tsx'
     ],
     coverage: {
