@@ -390,7 +390,19 @@ export const adminOrderService = {
         total_ready: orders.filter(o => o.status === 'ready').length,
         total_completed: orders.filter(o => o.status === 'completed').length,
         total_cancelled: orders.filter(o => o.status === 'cancelled').length,
-        average_wait_time: 5, // TODO: Calculate from actual data
+        average_wait_time: (() => {
+          // Calculate average wait time for completed orders
+          const completedOrders = orders.filter(o => o.status === 'completed' && o.created_at && o.completed_at)
+          if (completedOrders.length === 0) return 0
+          const totalWaitTimeMinutes = completedOrders.reduce((sum, o) => {
+            const created = new Date(o.created_at)
+            const completed = new Date(o.completed_at)
+            const diffMs = completed.getTime() - created.getTime()
+            const diffMinutes = diffMs / (1000 * 60)
+            return sum + diffMinutes
+          }, 0)
+          return Math.round(totalWaitTimeMinutes / completedOrders.length)
+        })(),
         orders_today: orders.filter(o => {
           if (!o.created_at) return false
           const orderDate = new Date(o.created_at)
