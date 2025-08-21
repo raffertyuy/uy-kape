@@ -19,7 +19,8 @@ For example, if the requirement name is "Implement User Authentication", the fil
 ### 1. FIRST
 
 - Review the attached specification document to understand the requirements and objectives.
-- If needed, use context7 to get the latest documentation of the technology stack (e.g., Supabase, React.js, Vite).
+- If needed, use context7 MCP to get the latest documentation of the technology stack (e.g., Supabase, React.js, Vite).
+- If needed, use playwright MCP to explore and analyze the application.
 
 ### 2. THEN
 
@@ -53,7 +54,8 @@ PLAN HERE
 ```
 
 - After the steps to implement the feature, add a step to build and run the app
-- Add a step to write unit and UI tests for the feature
+- Add a step to write unit tests for the feature
+- For major UI changes, add a step to write playwright UI tests for the feature
 - Add a step to run all unit and UI tests as last step (with no -destination set to ensure active simulator is used)
 
 ### 3. NEXT:

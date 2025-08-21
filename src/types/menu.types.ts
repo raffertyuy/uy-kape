@@ -53,6 +53,19 @@ export interface OptionCategoryWithValues extends OptionCategory {
   option_values: OptionValue[]
 }
 
+// Options preview interfaces for enhanced drink cards
+export interface DrinkOptionPreview {
+  id: string
+  option_category_name: string
+  default_value_name: string | null
+  is_required?: boolean
+}
+
+export interface DrinkWithOptionsPreview extends Drink {
+  category?: DrinkCategory | null
+  options_preview: DrinkOptionPreview[]
+}
+
 // Filter and search types
 export interface MenuFilters {
   category?: string

@@ -65,6 +65,11 @@ uy-kape/
 │   └── ...                # Other source directories (not expanded)
 ├── public/                # Static assets including favicon and PWA icons derived from logo
 ├── dist/                  # Build output (generated)
+├── playwright-tests/      # End-to-end test suite (Playwright)
+│   ├── tests/            # E2E test files
+│   ├── test-results/     # Playwright test execution results
+│   ├── playwright-report/ # HTML test reports
+│   └── playwright.config.ts # Playwright configuration
 └── node_modules/          # Installed dependencies (ignored)
 ```
 
@@ -78,10 +83,11 @@ uy-kape/
 6. Real‑Time Features: Supabase channels & presence are encapsulated in hooks (`useMenuSubscriptions`) and service abstractions; UI surfaces connection via components like `RealtimeIndicator`.
 7. Media Assets: Brand logos and icons are stored in `media/` in multiple resolutions for different use cases (favicons, app icons, social media, etc.). Optimized logo assets are organized in `src/assets/logos/` for application use. Logo integration follows a hybrid approach combining logos with text for optimal brand recognition.
 8. Logo Integration: The reusable Logo component (`src/components/ui/Logo.tsx`) provides consistent branding across the application with responsive sizing variants (xs, sm, md, lg, xl, hero) and accessibility features.
-8. AI Assistant Context: The `.github/instructions/` directory contains augmentation rules leveraged by automated agents—keep these synchronized with code changes that alter public contracts.
-9. Build Artifacts: `dist/` is disposable; never commit manual edits there.
-10. Scripts: Keep cross‑platform operational scripts idempotent. For new scripts, provide Windows (`.ps1`) and POSIX (`.sh`) variants when feasible.
-11. Documentation Hygiene: Update this file when (a) adding/removing a top‑level folder, (b) materially restructuring `docs/`, or (c) introducing a new architectural layer.
+9. E2E Testing: End-to-end tests are organized in `playwright-tests/` with dedicated folder structure for tests, results, and reports. Test scripts are available in `package.json` (`test:e2e`, `test:e2e:headed`, `test:e2e:debug`).
+10. AI Assistant Context: The `.github/instructions/` directory contains augmentation rules leveraged by automated agents—keep these synchronized with code changes that alter public contracts.
+11. Build Artifacts: `dist/` is disposable; never commit manual edits there.
+12. Scripts: Keep cross‑platform operational scripts idempotent. For new scripts, provide Windows (`.ps1`) and POSIX (`.sh`) variants when feasible.
+13. Documentation Hygiene: Update this file when (a) adding/removing a top‑level folder, (b) materially restructuring `docs/`, or (c) introducing a new architectural layer.
 
 ## Quick Reference: Adding a New Domain Feature
 
@@ -100,6 +106,7 @@ When adding a feature (example: inventory tracking):
 
 ## Change Log (File Structure)
 
+- 2025-01-21: Reorganized E2E tests into dedicated `playwright-tests/` folder structure, updated package.json with E2E test scripts, and added E2E testing documentation to Notes & Conventions.
 - 2025-08-20: Added logo integration documentation and updated file structure to include optimized logo assets (`src/assets/logos/`), Logo component (`src/components/ui/Logo.tsx`), logo usage guide (`docs/user-guides/logo-usage-guide.md`), and implementation plan (`docs/plans/logo_integration_ui_enhancement.plan.md`).
 - 2025-08-20: Added `media/` folder documentation for brand assets (logos in multiple resolutions); updated Notes & Conventions section.
 - 2025-08-20: Removed outdated `deployment/` & `features/` documentation references; aligned with current `specs/` layout; added `dist/`, `.env`, `package-lock.json`, Supabase `.temp/` explanation, and Quick Reference section.

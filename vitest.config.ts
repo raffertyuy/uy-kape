@@ -12,8 +12,7 @@ export default defineConfig({
     poolOptions: {
       threads: {
         singleThread: true,
-        isolate: true, // Enable isolation for better cleanup
-        memoryLimit: '512MB' // Set explicit memory limit per thread
+        isolate: true // Enable isolation for better cleanup
       }
     },
     // Reduce concurrency to minimum
@@ -29,10 +28,12 @@ export default defineConfig({
     // Better error handling
     dangerouslyIgnoreUnhandledErrors: false,
     passWithNoTests: false,
-    // Exclude problematic tests
+    // Exclude problematic tests and Playwright tests
     exclude: [
       'node_modules/**',
-      'src/components/menu/__tests__/DrinkCategoryForm.test.tsx'
+      'src/components/menu/__tests__/DrinkCategoryForm.test.tsx',
+      'playwright-tests/**',
+      '**/*.spec.ts'
     ],
     // Simplified coverage
     coverage: {

@@ -16,7 +16,8 @@ import type {
   CreateDrinkOptionDto,
   UpdateDrinkOptionDto,
   DrinkWithOptionsAndCategory,
-  OptionCategoryWithValues
+  OptionCategoryWithValues,
+  DrinkWithOptionsPreview
 } from '@/types/menu.types'
 
 // Utility function for handling Supabase errors
@@ -215,6 +216,63 @@ export const drinksService = {
       
       if (error) handleSupabaseError(error)
     }
+  },
+
+  getAllWithOptionsPreview: async (): Promise<DrinkWithOptionsPreview[]> => {
+    const { data, error } = await supabase
+      .from('drinks')
+      .select(`
+        *,
+        category:drink_categories(*),
+        drink_options(
+          id,
+          option_category:option_categories(name),
+          default_value:option_values(name)
+        )
+      `)
+      .order('display_order', { ascending: true })
+    
+    if (error) handleSupabaseError(error)
+    
+    // Transform the data to match DrinkWithOptionsPreview interface
+    return (data || []).map(drink => ({
+      ...drink,
+      options_preview: (drink.drink_options || []).map(option => ({
+        id: option.id,
+        option_category_name: option.option_category?.name || 'Unknown',
+        default_value_name: option.default_value?.name || null,
+        is_required: false // This could be enhanced later with actual requirement data
+      }))
+    })) as DrinkWithOptionsPreview[]
+  },
+
+  getByCategoryWithOptionsPreview: async (categoryId: string): Promise<DrinkWithOptionsPreview[]> => {
+    const { data, error } = await supabase
+      .from('drinks')
+      .select(`
+        *,
+        category:drink_categories(*),
+        drink_options(
+          id,
+          option_category:option_categories(name),
+          default_value:option_values(name)
+        )
+      `)
+      .eq('category_id', categoryId)
+      .order('display_order', { ascending: true })
+    
+    if (error) handleSupabaseError(error)
+    
+    // Transform the data to match DrinkWithOptionsPreview interface
+    return (data || []).map(drink => ({
+      ...drink,
+      options_preview: (drink.drink_options || []).map(option => ({
+        id: option.id,
+        option_category_name: option.option_category?.name || 'Unknown',
+        default_value_name: option.default_value?.name || null,
+        is_required: false // This could be enhanced later with actual requirement data
+      }))
+    })) as DrinkWithOptionsPreview[]
   }
 }
 

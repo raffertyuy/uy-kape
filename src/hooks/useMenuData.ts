@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
 import {
   drinkCategoriesService,
@@ -14,6 +14,7 @@ import type {
   OptionValue,
   DrinkOption,
   DrinkWithOptionsAndCategory,
+  DrinkWithOptionsPreview,
   OptionCategoryWithValues,
   MenuOperationResult,
   CreateDrinkCategoryDto,
@@ -149,6 +150,88 @@ export const useDrinks = (categoryId?: string) => {
     error,
     refetch: fetchDrinks
   }
+}
+
+// Hook for drinks with options preview with performance optimizations
+export const useDrinksWithOptionsPreview = (categoryId?: string | null) => {
+  const [drinks, setDrinks] = useState<DrinkWithOptionsPreview[]>([])
+  const [isLoading, setIsLoading] = useState(false) // Start with false for lazy loading
+  const [error, setError] = useState<string | null>(null)
+
+  // Memoize the fetch function to prevent unnecessary re-renders
+  const fetchDrinks = useCallback(async () => {
+    // Skip loading if categoryId is explicitly null (lazy loading disabled)
+    if (categoryId === null) {
+      setDrinks([])
+      setIsLoading(false)
+      setError(null)
+      return
+    }
+
+    try {
+      setIsLoading(true)
+      setError(null)
+      const data = categoryId 
+        ? await drinksService.getByCategoryWithOptionsPreview(categoryId)
+        : await drinksService.getAllWithOptionsPreview()
+      setDrinks(data)
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch drinks with options'
+      setError(errorMessage)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [categoryId])
+
+  // Memoize the subscription callback to prevent subscription churn
+  const handleDrinksChange = useCallback(() => {
+    fetchDrinks()
+  }, [fetchDrinks])
+
+  const handleOptionsChange = useCallback(() => {
+    fetchDrinks()
+  }, [fetchDrinks])
+
+  useEffect(() => {
+    // Only set up subscriptions and fetch data if not explicitly disabled (categoryId !== null)
+    if (categoryId === null) {
+      return
+    }
+
+    fetchDrinks()
+
+    // Set up real-time subscriptions for drinks and related tables
+    const drinksSubscription = supabase
+      .channel('drinks_with_options_changes')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'drinks'
+      }, handleDrinksChange)
+      .subscribe()
+
+    const optionsSubscription = supabase
+      .channel('drink_options_changes')
+      .on('postgres_changes', {
+        event: '*',
+        schema: 'public',
+        table: 'drink_options'
+      }, handleOptionsChange)
+      .subscribe()
+
+    return () => {
+      drinksSubscription.unsubscribe()
+      optionsSubscription.unsubscribe()
+    }
+  }, [categoryId, fetchDrinks, handleDrinksChange, handleOptionsChange])
+
+  // Memoize the return object to prevent unnecessary re-renders
+  return useMemo(() => ({
+    data: drinks,
+    isLoading,
+    error,
+    refetch: fetchDrinks
+  }), [drinks, isLoading, error, fetchDrinks])
 }
 
 // Hook for individual drink with options
@@ -387,85 +470,130 @@ export const useOptionValues = (categoryId?: string) => {
 }
 
 // Mutation hooks for drink categories
-export const useCreateDrinkCategory = () => {
+export const useCreateDrinkCategory = (onSuccess?: () => void) => {
   const operation = useAsyncOperation<DrinkCategory>()
   
-  const createCategory = useCallback((data: CreateDrinkCategoryDto) => 
-    operation.execute(() => drinkCategoriesService.create(data)), [operation])
+  const createCategory = useCallback(async (data: CreateDrinkCategoryDto) => {
+    const result = await operation.execute(() => drinkCategoriesService.create(data))
+    if (result && onSuccess) {
+      onSuccess()
+    }
+    return result
+  }, [operation, onSuccess])
 
   return { ...operation, createCategory }
 }
 
-export const useUpdateDrinkCategory = () => {
+export const useUpdateDrinkCategory = (onSuccess?: () => void) => {
   const operation = useAsyncOperation<DrinkCategory>()
   
-  const updateCategory = useCallback((id: string, data: UpdateDrinkCategoryDto) => 
-    operation.execute(() => drinkCategoriesService.update(id, data)), [operation])
+  const updateCategory = useCallback(async (id: string, data: UpdateDrinkCategoryDto) => {
+    const result = await operation.execute(() => drinkCategoriesService.update(id, data))
+    if (result && onSuccess) {
+      onSuccess()
+    }
+    return result
+  }, [operation, onSuccess])
 
   return { ...operation, updateCategory }
 }
 
-export const useDeleteDrinkCategory = () => {
+export const useDeleteDrinkCategory = (onSuccess?: () => void) => {
   const operation = useAsyncOperation<void>()
   
-  const deleteCategory = useCallback((id: string) => 
-    operation.execute(() => drinkCategoriesService.delete(id)), [operation])
+  const deleteCategory = useCallback(async (id: string) => {
+    const result = await operation.execute(() => drinkCategoriesService.delete(id))
+    if (result === undefined && onSuccess) { // delete returns void, so undefined means success
+      onSuccess()
+    }
+    return result
+  }, [operation, onSuccess])
 
   return { ...operation, deleteCategory }
 }
 
 // Mutation hooks for drinks
-export const useCreateDrink = () => {
+export const useCreateDrink = (onSuccess?: () => void) => {
   const operation = useAsyncOperation<Drink>()
   
-  const createDrink = useCallback((data: CreateDrinkDto) => 
-    operation.execute(() => drinksService.create(data)), [operation])
+  const createDrink = useCallback(async (data: CreateDrinkDto) => {
+    const result = await operation.execute(() => drinksService.create(data))
+    if (result && onSuccess) {
+      onSuccess()
+    }
+    return result
+  }, [operation, onSuccess])
 
   return { ...operation, createDrink }
 }
 
-export const useUpdateDrink = () => {
+export const useUpdateDrink = (onSuccess?: () => void) => {
   const operation = useAsyncOperation<Drink>()
   
-  const updateDrink = useCallback((id: string, data: UpdateDrinkDto) => 
-    operation.execute(() => drinksService.update(id, data)), [operation])
+  const updateDrink = useCallback(async (id: string, data: UpdateDrinkDto) => {
+    const result = await operation.execute(() => drinksService.update(id, data))
+    if (result && onSuccess) {
+      onSuccess()
+    }
+    return result
+  }, [operation, onSuccess])
 
   return { ...operation, updateDrink }
 }
 
-export const useDeleteDrink = () => {
+export const useDeleteDrink = (onSuccess?: () => void) => {
   const operation = useAsyncOperation<void>()
   
-  const deleteDrink = useCallback((id: string) => 
-    operation.execute(() => drinksService.delete(id)), [operation])
+  const deleteDrink = useCallback(async (id: string) => {
+    const result = await operation.execute(() => drinksService.delete(id))
+    if (result === undefined && onSuccess) { // delete returns void
+      onSuccess()
+    }
+    return result
+  }, [operation, onSuccess])
 
   return { ...operation, deleteDrink }
 }
 
 // Mutation hooks for option categories
-export const useCreateOptionCategory = () => {
+export const useCreateOptionCategory = (onSuccess?: () => void) => {
   const operation = useAsyncOperation<OptionCategory>()
   
-  const createCategory = useCallback((data: CreateOptionCategoryDto) => 
-    operation.execute(() => optionCategoriesService.create(data)), [operation])
+  const createCategory = useCallback(async (data: CreateOptionCategoryDto) => {
+    const result = await operation.execute(() => optionCategoriesService.create(data))
+    if (result && onSuccess) {
+      onSuccess()
+    }
+    return result
+  }, [operation, onSuccess])
 
   return { ...operation, createCategory }
 }
 
-export const useUpdateOptionCategory = () => {
+export const useUpdateOptionCategory = (onSuccess?: () => void) => {
   const operation = useAsyncOperation<OptionCategory>()
   
-  const updateCategory = useCallback((id: string, data: UpdateOptionCategoryDto) => 
-    operation.execute(() => optionCategoriesService.update(id, data)), [operation])
+  const updateCategory = useCallback(async (id: string, data: UpdateOptionCategoryDto) => {
+    const result = await operation.execute(() => optionCategoriesService.update(id, data))
+    if (result && onSuccess) {
+      onSuccess()
+    }
+    return result
+  }, [operation, onSuccess])
 
   return { ...operation, updateCategory }
 }
 
-export const useDeleteOptionCategory = () => {
+export const useDeleteOptionCategory = (onSuccess?: () => void) => {
   const operation = useAsyncOperation<void>()
   
-  const deleteCategory = useCallback((id: string) => 
-    operation.execute(() => optionCategoriesService.delete(id)), [operation])
+  const deleteCategory = useCallback(async (id: string) => {
+    const result = await operation.execute(() => optionCategoriesService.delete(id))
+    if (result === undefined && onSuccess) { // delete returns void
+      onSuccess()
+    }
+    return result
+  }, [operation, onSuccess])
 
   return { ...operation, deleteCategory }
 }

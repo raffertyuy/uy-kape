@@ -20,9 +20,16 @@ export const MenuManagement: React.FC = () => {
   const [filters, setFilters] = useState<MenuFilters>({})
 
   // Data hooks
-  const { data: categories, isLoading: loadingCategories } = useDrinkCategories()
-  const { data: drinks, isLoading: loadingDrinks } = useDrinks()
-  const { data: optionCategories, isLoading: loadingOptions } = useOptionCategories()
+  const { data: categories, isLoading: loadingCategories, refetch: refetchCategories } = useDrinkCategories()
+  const { data: drinks, isLoading: loadingDrinks, refetch: refetchDrinks } = useDrinks()
+  const { data: optionCategories, isLoading: loadingOptions, refetch: refetchOptions } = useOptionCategories()
+
+  // Handle data changes from child components
+  const handleDataChange = () => {
+    refetchCategories()
+    refetchDrinks()
+    refetchOptions()
+  }
 
   // Real-time features
   const { 
@@ -112,15 +119,15 @@ export const MenuManagement: React.FC = () => {
             ) : (
               <>
                 {activeTab === 'categories' && (
-                  <DrinkCategoryManagement />
+                  <DrinkCategoryManagement onDataChange={handleDataChange} />
                 )}
 
                 {activeTab === 'drinks' && (
-                  <DrinkManagement />
+                  <DrinkManagement onDataChange={handleDataChange} />
                 )}
 
                 {activeTab === 'options' && (
-                  <OptionManagement />
+                  <OptionManagement onDataChange={handleDataChange} />
                 )}
               </>
             )}

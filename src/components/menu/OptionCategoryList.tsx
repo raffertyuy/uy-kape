@@ -6,15 +6,28 @@ import type { OptionCategory, CreateOptionCategoryDto, UpdateOptionCategoryDto }
 
 interface OptionCategoryListProps {
   onManageValues: (_category: OptionCategory) => void
+  onDataChange?: () => void
 }
 
 export const OptionCategoryList: React.FC<OptionCategoryListProps> = ({
-  onManageValues
+  onManageValues,
+  onDataChange
 }) => {
   const { data: categories, isLoading, error, refetch } = useOptionCategories()
-  const { createCategory } = useCreateOptionCategory()
-  const { updateCategory } = useUpdateOptionCategory()
-  const { deleteCategory } = useDeleteOptionCategory()
+  
+  // Create a data change handler that refreshes local data and calls parent callback
+  const handleDataChange = React.useCallback(async () => {
+    try {
+      await refetch()
+      onDataChange?.()
+    } catch (error) {
+      console.error('Error refreshing option category data:', error)
+    }
+  }, [refetch, onDataChange])
+  
+  const { createCategory } = useCreateOptionCategory(handleDataChange)
+  const { updateCategory } = useUpdateOptionCategory(handleDataChange)
+  const { deleteCategory } = useDeleteOptionCategory(handleDataChange)
   
   const [showForm, setShowForm] = useState(false)
   const [editingCategory, setEditingCategory] = useState<OptionCategory | null>(null)
@@ -42,7 +55,7 @@ export const OptionCategoryList: React.FC<OptionCategoryListProps> = ({
         await createCategory(data as CreateOptionCategoryDto)
       }
       handleCloseForm()
-      refetch()
+      // The data refresh is handled by the mutation hook callbacks
     } catch (error) {
       // Error is handled by the hooks
       console.error('Error submitting option category:', error)
@@ -52,7 +65,7 @@ export const OptionCategoryList: React.FC<OptionCategoryListProps> = ({
   const handleDelete = async (id: string) => {
     try {
       await deleteCategory(id)
-      refetch()
+      // The data refresh is handled by the mutation hook callback
     } catch (error) {
       // Error is handled by the hooks
       console.error('Error deleting option category:', error)

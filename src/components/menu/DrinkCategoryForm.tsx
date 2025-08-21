@@ -6,6 +6,7 @@ interface DrinkCategoryFormProps {
   category?: DrinkCategory | null // undefined for create, defined for edit
   onSubmit: () => void
   onCancel: () => void
+  onDataChange?: () => void // Callback to refresh parent data
   isLoading?: boolean
 }
 
@@ -13,6 +14,7 @@ export const DrinkCategoryForm: React.FC<DrinkCategoryFormProps> = ({
   category,
   onSubmit,
   onCancel,
+  onDataChange,
   isLoading = false
 }) => {
   const [formData, setFormData] = useState({
@@ -23,9 +25,15 @@ export const DrinkCategoryForm: React.FC<DrinkCategoryFormProps> = ({
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  const { data: categories } = useDrinkCategories()
-  const createMutation = useCreateDrinkCategory()
-  const updateMutation = useUpdateDrinkCategory()
+  const { data: categories, refetch: refetchCategories } = useDrinkCategories()
+  
+  const handleDataChange = () => {
+    refetchCategories()
+    onDataChange?.()
+  }
+  
+  const createMutation = useCreateDrinkCategory(handleDataChange)
+  const updateMutation = useUpdateDrinkCategory(handleDataChange)
 
   const isEditing = Boolean(category)
   const isSubmitting = createMutation.state === 'loading' || updateMutation.state === 'loading'
