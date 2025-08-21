@@ -97,7 +97,7 @@ class BrowserNotificationService implements NotificationServiceInterface {
     }
 
     try {
-      const permission = await (window as any).Notification.requestPermission()
+      const permission = await window.Notification.requestPermission()
       return permission
     } catch (error) {
       console.error('Failed to request notification permission:', error)
