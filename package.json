@@ -18,7 +18,10 @@
     "test:watch": "node --max-old-space-size=8192 ./node_modules/vitest/vitest.mjs --watch",
     "test:ci": "node --max-old-space-size=10240 ./node_modules/vitest/vitest.mjs run --config=vitest.config.ci.ts --coverage --reporter=verbose --reporter=junit --outputFile=test-results.xml",
     "test:ci-no-coverage": "node --max-old-space-size=10240 ./node_modules/vitest/vitest.mjs run --config=vitest.config.ci.ts --reporter=verbose --reporter=junit --outputFile=test-results.xml",
-    "test:memory": "node --max-old-space-size=10240 --expose-gc ./node_modules/vitest/vitest.mjs run --config=vitest.config.ci.ts --reporter=verbose --logHeapUsage"
+    "test:memory": "node --max-old-space-size=10240 --expose-gc ./node_modules/vitest/vitest.mjs run --config=vitest.config.ci.ts --reporter=verbose --logHeapUsage",
+    "test:e2e": "playwright test --config=playwright-tests/playwright.config.ts",
+    "test:e2e:headed": "playwright test --config=playwright-tests/playwright.config.ts --headed",
+    "test:e2e:debug": "playwright test --config=playwright-tests/playwright.config.ts --debug"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.55.0",
@@ -28,6 +31,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
+    "@playwright/test": "^1.55.0",
     "@testing-library/jest-dom": "^6.7.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
