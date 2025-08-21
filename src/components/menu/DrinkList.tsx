@@ -1,17 +1,19 @@
 import React, { useState, useMemo } from 'react'
-import type { Drink, DrinkCategory } from '@/types/menu.types'
+import type { Drink, DrinkCategory, DrinkWithOptionsPreview } from '@/types/menu.types'
 import { DrinkCard } from './DrinkCard'
 import { DrinkForm } from './DrinkForm'
 
 interface DrinkListProps {
-  drinks: Drink[]
+  drinks: Drink[] | DrinkWithOptionsPreview[]
   categories: DrinkCategory[]
   onEdit: (_drink: Drink) => void
   onDelete: (_id: string) => void
   onManageOptions: (_drinkId: string) => void
   selectedCategoryId?: string
   onCategoryFilter: (_categoryId: string | undefined) => void
+  showOptionsPreview?: boolean
   isLoading?: boolean
+  onDataChange?: () => void
 }
 
 export const DrinkList: React.FC<DrinkListProps> = ({
@@ -22,7 +24,9 @@ export const DrinkList: React.FC<DrinkListProps> = ({
   onManageOptions,
   selectedCategoryId,
   onCategoryFilter,
-  isLoading = false
+  showOptionsPreview = false,
+  isLoading = false,
+  onDataChange
 }) => {
   const [showForm, setShowForm] = useState(false)
   const [editingDrink, setEditingDrink] = useState<Drink | null>(null)
@@ -42,8 +46,19 @@ export const DrinkList: React.FC<DrinkListProps> = ({
     setShowForm(true)
   }
 
-  const handleEdit = (drink: Drink) => {
-    setEditingDrink(drink)
+  const handleEdit = (drink: Drink | DrinkWithOptionsPreview) => {
+    // Extract the base Drink properties for editing
+    const drinkToEdit: Drink = {
+      id: drink.id,
+      name: drink.name,
+      description: drink.description,
+      is_active: drink.is_active,
+      display_order: drink.display_order,
+      category_id: drink.category_id,
+      created_at: drink.created_at,
+      updated_at: drink.updated_at
+    }
+    setEditingDrink(drinkToEdit)
     setShowForm(true)
   }
 
@@ -259,6 +274,7 @@ export const DrinkList: React.FC<DrinkListProps> = ({
               key={drink.id}
               drink={drink}
               viewMode={viewMode}
+              showOptionsPreview={showOptionsPreview}
               onEdit={() => handleEdit(drink)}
               onDelete={() => onDelete(drink.id)}
               onManageOptions={() => onManageOptions(drink.id)}
@@ -291,6 +307,7 @@ export const DrinkList: React.FC<DrinkListProps> = ({
               categories={categories}
               onSubmit={handleFormSubmit}
               onCancel={handleFormClose}
+              {...(onDataChange ? { onDataChange } : {})}
             />
           </div>
         </div>

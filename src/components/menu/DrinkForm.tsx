@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useCreateDrink, useUpdateDrink, useDrinks } from '@/hooks/useMenuData'
 import type { Drink, DrinkCategory, CreateDrinkDto, UpdateDrinkDto } from '@/types/menu.types'
 
@@ -7,6 +7,7 @@ interface DrinkFormProps {
   categories: DrinkCategory[]
   onSubmit: () => void
   onCancel: () => void
+  onDataChange?: () => void
   isLoading?: boolean
 }
 
@@ -15,6 +16,7 @@ export const DrinkForm: React.FC<DrinkFormProps> = ({
   categories,
   onSubmit,
   onCancel,
+  onDataChange,
   isLoading = false
 }) => {
   const [formData, setFormData] = useState({
@@ -27,8 +29,14 @@ export const DrinkForm: React.FC<DrinkFormProps> = ({
   const [errors, setErrors] = useState<Record<string, string>>({})
 
   const { data: drinks } = useDrinks()
-  const createMutation = useCreateDrink()
-  const updateMutation = useUpdateDrink()
+  
+  // Create a callback handler that calls onDataChange if provided
+  const handleDataChange = useCallback(() => {
+    onDataChange?.()
+  }, [onDataChange])
+  
+  const createMutation = useCreateDrink(handleDataChange)
+  const updateMutation = useUpdateDrink(handleDataChange)
 
   const isEditing = Boolean(drink)
   const isSubmitting = createMutation.state === 'loading' || updateMutation.state === 'loading'

@@ -3,7 +3,11 @@ import { OptionCategoryList } from './OptionCategoryList'
 import { OptionValueList } from './OptionValueList'
 import type { OptionCategory } from '@/types/menu.types'
 
-export const OptionManagement: React.FC = () => {
+interface OptionManagementProps {
+  onDataChange?: () => void
+}
+
+export const OptionManagement: React.FC<OptionManagementProps> = ({ onDataChange }) => {
   const [selectedCategory, setSelectedCategory] = useState<OptionCategory | null>(null)
 
   const handleManageValues = (category: OptionCategory) => {
@@ -26,6 +30,7 @@ export const OptionManagement: React.FC = () => {
   return (
     <OptionCategoryList
       onManageValues={handleManageValues}
+      {...(onDataChange ? { onDataChange } : {})}
     />
   )
 }

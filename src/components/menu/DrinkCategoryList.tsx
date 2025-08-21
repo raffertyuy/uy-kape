@@ -8,6 +8,7 @@ interface DrinkCategoryListProps {
   onEdit: (_category: DrinkCategory) => void
   onDelete: (_id: string) => void
   onReorder: (_reorderedCategories: DrinkCategory[]) => void
+  onDataChange?: () => void
   isLoading?: boolean
 }
 
@@ -16,6 +17,7 @@ export const DrinkCategoryList: React.FC<DrinkCategoryListProps> = ({
   onEdit: _onEdit,
   onDelete,
   onReorder: _onReorder,
+  onDataChange,
   isLoading = false
 }) => {
   const [showForm, setShowForm] = useState(false)
@@ -150,6 +152,7 @@ export const DrinkCategoryList: React.FC<DrinkCategoryListProps> = ({
               category={editingCategory}
               onSubmit={handleFormSubmit}
               onCancel={handleFormClose}
+              {...(onDataChange && { onDataChange })}
             />
           </div>
         </div>

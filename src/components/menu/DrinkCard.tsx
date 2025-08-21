@@ -1,22 +1,33 @@
 import React, { useState } from 'react'
-import type { Drink } from '@/types/menu.types'
+import type { Drink, DrinkWithOptionsPreview } from '@/types/menu.types'
+import { DrinkOptionsPreview } from './DrinkOptionsPreview'
 
 interface DrinkCardProps {
-  drink: Drink & { category?: { name: string } | null }
+  drink: (Drink & { category?: { name: string } | null }) | DrinkWithOptionsPreview
   viewMode: 'grid' | 'list'
+  showOptionsPreview?: boolean
   onEdit: () => void
   onDelete: () => void
   onManageOptions: () => void
 }
 
-export const DrinkCard: React.FC<DrinkCardProps> = ({
+export const DrinkCard = React.memo<DrinkCardProps>(({
   drink,
   viewMode,
+  showOptionsPreview = false,
   onEdit,
   onDelete,
   onManageOptions
 }) => {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+
+  // Helper function to check if drink has options preview data
+  const isDrinkWithOptionsPreview = (d: typeof drink): d is DrinkWithOptionsPreview => {
+    return 'options_preview' in d && Array.isArray(d.options_preview)
+  }
+
+  // Get options for preview if available
+  const drinkOptions = showOptionsPreview && isDrinkWithOptionsPreview(drink) ? drink.options_preview : undefined
 
   const handleDeleteClick = () => {
     setShowDeleteConfirm(true)
@@ -99,6 +110,16 @@ export const DrinkCard: React.FC<DrinkCardProps> = ({
                       {drink.description}
                     </p>
                   )}
+                  {/* Options Preview for List View */}
+                  {drinkOptions && (
+                    <div className="mt-2">
+                      <DrinkOptionsPreview 
+                        options={drinkOptions}
+                        variant="list"
+                        maxDisplayOptions={3}
+                      />
+                    </div>
+                  )}
                 </div>
                 
                 {/* Metadata */}
@@ -174,6 +195,16 @@ export const DrinkCard: React.FC<DrinkCardProps> = ({
                 {drink.description}
               </p>
             )}
+            {/* Options Preview for Grid View */}
+            {drinkOptions && (
+              <div className="mt-2">
+                <DrinkOptionsPreview 
+                  options={drinkOptions}
+                  variant="grid"
+                  maxDisplayOptions={4}
+                />
+              </div>
+            )}
           </div>
           <div className="flex items-center space-x-2 ml-2">
             {/* Status Badge */}
@@ -231,4 +262,6 @@ export const DrinkCard: React.FC<DrinkCardProps> = ({
       {showDeleteConfirm && <DeleteConfirmModal />}
     </>
   )
-}
+})
+
+DrinkCard.displayName = 'DrinkCard'

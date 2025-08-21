@@ -3,10 +3,20 @@ import { DrinkCategoryList } from './DrinkCategoryList'
 import { useDrinkCategories, useUpdateDrinkCategory, useDeleteDrinkCategory } from '@/hooks/useMenuData'
 import type { DrinkCategory } from '@/types/menu.types'
 
-export const DrinkCategoryManagement: React.FC = () => {
-  const { data: categories = [], isLoading } = useDrinkCategories()
-  const { updateCategory } = useUpdateDrinkCategory()
-  const { deleteCategory } = useDeleteDrinkCategory()
+interface DrinkCategoryManagementProps {
+  onDataChange?: () => void
+}
+
+export const DrinkCategoryManagement: React.FC<DrinkCategoryManagementProps> = ({ onDataChange }) => {
+  const { data: categories = [], isLoading, refetch: refetchCategories } = useDrinkCategories()
+  
+  const handleDataChange = () => {
+    refetchCategories()
+    onDataChange?.()
+  }
+  
+  const { updateCategory } = useUpdateDrinkCategory(handleDataChange)
+  const { deleteCategory } = useDeleteDrinkCategory(handleDataChange)
 
   const [editingCategory, setEditingCategory] = useState<DrinkCategory | null>(null)
 
@@ -15,10 +25,7 @@ export const DrinkCategoryManagement: React.FC = () => {
   }
 
   const handleDelete = async (id: string) => {
-    // eslint-disable-next-line no-alert
-    if (window.confirm('Are you sure you want to delete this category?')) {
-      await deleteCategory(id)
-    }
+    await deleteCategory(id)
   }
 
   const handleReorder = async (reorderedCategories: DrinkCategory[]) => {
@@ -48,6 +55,7 @@ export const DrinkCategoryManagement: React.FC = () => {
       onEdit={handleEdit}
       onDelete={handleDelete}
       onReorder={handleReorder}
+      onDataChange={handleDataChange}
       isLoading={isLoading}
     />
   )
