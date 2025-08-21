@@ -24,7 +24,6 @@ export const DrinkCard = memo<DrinkCardProps>(
     const borderColorClass = isSelected 
       ? 'border-coffee-500 bg-coffee-50 shadow-md' 
       : 'border-coffee-200 hover:border-coffee-300 hover:shadow-sm'
-
     return (
       <div
         role="button"
