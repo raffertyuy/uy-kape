@@ -141,6 +141,7 @@ export default function OrderDashboardError({
                 <div>
                   <strong>Stack Trace:</strong>
                   <pre className="mt-1 text-xs whitespace-pre-wrap">
+                    {/* Stack trace is only shown in development */}
                     {error.stack}
                   </pre>
                 </div>
