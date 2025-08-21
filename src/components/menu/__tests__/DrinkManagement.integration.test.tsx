@@ -15,62 +15,58 @@ vi.mock('../../../services/menuService', () => ({
 }));
 
 // Mock the hooks
-vi.mock('../../../hooks/useMenuData', async (importOriginal) => {
-  const actual = await importOriginal() as any;
-  return {
-    ...actual,
-    useDrinkCategories: () => ({
-      data: [
-        { id: '1', name: 'Coffee', description: 'Coffee drinks' },
-        { id: '2', name: 'Tea', description: 'Tea drinks' },
-      ],
-      isLoading: false,
-      error: null,
-      refetch: vi.fn(),
-    }),
-    useDrinks: () => ({
-      data: [
-        {
-          id: '1',
-          name: 'Espresso',
-          description: 'Strong coffee',
-          price: 3.50,
-          category_id: '1',
-          is_available: true,
-        },
-      ],
-      isLoading: false,
-      error: null,
-      refetch: vi.fn(),
-    }),
-    useDrinksWithOptionsPreview: () => ({
-      data: [
-        {
-          id: '1',
-          name: 'Espresso',
-          description: 'Strong coffee',
-          price: 3.50,
-          category_id: '1',
-          is_available: true,
-          options: [
-            {
-              option_category: { id: '1', name: 'Shots' },
-              option_value: { id: '1', name: '1', additional_price: 0 },
-              is_default: true,
-            },
-          ],
-        },
-      ],
-      isLoading: false,
-      error: null,
-      refetch: vi.fn(),
-    }),
-    useDeleteDrink: () => ({
-      deleteDrink: vi.fn(),
-      state: 'idle',
-    }),
-  };
-});
+vi.mock('../../../hooks/useMenuData', () => ({
+  useDrinkCategories: () => ({
+    data: [
+      { id: '1', name: 'Coffee', description: 'Coffee drinks' },
+      { id: '2', name: 'Tea', description: 'Tea drinks' },
+    ],
+    isLoading: false,
+    error: null,
+    refetch: vi.fn(),
+  }),
+  useDrinks: () => ({
+    data: [
+      {
+        id: '1',
+        name: 'Espresso',
+        description: 'Strong coffee',
+        price: 3.50,
+        category_id: '1',
+        is_available: true,
+      },
+    ],
+    isLoading: false,
+    error: null,
+    refetch: vi.fn(),
+  }),
+  useDrinksWithOptionsPreview: () => ({
+    data: [
+      {
+        id: '1',
+        name: 'Espresso',
+        description: 'Strong coffee',
+        price: 3.50,
+        category_id: '1',
+        is_available: true,
+        options: [
+          {
+            option_category: { id: '1', name: 'Shots' },
+            option_value: { id: '1', name: '1', additional_price: 0 },
+            is_default: true,
+          },
+        ],
+      },
+    ],
+    isLoading: false,
+    error: null,
+    refetch: vi.fn(),
+  }),
+  useDeleteDrink: () => ({
+    deleteDrink: vi.fn(),
+    state: 'idle',
+  }),
+}));
 
 const renderWithRouter = (component: React.ReactElement) => {
   return render(
