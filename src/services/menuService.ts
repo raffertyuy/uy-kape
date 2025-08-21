@@ -226,7 +226,8 @@ export const drinksService = {
         category:drink_categories(*),
         drink_options(
           id,
-          option_category:option_categories(name),
+          option_category_id,
+          option_category:option_categories(name, is_required),
           default_value:option_values(name)
         )
       `)
@@ -238,10 +239,10 @@ export const drinksService = {
     return (data || []).map(drink => ({
       ...drink,
       options_preview: (drink.drink_options || []).map(option => ({
-        id: option.id,
+        id: option.option_category_id, // Use option_category_id instead of drink_option.id
         option_category_name: option.option_category?.name || 'Unknown',
         default_value_name: option.default_value?.name || null,
-        is_required: false // This could be enhanced later with actual requirement data
+        is_required: option.option_category?.is_required || false
       }))
     })) as DrinkWithOptionsPreview[]
   },
@@ -254,7 +255,8 @@ export const drinksService = {
         category:drink_categories(*),
         drink_options(
           id,
-          option_category:option_categories(name),
+          option_category_id,
+          option_category:option_categories(name, is_required),
           default_value:option_values(name)
         )
       `)
@@ -267,10 +269,10 @@ export const drinksService = {
     return (data || []).map(drink => ({
       ...drink,
       options_preview: (drink.drink_options || []).map(option => ({
-        id: option.id,
+        id: option.option_category_id, // Use option_category_id instead of drink_option.id
         option_category_name: option.option_category?.name || 'Unknown',
         default_value_name: option.default_value?.name || null,
-        is_required: false // This could be enhanced later with actual requirement data
+        is_required: option.option_category?.is_required || false
       }))
     })) as DrinkWithOptionsPreview[]
   }

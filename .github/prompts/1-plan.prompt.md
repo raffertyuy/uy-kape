@@ -57,7 +57,7 @@ PLAN HERE
 - Add a step to write unit tests for the feature
 - For major UI changes, add a step to write playwright UI tests for the feature
 - Add a step to run all unit and UI tests as last step (with no -destination set to ensure active simulator is used)
-- Add a step to make sure it follows our [definition_of_done](/docs/specs/definition_of_done.md)
+- Add a step to make sure it complies with our [definition_of_done](/docs/specs/definition_of_done.md)
 
 ### 3. NEXT:
 

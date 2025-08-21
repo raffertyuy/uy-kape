@@ -14,63 +14,70 @@ vi.mock('../../../services/menuService', () => ({
   },
 }));
 
-// Mock the hooks
-vi.mock('../../../hooks/useMenuData', () => ({
-  useDrinkCategories: () => ({
-    data: [
-      { id: '1', name: 'Coffee', description: 'Coffee drinks' },
-      { id: '2', name: 'Tea', description: 'Tea drinks' },
-    ],
-    isLoading: false,
-    error: null,
-    refetch: vi.fn(),
-  }),
-  useDrinks: () => ({
-    data: [
-      {
-        id: '1',
-        name: 'Espresso',
-        description: 'Strong coffee',
-        price: 3.50,
-        category_id: '1',
-        is_available: true,
-      },
-    ],
-    isLoading: false,
-    error: null,
-    refetch: vi.fn(),
-  }),
-  useDrinksWithOptionsPreview: () => ({
-    data: [
-      {
-        id: '1',
-        name: 'Espresso',
-        description: 'Strong coffee',
-        price: 3.50,
-        category_id: '1',
-        is_available: true,
-        options: [
-          {
-            option_category: { id: '1', name: 'Shots' },
-            option_value: { id: '1', name: '1', additional_price: 0 },
-            is_default: true,
-          },
-        ],
-      },
-    ],
-    isLoading: false,
-    error: null,
-    refetch: vi.fn(),
-  }),
-  useDeleteDrink: () => ({
-    deleteDrink: vi.fn(),
-    state: 'idle',
-  }),
-}));
+// Mock the hooks using importOriginal to avoid missing exports
+vi.mock('../../../hooks/useMenuData', async (importOriginal) => {
+  const actual = await importOriginal() as any;
+  return {
+    ...actual,
+    useDrinkCategories: vi.fn(() => ({
+      data: [
+        { id: '1', name: 'Coffee', description: 'Coffee drinks' },
+        { id: '2', name: 'Tea', description: 'Tea drinks' },
+      ],
+      isLoading: false,
+      error: null,
+      refetch: vi.fn(),
+    })),
+    useDrinks: vi.fn(() => ({
+      data: [
+        {
+          id: '1',
+          name: 'Espresso',
+          description: 'Strong coffee',
+          price: 3.50,
+          category_id: '1',
+          is_available: true,
+        },
+      ],
+      isLoading: false,
+      error: null,
+      refetch: vi.fn(),
+    })),
+    useDrinksWithOptionsPreview: vi.fn(() => ({
+      data: [
+        {
+          id: '1',
+          name: 'Espresso',
+          description: 'Strong coffee',
+          price: 3.50,
+          category_id: '1',
+          is_available: true,
+          options: [
+            {
+              option_category: { id: '1', name: 'Shots' },
+              option_value: { id: '1', name: '1', additional_price: 0 },
+              is_default: true,
+            },
+          ],
+        },
+      ],
+      isLoading: false,
+      error: null,
+      refetch: vi.fn(),
+    })),
+    useDeleteDrink: vi.fn(() => ({
+      deleteDrink: vi.fn(),
+      state: 'idle',
+    })),
+  };
+});
 
 const renderWithRouter = (component: React.ReactElement) => {
   return render(
-    <BrowserRouter>
+    <BrowserRouter future={{
+      v7_startTransition: true,
+      v7_relativeSplatPath: true
+    }}>
       {component}
     </BrowserRouter>
   );
@@ -89,9 +96,15 @@ describe('DrinkManagement Integration', () => {
       expect(screen.getByText('Show Options Preview')).toBeInTheDocument();
     });
 
-    // Check if categories are rendered
-    expect(screen.getByText('Coffee')).toBeInTheDocument();
-    expect(screen.getByText('Tea')).toBeInTheDocument();
+    // Check if categories are rendered in the dropdown
+    const categorySelect = screen.getByLabelText(/filter by category/i);
+    expect(categorySelect).toBeInTheDocument();
+    
+    // Check if category options are available
+    await waitFor(() => {
+      expect(screen.getByRole('option', { name: 'Coffee' })).toBeInTheDocument();
+      expect(screen.getByRole('option', { name: 'Tea' })).toBeInTheDocument();
+    });
 
     // Check if drinks are rendered
     expect(screen.getByText('Espresso')).toBeInTheDocument();
@@ -116,9 +129,17 @@ describe('DrinkManagement Integration', () => {
       expect(screen.getByText('Show Options Preview')).toBeInTheDocument();
     });
 
-    // Click on Coffee category
-    const coffeeCategory = screen.getByText('Coffee');
-    fireEvent.click(coffeeCategory);
+    // Find the category select dropdown
+    const categorySelect = screen.getByLabelText(/filter by category/i);
+    expect(categorySelect).toBeInTheDocument();
+    
+    // Wait for category options to be available
+    await waitFor(() => {
+      expect(screen.getByRole('option', { name: 'Coffee' })).toBeInTheDocument();
+    });
+
+    // Change the select value to filter by Coffee category
+    fireEvent.change(categorySelect, { target: { value: '1' } }); // Coffee has id '1' in our mock
 
     // Verify that drinks are filtered (this would depend on actual implementation)
     await waitFor(() => {

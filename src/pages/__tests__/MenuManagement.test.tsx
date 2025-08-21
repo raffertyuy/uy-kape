@@ -12,6 +12,12 @@ vi.mock('@/hooks/useMenuData', () => ({
     data: [],
     isLoading: false
   })),
+  useDrinksWithOptionsPreview: vi.fn(() => ({
+    data: [],
+    isLoading: false,
+    error: null,
+    refetch: vi.fn()
+  })),
   useOptionCategories: vi.fn(() => ({
     data: [],
     isLoading: false

@@ -53,8 +53,8 @@ To know what each file and folder does, or to look for any project documentation
 
 ### Coding Standards
 
-[coding-standards](/.github/prompt-snippets/coding-standards.md)
+All code changes must follow our [coding-standards](/.github/prompt-snippets/coding-standards.md).
 
 ## Definition of Done
 
-[definition_of_done](/docs/specs/definition_of_done.md)
+All changes must comply with our [definition_of_done](/docs/specs/definition_of_done.md).

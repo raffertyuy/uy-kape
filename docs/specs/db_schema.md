@@ -51,6 +51,7 @@ erDiagram
         int id PK "unique ID"
         string guest_name "the guest's name"
         int drink_id FK "references drinks.id"
+        string special_request "optional guest instructions for order preparation"
         string status "pending, ready, completed, cancelled"
         int queue_number "computed queue position"
         timestamp created_at "timestamp of the order"
@@ -146,6 +147,7 @@ Stores all guest orders with status tracking and queue management.
 | id           | int       | unique ID (Primary Key)                            |
 | guest_name   | string    | the guest's name                                   |
 | drink_id     | int       | Foreign Key to drinks.id                           |
+| special_request | string | optional guest instructions for order preparation |
 | status       | string    | "pending", "ready", "completed", "cancelled"      |
 | queue_number | int       | computed queue position for pending orders        |
 | created_at   | timestamp | timestamp when order was placed                    |
@@ -191,6 +193,14 @@ Stores the specific options selected for each order.
 - **Available Options**: Temperature (Hot/Cold) (default Hot)
 - **Guest Selection**: Hot
 - **Order Record**: 1 order_options record
+
+### Scenario 5: Latte Order with Special Request
+
+- **Drink**: Caffe Latte (Coffee category)
+- **Available Options**: Number of Shots (Single/Double) + Milk Type (required) + Temperature (Hot/Cold)
+- **Guest Selection**: Double shot + Oat milk + Hot
+- **Special Request**: "Extra hot please, and light foam"
+- **Order Record**: 3 order_options records + special_request field populated
 
 ## Updated Option Logic Summary
 
