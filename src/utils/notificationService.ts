@@ -143,7 +143,7 @@ class BrowserNotificationService implements NotificationServiceInterface {
         notificationOptions.data = options.data
       }
 
-      const notification = new (window as any).Notification(options.title, notificationOptions)
+      const notification = new window.Notification(options.title, notificationOptions)
 
       // Auto-close after 5 seconds unless requireInteraction is true
       if (!options.requireInteraction) {
