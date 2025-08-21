@@ -96,9 +96,15 @@ describe('DrinkManagement Integration', () => {
       expect(screen.getByText('Show Options Preview')).toBeInTheDocument();
     });
 
-    // Check if categories are rendered
-    expect(screen.getByText('Coffee')).toBeInTheDocument();
-    expect(screen.getByText('Tea')).toBeInTheDocument();
+    // Check if categories are rendered in the dropdown
+    const categorySelect = screen.getByLabelText(/filter by category/i);
+    expect(categorySelect).toBeInTheDocument();
+    
+    // Check if category options are available
+    await waitFor(() => {
+      expect(screen.getByRole('option', { name: 'Coffee' })).toBeInTheDocument();
+      expect(screen.getByRole('option', { name: 'Tea' })).toBeInTheDocument();
+    });
 
     // Check if drinks are rendered
     expect(screen.getByText('Espresso')).toBeInTheDocument();
@@ -123,9 +129,17 @@ describe('DrinkManagement Integration', () => {
       expect(screen.getByText('Show Options Preview')).toBeInTheDocument();
     });
 
-    // Click on Coffee category
-    const coffeeCategory = screen.getByText('Coffee');
-    fireEvent.click(coffeeCategory);
+    // Find the category select dropdown
+    const categorySelect = screen.getByLabelText(/filter by category/i);
+    expect(categorySelect).toBeInTheDocument();
+    
+    // Wait for category options to be available
+    await waitFor(() => {
+      expect(screen.getByRole('option', { name: 'Coffee' })).toBeInTheDocument();
+    });
+
+    // Change the select value to filter by Coffee category
+    fireEvent.change(categorySelect, { target: { value: '1' } }); // Coffee has id '1' in our mock
 
     // Verify that drinks are filtered (this would depend on actual implementation)
     await waitFor(() => {
