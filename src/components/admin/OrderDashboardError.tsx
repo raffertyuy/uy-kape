@@ -209,7 +209,6 @@ export default function OrderDashboardError({
 interface OrderDashboardErrorBoundaryState {
   hasError: boolean
   error: Error | null
-  errorInfo: React.ErrorInfo | null
 }
 
 interface OrderDashboardErrorBoundaryProps {
@@ -226,8 +225,7 @@ export class OrderDashboardErrorBoundary extends React.Component<
     super(props)
     this.state = {
       hasError: false,
-      error: null,
-      errorInfo: null
+      error: null
     }
   }
   
@@ -240,8 +238,7 @@ export class OrderDashboardErrorBoundary extends React.Component<
   
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     this.setState({
-      error,
-      errorInfo
+      error
     })
     
     // Log error to console in development
@@ -257,8 +254,7 @@ export class OrderDashboardErrorBoundary extends React.Component<
   handleRetry = () => {
     this.setState({
       hasError: false,
-      error: null,
-      errorInfo: null
+      error: null
     })
   }
   
