@@ -19,7 +19,7 @@ Based on the analysis:
 
 ## Implementation Steps
 
-- [ ] **Step 1: Create Order Management Types and Services**
+- [x] **Step 1: Create Order Management Types and Services**
   - **Task**: Define TypeScript interfaces for order operations and create order service for guest submissions
   - **Files**:
     - `src/types/order.types.ts`: Order-specific TypeScript interfaces and enums for guest module
@@ -49,7 +49,7 @@ Based on the analysis:
     }
     ```
 
-- [ ] **Step 2: Create Drink Selection Components**
+- [x] **Step 2: Create Drink Selection Components**
   - **Task**: Build reusable components for displaying drinks organized by categories with proper TypeScript typing
   - **Files**:
     - `src/components/guest/DrinkCategoryTabs.tsx`: Category navigation with active state management
@@ -79,12 +79,13 @@ Based on the analysis:
     </div>
     ```
 
-- [ ] **Step 3: Create Dynamic Options Selection Components**
+- [x] **Step 3: Create Dynamic Options Selection Components**
   - **Task**: Build components for drink options selection based on database schema (option_categories and option_values)
   - **Files**:
     - `src/components/guest/OptionCategory.tsx`: Single option category with values (radio/select)
-    - `src/components/guest/DrinkOptionsPanel.tsx`: Complete options panel for selected drink
-    - `src/components/guest/OptionSummary.tsx`: Summary display of selected options
+    - `src/components/guest/DrinkOptionsForm.tsx`: Complete options form for selected drink
+    - `src/services/optionService.ts`: Service for fetching option values and validation
+    - `src/hooks/useOptionSelection.ts`: Hook for managing option selection state
   - **Dependencies**: Menu data hooks, form validation, UI components
   - **Implementation Details**:
 
@@ -115,13 +116,13 @@ Based on the analysis:
     </div>
     ```
 
-- [ ] **Step 4: Create Guest Information and Order Summary Components**
+- [x] **Step 4: Create Guest Information and Order Summary Components**
   - **Task**: Build guest name input and order summary components with validation
   - **Files**:
     - `src/components/guest/GuestInfoForm.tsx`: Name input with validation and accessibility
     - `src/components/guest/OrderSummary.tsx`: Complete order summary with drink and options
-    - `src/components/guest/OrderActions.tsx`: Submit and reset action buttons
-  - **Dependencies**: Form validation, toast notifications, UI components
+    - `src/hooks/useGuestInfo.ts`: Hook for managing guest information state and validation
+  - **Dependencies**: Form validation, UI components, accessibility
   - **Implementation Details**:
 
     ```typescript
@@ -153,13 +154,13 @@ Based on the analysis:
     </div>
     ```
 
-- [ ] **Step 5: Create Order Confirmation Components**
-  - **Task**: Build order confirmation and queue status display components
+- [x] **Step 5: Create Order Submission and Actions Components**
+  - **Task**: Build order submission, actions, and success confirmation components
   - **Files**:
-    - `src/components/guest/OrderConfirmation.tsx`: Success confirmation with order details
-    - `src/components/guest/QueueStatus.tsx`: Queue position and estimated wait time
-    - `src/components/guest/OrderActions.tsx`: Cancel order and place new order actions
-  - **Dependencies**: Order service, real-time updates, UI components
+    - `src/components/guest/OrderActions.tsx`: Submit, reset, and cancel action buttons with loading states
+    - `src/components/guest/OrderSuccess.tsx`: Success confirmation with order details and queue number
+    - `src/hooks/useOrderSubmission.ts`: Hook for managing order submission state
+  - **Dependencies**: Order service, loading states, accessibility, UI components
   - **Implementation Details**:
 
     ```typescript
@@ -190,13 +191,12 @@ Based on the analysis:
     </div>
     ```
 
-- [ ] **Step 6: Implement Custom Hooks for Guest Module**
+- [x] **Step 6: Implement Custom Hooks for Guest Module**
   - **Task**: Create custom hooks for order form state management and queue status
   - **Files**:
-    - `src/hooks/useOrderForm.ts`: Form state management with validation and submission
+    - `src/hooks/useOrderForm.ts`: Complete ordering flow state management with step navigation
     - `src/hooks/useQueueStatus.ts`: Real-time queue position updates via Supabase
-    - `src/hooks/useGuestOrdering.ts`: Complete ordering flow state management
-  - **Dependencies**: Order service, Supabase real-time, validation utilities
+  - **Dependencies**: Order service, Supabase real-time, validation utilities, existing hooks
   - **Implementation Details**:
 
     ```typescript
@@ -227,11 +227,12 @@ Based on the analysis:
     }
     ```
 
-- [ ] **Step 7: Update Main Guest Module Page**
+- [x] **Step 7: Update Main Guest Module Page**
   - **Task**: Replace placeholder content with complete ordering interface
   - **Files**:
-    - `src/pages/GuestModule.tsx`: Main guest ordering page with state management and component composition
-  - **Dependencies**: All guest components, custom hooks, layout components
+    - `src/pages/GuestModule.tsx`: Main guest ordering page with state management and step-based navigation
+  - **Dependencies**: All guest components, custom hooks, layout components, menu data hooks
+  - **Status**: ✅ **COMPLETED** - Full guest ordering interface implemented with step-based navigation
   - **Implementation Details**:
 
     ```typescript
@@ -273,6 +274,22 @@ Based on the analysis:
       )
     }
     ```
+
+- [x] **Step 7.1: Debug and Fix Critical Step Progression Bug**
+  - **Task**: Identify and fix bug where drink selection didn't advance to next step
+  - **Files**:
+    - `src/hooks/useOrderForm.ts`: Fixed step progression logic for drinks without options
+    - `src/pages/GuestModule.tsx`: Fixed data loading issue with useDrinksWithOptionsPreview hook
+  - **Status**: ✅ **COMPLETED** - Critical bug fixed and tested working
+  - **Bug Details**:
+    - **Root Cause 1**: `useDrinksWithOptionsPreview(null)` returned empty array instead of all drinks
+    - **Root Cause 2**: Step validation logic checking wrong data structure for drink options
+    - **Solution 1**: Changed to `useDrinksWithOptionsPreview()` to load all drinks
+    - **Solution 2**: Fixed `isStepValid` and `nextStep` to check `drink.drink_options` directly
+  - **Testing Results**:
+    - ✅ Drinks without options (Yakult, Ribena, Affogato) automatically progress to guest info step
+    - ✅ Drinks with options (Cappuccino, Espresso) progress to customization step
+    - ✅ Step progression working seamlessly across all drink types
 
 - [ ] **Step 8: Add Loading and Error States**
   - **Task**: Implement comprehensive loading states and error handling throughout guest module
