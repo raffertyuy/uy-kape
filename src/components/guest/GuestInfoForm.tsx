@@ -1,4 +1,4 @@
-import { memo, useState } from 'react'
+import { memo, useState, useCallback } from 'react'
 
 interface GuestInfoFormProps {
   guestName: string
@@ -23,17 +23,6 @@ export const GuestInfoForm = memo<GuestInfoFormProps>(
     const [isFocused, setIsFocused] = useState(false)
     const [isSpecialRequestFocused, setIsSpecialRequestFocused] = useState(false)
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      onGuestNameChange(e.target.value)
-    }
-
-    const handleSpecialRequestChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      onSpecialRequestChange(e.target.value)
-    }
-
-    const handleFocus = () => setIsFocused(true)
-    const handleBlur = () => setIsFocused(false)
-    const handleSpecialRequestFocus = () => setIsSpecialRequestFocused(true)
     const handleInputChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         onGuestNameChange(e.target.value)

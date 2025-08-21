@@ -178,20 +178,16 @@ export function useOrderForm(): UseOrderFormReturn {
 
     // Validate options
     if (!(await optionSelection.validateSelection())) {
-      return false
+      return false;
     }
 
-    const orderData: GuestOrderForm = {
-      guest_name: guestInfo.trimmedName,
-      drink_id: selectedDrink.id,
-      selected_options: optionSelection.selectedOptions,
     const trimmedRequest = guestInfo.specialRequest.trim();
     const orderData: GuestOrderForm = {
       guest_name: guestInfo.trimmedName,
       drink_id: selectedDrink.id,
       selected_options: optionSelection.selectedOptions,
       ...(trimmedRequest && { special_request: trimmedRequest })
-    }
+    };
 
     return await orderSubmission.submitGuestOrder(orderData);
   }, [selectedDrink, guestInfo, optionSelection, orderSubmission]);
