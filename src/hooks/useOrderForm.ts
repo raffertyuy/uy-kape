@@ -185,7 +185,12 @@ export function useOrderForm(): UseOrderFormReturn {
       guest_name: guestInfo.trimmedName,
       drink_id: selectedDrink.id,
       selected_options: optionSelection.selectedOptions,
-      ...(guestInfo.specialRequest.trim() && { special_request: guestInfo.specialRequest.trim() })
+    const trimmedRequest = guestInfo.specialRequest.trim();
+    const orderData: GuestOrderForm = {
+      guest_name: guestInfo.trimmedName,
+      drink_id: selectedDrink.id,
+      selected_options: optionSelection.selectedOptions,
+      ...(trimmedRequest && { special_request: trimmedRequest })
     }
 
     return await orderSubmission.submitGuestOrder(orderData);

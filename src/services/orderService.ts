@@ -90,7 +90,7 @@ export const orderService = {
           drink_id: orderData.drink_id,
           status: 'pending' as OrderStatus,
           created_at: orderCreatedAt,
-          ...(orderData.special_request?.trim() && { special_request: orderData.special_request.trim() })
+          special_request: orderData.special_request?.trim() || null
         })
         .select()
         .single()

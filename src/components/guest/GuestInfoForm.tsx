@@ -34,7 +34,24 @@ export const GuestInfoForm = memo<GuestInfoFormProps>(
     const handleFocus = () => setIsFocused(true)
     const handleBlur = () => setIsFocused(false)
     const handleSpecialRequestFocus = () => setIsSpecialRequestFocused(true)
-    const handleSpecialRequestBlur = () => setIsSpecialRequestFocused(false)
+    const handleInputChange = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        onGuestNameChange(e.target.value)
+      },
+      [onGuestNameChange]
+    )
+
+    const handleSpecialRequestChange = useCallback(
+      (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        onSpecialRequestChange(e.target.value)
+      },
+      [onSpecialRequestChange]
+    )
+
+    const handleFocus = useCallback(() => setIsFocused(true), [])
+    const handleBlur = useCallback(() => setIsFocused(false), [])
+    const handleSpecialRequestFocus = useCallback(() => setIsSpecialRequestFocused(true), [])
+    const handleSpecialRequestBlur = useCallback(() => setIsSpecialRequestFocused(false), [])
 
     const remainingChars = 500 - specialRequest.length
 
