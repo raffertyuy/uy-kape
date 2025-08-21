@@ -6,6 +6,8 @@ labels: 'enhancement'
 assignees: 'copilot'
 ---
 
+<!-- NOTE: This issue template is experimental. From previous experience, it is still not following the mandatory workflow as it is not creating a plan file. -->
+
 Your goal is to implement the specified requirement by **STRICTLY FOLLOWING** the mandatory 4-step process below.
 
 ## Requirement to implement
