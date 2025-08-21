@@ -83,7 +83,7 @@ class BrowserNotificationService implements NotificationServiceInterface {
   }
 
   get permission(): string {
-    return this.isSupported ? (window as any).Notification.permission : 'denied'
+    return this.isSupported ? window.Notification.permission : 'denied'
   }
 
   async requestPermission(): Promise<string> {
