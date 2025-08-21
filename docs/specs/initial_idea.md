@@ -69,16 +69,15 @@ It has 2 links:
 
 **Functionality:**
 1. **Menu Management:**  
-   A form or list to add, edit, and delete available coffee drinks. The data is saved to the `drinks` table in Supabase.
+   A mobile responsive form or list to add, edit, and delete available coffee drinks. The data is saved to the `drinks` table in Supabase.
    This includes the available options for each coffee drink, for example:
    - Espresso will have # of shots (single or double)
    - Cappucino will have # of shots (single or double) and also the choice of milk (whole, low-fat, non-fat, oat)
     
 2. **Order Dashboard:**  
-   A real-time list that displays all pending guest orders.
+   A mobile responsive real-time dashboard that displays all pending guest orders. This includes
+   - Order queue: A queue/list of orders which includes the details: drink, drink options, special request, name of the guest
+   - Order status: A button or toggle next to each order to mark it as "Ready", "Completed", or "Cancelled". This action should update the order's status in Supabase.
+   - Clear orders: A button to cancel all pending orders from the `orders` table, allowing for a fresh start each day.
 
-3. **Order Status:**  
-   A button or toggle next to each order to mark it as "Ready", "Completed", or "Cancelled". This action should update the order's status in Supabase.
-
-4. **Clear Orders:**  
-   A button to cancel all pending orders from the `orders` table, allowing for a fresh start each day.
+   Keep it simple. This is a home coffee ordering system for guests. Nothing about money as everything is free. No data analytic features needed.
