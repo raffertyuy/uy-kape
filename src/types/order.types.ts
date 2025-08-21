@@ -12,6 +12,15 @@ export type OrderStatus = Database['public']['Enums']['order_status']
 export interface GuestOrderForm {
   guest_name: string
   drink_id: string
+  special_request?: string
+  selected_options: Record<string, string> // option_category_id -> option_value_id
+}
+
+// Order creation request interface
+export interface CreateOrderRequest {
+  guest_name: string
+  drink_id: string
+  special_request?: string
   selected_options: Record<string, string> // option_category_id -> option_value_id
 }
 
@@ -29,6 +38,7 @@ export interface OrderWithDetails {
   drink_id: string
   drink_name?: string
   category_name?: string
+  special_request?: string | null
   status: OrderStatus
   queue_number: number
   selected_options: OrderOptionsDetail[]

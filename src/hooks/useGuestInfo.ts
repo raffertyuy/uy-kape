@@ -3,6 +3,7 @@ import { useState, useCallback } from 'react'
 interface UseGuestInfoReturn {
   // Form data
   guestName: string
+  specialRequest: string
   
   // Validation state
   isValid: boolean
@@ -10,6 +11,7 @@ interface UseGuestInfoReturn {
   
   // Actions
   setGuestName: (_name: string) => void
+  setSpecialRequest: (_request: string) => void
   validateName: () => boolean
   clearError: () => void
   
@@ -20,6 +22,7 @@ interface UseGuestInfoReturn {
 
 export function useGuestInfo(): UseGuestInfoReturn {
   const [guestName, setGuestNameState] = useState('')
+  const [specialRequest, setSpecialRequestState] = useState('')
   const [error, setError] = useState<string | null>(null)
 
   // Validation logic
@@ -69,6 +72,13 @@ export function useGuestInfo(): UseGuestInfoReturn {
     }
   }, [error])
 
+  const setSpecialRequest = useCallback((request: string) => {
+    // Limit to 500 characters
+    if (request.length <= 500) {
+      setSpecialRequestState(request)
+    }
+  }, [])
+
   const clearError = useCallback(() => {
     setError(null)
   }, [])
@@ -81,6 +91,7 @@ export function useGuestInfo(): UseGuestInfoReturn {
   return {
     // Form data
     guestName,
+    specialRequest,
     
     // Validation state
     isValid,
@@ -88,6 +99,7 @@ export function useGuestInfo(): UseGuestInfoReturn {
     
     // Actions
     setGuestName,
+    setSpecialRequest,
     validateName,
     clearError,
     

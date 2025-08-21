@@ -4,6 +4,7 @@ import type { OrderSubmissionResult } from '@/types/order.types'
 interface OrderSuccessProps {
   result: OrderSubmissionResult
   guestName: string
+  specialRequest?: string
   onCreateNewOrder: () => void
   className?: string
 }
@@ -12,6 +13,7 @@ export const OrderSuccess = memo<OrderSuccessProps>(
   function OrderSuccess({ 
     result, 
     guestName, 
+    specialRequest,
     onCreateNewOrder, 
     className = '' 
   }) {
@@ -79,6 +81,36 @@ export const OrderSuccess = memo<OrderSuccessProps>(
             )}
           </div>
         </div>
+
+        {/* Special Request */}
+        {specialRequest && specialRequest.trim() && (
+          <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+            <div className="flex items-start space-x-3">
+              <svg 
+                className="w-5 h-5 text-blue-600 mt-1 flex-shrink-0" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" 
+                />
+              </svg>
+              <div className="text-left">
+                <p className="text-sm font-medium text-blue-800 mb-1">
+                  Special Request:
+                </p>
+                <p className="text-sm text-blue-700 whitespace-pre-wrap">
+                  {specialRequest.trim()}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Instructions */}
         <div className="bg-amber-50 rounded-lg p-4 border border-amber-200">

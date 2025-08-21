@@ -45,6 +45,14 @@ const validateOrderForm = (orderData: GuestOrderForm): void => {
     }
     throw error
   }
+
+  if (orderData.special_request && orderData.special_request.length > 500) {
+    const error: OrderServiceError = {
+      type: 'validation',
+      message: 'Special request must be less than 500 characters'
+    }
+    throw error
+  }
 }
 
 // Calculate queue position for new order
@@ -81,7 +89,8 @@ export const orderService = {
           guest_name: orderData.guest_name.trim(),
           drink_id: orderData.drink_id,
           status: 'pending' as OrderStatus,
-          created_at: orderCreatedAt
+          created_at: orderCreatedAt,
+          ...(orderData.special_request?.trim() && { special_request: orderData.special_request.trim() })
         })
         .select()
         .single()
@@ -263,6 +272,7 @@ export const orderService = {
         drink_id: order.drink_id,
         drink_name: (order as any).drinks?.name || 'Unknown',
         category_name: (order as any).drinks?.drink_categories?.name || 'Unknown',
+        special_request: order.special_request,
         status: order.status || 'pending',
         queue_number: order.queue_number || 0,
         selected_options: selectedOptions,

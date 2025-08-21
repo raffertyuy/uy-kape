@@ -2,7 +2,9 @@ import { memo, useState } from 'react'
 
 interface GuestInfoFormProps {
   guestName: string
+  specialRequest: string
   onGuestNameChange: (_name: string) => void
+  onSpecialRequestChange: (_request: string) => void
   isValid: boolean
   error?: string
   className?: string
@@ -11,19 +13,30 @@ interface GuestInfoFormProps {
 export const GuestInfoForm = memo<GuestInfoFormProps>(
   function GuestInfoForm({ 
     guestName, 
-    onGuestNameChange, 
+    specialRequest,
+    onGuestNameChange,
+    onSpecialRequestChange, 
     isValid, 
     error, 
     className = '' 
   }) {
     const [isFocused, setIsFocused] = useState(false)
+    const [isSpecialRequestFocused, setIsSpecialRequestFocused] = useState(false)
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       onGuestNameChange(e.target.value)
     }
 
+    const handleSpecialRequestChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      onSpecialRequestChange(e.target.value)
+    }
+
     const handleFocus = () => setIsFocused(true)
     const handleBlur = () => setIsFocused(false)
+    const handleSpecialRequestFocus = () => setIsSpecialRequestFocused(true)
+    const handleSpecialRequestBlur = () => setIsSpecialRequestFocused(false)
+
+    const remainingChars = 500 - specialRequest.length
 
     return (
       <div className={`space-y-3 ${className}`}>
@@ -99,6 +112,55 @@ export const GuestInfoForm = memo<GuestInfoFormProps>(
               We&apos;ll call your name when your order is ready
             </p>
           )}
+        </div>
+
+        {/* Special Request Field */}
+        <div className="space-y-2">
+          <label 
+            htmlFor="special-request"
+            className="block text-lg font-medium text-coffee-800"
+          >
+            Special Request 
+            <span className="text-coffee-600 font-normal text-base ml-1">(Optional)</span>
+          </label>
+          
+          <div className="relative">
+            <textarea
+              id="special-request"
+              value={specialRequest}
+              onChange={handleSpecialRequestChange}
+              onFocus={handleSpecialRequestFocus}
+              onBlur={handleSpecialRequestBlur}
+              placeholder="Any special instructions for your order..."
+              aria-describedby="special-request-help"
+              className={`
+                w-full px-4 py-3 rounded-lg border text-base resize-none
+                transition-all duration-200
+                focus:outline-none focus:ring-2 focus:ring-coffee-400 focus:ring-offset-2
+                placeholder:text-coffee-400
+                ${isSpecialRequestFocused
+                  ? 'border-coffee-400 bg-coffee-25'
+                  : 'border-coffee-200 bg-white hover:border-coffee-300'
+                }
+              `}
+              maxLength={500}
+              rows={3}
+            />
+            
+            {/* Character count indicator */}
+            <div className={`absolute bottom-2 right-3 text-xs ${
+              remainingChars < 50 ? 'text-amber-600' : 'text-coffee-500'
+            }`}>
+              {remainingChars} characters remaining
+            </div>
+          </div>
+
+          <p 
+            id="special-request-help" 
+            className="text-sm text-coffee-600"
+          >
+            Let us know if you have any special preferences or dietary requirements
+          </p>
         </div>
       </div>
     )

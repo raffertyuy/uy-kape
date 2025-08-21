@@ -133,6 +133,8 @@ function GuestModulePage() {
       <GuestInfoForm
         guestName={orderForm.guestInfo.guestName}
         onGuestNameChange={orderForm.guestInfo.setGuestName}
+        specialRequest={orderForm.guestInfo.specialRequest}
+        onSpecialRequestChange={orderForm.guestInfo.setSpecialRequest}
         isValid={orderForm.guestInfo.isValid}
         {...(orderForm.guestInfo.error && { error: orderForm.guestInfo.error })}
       />
@@ -156,6 +158,7 @@ function GuestModulePage() {
           selectedOptions={orderForm.optionSelection.selectedOptions}
           optionCategories={orderForm.optionSelection.optionCategories}
           guestName={orderForm.guestInfo.trimmedName}
+          specialRequest={orderForm.guestInfo.specialRequest}
         />
       )}
       
@@ -187,6 +190,7 @@ function GuestModulePage() {
         <OrderSuccess
           result={orderForm.orderSubmission.result}
           guestName={orderForm.guestInfo.trimmedName}
+          specialRequest={orderForm.guestInfo.specialRequest}
           onCreateNewOrder={orderForm.startNewOrder}
         />
       )}

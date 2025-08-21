@@ -270,6 +270,7 @@ export type Database = {
           guest_name: string
           id: string
           queue_number: number | null
+          special_request: string | null
           status: Database["public"]["Enums"]["order_status"] | null
           updated_at: string | null
         }
@@ -279,6 +280,7 @@ export type Database = {
           guest_name: string
           id?: string
           queue_number?: number | null
+          special_request?: string | null
           status?: Database["public"]["Enums"]["order_status"] | null
           updated_at?: string | null
         }
@@ -288,6 +290,7 @@ export type Database = {
           guest_name?: string
           id?: string
           queue_number?: number | null
+          special_request?: string | null
           status?: Database["public"]["Enums"]["order_status"] | null
           updated_at?: string | null
         }

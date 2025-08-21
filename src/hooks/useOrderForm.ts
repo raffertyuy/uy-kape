@@ -161,6 +161,7 @@ export function useOrderForm(): UseOrderFormReturn {
     setCurrentStep('drink-selection')
     setSelectedDrink(null)
     guestInfo.setGuestName('')
+    guestInfo.setSpecialRequest('')
     guestInfo.clearError()
     orderSubmission.resetSubmission()
   }, [guestInfo, orderSubmission])
@@ -183,7 +184,8 @@ export function useOrderForm(): UseOrderFormReturn {
     const orderData: GuestOrderForm = {
       guest_name: guestInfo.trimmedName,
       drink_id: selectedDrink.id,
-      selected_options: optionSelection.selectedOptions
+      selected_options: optionSelection.selectedOptions,
+      ...(guestInfo.specialRequest.trim() && { special_request: guestInfo.specialRequest.trim() })
     }
 
     return await orderSubmission.submitGuestOrder(orderData)
@@ -199,7 +201,8 @@ export function useOrderForm(): UseOrderFormReturn {
   const orderData: GuestOrderForm | null = selectedDrink && guestInfo.trimmedName ? {
     guest_name: guestInfo.trimmedName,
     drink_id: selectedDrink.id,
-    selected_options: optionSelection.selectedOptions
+    selected_options: optionSelection.selectedOptions,
+    ...(guestInfo.specialRequest.trim() && { special_request: guestInfo.specialRequest.trim() })
   } : null
 
   // Progress calculation (excluding success step)
