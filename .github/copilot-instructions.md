@@ -51,4 +51,10 @@ To know what each file and folder does, or to look for any project documentation
 - Obfuscation of sensitive information (e.g., Subscription IDs, usernames)
 - Backward compatibility or proper breaking change documentation
 
-Follow [coding-standards](/.github/prompt-snippets/coding-standards.md)
+### Coding Standards
+
+[coding-standards](/.github/prompt-snippets/coding-standards.md)
+
+## Definition of Done
+
+[definition_of_done](/docs/specs/definition_of_done.md)
