@@ -1,51 +1,61 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { DrinkCategoryForm } from '@/components/menu/DrinkCategoryForm'
+import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest'
+import { render, screen, waitFor, userEvent } from '@/test-utils'
 
-// Mock the hooks
-vi.mock('@/hooks/useMenuData', () => ({
-  useDrinkCategories: vi.fn(() => ({
-    data: [],
-    isLoading: false
-  })),
-  useDrinksWithOptionsPreview: vi.fn(() => ({
-    data: [],
-    isLoading: false,
-    error: null,
-    refetch: vi.fn()
-  })),
-  useCreateDrinkCategory: vi.fn(() => ({
-    createCategory: vi.fn(),
-    execute: vi.fn(),
-    state: 'idle' as const
-  })),
-  useUpdateDrinkCategory: vi.fn(() => ({
-    updateCategory: vi.fn(),
-    execute: vi.fn(),
-    state: 'idle' as const
-  }))
-}))
-
-const mockOnSubmit = vi.fn()
-const mockOnCancel = vi.fn()
-
-const defaultProps = {
-  onSubmit: mockOnSubmit,
-  onCancel: mockOnCancel
-}
-
-const existingCategory = {
-  id: '1',
-  name: 'Coffee',
-  description: 'Hot coffee drinks',
-  display_order: 1,
-  is_active: true,
-  created_at: '2024-01-01T00:00:00Z',
-  updated_at: '2024-01-01T00:00:00Z'
-}
+// Component variables
+let DrinkCategoryForm: any
 
 describe('DrinkCategoryForm', () => {
+  beforeAll(async () => {
+    // Setup scoped mocks for this test file
+    vi.doMock('@/hooks/useMenuData', () => ({
+      useDrinkCategories: vi.fn(() => ({
+        data: [],
+        isLoading: false
+      })),
+      useDrinksWithOptionsPreview: vi.fn(() => ({
+        data: [],
+        isLoading: false,
+        error: null,
+        refetch: vi.fn()
+      })),
+      useCreateDrinkCategory: vi.fn(() => ({
+        createCategory: vi.fn(),
+        execute: vi.fn(),
+        state: 'idle' as const
+      })),
+      useUpdateDrinkCategory: vi.fn(() => ({
+        updateCategory: vi.fn(),
+        execute: vi.fn(),
+        state: 'idle' as const
+      }))
+    }))
+
+    // Import component after mocking
+    const componentModule = await import('@/components/menu/DrinkCategoryForm')
+    DrinkCategoryForm = componentModule.DrinkCategoryForm
+  })
+
+  afterAll(() => {
+    vi.doUnmock('@/hooks/useMenuData')
+  })
+
+  const mockOnSubmit = vi.fn()
+  const mockOnCancel = vi.fn()
+
+  const defaultProps = {
+    onSubmit: mockOnSubmit,
+    onCancel: mockOnCancel
+  }
+
+  const existingCategory = {
+    id: '1',
+    name: 'Coffee',
+    description: 'Hot coffee drinks',
+    display_order: 1,
+    is_active: true,
+    created_at: '2024-01-01T00:00:00Z',
+    updated_at: '2024-01-01T00:00:00Z'
+  }
   beforeEach(() => {
     vi.clearAllMocks()
   })

@@ -1,5 +1,5 @@
 import { useEffect, useContext, useRef } from 'react'
-import { ErrorContext } from '../contexts/ErrorContext'
+import { ErrorContext } from '../contexts/ErrorContextTypes'
 import { useToast } from './useToastHook'
 
 /**

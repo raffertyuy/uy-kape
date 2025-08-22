@@ -65,7 +65,7 @@ export const RealtimeIndicator: React.FC<RealtimeIndicatorProps> = ({
   }
 
   return (
-    <div className={`flex items-center gap-2 text-sm ${className}`}>
+    <div className={`flex items-center gap-2 text-sm ${className}`} data-testid="realtime-indicator">
       <div className="flex items-center gap-1">
         {getStatusIcon()}
         <span className={getStatusColor()}>

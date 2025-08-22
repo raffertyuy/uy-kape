@@ -1,22 +1,7 @@
-import React, { createContext, useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { handleGlobalError } from '../utils/globalErrorHandler'
 import type { ErrorDetails } from '../hooks/useErrorHandling'
-
-export interface ErrorContextState {
-  errors: ErrorDetails[]
-  isGlobalError: boolean
-  addError: (_error: unknown, _context?: string) => void
-  clearError: (_id: string) => void
-  clearAllErrors: () => void
-  getLatestError: () => ErrorDetails | null
-  hasErrors: boolean
-}
-
-interface ErrorWithId extends ErrorDetails {
-  id: string
-}
-
-export const ErrorContext = createContext<ErrorContextState | null>(null)
+import { ErrorContext, type ErrorContextState, type ErrorWithId } from './ErrorContextTypes'
 
 interface ErrorContextProviderProps {
   children: React.ReactNode

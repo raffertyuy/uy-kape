@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { AlertTriangle, RefreshCw, X, WifiOff } from 'lucide-react'
-import { ErrorContext } from '../../contexts/ErrorContext'
+import { ErrorContext } from '../../contexts/ErrorContextTypes'
 import type { ErrorDetails } from '../../hooks/useErrorHandling'
 
 /**

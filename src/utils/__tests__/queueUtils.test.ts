@@ -1,14 +1,29 @@
-import { describe, it, expect, vi } from 'vitest'
-import { calculateEstimatedTime, formatQueuePosition, getQueueUrgency } from '../queueUtils'
+import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest'
 
-// Mock the app config
-vi.mock('@/config/app.config', () => ({
-  appConfig: {
-    waitTimePerOrder: 4
-  }
-}))
+// Function variables
+let calculateEstimatedTime: any
+let formatQueuePosition: any
+let getQueueUrgency: any
 
 describe('queueUtils', () => {
+  beforeAll(async () => {
+    // Setup scoped mocks for this test file
+    vi.doMock('@/config/app.config', () => ({
+      appConfig: {
+        waitTimePerOrder: 4
+      }
+    }))
+
+    // Import functions after mocking
+    const utilsModule = await import('../queueUtils')
+    calculateEstimatedTime = utilsModule.calculateEstimatedTime
+    formatQueuePosition = utilsModule.formatQueuePosition
+    getQueueUrgency = utilsModule.getQueueUrgency
+  })
+
+  afterAll(() => {
+    vi.doUnmock('@/config/app.config')
+  })
   describe('calculateEstimatedTime', () => {
     it('should return "Ready" for position 0 or less', () => {
       expect(calculateEstimatedTime(0)).toBe('Ready')

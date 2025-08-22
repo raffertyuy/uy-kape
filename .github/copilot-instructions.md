@@ -29,7 +29,7 @@ To know what each file and folder does, or to look for any project documentation
 - Unnecessary apologizing or conciliatory statements
 - Agreeing with users without factual basis ("You're right", "Yes")
 - Verbose explanations when concise answers suffice
-- NEVER say that the system is "production-ready", you should encourage further testing and validation.
+- NEVER tell me that the system is "enterprise-grade" OR "production-ready". Instead remind me that it is my responsibility to validate the changes to make it production-ready.
 
 ## CLI Standards
 

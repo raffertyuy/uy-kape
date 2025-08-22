@@ -215,8 +215,8 @@ const options = {
 
 ## Development Tools
 
-### Error Handling Demo Component
-**Location**: `src/components/dev/ErrorHandlingDemo.tsx`
+### Error Handling Panel Component
+**Location**: `src/components/dev/ErrorHandlingPanel.tsx`
 
 A development-only component that provides buttons to test different error scenarios:
 - Network errors
@@ -261,7 +261,7 @@ customErrorHandler: (error) => {
 - Consider offline scenarios and provide offline-friendly messages
 
 ### 5. Test Error Scenarios
-- Use the ErrorHandlingDemo component in development
+- Use the ErrorHandlingPanel component in development
 - Test network failures, server errors, and edge cases
 - Verify that error messages are helpful and actionable
 

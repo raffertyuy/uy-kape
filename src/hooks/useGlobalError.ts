@@ -1,5 +1,5 @@
 import { useCallback, useContext } from 'react'
-import { ErrorContext, type ErrorContextState } from '../contexts/ErrorContext'
+import { ErrorContext, type ErrorContextState } from '../contexts/ErrorContextTypes'
 
 export const useGlobalError = (): ErrorContextState => {
   const context = useContext(ErrorContext)

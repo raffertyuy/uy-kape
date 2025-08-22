@@ -1,124 +1,142 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest'
+import { render, screen } from '@/test-utils'
 import { MenuManagement } from '@/pages/MenuManagement'
 
-// Simplified mocks to reduce memory usage
-vi.mock('@/hooks/useMenuData', () => ({
-  useDrinkCategories: vi.fn(() => ({
-    data: [],
-    isLoading: false
-  })),
-  useDrinks: vi.fn(() => ({
-    data: [],
-    isLoading: false
-  })),
-  useDrinksWithOptionsPreview: vi.fn(() => ({
-    data: [],
-    isLoading: false,
-    error: null,
-    refetch: vi.fn()
-  })),
-  useOptionCategories: vi.fn(() => ({
-    data: [],
-    isLoading: false
-  })),
-  useOptionValues: vi.fn(() => ({
-    data: [],
-    isLoading: false
-  })),
-  useDrinkOptions: vi.fn(() => ({
-    data: [],
-    isLoading: false
-  })),
-  useCreateDrinkCategory: vi.fn(() => ({
-    state: 'idle',
-    createCategory: vi.fn()
-  })),
-  useUpdateDrinkCategory: vi.fn(() => ({
-    state: 'idle',
-    updateCategory: vi.fn()
-  })),
-  useDeleteDrinkCategory: vi.fn(() => ({
-    state: 'idle',
-    deleteCategory: vi.fn()
-  })),
-  useCreateDrink: vi.fn(() => ({
-    state: 'idle',
-    createDrink: vi.fn()
-  })),
-  useUpdateDrink: vi.fn(() => ({
-    state: 'idle',
-    updateDrink: vi.fn()
-  })),
-  useDeleteDrink: vi.fn(() => ({
-    state: 'idle',
-    deleteDrink: vi.fn()
-  })),
-  useCreateOptionCategory: vi.fn(() => ({
-    state: 'idle',
-    createCategory: vi.fn()
-  })),
-  useUpdateOptionCategory: vi.fn(() => ({
-    state: 'idle',
-    updateCategory: vi.fn()
-  })),
-  useDeleteOptionCategory: vi.fn(() => ({
-    state: 'idle',
-    deleteCategory: vi.fn()
-  })),
-  useCreateOptionValue: vi.fn(() => ({
-    state: 'idle',
-    createValue: vi.fn()
-  })),
-  useUpdateOptionValue: vi.fn(() => ({
-    state: 'idle',
-    updateValue: vi.fn()
-  })),
-  useDeleteOptionValue: vi.fn(() => ({
-    state: 'idle',
-    deleteValue: vi.fn()
-  }))
-}))
-
-vi.mock('@/hooks/useMenuSubscriptions', () => ({
-  useMenuSubscriptions: vi.fn(() => ({
-    connectionStatus: 'connected',
-    hasChanges: false,
-    changes: []
-  }))
-}))
-
-vi.mock('@/hooks/useErrorHandling', () => ({
-  useErrorHandling: vi.fn(() => ({
-    errors: [],
-    showError: vi.fn(),
-    clearError: vi.fn(),
-    clearAllErrors: vi.fn()
-  }))
-}))
-
-// Mock components with minimal implementations
-vi.mock('@/components/menu/MenuNotifications', () => ({
-  MenuNotifications: () => <div data-testid="menu-notifications" />
-}))
-
-vi.mock('@/components/menu/RealtimeIndicator', () => ({
-  RealtimeIndicator: () => <div data-testid="realtime-indicator" />
-}))
-
-vi.mock('@/components/menu/ChangeNotification', () => ({
-  ChangeNotification: () => <div data-testid="change-notification" />
-}))
-
-vi.mock('@/components/menu/DrinkCategoryForm', () => ({
-  DrinkCategoryForm: () => <div data-testid="drink-category-form" />
-}))
-
-vi.mock('@/components/menu/DrinkForm', () => ({
-  DrinkForm: () => <div data-testid="drink-form" />
-}))
-
 describe('MenuManagement - Basic Rendering', () => {
+  beforeAll(() => {
+    // Mock Logo component for asset loading
+    vi.doMock('@/components/ui/Logo', () => ({
+      Logo: ({ className, alt, ...props }: any) => (
+        <div 
+          className={className} 
+          aria-label={alt} 
+          data-testid="logo"
+          {...props}
+        >
+          Logo
+        </div>
+      )
+    }))
+
+    // Simplified mocks scoped to this test suite only
+    vi.doMock('@/hooks/useMenuData', () => ({
+      useDrinkCategories: vi.fn(() => ({
+        data: [],
+        isLoading: false
+      })),
+      useDrinks: vi.fn(() => ({
+        data: [],
+        isLoading: false
+      })),
+      useDrinksWithOptionsPreview: vi.fn(() => ({
+        data: [],
+        isLoading: false,
+        error: null,
+        refetch: vi.fn()
+      })),
+      useOptionCategories: vi.fn(() => ({
+        data: [],
+        isLoading: false
+      })),
+      useOptionValues: vi.fn(() => ({
+        data: [],
+        isLoading: false
+      })),
+      useDrinkOptions: vi.fn(() => ({
+        data: [],
+        isLoading: false
+      })),
+      useCreateDrinkCategory: vi.fn(() => ({
+        state: 'idle',
+        createCategory: vi.fn()
+      })),
+      useUpdateDrinkCategory: vi.fn(() => ({
+        state: 'idle',
+        updateCategory: vi.fn()
+      })),
+      useDeleteDrinkCategory: vi.fn(() => ({
+        state: 'idle',
+        deleteCategory: vi.fn()
+      })),
+      useCreateDrink: vi.fn(() => ({
+        state: 'idle',
+        createDrink: vi.fn()
+      })),
+      useUpdateDrink: vi.fn(() => ({
+        state: 'idle',
+        updateDrink: vi.fn()
+      })),
+      useDeleteDrink: vi.fn(() => ({
+        state: 'idle',
+        deleteDrink: vi.fn()
+      })),
+      useCreateOptionCategory: vi.fn(() => ({
+        state: 'idle',
+        createCategory: vi.fn()
+      })),
+      useUpdateOptionCategory: vi.fn(() => ({
+        state: 'idle',
+        updateCategory: vi.fn()
+      })),
+      useDeleteOptionCategory: vi.fn(() => ({
+        state: 'idle',
+        deleteCategory: vi.fn()
+      })),
+      useCreateOptionValue: vi.fn(() => ({
+        state: 'idle',
+        createValue: vi.fn()
+      })),
+      useUpdateOptionValue: vi.fn(() => ({
+        state: 'idle',
+        updateValue: vi.fn()
+      })),
+      useDeleteOptionValue: vi.fn(() => ({
+        state: 'idle',
+        deleteValue: vi.fn()
+      }))
+    }))
+
+    vi.doMock('@/hooks/useMenuSubscriptions', () => ({
+      useMenuSubscriptions: vi.fn(() => ({
+        connectionStatus: { 
+          connected: true, 
+          lastUpdate: null, 
+          error: null 
+        },
+        recentChanges: [],
+        clearRecentChanges: vi.fn()
+      }))
+    }))
+
+    // Mock components with minimal implementations
+    vi.doMock('@/components/menu/MenuNotifications', () => ({
+      MenuNotifications: () => <div data-testid="menu-notifications" />
+    }))
+
+    vi.doMock('@/components/menu/ChangeNotification', () => ({
+      ChangeNotification: () => <div data-testid="change-notification" />
+    }))
+
+    vi.doMock('@/components/menu/DrinkCategoryForm', () => ({
+      DrinkCategoryForm: () => <div data-testid="drink-category-form" />
+    }))
+
+    vi.doMock('@/components/menu/DrinkForm', () => ({
+      DrinkForm: () => <div data-testid="drink-form" />
+    }))
+  })
+
+  afterAll(() => {
+    // Clean up mocks after this test suite
+    vi.doUnmock('@/components/ui/Logo')
+    vi.doUnmock('@/hooks/useMenuData')
+    vi.doUnmock('@/hooks/useMenuSubscriptions')
+    vi.doUnmock('@/components/menu/MenuNotifications')
+    vi.doUnmock('@/components/menu/ChangeNotification')
+    vi.doUnmock('@/components/menu/ChangeNotification')
+    vi.doUnmock('@/components/menu/DrinkCategoryForm')
+    vi.doUnmock('@/components/menu/DrinkForm')
+  })
   beforeEach(() => {
     vi.clearAllMocks()
   })

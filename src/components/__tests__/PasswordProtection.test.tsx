@@ -1,33 +1,45 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { render, screen, act } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import PasswordProtection from '../PasswordProtection'
+import { describe, it, expect, beforeEach, vi, beforeAll, afterAll } from 'vitest'
+import { render, screen, act, userEvent } from '@/test-utils'
 
-// Mock the password auth hook
-const mockAuthenticate = vi.fn()
-const mockLogout = vi.fn()
-
-vi.mock('@/hooks/usePasswordAuth', () => ({
-  usePasswordAuth: vi.fn(() => ({
-    isAuthenticated: false,
-    role: undefined,
-    authenticate: mockAuthenticate,
-    logout: mockLogout
-  }))
-}))
-
-// Get the mocked function for testing
-import { usePasswordAuth } from '@/hooks/usePasswordAuth'
-const mockUsePasswordAuth = vi.mocked(usePasswordAuth)
-
-// Mock window.history.back
-const mockHistoryBack = vi.fn()
-Object.defineProperty(window, 'history', {
-  value: { back: mockHistoryBack },
-  writable: true,
-})
+// Mock variables
+let PasswordProtection: any
+let mockAuthenticate: any
+let mockLogout: any
+let mockUsePasswordAuth: any
 
 describe('PasswordProtection - Basic Functionality', () => {
+  beforeAll(async () => {
+    // Setup scoped mocks for this test file
+    mockAuthenticate = vi.fn()
+    mockLogout = vi.fn()
+
+    vi.doMock('@/hooks/usePasswordAuth', () => ({
+      usePasswordAuth: vi.fn(() => ({
+        isAuthenticated: false,
+        role: undefined,
+        authenticate: mockAuthenticate,
+        logout: mockLogout
+      }))
+    }))
+
+    // Import component and mocked hook after mocking
+    const componentModule = await import('../PasswordProtection')
+    PasswordProtection = componentModule.default
+
+    const hookModule = await import('@/hooks/usePasswordAuth')
+    mockUsePasswordAuth = vi.mocked(hookModule.usePasswordAuth)
+  })
+
+  afterAll(() => {
+    vi.doUnmock('@/hooks/usePasswordAuth')
+  })
+
+  // Mock window.history.back
+  const mockHistoryBack = vi.fn()
+  Object.defineProperty(window, 'history', {
+    value: { back: mockHistoryBack },
+    writable: true,
+  })
   const defaultProps = {
     requiredPassword: 'test123',
     title: 'Test Access',

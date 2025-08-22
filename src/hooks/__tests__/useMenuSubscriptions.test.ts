@@ -1,22 +1,47 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
-import { useMenuSubscriptions } from '@/hooks/useMenuSubscriptions'
 
-// Mock Supabase
-vi.mock('@/lib/supabase', () => {
-  const mockUnsubscribe = vi.fn()
-  const mockSubscribe = vi.fn(() => ({ unsubscribe: mockUnsubscribe }))
-  const mockOn = vi.fn().mockReturnThis()
-  const mockChannel = vi.fn(() => ({ on: mockOn, subscribe: mockSubscribe }))
-
-  return {
-    supabase: {
-      channel: mockChannel
-    }
-  }
-})
+// Hook variable
+let useMenuSubscriptions: any
 
 describe('useMenuSubscriptions', () => {
+  beforeAll(async () => {
+    // Setup scoped mocks for this test file
+    vi.doMock('@/lib/supabase', () => {
+      const mockUnsubscribe = vi.fn()
+      const mockSubscribe = vi.fn((callback) => {
+        // Immediately call the callback with SUBSCRIBED status
+        if (typeof callback === 'function') {
+          setTimeout(() => callback('SUBSCRIBED'), 0)
+        }
+        return { unsubscribe: mockUnsubscribe }
+      })
+      
+      const mockChannelInstance = {
+        on: vi.fn((_event: string, _config: any, _callback: any) => {
+          // Return the channel instance for method chaining
+          return mockChannelInstance
+        }),
+        subscribe: mockSubscribe
+      }
+      
+      const mockChannel = vi.fn(() => mockChannelInstance)
+
+      return {
+        supabase: {
+          channel: mockChannel
+        }
+      }
+    })
+
+    // Import hook after mocking
+    const hookModule = await import('@/hooks/useMenuSubscriptions')
+    useMenuSubscriptions = hookModule.useMenuSubscriptions
+  })
+
+  afterAll(() => {
+    vi.doUnmock('@/lib/supabase')
+  })
   beforeEach(() => {
     vi.clearAllMocks()
   })

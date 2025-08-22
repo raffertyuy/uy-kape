@@ -1,9 +1,16 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest'
 import { render, screen, fireEvent } from '@/test-utils'
-import { DrinkCard } from '../DrinkCard'
 import type { Drink, DrinkWithOptionsPreview, DrinkOptionPreview } from '@/types/menu.types'
 
+// Component variables
+let DrinkCard: any
+
 describe('DrinkCard', () => {
+  beforeAll(async () => {
+    // Import component after setup
+    const drinkCardModule = await import('../DrinkCard')
+    DrinkCard = drinkCardModule.DrinkCard
+  })
   const mockDrink: Drink = {
     id: '1',
     name: 'Espresso',

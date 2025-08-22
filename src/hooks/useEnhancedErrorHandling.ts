@@ -1,7 +1,7 @@
 import { useCallback, useContext } from 'react'
 import { useErrorHandling, useFormErrorHandling } from './useErrorHandling'
 import { useToast } from './useToastHook'
-import { ErrorContext } from '../contexts/ErrorContext'
+import { ErrorContext } from '../contexts/ErrorContextTypes'
 
 /**
  * Enhanced error handling hook that integrates with toast notifications

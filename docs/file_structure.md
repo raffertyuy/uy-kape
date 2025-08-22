@@ -53,7 +53,7 @@ uy-kape/
 │   └── specs/
 │       ├── db_schema.md
 │       ├── definition_of_done.md
-│       ├── initial_idea.md
+│       ├── application_overview.md
 │       └── technology_stack.md
 ├── scripts/               # Operational / helper scripts (not expanded)
 ├── database/              # Legacy SQL schema + seed (reference only)

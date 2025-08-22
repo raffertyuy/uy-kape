@@ -1,19 +1,29 @@
 import { renderHook, act } from '@/test-utils'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { useGuestInfo } from '../useGuestInfo'
-
-// Mock the nameGenerator utilities
-vi.mock('@/utils/nameGenerator', () => ({
-  generateFunnyGuestName: vi.fn(() => 'The Bean Roaster'),
-  isGeneratedFunnyName: vi.fn((name: string) => 
-    name.includes('The Bean Roaster') || 
-    name.includes('Captain') || 
-    name.includes('Professor') ||
-    /\b(the|captain|professor|doctor|master|super)\s+\w+\s+(roaster|monster|crusher|defender|warrior)/i.test(name)
-  )
-}))
+import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest'
 
 describe('useGuestInfo', () => {
+  let useGuestInfo: any
+
+  beforeAll(async () => {
+    // Mock the nameGenerator utilities
+    vi.doMock('@/utils/nameGenerator', () => ({
+      generateFunnyGuestName: vi.fn(() => 'The Bean Roaster'),
+      isGeneratedFunnyName: vi.fn((name: string) => 
+        name.includes('The Bean Roaster') || 
+        name.includes('Captain') || 
+        name.includes('Professor') ||
+        /\b(the|captain|professor|doctor|master|super)\s+\w+\s+(roaster|monster|crusher|defender|warrior)/i.test(name)
+      )
+    }))
+
+    // Import mocked module
+    const useGuestInfoModule = await import('../useGuestInfo')
+    useGuestInfo = useGuestInfoModule.useGuestInfo
+  })
+
+  afterAll(() => {
+    vi.doUnmock('@/utils/nameGenerator')
+  })
   beforeEach(() => {
     vi.clearAllMocks()
   })

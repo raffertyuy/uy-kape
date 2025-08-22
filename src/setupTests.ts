@@ -24,7 +24,7 @@ configure({
   },
 })
 
-// Automatically cleanup after each test
+// Automatically cleanup DOM after each test to prevent interference
 afterEach(() => {
   cleanup()
 })
@@ -147,11 +147,14 @@ const originalConsole = {
   log: console.log,
 }
 
-// Reset all mocks and storage before each test
+// Reset storage and specific mocks before each test, but preserve component mocks
 beforeEach(() => {
   sessionStorageMock.clear()
   localStorageMock.clear()
-  vi.clearAllMocks()
+  // Only clear non-component mocks to avoid test interference
+  if (global.fetch) {
+    vi.mocked(global.fetch).mockClear()
+  }
   
   // Reset console mocks but allow them through unless explicitly suppressed
   console.error = originalConsole.error

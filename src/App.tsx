@@ -10,7 +10,7 @@ import { ErrorBoundary } from './components/ui/ErrorBoundary'
 import { ErrorContextProvider } from './contexts/ErrorContext'
 import { GlobalErrorNotification } from './components/ui/GlobalErrorNotification'
 import { useErrorToast } from './hooks/useErrorToast'
-import { ErrorHandlingDemo } from './components/dev/ErrorHandlingDemo'
+import { ErrorHandlingPanel } from './components/dev/ErrorHandlingPanel'
 
 // Component to handle error toast integration
 const ErrorToastIntegration: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -20,30 +20,32 @@ const ErrorToastIntegration: React.FC<{ children: React.ReactNode }> = ({ childr
 
 function App() {
   return (
-    <ErrorBoundary>
-      <ErrorContextProvider>
-        <ToastProvider>
-          <ErrorToastIntegration>
-            <GlobalErrorNotification />
-            <ErrorHandlingDemo />
-            <BrowserRouter future={{
-              v7_startTransition: true,
-              v7_relativeSplatPath: true
-            }}>
-              <Layout>
-                <Routes>
-                  <Route path="/" element={<WelcomePage />} />
-                  <Route path="/order" element={<GuestModule />} />
-                  <Route path="/admin" element={<BaristaModule />} />
-                  <Route path="/error" element={<ServerError />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Layout>
-            </BrowserRouter>
-          </ErrorToastIntegration>
-        </ToastProvider>
-      </ErrorContextProvider>
-    </ErrorBoundary>
+    <div data-testid="app-loaded">
+      <ErrorBoundary>
+        <ErrorContextProvider>
+          <ToastProvider>
+            <ErrorToastIntegration>
+              <GlobalErrorNotification />
+              <ErrorHandlingPanel />
+              <BrowserRouter future={{
+                v7_startTransition: true,
+                v7_relativeSplatPath: true
+              }}>
+                <Layout>
+                  <Routes>
+                    <Route path="/" element={<WelcomePage />} />
+                    <Route path="/order" element={<GuestModule />} />
+                    <Route path="/admin" element={<BaristaModule />} />
+                    <Route path="/error" element={<ServerError />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </Layout>
+              </BrowserRouter>
+            </ErrorToastIntegration>
+          </ToastProvider>
+        </ErrorContextProvider>
+      </ErrorBoundary>
+    </div>
   )
 }
 

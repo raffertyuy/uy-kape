@@ -1,22 +1,28 @@
-import { render, screen } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
-import { MemoryRouter } from 'react-router-dom'
-import Layout from '../Layout'
+import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
+import { render, screen } from '@/test-utils'
 
-const renderWithRouter = (component: React.ReactElement, initialEntries = ['/']) => {
-  return render(
-    <MemoryRouter 
-      initialEntries={initialEntries}
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-    >
-      {component}
-    </MemoryRouter>
-  )
-}
+// Component variables
+let Layout: any
 
 describe('Layout', () => {
+  beforeAll(async () => {
+    // Setup scoped mocks for this test file
+    vi.doMock('lucide-react', () => ({
+      Home: () => <div data-testid="home-icon" />,
+      Coffee: () => <div data-testid="coffee-icon" />,
+      Settings: () => <div data-testid="settings-icon" />
+    }))
+
+    // Import component after mocking
+    const layoutModule = await import('../Layout')
+    Layout = layoutModule.default
+  })
+
+  afterAll(() => {
+    vi.doUnmock('lucide-react')
+  })
   it('renders children correctly', () => {
-    renderWithRouter(
+    render(
       <Layout>
         <div>Test Content</div>
       </Layout>
@@ -26,7 +32,7 @@ describe('Layout', () => {
   })
 
   it('applies correct CSS classes for responsive design', () => {
-    renderWithRouter(
+    render(
       <Layout>
         <div>Test Content</div>
       </Layout>
@@ -38,7 +44,7 @@ describe('Layout', () => {
   })
 
   it('maintains proper semantic structure', () => {
-    renderWithRouter(
+    render(
       <Layout>
         <div>Test Content</div>
       </Layout>
@@ -50,11 +56,11 @@ describe('Layout', () => {
   })
 
   it('displays navigation when not on welcome page', () => {
-    renderWithRouter(
+    render(
       <Layout>
         <div>Test Content</div>
       </Layout>,
-      ['/order']
+      { initialEntries: ['/order'] }
     )
     
     // Check for navigation
@@ -72,11 +78,11 @@ describe('Layout', () => {
   })
 
   it('hides navigation on welcome page', () => {
-    renderWithRouter(
+    render(
       <Layout>
         <div>Test Content</div>
       </Layout>,
-      ['/']
+      { initialEntries: ['/'] }
     )
     
     // Navigation should not be present on welcome page
@@ -84,11 +90,11 @@ describe('Layout', () => {
   })
 
   it('highlights active navigation links', () => {
-    renderWithRouter(
+    render(
       <Layout>
         <div>Test Content</div>
       </Layout>,
-      ['/order']
+      { initialEntries: ['/order'] }
     )
     
     // Check that the order link is highlighted using menuitem role
@@ -97,11 +103,11 @@ describe('Layout', () => {
   })
 
   it('has proper accessibility for navigation', () => {
-    renderWithRouter(
+    render(
       <Layout>
         <div>Test Content</div>
       </Layout>,
-      ['/order']
+      { initialEntries: ['/order'] }
     )
     
     // Check navigation has proper structure

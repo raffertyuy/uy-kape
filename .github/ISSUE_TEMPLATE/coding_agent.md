@@ -1,17 +1,15 @@
 ---
 name: 'New Issue for the GitHub Copilot Coding Agent'
 about: 'Assign a new task for the GitHub Copilot Coding Agent to implement'
-title: 'Implement {requirement}'
+title: 'Implement {task}'
 labels: 'enhancement'
 assignees: 'copilot'
 ---
 
-<!-- NOTE: This issue template is experimental. From previous experience, it is still not following the mandatory workflow as it is not creating a plan file. -->
+Your goal is to implement the specified task by **STRICTLY FOLLOWING** the mandatory 4-step process below.
 
-Your goal is to implement the specified requirement by **STRICTLY FOLLOWING** the mandatory 4-step process below.
-
-## Requirement to implement
-REPLACE_WITH_YOUR_REQUIREMENT
+## TASK
+REPLACE_WITH_YOUR_TASK
 
 ## ⚠️ MANDATORY WORKFLOW - DO NOT SKIP ANY STEPS ⚠️
 
@@ -23,19 +21,19 @@ REPLACE_WITH_YOUR_REQUIREMENT
 3. **Checkpoint**: Confirm you understand the project structure and coding standards
 
 ### **STEP 2 - MANDATORY**: Create Implementation Plan  
-1. Run `/1-plan {requirement}` following `.github/prompts/1-plan.prompt.md`
-2. **CRITICAL**: This MUST create a new file `docs/plans/{requirement_name}.plan.md`
+1. Run `/1-plan {task}` following `.github/prompts/1-plan.prompt.md`
+2. **CRITICAL**: This MUST create a new file `docs/plans/YYYYMMDD-{task_name}.plan.md`
 3. **Checkpoint**: Verify the plan file exists and contains proper frontmatter and detailed steps
 4. **Do NOT proceed to Step 3 until this plan file is created**
 
 ### **STEP 3 - MANDATORY**: Implement the Plan
-1. Run `/2-implement #file:docs/plans/{requirement}.plan.md` following `.github/prompts/2-implement.prompt.md`
+1. Run `/2-implement #file:docs/plans/YYYYMMDD-{task_name}.plan.md` following `.github/prompts/2-implement.prompt.md`
 2. **CRITICAL**: Work ONLY from the plan created in Step 2
 3. **Checkpoint**: Mark each completed step in the plan file as you progress
 4. **Do NOT implement anything not covered in the plan**
 
 ### **STEP 4 - MANDATORY**: Test and Validate
-1. Run `/3-run {requirement}` following `.github/prompts/3-run.prompt.md`
+1. Run `/3-run {task_name}` following `.github/prompts/3-run.prompt.md`
 2. **Checkpoint**: Ensure all functionality works as expected
 3. Fix any issues found during testing
 

@@ -134,10 +134,10 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
   }
 
   return (
-    <div className={className}>
+    <div className={className} data-testid="order-dashboard">
       <div className="space-y-6 p-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0" data-testid="dashboard-controls">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
               Order Dashboard
@@ -153,6 +153,12 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
           </div>
 
           <div className="flex items-center space-x-4">
+            {/* Connection Status */}
+            <div className="flex items-center space-x-2" data-testid="connection-status">
+              <div className="w-2 h-2 bg-green-500 rounded-full" />
+              <span className="text-sm text-gray-600 dark:text-gray-400">Connected</span>
+            </div>
+
             {/* Show Completed Toggle */}
             <div className="flex items-center space-x-2">
               <label 
@@ -169,6 +175,7 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
                 }`}
                 role="switch"
                 aria-checked={showCompleted}
+                aria-label="Toggle show completed orders"
               >
                 <span
                   className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
@@ -205,7 +212,7 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
         </div>
 
         {/* Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4" data-testid="order-statistics">
           <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
             <div className="p-5">
               <div className="flex items-center">
@@ -296,7 +303,7 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
         </div>
 
         {/* Filters */}
-        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
+        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4" data-testid="order-filters">
           <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
             {/* Search */}
             <div className="flex-1">
@@ -327,10 +334,10 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
         </div>
 
         {/* Order List */}
-        <div className="bg-white dark:bg-gray-800 shadow rounded-lg">
+        <div className="bg-white dark:bg-gray-800 shadow rounded-lg" data-testid="order-list">
           <div className="px-4 py-5 sm:p-6">
             {filteredOrders.length === 0 ? (
-              <div className="text-center py-12">
+              <div className="text-center py-12" data-testid="empty-orders">
                 <div className="text-6xl mb-4">📦</div>
                 <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
                   {searchTerm || statusFilter !== 'all' ? 'No orders match your filters' : 'No orders found'}
@@ -348,6 +355,7 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
                   <div
                     key={order.id}
                     className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow"
+                    data-testid={`order-card-${order.id}`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-4">
@@ -368,7 +376,7 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
                               order.status === 'ready' ? 'bg-green-100 text-green-800' :
                               order.status === 'completed' ? 'bg-blue-100 text-blue-800' :
                               'bg-gray-100 text-gray-800'
-                            }`}>
+                            }`} data-testid="order-status">
                               {order.status}
                             </span>
                           </div>

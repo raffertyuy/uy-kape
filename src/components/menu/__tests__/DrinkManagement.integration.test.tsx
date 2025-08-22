@@ -1,35 +1,38 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { DrinkManagement } from '../DrinkManagement';
-import { BrowserRouter } from 'react-router-dom';
+import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@/test-utils';
 
-// Mock the menuService modules
-vi.mock('../../../services/menuService', () => ({
-  drinkCategoriesService: {
-    getAll: vi.fn(),
-  },
-  drinksService: {
-    getAllWithOptionsPreview: vi.fn(),
-    getByCategoryWithOptionsPreview: vi.fn(),
-  },
-}));
+// Component variables
+let DrinkManagement: any
 
-// Mock the hooks using importOriginal to avoid missing exports
-vi.mock('../../../hooks/useMenuData', async (importOriginal) => {
-  const actual = await importOriginal() as any;
-  return {
-    ...actual,
-    useDrinkCategories: vi.fn(() => ({
-      data: [
-        { id: '1', name: 'Coffee', description: 'Coffee drinks' },
-        { id: '2', name: 'Tea', description: 'Tea drinks' },
-      ],
-      isLoading: false,
-      error: null,
-      refetch: vi.fn(),
-    })),
-    useDrinks: vi.fn(() => ({
-      data: [
+describe('DrinkManagement Integration Tests', () => {
+  beforeAll(async () => {
+    // Setup scoped mocks for this test file
+    vi.doMock('../../../services/menuService', () => ({
+      drinkCategoriesService: {
+        getAll: vi.fn(),
+      },
+      drinksService: {
+        getAllWithOptionsPreview: vi.fn(),
+        getByCategoryWithOptionsPreview: vi.fn(),
+      },
+    }));
+
+    // Mock the hooks using importOriginal to avoid missing exports
+    vi.doMock('../../../hooks/useMenuData', async (importOriginal) => {
+      const actual = await importOriginal() as any;
+      return {
+        ...actual,
+        useDrinkCategories: vi.fn(() => ({
+          data: [
+            { id: '1', name: 'Coffee', description: 'Coffee drinks' },
+            { id: '2', name: 'Tea', description: 'Tea drinks' },
+          ],
+          isLoading: false,
+          error: null,
+          refetch: vi.fn(),
+        })),
+        useDrinks: vi.fn(() => ({
+          data: [
         {
           id: '1',
           name: 'Espresso',
@@ -65,25 +68,26 @@ vi.mock('../../../hooks/useMenuData', async (importOriginal) => {
       error: null,
       refetch: vi.fn(),
     })),
-    useDeleteDrink: vi.fn(() => ({
-      deleteDrink: vi.fn(),
-      state: 'idle',
-    })),
+      useDeleteDrink: vi.fn(() => ({
+        deleteDrink: vi.fn(),
+        state: 'idle',
+      })),
+    };
+  });
+
+    // Import component after mocking
+    const componentModule = await import('../DrinkManagement')
+    DrinkManagement = componentModule.DrinkManagement
+  })
+
+  afterAll(() => {
+    vi.doUnmock('../../../services/menuService')
+    vi.doUnmock('../../../hooks/useMenuData')
+  })
+
+  const renderWithRouter = (component: React.ReactElement) => {
+    return render(component);
   };
-});
-
-const renderWithRouter = (component: React.ReactElement) => {
-  return render(
-    <BrowserRouter future={{
-      v7_startTransition: true,
-      v7_relativeSplatPath: true
-    }}>
-      {component}
-    </BrowserRouter>
-  );
-};
-
-describe('DrinkManagement Integration', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });

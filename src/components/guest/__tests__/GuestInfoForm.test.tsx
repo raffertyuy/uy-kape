@@ -1,6 +1,8 @@
 import { render, screen, fireEvent } from '@/test-utils'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { GuestInfoForm } from '../GuestInfoForm'
+import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest'
+
+// Component variables
+let GuestInfoForm: any
 
 describe('GuestInfoForm', () => {
   const defaultProps = {
@@ -17,6 +19,21 @@ describe('GuestInfoForm', () => {
     onGenerateNewName: vi.fn(),
     onClearGeneratedName: vi.fn()
   }
+
+  beforeAll(async () => {
+    // Setup scoped mocks for this test file
+    vi.doMock('lucide-react', () => ({
+      RotateCcw: () => <div data-testid="rotate-ccw-icon" />
+    }))
+
+    // Import component after mocking
+    const guestInfoFormModule = await import('../GuestInfoForm')
+    GuestInfoForm = guestInfoFormModule.GuestInfoForm
+  })
+
+  afterAll(() => {
+    vi.doUnmock('lucide-react')
+  })
 
   beforeEach(() => {
     vi.clearAllMocks()

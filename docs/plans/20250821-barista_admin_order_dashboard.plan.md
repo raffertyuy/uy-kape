@@ -16,7 +16,7 @@ description: "Implementation plan for Barista Admin Module - Order Dashboard"
 
 ## Overview
 
-This plan implements the Order Dashboard functionality for the Barista Admin Module, providing real-time order management capabilities including viewing pending orders, updating order status, queue management, and bulk operations. The implementation follows the specifications in `initial_idea.md` and integrates with the existing database schema and authentication system. REMEMBER to keep it simple: This is a home coffee ordering system for guests. Nothing about money as everything is free (don't implement anything that has a price or dollar amount). No data analytic features needed.
+This plan implements the Order Dashboard functionality for the Barista Admin Module, providing real-time order management capabilities including viewing pending orders, updating order status, queue management, and bulk operations. The implementation follows the specifications in `application_overview.md` and integrates with the existing database schema and authentication system. REMEMBER to keep it simple: This is a home coffee ordering system for guests. Nothing about money as everything is free (don't implement anything that has a price or dollar amount). No data analytic features needed.
 
 ## Implementation Steps
 

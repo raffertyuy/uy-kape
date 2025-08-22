@@ -4,15 +4,18 @@ import { useEnhancedErrorHandling } from '../../hooks/useEnhancedErrorHandling'
 
 /**
  * Demo component to showcase the enhanced error handling capabilities
- * This component is only visible in development mode for testing purposes
+ * This component is only visible when enabled via environment variable
  */
-export const ErrorHandlingDemo: React.FC = () => {
+export const ErrorHandlingPanel: React.FC = () => {
   const { handleNetworkOperation, handleFormSubmission, handleDataFetch } = useNetworkErrorHandler()
   const { setErrorWithToast } = useEnhancedErrorHandling()
   const [isLoading, setIsLoading] = useState(false)
 
-  // Only show in development
-  if (process.env.NODE_ENV !== 'development') {
+  // Check if error handling panel is enabled via environment variable
+  const isEnabled = import.meta.env.VITE_ERROR_HANDLING_PANEL === 'true'
+  
+  // Only show when explicitly enabled
+  if (!isEnabled) {
     return null
   }
 
@@ -102,8 +105,8 @@ export const ErrorHandlingDemo: React.FC = () => {
   return (
     <div className="fixed bottom-4 left-4 z-50 bg-white border border-gray-300 rounded-lg shadow-lg p-4 max-w-sm">
       <div className="mb-3">
-        <h3 className="text-sm font-semibold text-gray-800">🧪 Error Handling Demo</h3>
-        <p className="text-xs text-gray-600">Development mode only</p>
+        <h3 className="text-sm font-semibold text-gray-800">🧪 Error Handling Panel</h3>
+        <p className="text-xs text-gray-600">Development testing tool</p>
       </div>
       
       <div className="space-y-2">
@@ -166,4 +169,4 @@ export const ErrorHandlingDemo: React.FC = () => {
   )
 }
 
-export default ErrorHandlingDemo
+export default ErrorHandlingPanel

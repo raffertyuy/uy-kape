@@ -1,32 +1,43 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
-import { useErrorHandling } from '../../../src/hooks/useErrorHandling'
 
-// Mock the global error handler
-vi.mock('../../../src/utils/globalErrorHandler', () => ({
-  handleGlobalError: vi.fn((error, context) => ({
-    code: error?.code || 'ERROR',
-    message: 'Mocked error message',
-    details: { context },
-    timestamp: new Date(),
-    action: context
-  })),
-  isRetryableError: vi.fn((error) => 
-    error?.message?.includes('network') || error?.message?.includes('timeout')
-  ),
-  isOffline: vi.fn(() => false),
-  withRetry: vi.fn(async (operation, _maxRetries, _delay) => {
-    return await operation()
-  }),
-  getRecoveryStrategy: vi.fn((_category) => ({
-    canRetry: true,
-    retryDelay: 1000,
-    maxRetries: 3,
-    message: 'Recovery strategy message'
-  }))
-}))
+// Hook variable
+let useErrorHandling: any
 
 describe('useErrorHandling', () => {
+  beforeAll(async () => {
+    // Setup scoped mocks for this test file
+    vi.doMock('../../../src/utils/globalErrorHandler', () => ({
+      handleGlobalError: vi.fn((error, context) => ({
+        code: error?.code || 'ERROR',
+        message: 'Mocked error message',
+        details: { context },
+        timestamp: new Date(),
+        action: context
+      })),
+      isRetryableError: vi.fn((error) => 
+        error?.message?.includes('network') || error?.message?.includes('timeout')
+      ),
+      isOffline: vi.fn(() => false),
+      withRetry: vi.fn(async (operation, _maxRetries, _delay) => {
+        return await operation()
+      }),
+      getRecoveryStrategy: vi.fn((_category) => ({
+        canRetry: true,
+        retryDelay: 1000,
+        maxRetries: 3,
+        message: 'Recovery strategy message'
+      }))
+    }))
+
+    // Import hook after mocking
+    const hookModule = await import('../../../src/hooks/useErrorHandling')
+    useErrorHandling = hookModule.useErrorHandling
+  })
+
+  afterAll(() => {
+    vi.doUnmock('../../../src/utils/globalErrorHandler')
+  })
   beforeEach(() => {
     vi.clearAllMocks()
   })
