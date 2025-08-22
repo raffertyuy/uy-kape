@@ -67,4 +67,3 @@ PLAN HERE
 ### 4. FINALLY:
 
 - DO NOT start implementation without my permission.
-- Update `docs/file_structure.md` to include the generated plan (`/docs/plans/YYYYMMDD-<requirement_name>.plan.md`), this includes the change log at the bottom of this document.
