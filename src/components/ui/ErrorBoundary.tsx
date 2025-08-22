@@ -126,7 +126,7 @@ interface ErrorFallbackProps {
 
 function DefaultErrorFallback({ 
   error, 
-  errorInfo, 
+  errorInfo: _errorInfo, 
   onRetry, 
   retryCount = 0, 
   maxRetries = 3 
@@ -203,25 +203,10 @@ function DefaultErrorFallback({
             </div>
           )}
 
-          {error && process.env.NODE_ENV === 'development' && (
-            <details className="bg-gray-100 border border-gray-200 rounded-lg p-3 mb-4 text-left">
-              <summary className="cursor-pointer text-sm font-medium text-gray-700">
-                🔍 Developer Info
-              </summary>
-              <div className="mt-2 text-xs text-gray-600 font-mono">
-                <p><strong>Error:</strong> {error.message}</p>
-                <p><strong>Category:</strong> {category}</p>
-                {error.stack && (
-                  <pre className="mt-2 whitespace-pre-wrap">{error.stack}</pre>
-                )}
-                {errorInfo?.componentStack && (
-                  <div className="mt-2">
-                    <strong>Component Stack:</strong>
-                    <pre className="whitespace-pre-wrap">{errorInfo.componentStack}</pre>
-                  </div>
-                )}
-              </div>
-            </details>
+          {error && import.meta.env.VITE_IS_DEV === 'true' && (
+            <pre className="mt-2 text-xs text-red-200" aria-label="error-details">
+              {error.stack || error.message}
+            </pre>
           )}
         </div>
         

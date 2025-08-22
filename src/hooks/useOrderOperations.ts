@@ -1,60 +1,60 @@
-import { useState, useCallback, useRef } from 'react'
-import type { AdminOrderListItem } from '../types/admin.types'
+import { useCallback, useRef, useState } from "react";
+import type { AdminOrderListItem } from "../types/admin.types";
 
 export interface OrderOperationOptions {
   /**
    * Maximum number of retry attempts
    */
-  maxRetries?: number
+  maxRetries?: number;
   /**
    * Base delay between retries in milliseconds
    */
-  retryDelay?: number
+  retryDelay?: number;
   /**
    * Whether to use exponential backoff for retries
    */
-  exponentialBackoff?: boolean
+  exponentialBackoff?: boolean;
   /**
    * Callback for when an operation succeeds after retries
    */
-  onRetrySuccess?: (_attempts: number) => void
+  onRetrySuccess?: (_attempts: number) => void;
   /**
    * Callback for when an operation fails after all retries
    */
-  onRetryFailure?: (_error: Error, _attempts: number) => void
+  onRetryFailure?: (_error: Error, _attempts: number) => void;
 }
 
 export interface OrderOperationState {
-  isLoading: boolean
-  error: Error | null
-  retryCount: number
-  lastAttemptAt: Date | null
+  isLoading: boolean;
+  error: Error | null;
+  retryCount: number;
+  lastAttemptAt: Date | null;
 }
 
 export interface UseOrderOperationsReturn {
   /**
    * Current operation state
    */
-  operationState: OrderOperationState
+  operationState: OrderOperationState;
   /**
    * Execute an order operation with error handling and retry logic
    */
   executeOperation: <T>(
     _operation: () => Promise<T>,
-    _options?: OrderOperationOptions
-  ) => Promise<T>
+    _options?: OrderOperationOptions,
+  ) => Promise<T>;
   /**
    * Reset the operation state
    */
-  resetOperation: () => void
+  resetOperation: () => void;
   /**
    * Check if the operation can be retried
    */
-  canRetry: boolean
+  canRetry: boolean;
   /**
    * Manually retry the last failed operation
    */
-  retryLastOperation: () => Promise<void>
+  retryLastOperation: () => Promise<void>;
 }
 
 /**
@@ -67,159 +67,175 @@ export function useOrderOperations(): UseOrderOperationsReturn {
     isLoading: false,
     error: null,
     retryCount: 0,
-    lastAttemptAt: null
-  })
-  
+    lastAttemptAt: null,
+  });
+
   // Store the last operation for manual retry
-  const lastOperationRef = useRef<{
-    operation: () => Promise<any>
-    options: OrderOperationOptions
-  } | null>(null)
-  
+  const lastOperationRef = useRef<
+    {
+      operation: () => Promise<any>;
+      options: OrderOperationOptions;
+    } | null
+  >(null);
+
   const resetOperation = useCallback(() => {
     setOperationState({
       isLoading: false,
       error: null,
       retryCount: 0,
-      lastAttemptAt: null
-    })
-    lastOperationRef.current = null
-  }, [])
-  
-  const sleep = (ms: number): Promise<void> => 
-    new Promise(resolve => setTimeout(resolve, ms))
-  
+      lastAttemptAt: null,
+    });
+    lastOperationRef.current = null;
+  }, []);
+
+  const sleep = (ms: number): Promise<void> =>
+    new Promise((resolve) => setTimeout(resolve, ms));
+
   const calculateRetryDelay = (
-    attempt: number, 
-    baseDelay: number, 
-    exponentialBackoff: boolean
+    attempt: number,
+    baseDelay: number,
+    exponentialBackoff: boolean,
   ): number => {
     if (!exponentialBackoff) {
-      return baseDelay
+      return baseDelay;
     }
-    return Math.min(baseDelay * Math.pow(2, attempt - 1), 30000) // Max 30 seconds
-  }
-  
+    return Math.min(baseDelay * Math.pow(2, attempt - 1), 30000); // Max 30 seconds
+  };
+
   const executeOperation = useCallback(async <T>(
     operation: () => Promise<T>,
-    options: OrderOperationOptions = {}
+    options: OrderOperationOptions = {},
   ): Promise<T> => {
     const {
       maxRetries = 3,
       retryDelay = 1000,
       exponentialBackoff = true,
       onRetrySuccess,
-      onRetryFailure
-    } = options
-    
+      onRetryFailure,
+    } = options;
+
     // Store operation for potential manual retry
-    lastOperationRef.current = { operation, options }
-    
-    setOperationState(prev => ({
+    lastOperationRef.current = { operation, options };
+
+    setOperationState((prev) => ({
       ...prev,
       isLoading: true,
       error: null,
-      lastAttemptAt: new Date()
-    }))
-    
-    let lastError: Error | undefined
-    let attempt = 0
-    
+      lastAttemptAt: new Date(),
+    }));
+
+    let lastError: Error | undefined;
+    let attempt = 0;
+
     while (attempt <= maxRetries) {
       try {
-        const result = await operation()
-        
+        const result = await operation();
+
         // Success - reset state and call success callback if this was a retry
-        setOperationState(prev => ({
+        setOperationState((prev) => ({
           ...prev,
           isLoading: false,
           error: null,
-          retryCount: attempt
-        }))
-        
+          retryCount: attempt,
+        }));
+
         if (attempt > 0 && onRetrySuccess) {
-          onRetrySuccess(attempt)
+          onRetrySuccess(attempt);
         }
-        
-        return result
-        
+
+        return result;
       } catch (error) {
-        lastError = error instanceof Error ? error : new Error(String(error))
-        attempt++
-        
-        setOperationState(prev => ({
+        lastError = error instanceof Error ? error : new Error(String(error));
+        attempt++;
+
+        setOperationState((prev) => ({
           ...prev,
           retryCount: attempt,
-          lastAttemptAt: new Date()
-        }))
-        
+          lastAttemptAt: new Date(),
+        }));
+
         // If we've exhausted all retries, break out of the loop
         if (attempt > maxRetries) {
-          break
+          break;
         }
-        
+
         // Calculate delay for next retry
-        const delay = calculateRetryDelay(attempt, retryDelay, exponentialBackoff)
-        
+        const delay = calculateRetryDelay(
+          attempt,
+          retryDelay,
+          exponentialBackoff,
+        );
+
         // Log retry attempt in development
-        if (process.env.NODE_ENV === 'development') {
+        if (import.meta.env.VITE_IS_DEV === "true") {
           console.warn(
             `Order operation failed (attempt ${attempt}/${maxRetries + 1}). ` +
-            `Retrying in ${delay}ms...`,
-            lastError
-          )
+              `Retrying in ${delay}ms...`,
+            lastError,
+          );
         }
-        
+
         // Wait before retrying
-        await sleep(delay)
+        await sleep(delay);
       }
     }
-    
+
     // All retries exhausted - update state and call failure callback
-    const finalError = lastError || new Error('Operation failed with unknown error')
-    setOperationState(prev => ({
+    const finalError = lastError ||
+      new Error("Operation failed with unknown error");
+    setOperationState((prev) => ({
       ...prev,
       isLoading: false,
-      error: finalError
-    }))
-    
+      error: finalError,
+    }));
+
     if (onRetryFailure) {
-      onRetryFailure(finalError, attempt - 1)
+      onRetryFailure(finalError, attempt - 1);
     }
-    
-    throw finalError
-  }, [])
-  
+
+    throw finalError;
+  }, []);
+
   const retryLastOperation = useCallback(async (): Promise<void> => {
     if (!lastOperationRef.current) {
-      throw new Error('No operation to retry')
+      throw new Error("No operation to retry");
     }
-    
-    const { operation, options } = lastOperationRef.current
-    await executeOperation(operation, options)
-  }, [executeOperation])
-  
-  const canRetry = operationState.error !== null && lastOperationRef.current !== null
-  
+
+    const { operation, options } = lastOperationRef.current;
+    await executeOperation(operation, options);
+  }, [executeOperation]);
+
+  const canRetry = operationState.error !== null &&
+    lastOperationRef.current !== null;
+
   return {
     operationState,
     executeOperation,
     resetOperation,
     canRetry,
-    retryLastOperation
-  }
+    retryLastOperation,
+  };
 }
 
 /**
  * Specialized hook for order status updates with optimistic updates
  */
 export function useOrderStatusOperations() {
-  const { executeOperation, operationState, resetOperation, canRetry, retryLastOperation } = useOrderOperations()
-  
+  const {
+    executeOperation,
+    operationState,
+    resetOperation,
+    canRetry,
+    retryLastOperation,
+  } = useOrderOperations();
+
   const updateOrderStatus = useCallback(async (
     orderId: string,
-    newStatus: AdminOrderListItem['status'],
-    updateFunction: (_orderId: string, _status: AdminOrderListItem['status']) => Promise<void>
+    newStatus: AdminOrderListItem["status"],
+    updateFunction: (
+      _orderId: string,
+      _status: AdminOrderListItem["status"],
+    ) => Promise<void>,
   ) => {
     return executeOperation(
       () => updateFunction(orderId, newStatus),
@@ -229,25 +245,30 @@ export function useOrderStatusOperations() {
         exponentialBackoff: true,
         onRetrySuccess: (attempts) => {
           // Log success in development mode
-          if (process.env.NODE_ENV === 'development') {
+          if (import.meta.env.VITE_IS_DEV === "true") {
             // eslint-disable-next-line no-console
-            console.info(`Order status update succeeded after ${attempts} retries`)
+            console.info(
+              `Order status update succeeded after ${attempts} retries`,
+            );
           }
         },
         onRetryFailure: (error, attempts) => {
-          console.error(`Order status update failed after ${attempts} retries:`, error)
-        }
-      }
-    )
-  }, [executeOperation])
-  
+          console.error(
+            `Order status update failed after ${attempts} retries:`,
+            error,
+          );
+        },
+      },
+    );
+  }, [executeOperation]);
+
   return {
     updateOrderStatus,
     operationState,
     resetOperation,
     canRetry,
-    retryLastOperation
-  }
+    retryLastOperation,
+  };
 }
 
 /**
@@ -258,77 +279,90 @@ export function useBatchOrderOperations() {
     total: 0,
     completed: 0,
     failed: 0,
-    errors: [] as Error[]
-  })
-  
+    errors: [] as Error[],
+  });
+
   const executeBatchOperation = useCallback(async <T>(
     items: T[],
     operation: (_item: T) => Promise<void>,
-    _options: OrderOperationOptions = {}
+    _options: OrderOperationOptions = {},
   ) => {
     setBatchProgress({
       total: items.length,
       completed: 0,
       failed: 0,
-      errors: []
-    })
-    
+      errors: [],
+    });
+
     const results = await Promise.allSettled(
       items.map(async (item) => {
         try {
-          await operation(item)
-          setBatchProgress(prev => ({
+          await operation(item);
+          setBatchProgress((prev) => ({
             ...prev,
-            completed: prev.completed + 1
-          }))
+            completed: prev.completed + 1,
+          }));
         } catch (error) {
-          const errorObj = error instanceof Error ? error : new Error(String(error))
-          setBatchProgress(prev => ({
+          const errorObj = error instanceof Error
+            ? error
+            : new Error(String(error));
+          setBatchProgress((prev) => ({
             ...prev,
             failed: prev.failed + 1,
-            errors: [...prev.errors, errorObj]
-          }))
-          throw errorObj
+            errors: [...prev.errors, errorObj],
+          }));
+          throw errorObj;
         }
-      })
-    )
-    
-    return results
-  }, [])
-  
+      }),
+    );
+
+    return results;
+  }, []);
+
   const resetBatchProgress = useCallback(() => {
     setBatchProgress({
       total: 0,
       completed: 0,
       failed: 0,
-      errors: []
-    })
-  }, [])
-  
+      errors: [],
+    });
+  }, []);
+
   return {
     batchProgress,
     executeBatchOperation,
-    resetBatchProgress
-  }
+    resetBatchProgress,
+  };
 }
 
 /**
  * Utility function to determine error type for better error handling
  */
-export function getErrorType(error: Error): 'network' | 'database' | 'permission' | 'unknown' {
-  const message = error.message.toLowerCase()
-  
-  if (message.includes('network') || message.includes('fetch') || message.includes('connection')) {
-    return 'network'
+export function getErrorType(
+  error: Error,
+): "network" | "database" | "permission" | "unknown" {
+  const message = error.message.toLowerCase();
+
+  if (
+    message.includes("network") || message.includes("fetch") ||
+    message.includes("connection")
+  ) {
+    return "network";
   }
-  
-  if (message.includes('database') || message.includes('supabase') || message.includes('postgresql')) {
-    return 'database'
+
+  if (
+    message.includes("database") || message.includes("supabase") ||
+    message.includes("postgresql")
+  ) {
+    return "database";
   }
-  
-  if (message.includes('permission') || message.includes('unauthorized') || message.includes('forbidden')) {
-    return 'permission'
+
+  if (
+    message.includes("permission") || message.includes("unauthorized") ||
+    message.includes("forbidden")
+  ) {
+    return "permission";
   }
-  
-  return 'unknown'
+
+  return "unknown";
 }

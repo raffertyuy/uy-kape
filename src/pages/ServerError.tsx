@@ -4,12 +4,17 @@ interface ServerErrorProps {
   errorCode?: number
   message?: string
   retryAction?: () => void
+  // Optional debug details for development builds
+  debugStack?: string
+  debugMessage?: string
 }
 
 export default function ServerError({ 
   errorCode = 500, 
   message, 
-  retryAction 
+  retryAction,
+  debugStack,
+  debugMessage
 }: ServerErrorProps) {
   const defaultMessages: Record<number, string> = {
     500: 'Our coffee servers are having trouble brewing right now.',
@@ -124,20 +129,10 @@ export default function ServerError({
         </div>
         
         {/* Development Info */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="mt-6 text-left">
-            <details className="bg-gray-100 border border-gray-200 rounded-lg p-3">
-              <summary className="cursor-pointer text-sm font-medium text-gray-700">
-                🔍 Developer Info
-              </summary>
-              <div className="mt-2 text-xs text-gray-600 font-mono">
-                <p><strong>Error Code:</strong> {errorCode}</p>
-                <p><strong>Timestamp:</strong> {new Date().toISOString()}</p>
-                <p><strong>URL:</strong> {window.location.href}</p>
-                {message && <p><strong>Details:</strong> {message}</p>}
-              </div>
-            </details>
-          </div>
+        {import.meta.env.VITE_IS_DEV === 'true' && (debugStack || debugMessage) && (
+          <pre className="mt-4 text-sm bg-red-50 border border-red-200 p-3 rounded text-red-700">
+            {String(debugStack || debugMessage)}
+          </pre>
         )}
       </div>
     </div>

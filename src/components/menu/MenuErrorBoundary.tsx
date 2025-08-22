@@ -26,7 +26,7 @@ export class MenuErrorBoundary extends Component<Props, State> {
     console.error('Menu Error Boundary caught an error:', error, errorInfo)
     
     // Log error to external service in production
-    if (process.env.NODE_ENV === 'production') {
+    if (import.meta.env.VITE_IS_PROD === 'true') {
       // Example: logErrorToService(error, errorInfo)
     }
     
@@ -79,26 +79,10 @@ export class MenuErrorBoundary extends Component<Props, State> {
               </button>
             </div>
 
-            {process.env.NODE_ENV === 'development' && this.state.error && (
-              <details className="mt-6 text-left">
-                <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
-                  Error Details (Development Only)
-                </summary>
-                <div className="mt-2 p-3 bg-red-50 border border-red-200 rounded text-xs text-red-700 overflow-auto">
-                  <div className="font-semibold">Error:</div>
-                  <div className="mb-2">{this.state.error.message}</div>
-                  
-                  <div className="font-semibold">Stack Trace:</div>
-                  <pre className="whitespace-pre-wrap">{this.state.error.stack}</pre>
-                  
-                  {this.state.errorInfo && (
-                    <>
-                      <div className="font-semibold mt-2">Component Stack:</div>
-                      <pre className="whitespace-pre-wrap">{this.state.errorInfo.componentStack}</pre>
-                    </>
-                  )}
-                </div>
-              </details>
+            {import.meta.env.VITE_IS_DEV === 'true' && this.state.error && (
+              <pre className="mt-2 text-xs text-red-200" aria-label="error-details">
+                {this.state.error.stack || this.state.error.message}
+              </pre>
             )}
           </div>
         </div>

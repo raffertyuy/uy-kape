@@ -28,9 +28,7 @@
       ]
     }
   ],
-  "functions": {
-    "src/pages/api/*": {
-      "runtime": "nodejs18.x"
-    }
-  }
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist"
 }
