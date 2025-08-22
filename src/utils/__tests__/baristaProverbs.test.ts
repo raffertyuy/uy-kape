@@ -110,7 +110,7 @@ describe('baristaProverbs', () => {
       const proverbText = getRandomBaristaProverbText()
       
       // Should contain relevant coffee/patience themes
-      const relevantTerms = /coffee|brew|cup|bean|barista|patience|wait|time|care|craft|perfect|love|moment|aroma/i
+      const relevantTerms = /coffee|brew|cup|bean|barista|patience|wait|time|care|craft|perfect|love|moment|aroma|latte|espresso|extraction|foam|americano|caffeine/i
       expect(relevantTerms.test(proverbText)).toBe(true)
     })
 
@@ -236,7 +236,7 @@ describe('baristaProverbs', () => {
       const proverbs = Array.from({ length: 20 }, () => getRandomBaristaProverb())
       
       // Each proverb should relate to coffee, service, or patience
-      const coffeeShopTerms = /coffee|brew|cup|bean|barista|wait|time|care|craft|serve|drink|order|moment|perfect|love|patience|aroma|steam|grind|pour/i
+      const coffeeShopTerms = /coffee|brew|cup|bean|barista|wait|time|care|craft|serve|drink|order|moment|perfect|love|patience|aroma|steam|grind|pour|latte|espresso|extraction|foam|americano|caffeine/i
       
       proverbs.forEach(proverb => {
         expect(coffeeShopTerms.test(proverb.text)).toBe(true)

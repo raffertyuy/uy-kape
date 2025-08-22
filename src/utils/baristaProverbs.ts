@@ -74,7 +74,7 @@ const baristaProverbs: readonly BaristaProverb[] = [
   
   // Wisdom proverbs
   {
-    text: "Doctor Strange says: 'I've seen 14 million futures, and in all of them, good coffee takes time.'",
+    text: "Doctor Strange says: 'I've seen 14 million futures, and in all of them, good coffee takes time'.",
     category: 'wisdom'
   },
   {
@@ -112,7 +112,7 @@ const baristaProverbs: readonly BaristaProverb[] = [
     category: 'coffee-love'
   },
   {
-    text: "Groot's vocabulary is limited, but he'd definitely say 'I am Groot... and I love coffee!'",
+    text: "Groot's vocabulary is limited, but he'd definitely say 'I am Groot... and I love coffee'!",
     category: 'coffee-love'
   },
   {

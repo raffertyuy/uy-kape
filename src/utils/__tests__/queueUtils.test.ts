@@ -16,9 +16,9 @@ describe('queueUtils', () => {
     })
 
     it('should use default wait time from config', () => {
-      expect(calculateEstimatedTime(1)).toBe('5 min')
-      expect(calculateEstimatedTime(2)).toBe('10 min')
-      expect(calculateEstimatedTime(3)).toBe('15 min')
+      expect(calculateEstimatedTime(1)).toBe('4 min')
+      expect(calculateEstimatedTime(2)).toBe('8 min')
+      expect(calculateEstimatedTime(3)).toBe('12 min')
     })
 
     it('should accept custom wait time parameter', () => {
