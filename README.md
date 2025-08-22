@@ -78,6 +78,9 @@ _For detailed version information, architectural decisions, and configuration de
      ```env
      VITE_SUPABASE_URL=your_supabase_project_url
      VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+     
+     # Optional: Configure order wait time (default: 5 minutes per order)
+     VITE_WAIT_TIME_PER_ORDER=5
      ```
 
 4. **Start the development server:**
