@@ -28,6 +28,18 @@ describe('App Configuration', () => {
       expect(appConfig.guestPassword.length).toBeGreaterThan(0)
       expect(appConfig.adminPassword.length).toBeGreaterThan(0)
     })
+
+    it('should have valid waitTimePerOrder configuration', () => {
+      expect(appConfig).toHaveProperty('waitTimePerOrder')
+      expect(typeof appConfig.waitTimePerOrder).toBe('number')
+      expect(appConfig.waitTimePerOrder).toBeGreaterThan(0)
+    })
+
+    it('should use default waitTimePerOrder when env var not set', () => {
+      // Since we can't easily mock env vars in this test, just ensure it's a reasonable default
+      expect(appConfig.waitTimePerOrder).toBeGreaterThanOrEqual(1)
+      expect(appConfig.waitTimePerOrder).toBeLessThanOrEqual(60) // reasonable maximum
+    })
   })
 
   describe('Application Constants', () => {

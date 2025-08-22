@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase'
+import { appConfig } from '@/config/app.config'
 import type {
   GuestOrderForm,
   OrderSubmissionResult,
@@ -134,7 +135,7 @@ export const orderService = {
       return {
         order_id: order.id,
         queue_number: queueNumber,
-        estimated_wait_time: `${Math.max(1, queueNumber * 3)} minutes`
+        estimated_wait_time: `${Math.max(1, queueNumber * appConfig.waitTimePerOrder)} minutes`
       }
     } catch (error) {
       if (error && typeof error === 'object' && 'type' in error) {
@@ -309,7 +310,7 @@ export const orderService = {
 
       return {
         position,
-        estimated_wait_minutes: position > 0 ? Math.max(1, position * 3) : 0,
+        estimated_wait_minutes: position > 0 ? Math.max(1, position * appConfig.waitTimePerOrder) : 0,
         status: order?.status || 'pending'
       }
     } catch (error) {

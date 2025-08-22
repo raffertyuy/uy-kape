@@ -10,7 +10,7 @@ Make the order wait time configurable in the .env file and implement the formula
 
 ## Implementation Steps
 
-- [ ] **Step 1: Add Environment Variable Configuration**
+- [x] **Step 1: Add Environment Variable Configuration**
   - **Task**: Add configurable wait time environment variable to replace hardcoded 3-minute values
   - **Files**:
     - `.env.example`: Add `VITE_WAIT_TIME_PER_ORDER=5` example configuration
@@ -32,7 +32,7 @@ Make the order wait time configurable in the .env file and implement the formula
     }
     ```
 
-- [ ] **Step 2: Update Queue Utilities**
+- [x] **Step 2: Update Queue Utilities**
   - **Task**: Modify queueUtils to use configurable wait time instead of hardcoded value
   - **Files**:
     - `src/utils/queueUtils.ts`: Update calculateEstimatedTime function to accept configurable time and use it as default
@@ -49,7 +49,7 @@ Make the order wait time configurable in the .env file and implement the formula
     }
     ```
 
-- [ ] **Step 3: Update Queue Status Hook**
+- [x] **Step 3: Update Queue Status Hook**
   - **Task**: Modify useQueueStatus hook to use configurable wait time for calculations
   - **Files**:
     - `src/hooks/useQueueStatus.ts`: Replace hardcoded 3 with configurable value from app config
@@ -66,7 +66,7 @@ Make the order wait time configurable in the .env file and implement the formula
       : 'Preparing your order...'
     ```
 
-- [ ] **Step 4: Update Admin Order Service**
+- [x] **Step 4: Update Admin Order Service**
   - **Task**: Replace hardcoded wait time in admin order service calculations
   - **Files**:
     - `src/services/adminOrderService.ts`: Update estimated completion time calculation to use configurable value
@@ -79,7 +79,7 @@ Make the order wait time configurable in the .env file and implement the formula
     const estimatedMinutes = Math.max(1, (order.queue_number || 0) * appConfig.waitTimePerOrder)
     ```
 
-- [ ] **Step 5: Update Order Service (if needed)**
+- [x] **Step 5: Update Order Service (if needed)**
   - **Task**: Check if orderService also uses hardcoded wait times and update if necessary
   - **Files**:
     - `src/services/orderService.ts`: Review for any hardcoded wait time calculations
@@ -89,7 +89,7 @@ Make the order wait time configurable in the .env file and implement the formula
     // Review and update any hardcoded wait time calculations if found
     ```
 
-- [ ] **Step 6: Update Configuration Tests**
+- [x] **Step 6: Update Configuration Tests**
   - **Task**: Add tests for new waitTimePerOrder configuration
   - **Files**:
     - `src/config/__tests__/app.config.test.ts`: Add tests for waitTimePerOrder configuration
@@ -103,7 +103,7 @@ Make the order wait time configurable in the .env file and implement the formula
     })
     ```
 
-- [ ] **Step 7: Add Queue Utils Tests**
+- [x] **Step 7: Add Queue Utils Tests**
   - **Task**: Test that calculateEstimatedTime uses configurable values correctly
   - **Files**:
     - `src/utils/__tests__/queueUtils.test.ts`: Add tests for updated calculateEstimatedTime function
@@ -117,7 +117,7 @@ Make the order wait time configurable in the .env file and implement the formula
     })
     ```
 
-- [ ] **Step 8: Build and Test Application**
+- [x] **Step 8: Build and Test Application**
   - **Task**: Build the application and run existing tests to ensure no regressions
   - **Files**: None (build/test process)
   - **Dependencies**: Steps 1-7

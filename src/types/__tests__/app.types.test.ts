@@ -87,6 +87,7 @@ describe('App Types', () => {
       const config: AppConfig = {
         guestPassword: 'guest123',
         adminPassword: 'admin456',
+        waitTimePerOrder: 5,
       }
 
       expect(config.guestPassword).toBe('guest123')
