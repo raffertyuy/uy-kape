@@ -107,57 +107,148 @@ function AdminDashboard({ onNavigate }: { onNavigate: (_view: AdminView) => void
   )
 }
 
+// Navigation button component for desktop
+function NavigationButton({ activeView, view, onNavigate, children }: { 
+  activeView: AdminView
+  view: AdminView
+  onNavigate: (_view: AdminView) => void
+  children: React.ReactNode
+}) {
+  return (
+    <button
+      onClick={() => onNavigate(view)}
+      className={`inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2 transition-colors ${
+        activeView === view
+          ? 'border-coffee-500 text-coffee-900'
+          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+      }`}
+    >
+      {children}
+    </button>
+  )
+}
+
+// Mobile navigation button component
+function MobileNavigationButton({ activeView, view, onNavigate, children, onMenuClose }: { 
+  activeView: AdminView
+  view: AdminView
+  onNavigate: (_view: AdminView) => void
+  children: React.ReactNode
+  onMenuClose: () => void
+}) {
+  const handleClick = () => {
+    onNavigate(view)
+    onMenuClose()
+  }
+
+  return (
+    <button
+      onClick={handleClick}
+      className={`flex items-center w-full text-left px-3 py-2 rounded-md text-base font-medium transition-colors ${
+        activeView === view
+          ? 'bg-coffee-100 text-coffee-900'
+          : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
+      }`}
+    >
+      {children}
+    </button>
+  )
+}
+
+// Hamburger icon component
+function HamburgerIcon() {
+  return (
+    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+  )
+}
+
 // Navigation component for admin views
 function AdminNavigation({ activeView, onNavigate }: { 
   activeView: AdminView
   onNavigate: (_view: AdminView) => void 
 }) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false)
+  }
+
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex">
+          {/* Left side - Logo/Dashboard + Mobile menu button */}
+          <div className="flex items-center">
             <button
               onClick={() => onNavigate('dashboard')}
-              className="flex items-center px-4 text-coffee-700 hover:text-coffee-900 font-medium"
+              className="flex items-center px-2 sm:px-4 text-coffee-700 hover:text-coffee-900 font-medium transition-colors rounded-md focus:outline-none focus:ring-2 focus:ring-coffee-500"
             >
               <Logo 
                 size="xs" 
                 className="h-5 w-5 mr-2" 
                 alt="Uy, Kape!"
               />
-              Dashboard
+              <span className="hidden sm:inline">Dashboard</span>
             </button>
-            <div className="flex space-x-8 ml-6">
-              <button
-                onClick={() => onNavigate('menu')}
-                className={`inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2 ${
-                  activeView === 'menu'
-                    ? 'border-coffee-500 text-coffee-900'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+            
+            {/* Mobile menu button */}
+            <button
+              className="ml-2 sm:hidden p-2 rounded-md text-coffee-700 hover:text-coffee-900 hover:bg-coffee-50 focus:outline-none focus:ring-2 focus:ring-coffee-500 transition-colors"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-expanded={isMobileMenuOpen}
+              aria-label="Toggle navigation menu"
+            >
+              <HamburgerIcon />
+            </button>
+            
+            {/* Desktop navigation items */}
+            <div className="hidden sm:flex sm:space-x-8 sm:ml-6">
+              <NavigationButton activeView={activeView} view="menu" onNavigate={onNavigate}>
+                Menu Management
+              </NavigationButton>
+              <NavigationButton activeView={activeView} view="orders" onNavigate={onNavigate}>
+                Orders
+                <span className="ml-2 bg-green-100 text-green-600 px-2 py-0.5 rounded-full text-xs">
+                  Available
+                </span>
+              </NavigationButton>
+            </div>
+          </div>
+          
+          {/* Right side - Admin indicator */}
+          <div className="flex items-center">
+            <span className="text-xs sm:text-sm text-gray-500">Barista Admin</span>
+          </div>
+        </div>
+        
+        {/* Mobile menu dropdown */}
+        {isMobileMenuOpen && (
+          <div className="sm:hidden border-t border-gray-200 bg-white">
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              <MobileNavigationButton 
+                activeView={activeView} 
+                view="menu" 
+                onNavigate={onNavigate}
+                onMenuClose={closeMobileMenu}
               >
                 Menu Management
-              </button>
-              <button
-                onClick={() => onNavigate('orders')}
-                className={`inline-flex items-center px-1 pt-1 text-sm font-medium border-b-2 ${
-                  activeView === 'orders'
-                    ? 'border-coffee-500 text-coffee-900'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+              </MobileNavigationButton>
+              <MobileNavigationButton 
+                activeView={activeView} 
+                view="orders" 
+                onNavigate={onNavigate}
+                onMenuClose={closeMobileMenu}
               >
                 Orders
                 <span className="ml-2 bg-green-100 text-green-600 px-2 py-0.5 rounded-full text-xs">
                   Available
                 </span>
-              </button>
+              </MobileNavigationButton>
             </div>
           </div>
-          <div className="flex items-center">
-            <span className="text-sm text-gray-500">Barista Admin</span>
-          </div>
-        </div>
+        )}
       </div>
     </nav>
   )
