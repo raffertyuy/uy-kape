@@ -123,7 +123,11 @@ export const MenuManagement: React.FC = () => {
                 )}
 
                 {activeTab === 'drinks' && (
-                  <DrinkManagement onDataChange={handleDataChange} />
+                  <DrinkManagement 
+                    onDataChange={handleDataChange}
+                    searchQuery={searchQuery}
+                    filters={filters}
+                  />
                 )}
 
                 {activeTab === 'options' && (

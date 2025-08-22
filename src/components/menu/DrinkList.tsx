@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import type { Drink, DrinkCategory, DrinkWithOptionsPreview } from '@/types/menu.types'
+import type { MenuFilters } from '@/components/menu/MenuSearch'
 import { DrinkCard } from './DrinkCard'
 import { DrinkForm } from './DrinkForm'
 
@@ -9,11 +10,13 @@ interface DrinkListProps {
   onEdit: (_drink: Drink) => void
   onDelete: (_id: string) => void
   onManageOptions: (_drinkId: string) => void
-  selectedCategoryId?: string
+  selectedCategoryId?: string // Keeping for backward compatibility, but filters.categoryId takes precedence
   onCategoryFilter: (_categoryId: string | undefined) => void
   showOptionsPreview?: boolean
   isLoading?: boolean
   onDataChange?: () => void
+  searchQuery?: string
+  filters?: MenuFilters
 }
 
 export const DrinkList: React.FC<DrinkListProps> = ({
@@ -26,20 +29,71 @@ export const DrinkList: React.FC<DrinkListProps> = ({
   onCategoryFilter,
   showOptionsPreview = false,
   isLoading = false,
-  onDataChange
+  onDataChange,
+  searchQuery = '',
+  filters = {}
 }) => {
   const [showForm, setShowForm] = useState(false)
   const [editingDrink, setEditingDrink] = useState<Drink | null>(null)
-  const [searchQuery, setSearchQuery] = useState('')
+  // Remove local searchQuery state since it's now coming from parent
+  // const [searchQuery, setSearchQuery] = useState('')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
-  // Filter drinks based on search query
+  // Apply comprehensive filtering and sorting
   const filteredDrinks = useMemo(() => {
-    return drinks.filter(drink =>
-      drink.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (drink.description && drink.description.toLowerCase().includes(searchQuery.toLowerCase()))
-    )
-  }, [drinks, searchQuery])
+    let result = [...drinks]
+
+    // Apply search query filter
+    if (searchQuery && searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim()
+      result = result.filter(drink =>
+        drink.name.toLowerCase().includes(query) ||
+        (drink.description && drink.description.toLowerCase().includes(query))
+      )
+    }
+
+    // Apply category filter (prioritize filters.categoryId over selectedCategoryId)
+    const categoryFilter = filters.categoryId || selectedCategoryId
+    if (categoryFilter) {
+      result = result.filter(drink => drink.category_id === categoryFilter)
+    }
+
+    // Apply status filter
+    if (filters.isActive !== undefined) {
+      result = result.filter(drink => drink.is_active === filters.isActive)
+    }
+
+    // Apply sorting
+    const sortBy = filters.sortBy || 'display_order'
+    const sortOrder = filters.sortOrder || 'asc'
+
+    result.sort((a, b) => {
+      let aValue: string | number | Date
+      let bValue: string | number | Date
+
+      switch (sortBy) {
+        case 'name':
+          aValue = a.name.toLowerCase()
+          bValue = b.name.toLowerCase()
+          break
+        case 'created_at':
+          aValue = new Date(a.created_at || 0)
+          bValue = new Date(b.created_at || 0)
+          break
+        case 'display_order':
+        default:
+          aValue = a.display_order || 0
+          bValue = b.display_order || 0
+          break
+      }
+
+      if (aValue < bValue) return sortOrder === 'asc' ? -1 : 1
+      if (aValue > bValue) return sortOrder === 'asc' ? 1 : -1
+      return 0
+    })
+
+    return result
+  }, [drinks, searchQuery, filters, selectedCategoryId])
 
   const handleAdd = () => {
     setEditingDrink(null)
@@ -75,6 +129,9 @@ export const DrinkList: React.FC<DrinkListProps> = ({
   const handleClearFilter = () => {
     onCategoryFilter(undefined)
   }
+
+  // Get the effective category filter (prioritize filters.categoryId over selectedCategoryId)
+  const effectiveCategoryId = filters.categoryId || selectedCategoryId
 
   if (isLoading) {
     return (
@@ -119,17 +176,17 @@ export const DrinkList: React.FC<DrinkListProps> = ({
         </button>
       </div>
 
-      {/* Filters and Search */}
+      {/* Filters and Search - Show simplified version since main filters are in MenuSearch */}
       <div className="flex flex-col sm:flex-row gap-4">
-        {/* Category Filter */}
+        {/* Category Filter - Keep this as a quick filter that syncs with main filters */}
         <div className="flex-1">
           <label htmlFor="category-filter" className="block text-sm font-medium text-coffee-700 mb-1">
-            Filter by Category
+            Quick Category Filter
           </label>
           <div className="flex gap-2">
             <select
               id="category-filter"
-              value={selectedCategoryId || ''}
+              value={effectiveCategoryId || ''}
               onChange={(e) => onCategoryFilter(e.target.value || undefined)}
               className="flex-1 px-3 py-2 border border-coffee-300 rounded-md shadow-sm 
                        focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:border-coffee-500"
@@ -141,7 +198,7 @@ export const DrinkList: React.FC<DrinkListProps> = ({
                 </option>
               ))}
             </select>
-            {selectedCategoryId && (
+            {effectiveCategoryId && (
               <button
                 onClick={handleClearFilter}
                 className="px-3 py-2 text-coffee-600 hover:text-coffee-800 focus:outline-none 
@@ -154,21 +211,17 @@ export const DrinkList: React.FC<DrinkListProps> = ({
           </div>
         </div>
 
-        {/* Search */}
-        <div className="flex-1">
-          <label htmlFor="search" className="block text-sm font-medium text-coffee-700 mb-1">
-            Search Drinks
-          </label>
-          <input
-            type="text"
-            id="search"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by name or description..."
-            className="w-full px-3 py-2 border border-coffee-300 rounded-md shadow-sm 
-                     focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:border-coffee-500"
-          />
-        </div>
+        {/* Search Display - Show current search for context */}
+        {searchQuery && (
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-coffee-700 mb-1">
+              Current Search
+            </label>
+            <div className="px-3 py-2 bg-coffee-50 border border-coffee-200 rounded-md text-sm text-coffee-700">
+              "{searchQuery}"
+            </div>
+          </div>
+        )}
 
         {/* View Mode Toggle */}
         <div className="flex items-end">
@@ -206,11 +259,11 @@ export const DrinkList: React.FC<DrinkListProps> = ({
       </div>
 
       {/* Active Filter Display */}
-      {selectedCategoryId && (
+      {effectiveCategoryId && (
         <div className="flex items-center gap-2">
           <span className="text-sm text-coffee-600">Filtered by:</span>
           <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-coffee-100 text-coffee-800">
-            {categories.find(cat => cat.id === selectedCategoryId)?.name}
+            {categories.find(cat => cat.id === effectiveCategoryId)?.name}
             <button
               onClick={handleClearFilter}
               className="ml-2 text-coffee-600 hover:text-coffee-800 focus:outline-none"
@@ -244,15 +297,15 @@ export const DrinkList: React.FC<DrinkListProps> = ({
             </svg>
           </div>
           <h3 className="text-lg font-semibold text-coffee-800 mb-2">
-            {searchQuery || selectedCategoryId ? 'No drinks found' : 'No drinks yet'}
+            {searchQuery || effectiveCategoryId ? 'No drinks found' : 'No drinks yet'}
           </h3>
           <p className="text-coffee-600 mb-4">
-            {searchQuery || selectedCategoryId 
+            {searchQuery || effectiveCategoryId 
               ? 'Try adjusting your search criteria or filters'
               : 'Create your first drink to get started'
             }
           </p>
-          {!searchQuery && !selectedCategoryId && (
+          {!searchQuery && !effectiveCategoryId && (
             <button
               onClick={handleAdd}
               className="px-6 py-3 bg-coffee-600 text-white rounded-lg hover:bg-coffee-700 

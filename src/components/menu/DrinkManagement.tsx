@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import type { Drink } from '@/types/menu.types'
+import type { MenuFilters } from '@/components/menu/MenuSearch'
 import { DrinkList } from './DrinkList'
 import { DrinkOptionsManager } from './DrinkOptionsManager'
 import { ToggleSwitch } from '@/components/ui/ToggleSwitch'
@@ -12,9 +13,15 @@ import {
 
 interface DrinkManagementProps {
   onDataChange?: () => void
+  searchQuery?: string
+  filters?: MenuFilters
 }
 
-export const DrinkManagement: React.FC<DrinkManagementProps> = ({ onDataChange }) => {
+export const DrinkManagement: React.FC<DrinkManagementProps> = ({ 
+  onDataChange, 
+  searchQuery = '', 
+  filters = {} 
+}) => {
   const [showOptionsPreview, setShowOptionsPreview] = useState(false)
   
   // Use different hooks based on preview preference
@@ -43,7 +50,9 @@ export const DrinkManagement: React.FC<DrinkManagementProps> = ({ onDataChange }
   const error = showOptionsPreview ? drinksWithOptionsError : regularDrinksError
   
   const [selectedDrink, setSelectedDrink] = useState<{ id: string; name: string } | null>(null)
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | undefined>(undefined)
+
+  // Remove the local selectedCategoryId state since it's now coming from parent filters
+  // const [selectedCategoryId, setSelectedCategoryId] = useState<string | undefined>(undefined)
 
   // Create a data change handler that refreshes local data and calls parent callback
   const handleDataChange = React.useCallback(async () => {
@@ -88,8 +97,10 @@ export const DrinkManagement: React.FC<DrinkManagementProps> = ({ onDataChange }
     setSelectedDrink(null)
   }
 
-  const handleCategoryFilter = (categoryId: string | undefined) => {
-    setSelectedCategoryId(categoryId)
+  const handleCategoryFilter = (_categoryId: string | undefined) => {
+    // This function is no longer needed since filtering is handled by parent
+    // setSelectedCategoryId(categoryId)
+    console.warn('handleCategoryFilter called but filtering is now handled by parent MenuManagement')
   }
 
   return (
@@ -145,10 +156,11 @@ export const DrinkManagement: React.FC<DrinkManagementProps> = ({ onDataChange }
         onDelete={handleDeleteDrink}
         onManageOptions={handleManageOptions}
         showOptionsPreview={showOptionsPreview}
-        {...(selectedCategoryId ? { selectedCategoryId } : {})}
         onCategoryFilter={handleCategoryFilter}
         isLoading={isLoading}
         onDataChange={handleDataChange}
+        searchQuery={searchQuery}
+        filters={filters}
       />
       
       {selectedDrink && (

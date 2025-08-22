@@ -101,7 +101,7 @@ describe('DrinkManagement Integration Tests', () => {
     });
 
     // Check if categories are rendered in the dropdown
-    const categorySelect = screen.getByLabelText(/filter by category/i);
+    const categorySelect = screen.getByLabelText(/quick category filter/i);
     expect(categorySelect).toBeInTheDocument();
     
     // Check if category options are available
@@ -134,7 +134,7 @@ describe('DrinkManagement Integration Tests', () => {
     });
 
     // Find the category select dropdown
-    const categorySelect = screen.getByLabelText(/filter by category/i);
+    const categorySelect = screen.getByLabelText(/quick category filter/i);
     expect(categorySelect).toBeInTheDocument();
     
     // Wait for category options to be available
