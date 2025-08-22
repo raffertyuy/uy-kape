@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { orderService } from '@/services/orderService'
+import { appConfig } from '@/config/app.config'
 import type { OrderServiceError } from '@/types/order.types'
 
 interface QueueStatusData {
@@ -55,7 +56,7 @@ export function useQueueStatus(orderId: string | null): UseQueueStatusReturn {
       
       // Calculate estimated wait time based on position
       const estimatedWaitTime = position > 0 
-        ? `${Math.max(1, position * 3)} minutes`
+        ? `${Math.max(1, position * appConfig.waitTimePerOrder)} minutes`
         : isReady 
         ? 'Ready for pickup!'
         : 'Preparing your order...'

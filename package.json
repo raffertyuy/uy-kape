@@ -16,12 +16,12 @@
     "test:ui": "node --max-old-space-size=8192 ./node_modules/vitest/vitest.mjs --ui",
     "test:coverage": "node --max-old-space-size=8192 ./node_modules/vitest/vitest.mjs run --coverage",
     "test:watch": "node --max-old-space-size=8192 ./node_modules/vitest/vitest.mjs --watch",
-    "test:ci": "node --max-old-space-size=10240 ./node_modules/vitest/vitest.mjs run --config=vitest.config.ci.ts --coverage --reporter=verbose --reporter=junit --outputFile=test-results.xml",
-    "test:ci-no-coverage": "node --max-old-space-size=10240 ./node_modules/vitest/vitest.mjs run --config=vitest.config.ci.ts --reporter=verbose --reporter=junit --outputFile=test-results.xml",
-    "test:memory": "node --max-old-space-size=10240 --expose-gc ./node_modules/vitest/vitest.mjs run --config=vitest.config.ci.ts --reporter=verbose --logHeapUsage",
-    "test:e2e": "playwright test --config=playwright-tests/playwright.config.ts",
-    "test:e2e:headed": "playwright test --config=playwright-tests/playwright.config.ts --headed",
-    "test:e2e:debug": "playwright test --config=playwright-tests/playwright.config.ts --debug"
+    "test:ci": "node --max-old-space-size=10240 ./node_modules/vitest/vitest.mjs run --config=tests/unit/vitest.config.ci.ts --coverage --reporter=verbose --reporter=junit --outputFile=tests/outputs/test-results.xml",
+    "test:ci-no-coverage": "node --max-old-space-size=10240 ./node_modules/vitest/vitest.mjs run --config=tests/unit/vitest.config.ci.ts --reporter=verbose --reporter=junit --outputFile=tests/outputs/test-results.xml",
+    "test:memory": "node --max-old-space-size=10240 --expose-gc ./node_modules/vitest/vitest.mjs run --config=tests/unit/vitest.config.ci.ts --reporter=verbose --logHeapUsage",
+    "test:e2e": "playwright test --config=tests/e2e/playwright.config.ts",
+    "test:e2e:headed": "playwright test --config=tests/e2e/playwright.config.ts --headed",
+    "test:e2e:debug": "playwright test --config=tests/e2e/playwright.config.ts --debug"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.55.0",

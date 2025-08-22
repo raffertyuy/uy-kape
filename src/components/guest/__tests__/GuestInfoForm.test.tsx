@@ -11,6 +11,13 @@ describe('GuestInfoForm', () => {
     isValid: true
   }
 
+  const funnyNameProps = {
+    ...defaultProps,
+    isGeneratedName: true,
+    onGenerateNewName: vi.fn(),
+    onClearGeneratedName: vi.fn()
+  }
+
   beforeEach(() => {
     vi.clearAllMocks()
   })
@@ -154,6 +161,118 @@ describe('GuestInfoForm', () => {
       
       const nameInput = screen.getByLabelText(/your name/i)
       expect(nameInput).toHaveClass('border-red-300')
+    })
+
+    it('should apply generated name styling when isGeneratedName is true', () => {
+      render(<GuestInfoForm {...funnyNameProps} guestName="Caffeinated Bean McBrew" />)
+      
+      const nameInput = screen.getByLabelText(/your name/i)
+      expect(nameInput).toHaveClass('border-amber-300', 'bg-amber-25')
+    })
+  })
+
+  describe('Funny Name Generation', () => {
+    it('should show regenerate button when name is generated', () => {
+      render(<GuestInfoForm {...funnyNameProps} guestName="Caffeinated Bean McBrew" />)
+      
+      const regenerateButton = screen.getByRole('button', { name: /generate new funny name/i })
+      expect(regenerateButton).toBeInTheDocument()
+    })
+
+    it('should not show regenerate button when name is not generated', () => {
+      render(<GuestInfoForm {...defaultProps} guestName="John Doe" />)
+      
+      const regenerateButton = screen.queryByRole('button', { name: /generate new funny name/i })
+      expect(regenerateButton).not.toBeInTheDocument()
+    })
+
+    it('should call onGenerateNewName when regenerate button is clicked', () => {
+      render(<GuestInfoForm {...funnyNameProps} guestName="Caffeinated Bean McBrew" />)
+      
+      const regenerateButton = screen.getByRole('button', { name: /generate new funny name/i })
+      fireEvent.click(regenerateButton)
+      
+      expect(funnyNameProps.onGenerateNewName).toHaveBeenCalledTimes(1)
+    })
+
+    it('should call onClearGeneratedName when generated name input is focused', () => {
+      render(<GuestInfoForm {...funnyNameProps} guestName="Caffeinated Bean McBrew" />)
+      
+      const nameInput = screen.getByLabelText(/your name/i)
+      fireEvent.focus(nameInput)
+      
+      expect(funnyNameProps.onClearGeneratedName).toHaveBeenCalledTimes(1)
+    })
+
+    it('should not call onClearGeneratedName when user-entered name is focused', () => {
+      render(<GuestInfoForm {...defaultProps} guestName="John Doe" />)
+      
+      const nameInput = screen.getByLabelText(/your name/i)
+      fireEvent.focus(nameInput)
+      
+      // onClearGeneratedName should not be called since it's not provided
+      expect(defaultProps.onGuestNameChange).not.toHaveBeenCalledWith('')
+    })
+
+    it('should show different placeholder for generated names', () => {
+      render(<GuestInfoForm {...funnyNameProps} guestName="Caffeinated Bean McBrew" />)
+      
+      const nameInput = screen.getByLabelText(/your name/i)
+      expect(nameInput).toHaveAttribute('placeholder', 'Click to enter your own name...')
+    })
+
+    it('should show normal placeholder for user-entered names', () => {
+      render(<GuestInfoForm {...defaultProps} guestName="John Doe" />)
+      
+      const nameInput = screen.getByLabelText(/your name/i)
+      expect(nameInput).toHaveAttribute('placeholder', 'Enter your name for the order')
+    })
+
+    it('should show different helper text for generated names', () => {
+      render(<GuestInfoForm {...funnyNameProps} guestName="Caffeinated Bean McBrew" />)
+      
+      expect(screen.getByText(/we've given you a fun coffee name/i)).toBeInTheDocument()
+    })
+
+    it('should show normal helper text for user-entered names', () => {
+      render(<GuestInfoForm {...defaultProps} guestName="John Doe" />)
+      
+      expect(screen.getByText(/we'll call your name when your order is ready/i)).toBeInTheDocument()
+    })
+
+    it('should handle onGenerateNewName being undefined', () => {
+      const { onGenerateNewName: _, ...propsWithoutGenerate } = funnyNameProps
+      render(<GuestInfoForm {...propsWithoutGenerate} guestName="Caffeinated Bean McBrew" />)
+      
+      // Should not show regenerate button if onGenerateNewName is not provided
+      const regenerateButton = screen.queryByRole('button', { name: /generate new funny name/i })
+      expect(regenerateButton).not.toBeInTheDocument()
+    })
+
+    it('should handle onClearGeneratedName being undefined', () => {
+      const { onClearGeneratedName: _, ...propsWithoutClear } = funnyNameProps
+      render(<GuestInfoForm {...propsWithoutClear} guestName="Caffeinated Bean McBrew" />)
+      
+      const nameInput = screen.getByLabelText(/your name/i)
+      
+      // Should not throw error when focusing
+      expect(() => {
+        fireEvent.focus(nameInput)
+      }).not.toThrow()
+    })
+
+    it('should adjust input padding when regenerate button is present', () => {
+      render(<GuestInfoForm {...funnyNameProps} guestName="Caffeinated Bean McBrew" />)
+      
+      const nameInput = screen.getByLabelText(/your name/i)
+      expect(nameInput).toHaveClass('pr-20') // More padding for regenerate button
+    })
+
+    it('should use normal padding when regenerate button is not present', () => {
+      render(<GuestInfoForm {...defaultProps} guestName="John Doe" />)
+      
+      const nameInput = screen.getByLabelText(/your name/i)
+      expect(nameInput).toHaveClass('pr-16') // Normal padding
     })
   })
 })

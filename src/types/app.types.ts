@@ -27,6 +27,7 @@ export interface PasswordAuthState {
 export interface AppConfig {
   guestPassword: string
   adminPassword: string
+  waitTimePerOrder: number
 }
 
 // Form types

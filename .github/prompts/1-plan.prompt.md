@@ -3,8 +3,8 @@ description: "Plan for a coding implementation for an AI coding assistant to fol
 ---
 
 Your goal is to generate an coding implementation plan for an AI coding assistant to follow.
-Create this plan in a new markdown .md file in `/docs/plans/<requirement_name>.plan.md`, for the requirement provided to you. You can decide on the appropriate requirement name.
-For example, if the requirement name is "Implement User Authentication", the file should be created as `/docs/plans/user_authentication.plan.md`.
+Create this plan in a new markdown .md file in `/docs/plans/YYYYMMDD-<requirement_name>.plan.md`, for the requirement provided to you. You can decide on the appropriate requirement name.
+For example, if the today's date is 2025-08-22 and the requirement name is "Implement User Authentication", the file should be created as `/docs/plans/20250822-user_authentication.plan.md`.
 
 ## RULES:
 
@@ -67,3 +67,4 @@ PLAN HERE
 ### 4. FINALLY:
 
 - DO NOT start implementation without my permission.
+- Update `docs/file_structure.md` to include the generated plan (`/docs/plans/YYYYMMDD-<requirement_name>.plan.md`), this includes the change log at the bottom of this document.

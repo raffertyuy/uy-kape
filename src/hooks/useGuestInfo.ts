@@ -1,9 +1,14 @@
 import { useState, useCallback } from 'react'
+import { generateFunnyGuestName, isGeneratedFunnyName } from '@/utils/nameGenerator'
 
 interface UseGuestInfoReturn {
   // Form data
   guestName: string
   specialRequest: string
+  
+  // Generation state
+  isGeneratedName: boolean
+  userHasClearedName: boolean
   
   // Validation state
   isValid: boolean
@@ -12,7 +17,10 @@ interface UseGuestInfoReturn {
   // Actions
   setGuestName: (_name: string) => void
   setSpecialRequest: (_request: string) => void
-  validateName: () => boolean
+  generateNewFunnyName: () => void
+  clearGeneratedName: () => void
+  handleBlur: () => void
+  validateName: (_nameToValidate?: string) => boolean
   clearError: () => void
   
   // Form utilities
@@ -24,10 +32,14 @@ export function useGuestInfo(): UseGuestInfoReturn {
   const [guestName, setGuestNameState] = useState('')
   const [specialRequest, setSpecialRequestState] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [isGeneratedName, setIsGeneratedName] = useState(false)
+  const [userHasInteracted, setUserHasInteracted] = useState(false)
+  const [userHasClearedName, setUserHasClearedName] = useState(false)
 
   // Validation logic
-  const validateName = useCallback((): boolean => {
-    const trimmed = guestName.trim()
+  const validateName = useCallback((nameToValidate?: string): boolean => {
+    const currentName = nameToValidate ?? guestName
+    const trimmed = currentName.trim()
     
     if (!trimmed) {
       setError('Please enter your name')
@@ -62,21 +74,69 @@ export function useGuestInfo(): UseGuestInfoReturn {
     return true
   }, [guestName])
 
-  // Action handlers
+  // Generate a new funny name
+  const generateNewFunnyName = useCallback(() => {
+    const funnyName = generateFunnyGuestName()
+    setGuestNameState(funnyName)
+    setIsGeneratedName(true)
+    setUserHasInteracted(false)
+    setUserHasClearedName(false) // Reset the flag when generating a new name
+    setError(null)
+  }, [])
+
+  // Clear generated name (when user clicks input)
+  const clearGeneratedName = useCallback(() => {
+    setGuestNameState('')
+    setIsGeneratedName(false)
+    setUserHasInteracted(true)
+    setUserHasClearedName(true) // Track that user has intentionally cleared the name
+    setError(null)
+  }, [])
+
+  // Enhanced setGuestName to track user input vs generated names
   const setGuestName = useCallback((name: string) => {
     setGuestNameState(name)
     
+    // Use the utility function to detect if this is a generated name
+    const isGenerated = isGeneratedFunnyName(name)
+    setIsGeneratedName(isGenerated)
+    
+    // If user has interacted but left field empty, we'll handle this in blur
+    if (name.trim() === '' && userHasInteracted) {
+      setIsGeneratedName(false)
+    } else if (name.trim() === '') {
+      // Initial empty state - not generated yet
+      setIsGeneratedName(false)
+    } else {
+      // User is entering their own name or we have a generated name
+      if (!isGenerated) {
+        setUserHasClearedName(false) // Reset flag when user starts typing their own name
+        setUserHasInteracted(true)
+      }
+    }
+    
     // Clear error when user starts typing (but don't validate immediately)
-    if (error && name.trim().length > 0) {
+    // Only clear if it was a previous "empty name" error 
+    if (error === 'Please enter your name' && name.trim().length > 0) {
       setError(null)
     }
-  }, [error])
+  }, [error, userHasInteracted])
+
+  // Handle when user leaves empty field - revert to funny name
+  const handleBlur = useCallback(() => {
+    if (guestName.trim() === '' && userHasInteracted) {
+      const funnyName = generateFunnyGuestName()
+      setGuestNameState(funnyName)
+      setIsGeneratedName(true)
+      setUserHasInteracted(false)
+      setUserHasClearedName(false) // Reset the flag when regenerating on blur
+    }
+  }, [guestName, userHasInteracted])
 
   const setSpecialRequest = useCallback((request: string) => {
     // Limit to 500 characters
-    if (request.length <= 500) {
-      setSpecialRequestState(request)
-    }
+    const truncatedRequest = request.length > 500 ? request.slice(0, 500) : request
+    setSpecialRequestState(truncatedRequest)
   }, [])
 
   const clearError = useCallback(() => {
@@ -85,13 +145,17 @@ export function useGuestInfo(): UseGuestInfoReturn {
 
   // Computed properties
   const trimmedName = guestName.trim()
-  const hasInput = guestName.length > 0
+  const hasInput = trimmedName.length > 0
   const isValid = error === null && trimmedName.length >= 2
 
   return {
     // Form data
     guestName,
     specialRequest,
+    
+    // Generation state
+    isGeneratedName,
+    userHasClearedName,
     
     // Validation state
     isValid,
@@ -100,6 +164,9 @@ export function useGuestInfo(): UseGuestInfoReturn {
     // Actions
     setGuestName,
     setSpecialRequest,
+    generateNewFunnyName,
+    clearGeneratedName,
+    handleBlur,
     validateName,
     clearError,
     

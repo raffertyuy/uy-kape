@@ -1,8 +1,12 @@
+import { appConfig } from '@/config/app.config'
+
 // Helper function to calculate estimated time based on position
-export const calculateEstimatedTime = (position: number, averageTimePerOrder: number = 3): string => {
+export const calculateEstimatedTime = (position: number, averageTimePerOrder?: number): string => {
+  const waitTime = averageTimePerOrder ?? appConfig.waitTimePerOrder
+  
   if (position <= 0) return 'Ready'
   
-  const minutes = position * averageTimePerOrder
+  const minutes = position * waitTime
   
   if (minutes < 60) {
     return `${minutes} min`

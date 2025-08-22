@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase'
+import { appConfig } from '@/config/app.config'
 import type { 
   OrderStatus 
 } from '@/types/order.types'
@@ -110,7 +111,7 @@ const formatOrderForAdmin = async (order: any): Promise<AdminOrderListItem> => {
   }))
 
   // Calculate estimated completion time based on queue position
-  const estimatedMinutes = Math.max(1, (order.queue_number || 0) * 3)
+  const estimatedMinutes = Math.max(1, (order.queue_number || 0) * appConfig.waitTimePerOrder)
   const estimatedCompletionTime = new Date(Date.now() + estimatedMinutes * 60000).toISOString()
 
   // Determine priority level based on order age and special requests
