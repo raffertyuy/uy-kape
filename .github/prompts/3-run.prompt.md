@@ -13,7 +13,7 @@ Your task is to run this application locally for functional testing.
 
 - When the app is properly running, use Playwright MCP to navigate to the specified module/requirement. Use playwright to go through every functionality and test if it is functioning correctly.
 - Fix any issues that arise during the process.
-- If it is a major module, update the playwright tests in `/playwright-tests`
+- If it is a major module, update the playwright tests in `/tests/e2e`
 - If you need a password, check out the `.env` file in the root directory.
 
 Refer to the following to better understand the implementation done before fixing:

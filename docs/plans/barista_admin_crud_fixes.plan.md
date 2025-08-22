@@ -193,7 +193,7 @@ The Add/Edit/Delete functions in the Barista Admin Module - Menu Management do n
     ```markdown
     # COMPLETED: Documentation updates
     # ✅ Added implementation status section to barista-admin-menu-management.md
-    # ✅ Updated file_structure.md with playwright-tests/ organization
+    # ✅ Updated file_structure.md with tests/e2e/ organization
     # ✅ Marked all features as "FULLY FUNCTIONAL" in specs
     # ✅ Added change log entries for recent improvements
     ```

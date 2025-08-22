@@ -153,7 +153,7 @@ The Barista Admin - Menu Management module is not mobile responsive. The top nav
 - [x] **Step 10: Write Playwright UI Tests for Responsive Navigation**
   - **Task**: Create end-to-end tests for responsive navigation across different screen sizes
   - **Files**:
-    - `playwright-tests/mobile-responsiveness.spec.ts`: Test mobile navigation functionality, hamburger menu behavior, and cross-device compatibility
+    - `tests/e2e/mobile-responsiveness.spec.ts`: Test mobile navigation functionality, hamburger menu behavior, and cross-device compatibility
   - **Dependencies**: Step 9 completion, Playwright test setup
 
 - [x] **Step 11: Run All Tests and Validate Implementation**

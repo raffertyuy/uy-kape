@@ -3,7 +3,7 @@ import type { AppConfig } from '@/types/app.types'
 export const appConfig: AppConfig = {
   guestPassword: import.meta.env.VITE_GUEST_PASSWORD || 'guest123',
   adminPassword: import.meta.env.VITE_ADMIN_PASSWORD || 'admin456',
-  waitTimePerOrder: Number(import.meta.env.VITE_WAIT_TIME_PER_ORDER) || 5,
+  waitTimePerOrder: Number(import.meta.env.VITE_WAIT_TIME_PER_ORDER) || 4,
 }
 
 // Application constants

@@ -4,7 +4,7 @@ import { calculateEstimatedTime, formatQueuePosition, getQueueUrgency } from '..
 // Mock the app config
 vi.mock('@/config/app.config', () => ({
   appConfig: {
-    waitTimePerOrder: 5
+    waitTimePerOrder: 4
   }
 }))
 

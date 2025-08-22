@@ -270,7 +270,7 @@ Implement an optional special request text field in the guest ordering module th
 - [ ] Step 12: Write Playwright UI Tests
   - **Task**: Create end-to-end tests for special request feature in guest ordering flow
   - **Files**:
-    - `playwright-tests/guest-special-request.spec.ts`: Test complete ordering flow with special requests
+    - `tests/e2e/guest-special-request.spec.ts`: Test complete ordering flow with special requests
   - **Dependencies**: Step 10, Step 11
   - **Pseudocode**:
 

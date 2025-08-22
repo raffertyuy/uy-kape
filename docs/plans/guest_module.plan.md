@@ -375,7 +375,7 @@ Based on the analysis:
 - [ ] **Step 11: Write Playwright UI Tests for Guest Flow**
   - **Task**: Create end-to-end tests for the complete guest ordering process
   - **Files**:
-    - `playwright-tests/guest-ordering.spec.ts`: Complete ordering flow tests
+    - `tests/e2e/guest-ordering.spec.ts`: Complete ordering flow tests
   - **Dependencies**: Playwright, test database setup
   - **Implementation Details**:
 

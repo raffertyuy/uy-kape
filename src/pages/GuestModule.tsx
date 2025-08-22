@@ -5,6 +5,7 @@ import { Logo } from '@/components/ui/Logo'
 import { useOrderForm } from '@/hooks/useOrderForm'
 import { useDrinksWithOptionsPreview } from '@/hooks/useMenuData'
 import type { DrinkWithOptionsAndCategory } from '@/types/menu.types'
+import { useEffect } from 'react'
 
 // Step components
 import { DrinkCategoryTabs } from '@/components/guest/DrinkCategoryTabs'
@@ -23,6 +24,16 @@ function GuestModulePage() {
   
   // Get all drinks data (for drink lookup in handleDrinkSelect)
   const { data: allDrinks = [] } = useDrinksWithOptionsPreview()
+
+  // Generate funny name when guest-info step is reached for the first time
+  useEffect(() => {
+    if (orderForm.currentStep === 'guest-info' && 
+        !orderForm.guestInfo.guestName && 
+        !orderForm.guestInfo.isGeneratedName &&
+        !orderForm.guestInfo.userHasClearedName) {
+      orderForm.guestInfo.generateNewFunnyName()
+    }
+  }, [orderForm.currentStep, orderForm.guestInfo])
 
   // Handle category selection
   const handleCategorySelect = (categoryId: string | undefined) => {
@@ -136,6 +147,9 @@ function GuestModulePage() {
         specialRequest={orderForm.guestInfo.specialRequest}
         onSpecialRequestChange={orderForm.guestInfo.setSpecialRequest}
         isValid={orderForm.guestInfo.isValid}
+        isGeneratedName={orderForm.guestInfo.isGeneratedName}
+        onClearGeneratedName={orderForm.guestInfo.clearGeneratedName}
+        onBlur={orderForm.guestInfo.handleBlur}
         {...(orderForm.guestInfo.error && { error: orderForm.guestInfo.error })}
       />
     </div>

@@ -8,6 +8,12 @@ interface GuestInfoFormProps {
   isValid: boolean
   error?: string
   className?: string
+  
+  // Funny name generation props
+  isGeneratedName?: boolean
+  onClearGeneratedName?: () => void
+  onGenerateNewName?: () => void
+  onBlur?: () => void
 }
 
 export const GuestInfoForm = memo<GuestInfoFormProps>(
@@ -18,7 +24,11 @@ export const GuestInfoForm = memo<GuestInfoFormProps>(
     onSpecialRequestChange, 
     isValid, 
     error, 
-    className = '' 
+    className = '',
+    isGeneratedName = false,
+    onClearGeneratedName,
+    onGenerateNewName,
+    onBlur
   }) {
     const [isFocused, setIsFocused] = useState(false)
     const [isSpecialRequestFocused, setIsSpecialRequestFocused] = useState(false)
@@ -37,8 +47,20 @@ export const GuestInfoForm = memo<GuestInfoFormProps>(
       [onSpecialRequestChange]
     )
 
-    const handleFocus = useCallback(() => setIsFocused(true), [])
-    const handleBlur = useCallback(() => setIsFocused(false), [])
+    const handleFocus = useCallback(() => {
+      // If this is a generated name and user focuses the input, clear it
+      if (isGeneratedName && onClearGeneratedName) {
+        onClearGeneratedName()
+      }
+      setIsFocused(true)
+    }, [isGeneratedName, onClearGeneratedName])
+
+    const handleBlur = useCallback(() => {
+      setIsFocused(false)
+      if (onBlur) {
+        onBlur()
+      }
+    }, [onBlur])
     const handleSpecialRequestFocus = useCallback(() => setIsSpecialRequestFocused(true), [])
     const handleSpecialRequestBlur = useCallback(() => setIsSpecialRequestFocused(false), [])
 
@@ -63,11 +85,11 @@ export const GuestInfoForm = memo<GuestInfoFormProps>(
               onChange={handleInputChange}
               onFocus={handleFocus}
               onBlur={handleBlur}
-              placeholder="Enter your name for the order"
+              placeholder={isGeneratedName ? "Click to enter your own name..." : "Enter your name for the order"}
               aria-describedby={error ? 'guest-name-error' : 'guest-name-hint'}
               aria-invalid={!isValid}
               className={`
-                w-full px-4 py-3 rounded-lg border text-lg
+                w-full px-4 py-3 rounded-lg border text-lg ${isGeneratedName && onGenerateNewName ? 'pr-20' : 'pr-16'}
                 transition-all duration-200
                 focus:outline-none focus:ring-2 focus:ring-coffee-400 focus:ring-offset-2
                 placeholder:text-coffee-400
@@ -75,13 +97,41 @@ export const GuestInfoForm = memo<GuestInfoFormProps>(
                   ? 'border-red-300 bg-red-50'
                   : isFocused
                   ? 'border-coffee-400 bg-coffee-25'
-                  : 'border-coffee-200 bg-white hover:border-coffee-300'
+                  : isGeneratedName
+                  ? 'border-amber-300 bg-amber-25 text-amber-600'
+                  : 'border-coffee-200 bg-white hover:border-coffee-300 text-coffee-800'
                 }
               `}
               maxLength={50}
               autoComplete="name"
               autoCapitalize="words"
             />
+            
+            {/* Regenerate button for generated names */}
+            {isGeneratedName && onGenerateNewName && (
+              <button
+                type="button"
+                onClick={onGenerateNewName}
+                className="absolute right-12 top-1/2 transform -translate-y-1/2 text-amber-600 hover:text-amber-700 transition-colors"
+                aria-label="Generate new funny name"
+                title="Generate a new funny name"
+              >
+                <svg 
+                  className="w-5 h-5" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" 
+                  />
+                </svg>
+              </button>
+            )}
             
             {/* Character count indicator */}
             <div className="absolute bottom-2 right-3 text-xs text-coffee-500">
@@ -115,7 +165,10 @@ export const GuestInfoForm = memo<GuestInfoFormProps>(
               id="guest-name-hint" 
               className="text-sm text-coffee-600"
             >
-              We&apos;ll call your name when your order is ready
+              {isGeneratedName 
+                ? "We've given you a fun coffee name! Click the input to enter your own name."
+                : "We'll call your name when your order is ready"
+              }
             </p>
           )}
         </div>

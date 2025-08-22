@@ -28,6 +28,7 @@ jobs:
               - 'package*.json'
               - 'vite.config.ts'
               - 'vitest.config.ts'
+              - 'tests/**'
               - 'tsconfig*.json'
             supabase:
               - 'supabase/**'
@@ -109,7 +110,7 @@ jobs:
         if: always()
         with:
           name: test-results
-          path: test-results.xml
+          path: tests/outputs/test-results.xml
           retention-days: 30
 
       # - name: Upload coverage reports to Codecov

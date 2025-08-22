@@ -1,5 +1,6 @@
 import { memo } from 'react'
 import type { OrderSubmissionResult } from '@/types/order.types'
+import { BaristaProverb } from '@/components/ui/BaristaProverb'
 
 interface OrderSuccessProps {
   result: OrderSubmissionResult
@@ -81,6 +82,14 @@ export const OrderSuccess = memo<OrderSuccessProps>(
             )}
           </div>
         </div>
+
+        {/* Barista Proverb - shown after wait time to manage expectations */}
+        {result.estimated_wait_time && (
+          <BaristaProverb 
+            category="patience" 
+            className="mt-4" 
+          />
+        )}
 
         {/* Special Request */}
         {specialRequest && specialRequest.trim() && (

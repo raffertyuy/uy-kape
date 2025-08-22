@@ -43,7 +43,7 @@ export default defineConfig({
     // Exclude problematic tests for CI stability
     exclude: [
       'node_modules/**',
-      'playwright-tests/**',
+      'tests/e2e/**',
       'src/components/menu/__tests__/DrinkCategoryForm.test.tsx'
     ],
     coverage: {
@@ -73,7 +73,7 @@ export default defineConfig({
     // CI-specific reporting
     reporters: ['verbose', 'junit'],
     outputFile: {
-      junit: './test-results.xml'
+      junit: '../outputs/test-results.xml'
     }
   },
   resolve: {

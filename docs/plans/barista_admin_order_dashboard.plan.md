@@ -116,8 +116,8 @@ This plan implements the Order Dashboard functionality for the Barista Admin Mod
 - [x] **Step 11: Write Playwright UI Tests for Order Management**
   - **Task**: Create end-to-end tests for critical order management workflows
   - **Files**:
-    - ✅ `playwright-tests/order-management.spec.ts`: E2E tests covering complete order workflows
-    - ✅ `playwright-tests/basic-functionality.spec.ts`: Basic site functionality tests (passing)
+    - ✅ `tests/e2e/order-management.spec.ts`: E2E tests covering complete order workflows
+    - ✅ `tests/e2e/basic-functionality.spec.ts`: Basic site functionality tests (passing)
   - **Dependencies**: Step 10 completion, Playwright test setup, admin password configuration
   - **Status**: COMPLETE - E2E test framework established and basic functionality verified
   - **Note**: Order management tests require further refinement for specific component test IDs and password handling
