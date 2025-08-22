@@ -33,13 +33,25 @@ export const DrinkList: React.FC<DrinkListProps> = ({
   const [searchQuery, setSearchQuery] = useState('')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
-  // Filter drinks based on search query
+  // Filter drinks based on search query and category
   const filteredDrinks = useMemo(() => {
-    return drinks.filter(drink =>
-      drink.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (drink.description && drink.description.toLowerCase().includes(searchQuery.toLowerCase()))
-    )
-  }, [drinks, searchQuery])
+    let filtered = drinks
+
+    // Filter by category if selectedCategoryId is provided
+    if (selectedCategoryId) {
+      filtered = filtered.filter(drink => drink.category_id === selectedCategoryId)
+    }
+
+    // Filter by search query
+    if (searchQuery.trim()) {
+      filtered = filtered.filter(drink =>
+        drink.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (drink.description && drink.description.toLowerCase().includes(searchQuery.toLowerCase()))
+      )
+    }
+
+    return filtered
+  }, [drinks, searchQuery, selectedCategoryId])
 
   const handleAdd = () => {
     setEditingDrink(null)
@@ -74,6 +86,25 @@ export const DrinkList: React.FC<DrinkListProps> = ({
 
   const handleClearFilter = () => {
     onCategoryFilter(undefined)
+  }
+
+  const handleClearFilterKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      onCategoryFilter(undefined)
+    }
+  }
+
+  const handleClearSearchKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      setSearchQuery('')
+    }
+  }
+
+  const handleClearAllFilters = () => {
+    onCategoryFilter(undefined)
+    setSearchQuery('')
   }
 
   if (isLoading) {
@@ -206,21 +237,43 @@ export const DrinkList: React.FC<DrinkListProps> = ({
       </div>
 
       {/* Active Filter Display */}
-      {selectedCategoryId && (
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-coffee-600">Filtered by:</span>
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-coffee-100 text-coffee-800">
-            {categories.find(cat => cat.id === selectedCategoryId)?.name}
+      {(selectedCategoryId || searchQuery.trim()) && (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-sm text-coffee-600">Active filters:</span>
+          {selectedCategoryId && (
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-coffee-100 text-coffee-800">
+              Category: {categories.find(cat => cat.id === selectedCategoryId)?.name}
+              <button
+                onClick={() => onCategoryFilter(undefined)}
+                onKeyDown={handleClearFilterKeyDown}
+                className="ml-2 text-coffee-600 hover:text-coffee-800 focus:outline-none focus:ring-2 focus:ring-coffee-500 rounded"
+                aria-label="Remove category filter"
+              >
+                ✕
+              </button>
+            </span>
+          )}
+          {searchQuery.trim() && (
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
+              Search: "{searchQuery}"
+              <button
+                onClick={() => setSearchQuery('')}
+                onKeyDown={handleClearSearchKeyDown}
+                className="ml-2 text-blue-600 hover:text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+                aria-label="Clear search"
+              >
+                ✕
+              </button>
+            </span>
+          )}
+          {(selectedCategoryId && searchQuery.trim()) && (
             <button
-              onClick={handleClearFilter}
-              className="ml-2 text-coffee-600 hover:text-coffee-800 focus:outline-none"
-              aria-label="Remove filter"
+              onClick={handleClearAllFilters}
+              className="px-3 py-1 text-sm text-coffee-600 hover:text-coffee-800 underline focus:outline-none focus:ring-2 focus:ring-coffee-500 rounded"
             >
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
-              </svg>
+              Clear all filters
             </button>
-          </span>
+          )}
         </div>
       )}
 
@@ -264,21 +317,25 @@ export const DrinkList: React.FC<DrinkListProps> = ({
           )}
         </div>
       ) : (
-        <div className={
-          viewMode === 'grid' 
-            ? 'grid gap-4 md:grid-cols-2 lg:grid-cols-3' 
-            : 'space-y-4'
-        }>
+        <div 
+          className={
+            viewMode === 'grid' 
+              ? 'grid gap-4 md:grid-cols-2 lg:grid-cols-3' 
+              : 'space-y-4'
+          }
+          data-testid="drinks-grid"
+        >
           {filteredDrinks.map((drink) => (
-            <DrinkCard
-              key={drink.id}
-              drink={drink}
-              viewMode={viewMode}
-              showOptionsPreview={showOptionsPreview}
-              onEdit={() => handleEdit(drink)}
-              onDelete={() => onDelete(drink.id)}
-              onManageOptions={() => onManageOptions(drink.id)}
-            />
+            <div key={drink.id} data-testid="drink-card">
+              <DrinkCard
+                drink={drink}
+                viewMode={viewMode}
+                showOptionsPreview={showOptionsPreview}
+                onEdit={() => handleEdit(drink)}
+                onDelete={() => onDelete(drink.id)}
+                onManageOptions={() => onManageOptions(drink.id)}
+              />
+            </div>
           ))}
         </div>
       )}
