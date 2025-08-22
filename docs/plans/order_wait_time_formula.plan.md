@@ -155,19 +155,19 @@ Make the order wait time configurable in the .env file and implement the formula
   - **Files**: Review all modified files
   - **Dependencies**: All previous steps
   - **Validation checklist**:
-    - [ ] Wait time is configurable via .env variable
-    - [ ] Formula `estimated_wait_time = queue_position * WAIT_TIME_PER_ORDER` is implemented
-    - [ ] Order confirmation displays estimated wait time
-    - [ ] Refresh functionality works to update queue position and wait time
-    - [ ] All tests pass
-    - [ ] Code follows TypeScript and React best practices
-    - [ ] Accessibility considerations are maintained
-    - [ ] No breaking changes to existing functionality
+    - [x] Wait time is configurable via .env variable
+    - [x] Formula `estimated_wait_time = queue_position * WAIT_TIME_PER_ORDER` is implemented
+    - [x] Order confirmation displays estimated wait time
+    - [x] Refresh functionality works to update queue position and wait time
+    - [x] All tests pass
+    - [x] Code follows TypeScript and React best practices
+    - [x] Accessibility considerations are maintained
+    - [x] No breaking changes to existing functionality
 
 ## Success Criteria
-- [ ] `VITE_WAIT_TIME_PER_ORDER` environment variable controls wait time calculation
-- [ ] Order confirmation page displays estimated wait time using the formula
-- [ ] Refresh functionality updates queue position and recalculates wait time
-- [ ] All existing tests continue to pass
-- [ ] New functionality tested with Playwright
-- [ ] Code follows project coding standards and TypeScript best practices
+- [x] `VITE_WAIT_TIME_PER_ORDER` environment variable controls wait time calculation
+- [x] Order confirmation page displays estimated wait time using the formula
+- [x] Refresh functionality updates queue position and recalculates wait time
+- [x] All existing tests continue to pass
+- [x] New functionality tested with Playwright
+- [x] Code follows project coding standards and TypeScript best practices
