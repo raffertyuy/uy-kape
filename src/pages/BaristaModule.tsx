@@ -205,14 +205,14 @@ function AdminNavigation({ activeView, onNavigate }: {
             
             {/* Desktop navigation items */}
             <div className="hidden sm:flex sm:space-x-8 sm:ml-6">
-              <NavigationButton activeView={activeView} view="menu" onNavigate={onNavigate}>
-                Menu Management
-              </NavigationButton>
               <NavigationButton activeView={activeView} view="orders" onNavigate={onNavigate}>
                 Orders
                 <span className="ml-2 bg-green-100 text-green-600 px-2 py-0.5 rounded-full text-xs">
                   Available
                 </span>
+              </NavigationButton>
+              <NavigationButton activeView={activeView} view="menu" onNavigate={onNavigate}>
+                Menu Management
               </NavigationButton>
             </div>
           </div>
@@ -229,14 +229,6 @@ function AdminNavigation({ activeView, onNavigate }: {
             <div className="px-2 pt-2 pb-3 space-y-1">
               <MobileNavigationButton 
                 activeView={activeView} 
-                view="menu" 
-                onNavigate={onNavigate}
-                onMenuClose={closeMobileMenu}
-              >
-                Menu Management
-              </MobileNavigationButton>
-              <MobileNavigationButton 
-                activeView={activeView} 
                 view="orders" 
                 onNavigate={onNavigate}
                 onMenuClose={closeMobileMenu}
@@ -245,6 +237,14 @@ function AdminNavigation({ activeView, onNavigate }: {
                 <span className="ml-2 bg-green-100 text-green-600 px-2 py-0.5 rounded-full text-xs">
                   Available
                 </span>
+              </MobileNavigationButton>
+              <MobileNavigationButton 
+                activeView={activeView} 
+                view="menu" 
+                onNavigate={onNavigate}
+                onMenuClose={closeMobileMenu}
+              >
+                Menu Management
               </MobileNavigationButton>
             </div>
           </div>
