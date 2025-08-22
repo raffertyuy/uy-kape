@@ -33,6 +33,7 @@ uy-kape/
 ├── docs/                  # (Fully expanded below)
 │   ├── file_structure.md  # This document
 │   ├── plans/
+│   │   ├── 20250822-global_error_handling_implementation.plan.md  # Global error handling system implementation plan
 │   │   ├── barista_admin_crud_fixes.plan.md
 │   │   ├── barista_admin_menu_management.plan.md
 │   │   ├── barista_admin_order_dashboard.plan.md
@@ -116,6 +117,7 @@ When adding a feature (example: inventory tracking):
 
 ## Change Log (File Structure)
 
+- 2025-08-22: Added `20250822-global_error_handling_implementation.plan.md` to `docs/plans/` directory documenting comprehensive global error handling system implementation plan covering server errors, network failures, error context management, and testing strategies.
 - 2025-08-22: Updated file structure to reflect current state: removed deprecated references to `test-results.xml` and `vitest.config.ci.ts` in root (now properly located in `tests/` subdirectories), expanded E2E test file listings to show specific test files (`basic-functionality.spec.ts`, `guest-experience-improvements.spec.ts`, `menu-crud.spec.ts`, `order-management.spec.ts`, `wait-time-configuration.spec.ts`), ensuring documentation matches actual workspace organization.
 - 2025-08-22: Reorganized all test-related folders under new `tests/` root directory: moved `vitest.config.ts` and `vitest.config.ci.ts` to `tests/unit/`, moved all Playwright files from `playwright-tests/` to `tests/e2e/`, consolidated test results and reports into `tests/e2e/results/` and `tests/e2e/reports/`, and moved JUnit XML output to `tests/outputs/`. Updated all configurations and scripts to use new paths. This consolidates scattered test artifacts and eliminates duplicate test-results folders.
 - 2025-08-22: Added `guest_ordering_experience_improvements.plan.md` to `docs/plans/` directory documenting implementation plan for guest UX improvements with funny name generation and barista proverbs.

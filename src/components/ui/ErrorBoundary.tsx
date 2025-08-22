@@ -1,32 +1,115 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react'
 import { Logo } from './Logo'
+import { handleGlobalError, getRecoveryStrategy, categorizeError } from '../../utils/globalErrorHandler'
 
 interface Props {
   children: ReactNode
   fallback?: ReactNode
+  onError?: (_error: Error, _errorInfo: ErrorInfo) => void
 }
 
 interface State {
   hasError: boolean
-  error?: Error
+  error?: Error | undefined
+  errorInfo?: ErrorInfo | undefined
+  retryCount: number
+  canRetry: boolean
 }
 
 export class ErrorBoundary extends Component<Props, State> {
+  private maxRetries = 3
+  private retryTimeouts: number[] = []
+
   public state: State = {
-    hasError: false
+    hasError: false,
+    retryCount: 0,
+    canRetry: true
   }
 
-  public static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error }
+  public static getDerivedStateFromError(error: Error): Partial<State> {
+    const category = categorizeError(error)
+    const canRetry = category === 'network' || category === 'unknown'
+    
+    return { 
+      hasError: true, 
+      error,
+      canRetry
+    }
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Uncaught error:', error, errorInfo)
+    this.setState({ errorInfo })
+
+    // Report error to global error handler
+    const errorDetails = handleGlobalError(error, 'error_boundary')
+    
+    // Call custom error handler if provided
+    if (this.props.onError) {
+      this.props.onError(error, errorInfo)
+    }
+
+    // Log comprehensive error information
+    // eslint-disable-next-line no-console
+    console.error('Error Boundary caught an error:', {
+      error,
+      errorInfo,
+      errorDetails,
+      componentStack: errorInfo.componentStack,
+      errorBoundary: 'ErrorBoundary'
+    })
+
+    // Auto-retry for network errors with exponential backoff
+    const category = categorizeError(error)
+    if (category === 'network' && this.state.retryCount < this.maxRetries) {
+      const delay = Math.pow(2, this.state.retryCount) * 1000 // Exponential backoff
+      const timeout = window.setTimeout(() => {
+        this.handleRetry()
+      }, delay)
+      
+      this.retryTimeouts.push(timeout)
+    }
+  }
+
+  public componentWillUnmount() {
+    // Clean up any pending retry timeouts
+    this.retryTimeouts.forEach(timeout => window.clearTimeout(timeout))
+  }
+
+  private handleRetry = () => {
+    if (this.state.retryCount >= this.maxRetries) {
+      this.setState({ canRetry: false })
+      return
+    }
+
+    this.setState(prevState => ({
+      hasError: false,
+      error: undefined,
+      errorInfo: undefined,
+      retryCount: prevState.retryCount + 1
+    }))
+  }
+
+  private handleManualRetry = () => {
+    this.setState({
+      hasError: false,
+      error: undefined,
+      errorInfo: undefined,
+      retryCount: 0,
+      canRetry: true
+    })
   }
 
   public render() {
     if (this.state.hasError) {
-      return this.props.fallback || <DefaultErrorFallback error={this.state.error} />
+      return this.props.fallback || (
+        <DefaultErrorFallback 
+          error={this.state.error} 
+          errorInfo={this.state.errorInfo}
+          onRetry={this.state.canRetry ? this.handleManualRetry : undefined}
+          retryCount={this.state.retryCount}
+          maxRetries={this.maxRetries}
+        />
+      )
     }
 
     return this.props.children
@@ -35,10 +118,22 @@ export class ErrorBoundary extends Component<Props, State> {
 
 interface ErrorFallbackProps {
   error?: Error | undefined
-  onRetry?: () => void
+  errorInfo?: ErrorInfo | undefined
+  onRetry?: (() => void) | undefined
+  retryCount?: number
+  maxRetries?: number
 }
 
-function DefaultErrorFallback({ error, onRetry }: ErrorFallbackProps) {
+function DefaultErrorFallback({ 
+  error, 
+  errorInfo, 
+  onRetry, 
+  retryCount = 0, 
+  maxRetries = 3 
+}: ErrorFallbackProps) {
+  const category = error ? categorizeError(error) : 'unknown'
+  const recovery = error ? getRecoveryStrategy(category, error) : null
+
   const handleRetry = () => {
     if (onRetry) {
       onRetry()
@@ -46,6 +141,36 @@ function DefaultErrorFallback({ error, onRetry }: ErrorFallbackProps) {
       window.location.reload()
     }
   }
+
+  const getErrorTitle = () => {
+    switch (category) {
+      case 'network':
+        return 'Connection Problem'
+      case 'permission':
+        return 'Access Denied'
+      case 'validation':
+        return 'Data Error'
+      default:
+        return 'Something went wrong'
+    }
+  }
+
+  const getErrorDescription = () => {
+    if (recovery?.message) {
+      return recovery.message
+    }
+
+    switch (category) {
+      case 'network':
+        return 'We\'re having trouble connecting to our coffee servers. Please check your internet connection.'
+      case 'permission':
+        return 'You don\'t have permission to access this feature. Please contact support.'
+      default:
+        return 'Don\'t worry, even the best coffee machines need a restart sometimes.'
+    }
+  }
+
+  const showRetryInfo = retryCount > 0 && onRetry
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-coffee-50 to-coffee-100 flex items-center justify-center p-4">
@@ -64,28 +189,51 @@ function DefaultErrorFallback({ error, onRetry }: ErrorFallbackProps) {
         <div className="mb-8">
           <div className="text-6xl mb-4">⚠️</div>
           <h2 className="text-xl font-bold text-coffee-800 mb-2">
-            Oops! Something went wrong
+            {getErrorTitle()}
           </h2>
           <p className="text-coffee-600 mb-4">
-            Don't worry, even the best coffee machines need a restart sometimes.
+            {getErrorDescription()}
           </p>
           
-          {error && process.env.NODE_ENV === 'development' && (
-            <div className="bg-coffee-100 border border-coffee-200 rounded-lg p-3 mb-4 text-left">
-              <p className="text-xs text-coffee-700 font-mono break-all">
-                {error.message}
+          {showRetryInfo && (
+            <div className="bg-coffee-100 border border-coffee-200 rounded-lg p-3 mb-4">
+              <p className="text-sm text-coffee-700">
+                Attempted {retryCount} of {maxRetries} retries
               </p>
             </div>
+          )}
+
+          {error && process.env.NODE_ENV === 'development' && (
+            <details className="bg-gray-100 border border-gray-200 rounded-lg p-3 mb-4 text-left">
+              <summary className="cursor-pointer text-sm font-medium text-gray-700">
+                🔍 Developer Info
+              </summary>
+              <div className="mt-2 text-xs text-gray-600 font-mono">
+                <p><strong>Error:</strong> {error.message}</p>
+                <p><strong>Category:</strong> {category}</p>
+                {error.stack && (
+                  <pre className="mt-2 whitespace-pre-wrap">{error.stack}</pre>
+                )}
+                {errorInfo?.componentStack && (
+                  <div className="mt-2">
+                    <strong>Component Stack:</strong>
+                    <pre className="whitespace-pre-wrap">{errorInfo.componentStack}</pre>
+                  </div>
+                )}
+              </div>
+            </details>
           )}
         </div>
         
         <div className="space-y-3">
-          <button
-            onClick={handleRetry}
-            className="w-full bg-coffee-600 hover:bg-coffee-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
-          >
-            🔄 Try Again
-          </button>
+          {onRetry && (
+            <button
+              onClick={handleRetry}
+              className="w-full bg-coffee-600 hover:bg-coffee-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+            >
+              🔄 Try Again
+            </button>
+          )}
           
           <button
             onClick={() => window.location.href = '/'}

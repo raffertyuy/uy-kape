@@ -10,7 +10,7 @@ interface ToastProviderProps {
 
 export const ToastProvider: React.FC<ToastProviderProps> = ({ 
   children, 
-  maxToasts = 5 
+  maxToasts = 3 // Reduced from 5 to 3 to prevent overflow
 }) => {
   const [toasts, setToasts] = useState<ToastData[]>([])
 
@@ -23,8 +23,19 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
     }
 
     setToasts(prev => {
+      // Check for duplicate error messages to prevent spam
+      const isDuplicate = prev.some(existingToast => 
+        existingToast.type === newToast.type && 
+        existingToast.title === newToast.title &&
+        existingToast.type === 'error' // Only prevent duplicate errors
+      )
+      
+      if (isDuplicate) {
+        return prev // Don't add duplicate error toasts
+      }
+
       const updated = [newToast, ...prev]
-      // Limit number of toasts
+      // Limit number of toasts and auto-dismiss oldest ones
       return updated.slice(0, maxToasts)
     })
   }, [maxToasts])
@@ -87,7 +98,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
   return (
     <ToastContext.Provider value={contextValue}>
       {children}
-      <ToastContainer toasts={toasts} onDismiss={dismissToast} />
+      <ToastContainer toasts={toasts} onDismiss={dismissToast} onClearAll={clearAllToasts} />
     </ToastContext.Provider>
   )
 }
