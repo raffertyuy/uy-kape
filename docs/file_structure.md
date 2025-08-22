@@ -28,33 +28,21 @@ uy-kape/
 ├── tailwind.config.js     # Tailwind theme/config
 ├── tsconfig.json          # TS config (app)
 ├── tsconfig.node.json     # TS config (node scripts)
+├── vercel.json            # Vercel deployment configuration
 ├── vite.config.ts         # Vite build config
 ├── vitest.config.ts       # Vitest config (re-exports from tests/unit/)
 ├── docs/                  # (Fully expanded below)
+│   ├── error-handling-system.md  # Global error handling system documentation
 │   ├── file_structure.md  # This document
-│   ├── plans/
-│   │   ├── 20250822-global_error_handling_implementation.plan.md  # Global error handling system implementation plan
-│   │   ├── barista_admin_crud_fixes.plan.md
-│   │   ├── barista_admin_menu_management.plan.md
-│   │   ├── barista_admin_order_dashboard.plan.md
-│   │   ├── continuous_integration_workflow.plan.md
-│   │   ├── drink_cards_options_display_enhancement.plan.md
-│   │   ├── fix_mobile_responsiveness_barista_admin_menu_management.plan.md
-│   │   ├── guest_module.plan.md
-│   │   ├── guest_ordering_experience_improvements.plan.md
-│   │   ├── guest_special_request.plan.md
-│   │   ├── initial_bootstrap_implementation.plan.md
-│   │   ├── logo_integration_ui_enhancement.plan.md  # Logo integration implementation plan
-│   │   ├── order_wait_time_formula.plan.md
-│   │   ├── unit_tests_ci_fixes.plan.md
-│   │   └── unit_tests_implementation.plan.md
+│   ├── plans/             # Implementation plans (excluded from documentation)
 │   ├── screens/
-│   │   └── old_ordering_system.png
+│   │   └── old_ordering_system.png  # Reference screenshot of old system
 │   └── specs/
-│       ├── db_schema.md
-│       ├── definition_of_done.md
-│       ├── application_overview.md
-│       └── technology_stack.md
+│       ├── application_overview.md   # High-level application overview
+│       ├── db_schema.md             # Database schema documentation
+│       ├── definition_of_done.md    # Development standards and completion criteria
+│       ├── global_error_handling_dod_compliance.md  # Error handling DoD compliance documentation
+│       └── technology_stack.md      # Technology stack decisions and versions
 ├── scripts/               # Operational / helper scripts (not expanded)
 ├── database/              # Legacy SQL schema + seed (reference only)
 ├── supabase/              # Supabase project (config, migrations, seed)
@@ -117,6 +105,7 @@ When adding a feature (example: inventory tracking):
 
 ## Change Log (File Structure)
 
+- 2025-08-22: Added `error-handling-system.md` to `docs/` root directory and `global_error_handling_dod_compliance.md` to `docs/specs/` documenting global error handling system implementation and DoD compliance. Added `vercel.json` deployment configuration. Excluded `docs/plans/` files from documentation per instructions while maintaining folder reference.
 - 2025-08-22: Added `20250822-global_error_handling_implementation.plan.md` to `docs/plans/` directory documenting comprehensive global error handling system implementation plan covering server errors, network failures, error context management, and testing strategies.
 - 2025-08-22: Updated file structure to reflect current state: removed deprecated references to `test-results.xml` and `vitest.config.ci.ts` in root (now properly located in `tests/` subdirectories), expanded E2E test file listings to show specific test files (`basic-functionality.spec.ts`, `guest-experience-improvements.spec.ts`, `menu-crud.spec.ts`, `order-management.spec.ts`, `wait-time-configuration.spec.ts`), ensuring documentation matches actual workspace organization.
 - 2025-08-22: Reorganized all test-related folders under new `tests/` root directory: moved `vitest.config.ts` and `vitest.config.ci.ts` to `tests/unit/`, moved all Playwright files from `playwright-tests/` to `tests/e2e/`, consolidated test results and reports into `tests/e2e/results/` and `tests/e2e/reports/`, and moved JUnit XML output to `tests/outputs/`. Updated all configurations and scripts to use new paths. This consolidates scattered test artifacts and eliminates duplicate test-results folders.
