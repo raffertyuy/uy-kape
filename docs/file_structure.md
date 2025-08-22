@@ -40,6 +40,7 @@ uy-kape/
 │   ├── plans/
 │   │   ├── barista_admin_menu_management.plan.md
 │   │   ├── continuous_integration_workflow.plan.md
+│   │   ├── fix_mobile_responsiveness_barista_admin_menu_management.plan.md
 │   │   ├── initial_bootstrap_implementation.plan.md
 │   │   ├── logo_integration_ui_enhancement.plan.md  # Logo integration implementation plan
 │   │   └── unit_tests_implementation.plan.md
