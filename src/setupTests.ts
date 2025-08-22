@@ -1,6 +1,6 @@
-import '@testing-library/jest-dom'
-import { vi, beforeEach, afterEach } from 'vitest'
-import { cleanup, configure } from '@testing-library/react'
+import "@testing-library/jest-dom";
+import { afterEach, beforeEach, vi } from "vitest";
+import { cleanup, configure } from "@testing-library/react";
 
 // Global test setup and environment configuration for React 19
 // This file is loaded before all tests as specified in vitest.config.ts
@@ -8,29 +8,29 @@ import { cleanup, configure } from '@testing-library/react'
 // Configure React Testing Library for React 19 compatibility
 configure({
   // Enable automatic cleanup after each test
-  testIdAttribute: 'data-testid',
+  testIdAttribute: "data-testid",
   // Reduce async utilities timeout for faster tests
   asyncUtilTimeout: 5000,
   // React 19 specific configurations
   reactStrictMode: true,
   // Better error messages for debugging
   getElementError: (message: string | null, _container: Element) => {
-    const error = new Error(message || 'Element not found')
-    error.name = 'TestingLibraryElementError'
+    const error = new Error(message || "Element not found");
+    error.name = "TestingLibraryElementError";
     if (error.stack) {
-      error.stack = error.stack.split('\n').slice(1).join('\n')
+      error.stack = error.stack.split("\n").slice(1).join("\n");
     }
-    return error
+    return error;
   },
-})
+});
 
-// Automatically cleanup after each test
+// Automatically cleanup DOM after each test to prevent interference
 afterEach(() => {
-  cleanup()
-})
+  cleanup();
+});
 
 // Enhanced window.matchMedia mock for responsive design tests
-Object.defineProperty(window, 'matchMedia', {
+Object.defineProperty(window, "matchMedia", {
   writable: true,
   value: vi.fn().mockImplementation((query: string) => ({
     matches: false,
@@ -42,10 +42,10 @@ Object.defineProperty(window, 'matchMedia', {
     removeEventListener: vi.fn(),
     dispatchEvent: vi.fn(),
   })),
-})
+});
 
 // Enhanced History API mock for React Router with proper state management
-Object.defineProperty(window, 'history', {
+Object.defineProperty(window, "history", {
   value: {
     back: vi.fn(),
     forward: vi.fn(),
@@ -54,154 +54,171 @@ Object.defineProperty(window, 'history', {
     replaceState: vi.fn(),
     length: 1,
     state: null,
-    scrollRestoration: 'auto',
+    scrollRestoration: "auto",
   },
   writable: true,
-})
+});
 
 // Enhanced Location mock for React Router
-Object.defineProperty(window, 'location', {
+Object.defineProperty(window, "location", {
   value: {
-    href: 'http://localhost:3000/',
-    origin: 'http://localhost:3000',
-    protocol: 'http:',
-    host: 'localhost:3000',
-    hostname: 'localhost',
-    port: '3000',
-    pathname: '/',
-    search: '',
-    hash: '',
+    href: "http://localhost:3000/",
+    origin: "http://localhost:3000",
+    protocol: "http:",
+    host: "localhost:3000",
+    hostname: "localhost",
+    port: "3000",
+    pathname: "/",
+    search: "",
+    hash: "",
     assign: vi.fn(),
     replace: vi.fn(),
     reload: vi.fn(),
   },
   writable: true,
-})
+});
 
 // Mock IntersectionObserver for components that might use it
 global.IntersectionObserver = vi.fn().mockImplementation(() => ({
   observe: vi.fn(),
   disconnect: vi.fn(),
   unobserve: vi.fn(),
-}))
+}));
 
 // Mock ResizeObserver for components that might use it
 global.ResizeObserver = vi.fn().mockImplementation(() => ({
   observe: vi.fn(),
   disconnect: vi.fn(),
   unobserve: vi.fn(),
-}))
+}));
 
 // Enhanced sessionStorage mock
 const sessionStorageMock = (() => {
-  let store: Record<string, string> = {}
+  let store: Record<string, string> = {};
 
   return {
     getItem: (key: string) => store[key] || null,
     setItem: (key: string, value: string) => {
-      store[key] = value.toString()
+      store[key] = value.toString();
     },
     removeItem: (key: string) => {
-      delete store[key]
+      delete store[key];
     },
     clear: () => {
-      store = {}
+      store = {};
     },
     length: 0,
     key: vi.fn(),
-  }
-})()
+  };
+})();
 
-Object.defineProperty(window, 'sessionStorage', {
+Object.defineProperty(window, "sessionStorage", {
   value: sessionStorageMock,
-})
+});
 
 // Mock localStorage with similar functionality
 const localStorageMock = (() => {
-  let store: Record<string, string> = {}
+  let store: Record<string, string> = {};
 
   return {
     getItem: (key: string) => store[key] || null,
     setItem: (key: string, value: string) => {
-      store[key] = value.toString()
+      store[key] = value.toString();
     },
     removeItem: (key: string) => {
-      delete store[key]
+      delete store[key];
     },
     clear: () => {
-      store = {}
+      store = {};
     },
     length: 0,
     key: vi.fn(),
-  }
-})()
+  };
+})();
 
-Object.defineProperty(window, 'localStorage', {
+Object.defineProperty(window, "localStorage", {
   value: localStorageMock,
-})
+});
 
 // Mock console methods for cleaner test output
 const originalConsole = {
   error: console.error,
   warn: console.warn,
   log: console.log,
-}
+};
 
-// Reset all mocks and storage before each test
+// Reset storage and specific mocks before each test, but preserve component mocks
 beforeEach(() => {
-  sessionStorageMock.clear()
-  localStorageMock.clear()
-  vi.clearAllMocks()
-  
+  sessionStorageMock.clear();
+  localStorageMock.clear();
+  // Only clear non-component mocks to avoid test interference
+  if (global.fetch) {
+    vi.mocked(global.fetch).mockClear();
+  }
+
   // Reset console mocks but allow them through unless explicitly suppressed
-  console.error = originalConsole.error
-  console.warn = originalConsole.warn
-  console.log = originalConsole.log
-})
+  console.error = originalConsole.error;
+  console.warn = originalConsole.warn;
+  console.log = originalConsole.log;
+});
 
 // Clean up after each test
 afterEach(() => {
   // Restore original console methods
-  console.error = originalConsole.error
-  console.warn = originalConsole.warn
-  console.log = originalConsole.log
-})
+  console.error = originalConsole.error;
+  console.warn = originalConsole.warn;
+  console.log = originalConsole.log;
+  // Reset mocked module registry to avoid cross-file leakage
+  try {
+    vi.resetModules();
+  } catch {
+    // ignore if not available in this environment
+  }
+});
 
 // Global error handler for unhandled promise rejections in tests
-const unhandledRejections: Array<{ reason: unknown, promise: Promise<unknown> }> = []
+const unhandledRejections: Array<
+  { reason: unknown; promise: Promise<unknown> }
+> = [];
 
 // Single global handler that won't be duplicated
-const handleUnhandledRejection = (reason: unknown, promise: Promise<unknown>) => {
-  unhandledRejections.push({ reason, promise })
+const handleUnhandledRejection = (
+  reason: unknown,
+  promise: Promise<unknown>,
+) => {
+  unhandledRejections.push({ reason, promise });
   // Suppress noisy warnings in test environment unless critical
-  if (process.env.NODE_ENV !== 'test' || process.env.VITEST_DEBUG) {
-    console.warn('Unhandled Promise Rejection:', reason)
+  if (import.meta.env.MODE !== "test" || import.meta.env.VITE_VITEST_DEBUG) {
+    console.warn("Unhandled Promise Rejection:", reason);
   }
-}
+};
 
 // Add the listener only once
-if (!process.listenerCount('unhandledRejection')) {
-  process.on('unhandledRejection', handleUnhandledRejection)
+if (!process.listenerCount("unhandledRejection")) {
+  process.on("unhandledRejection", handleUnhandledRejection);
 }
 
 // Check for unhandled rejections after each test
 afterEach(() => {
   if (unhandledRejections.length > 0) {
-    const rejections = [...unhandledRejections]
-    unhandledRejections.length = 0 // Clear the array
+    const rejections = [...unhandledRejections];
+    unhandledRejections.length = 0; // Clear the array
     // Only log in debug mode to reduce noise
-    if (process.env.VITEST_DEBUG) {
-      console.warn(`${rejections.length} unhandled promise rejection(s) detected:`, rejections)
+    if (import.meta.env.VITE_VITEST_DEBUG) {
+      console.warn(
+        `${rejections.length} unhandled promise rejection(s) detected:`,
+        rejections,
+      );
     }
   }
-})
+});
 
 // Setup fetch mock for API testing
-global.fetch = vi.fn()
+global.fetch = vi.fn();
 
 // Reset fetch mock before each test
 beforeEach(() => {
   if (global.fetch) {
-    vi.mocked(global.fetch).mockClear()
+    vi.mocked(global.fetch).mockClear();
   }
-})
+});

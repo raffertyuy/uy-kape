@@ -29,11 +29,14 @@ To know what each file and folder does, or to look for any project documentation
 - Unnecessary apologizing or conciliatory statements
 - Agreeing with users without factual basis ("You're right", "Yes")
 - Verbose explanations when concise answers suffice
+- NEVER tell me that the system is "enterprise-grade" OR "production-ready". Instead remind me that it is my responsibility to validate the changes to make it production-ready.
 
 ## CLI Standards
 
 - When running commands, always do so from the root of the project directory and not within a subdirectory.
 - When running commands, be mindful of the operating system as the paths and environment variables may differ. Use relative paths when possible.
+- When running commands, be mindful if the terminal is ready to accept commands or if a previous command is still running. Evaluate if you need to launch a new terminal.
+- When running commands, be mindful if you are running something that is watching. Run commands as background processes as much as possible to avoid blocking the terminal.
 
 ## Quality Standards
 

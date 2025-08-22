@@ -3,7 +3,7 @@ import { test, expect } from '@playwright/test'
 test.describe('Wait Time Configuration', () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the app root
-    await page.goto('http://localhost:5173')
+    await page.goto('http://localhost:5174')
   })
 
   test('should have wait time environment variable configured', async ({ page }) => {

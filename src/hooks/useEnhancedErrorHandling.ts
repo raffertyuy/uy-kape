@@ -1,6 +1,7 @@
-import { useCallback } from 'react'
+import { useCallback, useContext } from 'react'
 import { useErrorHandling, useFormErrorHandling } from './useErrorHandling'
 import { useToast } from './useToastHook'
+import { ErrorContext } from '../contexts/ErrorContextTypes'
 
 /**
  * Enhanced error handling hook that integrates with toast notifications
@@ -9,20 +10,19 @@ import { useToast } from './useToastHook'
 export const useEnhancedErrorHandling = () => {
   const errorHandling = useErrorHandling()
   const toast = useToast()
+  const errorContext = useContext(ErrorContext)
 
   const setErrorWithToast = useCallback((error: any, action?: string) => {
+    // Add to ErrorContext for global error tracking
+    if (errorContext) {
+      errorContext.addError(error, action)
+    }
+    
+    // Also set in local error handling for component-level state
     errorHandling.setError(error, action)
     
-    if (errorHandling.error) {
-      toast.showError('Error', errorHandling.error.message, {
-        label: 'Retry',
-        onClick: () => {
-          // This would trigger a retry if a retry function was provided
-          errorHandling.clearError()
-        }
-      })
-    }
-  }, [errorHandling, toast])
+    // Toast notifications are handled by useErrorToast hook automatically
+  }, [errorHandling, errorContext])
 
   const handleAsyncOperationWithToast = useCallback(async <T>(
     operation: () => Promise<T>,
@@ -42,7 +42,7 @@ export const useEnhancedErrorHandling = () => {
       setErrorWithToast(error, action)
       return null
     }
-  }, [errorHandling, toast, setErrorWithToast])
+  }, [errorHandling, setErrorWithToast, toast])
 
   const retryWithToast = useCallback(async (retryFn: () => Promise<any>, actionName = 'operation') => {
     try {

@@ -41,6 +41,7 @@ function Layout({ children }: LayoutProps) {
                   }`}
                   role="menuitem"
                   aria-current={location.pathname === '/order' ? 'page' : undefined}
+                  data-testid="menu-link"
                 >
                   Order
                 </Link>

@@ -125,29 +125,10 @@ export default function OrderDashboardError({
         </p>
         
         {/* Error Details (in development) */}
-        {process.env.NODE_ENV === 'development' && error && (
-          <details className="mb-6 text-left">
-            <summary className="cursor-pointer font-medium mb-2">
-              Technical Details (Dev Mode)
-            </summary>
-            <div className="bg-gray-900 text-green-400 p-3 rounded text-sm font-mono">
-              <div className="mb-2">
-                <strong>Error:</strong> {error.name}
-              </div>
-              <div className="mb-2">
-                <strong>Message:</strong> {error.message}
-              </div>
-              {error.stack && (
-                <div>
-                  <strong>Stack Trace:</strong>
-                  <pre className="mt-1 text-xs whitespace-pre-wrap">
-                    {/* Stack trace is only shown in development */}
-                    {error.stack}
-                  </pre>
-                </div>
-              )}
-            </div>
-          </details>
+        {import.meta.env.VITE_IS_DEV === 'true' && error && (
+          <pre className="mt-2 text-xs text-red-200" aria-label="error-details">
+            {error.stack || error.message}
+          </pre>
         )}
         
         {/* Action Buttons */}
@@ -243,9 +224,8 @@ export class OrderDashboardErrorBoundary extends React.Component<
     })
     
     // Log error to console in development
-    if (process.env.NODE_ENV === 'development') {
-      console.error('OrderDashboard Error:', error)
-      console.error('Error Info:', errorInfo)
+    if (import.meta.env.VITE_IS_DEV === 'true') {
+      console.error('Order dashboard error:', error)
     }
     
     // Call optional error handler

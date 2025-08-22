@@ -1,22 +1,53 @@
-import { render, screen } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
-import { BrowserRouter } from 'react-router-dom'
-import WelcomePage from '../WelcomePage'
+import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
+import { render, screen } from '@/test-utils'
 
-const renderWithRouter = (component: React.ReactElement) => {
-  return render(
-    <BrowserRouter future={{
-      v7_startTransition: true,
-      v7_relativeSplatPath: true
-    }}>
-      {component}
-    </BrowserRouter>
-  )
-}
+// Component variables
+let WelcomePage: any
 
 describe('WelcomePage', () => {
+  beforeAll(async () => {
+    // Setup scoped mocks for this test file
+    vi.doMock('@/assets/logos', () => ({
+      logo24: 'mocked-logo-24.png',
+      logo32: 'mocked-logo-32.png',
+      logo48: 'mocked-logo-48.png',
+      logo64: 'mocked-logo-64.png',
+      logo96: 'mocked-logo-96.png',
+      logo128: 'mocked-logo-128.png',
+      logo192: 'mocked-logo-192.png',
+      logo256: 'mocked-logo-256.png'
+    }))
+
+    vi.doMock('@/types/logo.types', () => ({
+      LogoSize: {
+        SM: '24',
+        MD: '32',
+        LG: '48',
+        XL: '64',
+        '2XL': '96',
+        '3XL': '128',
+        '4XL': '192',
+        HERO: '256'
+      }
+    }))
+
+    vi.doMock('lucide-react', () => ({
+      Coffee: () => <div data-testid="coffee-icon" />,
+      Settings: () => <div data-testid="settings-icon" />
+    }))
+
+    // Import component after mocking
+    const welcomePageModule = await import('../WelcomePage')
+    WelcomePage = welcomePageModule.default
+  })
+
+  afterAll(() => {
+    vi.doUnmock('@/assets/logos')
+    vi.doUnmock('@/types/logo.types')
+    vi.doUnmock('lucide-react')
+  })
   it('renders welcome message and app title', () => {
-    renderWithRouter(<WelcomePage />)
+    render(<WelcomePage />)
     
     // Check for the logo
     const logo = screen.getByRole('img')
@@ -31,7 +62,7 @@ describe('WelcomePage', () => {
   })
 
   it('displays order and admin navigation links', () => {
-    renderWithRouter(<WelcomePage />)
+    render(<WelcomePage />)
     
     // Check for Order Here link
     const orderLink = screen.getByRole('link', { name: /order here/i })
@@ -45,7 +76,7 @@ describe('WelcomePage', () => {
   })
 
   it('has proper accessibility attributes', () => {
-    renderWithRouter(<WelcomePage />)
+    render(<WelcomePage />)
     
     // Check logo accessibility
     const logo = screen.getByRole('img')
@@ -60,7 +91,7 @@ describe('WelcomePage', () => {
   })
 
   it('is responsive on different screen sizes', () => {
-    renderWithRouter(<WelcomePage />)
+    render(<WelcomePage />)
     
     // Check responsive container classes (looking for sm:max-w-md since that's the breakpoint)
     const container = screen.getByText('Uy, Kape! ☕').closest('.max-w-sm')
@@ -72,7 +103,7 @@ describe('WelcomePage', () => {
   })
 
   it('displays technology stack badges', () => {
-    renderWithRouter(<WelcomePage />)
+    render(<WelcomePage />)
     
     // Check for technology badges
     expect(screen.getByText('React + TypeScript')).toBeInTheDocument()
@@ -81,7 +112,7 @@ describe('WelcomePage', () => {
   })
 
   it('has proper semantic structure', () => {
-    renderWithRouter(<WelcomePage />)
+    render(<WelcomePage />)
     
     // The main container should have proper background and layout
     const mainContainer = screen.getByText('Uy, Kape! ☕').closest('.min-h-screen')

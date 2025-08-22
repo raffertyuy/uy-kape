@@ -1,38 +1,58 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest'
 import { renderHook, waitFor, act } from '@testing-library/react'
-import { useDrinkCategories, useDrinks, useCreateDrinkCategory, useUpdateDrinkCategory, useDeleteDrinkCategory } from '@/hooks/useMenuData'
-import * as menuService from '@/services/menuService'
-
-// Mock the menu service
-vi.mock('@/services/menuService', () => ({
-  drinkCategoriesService: {
-    getAll: vi.fn(),
-    create: vi.fn(),
-    update: vi.fn(),
-    delete: vi.fn()
-  },
-  drinksService: {
-    getAll: vi.fn(),
-    getByCategory: vi.fn(),
-    create: vi.fn(),
-    update: vi.fn(),
-    delete: vi.fn()
-  }
-}))
-
-// Mock Supabase real-time
-vi.mock('@/lib/supabase', () => ({
-  supabase: {
-    channel: vi.fn(() => ({
-      on: vi.fn().mockReturnThis(),
-      subscribe: vi.fn(() => ({
-        unsubscribe: vi.fn()
-      }))
-    }))
-  }
-}))
 
 describe('useMenuData hooks', () => {
+  let useDrinkCategories: any
+  let useDrinks: any
+  let useCreateDrinkCategory: any
+  let useUpdateDrinkCategory: any
+  let useDeleteDrinkCategory: any
+  let menuService: any
+
+  beforeAll(async () => {
+    // Mock the menu service
+    vi.doMock('@/services/menuService', () => ({
+      drinkCategoriesService: {
+        getAll: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
+        delete: vi.fn()
+      },
+      drinksService: {
+        getAll: vi.fn(),
+        getByCategory: vi.fn(),
+        create: vi.fn(),
+        update: vi.fn(),
+        delete: vi.fn()
+      }
+    }))
+
+    // Mock Supabase real-time
+    vi.doMock('@/lib/supabase', () => ({
+      supabase: {
+        channel: vi.fn(() => ({
+          on: vi.fn().mockReturnThis(),
+          subscribe: vi.fn(() => ({
+            unsubscribe: vi.fn()
+          }))
+        }))
+      }
+    }))
+
+    // Import mocked modules
+    menuService = await import('@/services/menuService')
+    const useMenuDataModule = await import('@/hooks/useMenuData')
+    useDrinkCategories = useMenuDataModule.useDrinkCategories
+    useDrinks = useMenuDataModule.useDrinks
+    useCreateDrinkCategory = useMenuDataModule.useCreateDrinkCategory
+    useUpdateDrinkCategory = useMenuDataModule.useUpdateDrinkCategory
+    useDeleteDrinkCategory = useMenuDataModule.useDeleteDrinkCategory
+  })
+
+  afterAll(() => {
+    vi.doUnmock('@/services/menuService')
+    vi.doUnmock('@/lib/supabase')
+  })
   beforeEach(() => {
     vi.clearAllMocks()
   })

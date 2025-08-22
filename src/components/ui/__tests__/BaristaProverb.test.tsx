@@ -1,26 +1,45 @@
 import { render, screen } from '@/test-utils'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { BaristaProverb, BaristaProverbCompact } from '../BaristaProverb'
+import { describe, it, expect, vi, beforeEach, afterAll, beforeAll } from 'vitest'
 
-// Mock the barista proverbs utility
-vi.mock('@/utils/baristaProverbs', () => ({
-  getRandomBaristaProverbText: vi.fn(() => 'Good coffee, like patience, takes time to perfect.'),
-  getBaristaProverbByCategory: vi.fn((category) => ({
-    text: `A ${category} proverb about coffee and patience.`,
-    category
-  })),
-  type: {
-    ProverbCategory: {}
-  }
-}))
-
-// Import the mocked functions
-import { getRandomBaristaProverbText, getBaristaProverbByCategory } from '@/utils/baristaProverbs'
-
-const mockGetRandomBaristaProverbText = vi.mocked(getRandomBaristaProverbText)
-const mockGetBaristaProverbByCategory = vi.mocked(getBaristaProverbByCategory)
+// Create spies for the functions
+let mockGetRandomBaristaProverbText: any
+let mockGetBaristaProverbByCategory: any
+let BaristaProverb: any
+let BaristaProverbCompact: any
 
 describe('BaristaProverb', () => {
+  beforeAll(async () => {
+    // Setup scoped mocks for this test file
+    vi.doMock('@/utils/baristaProverbs', () => ({
+      getRandomBaristaProverbText: vi.fn(() => 'Good coffee, like patience, takes time to perfect.'),
+      getBaristaProverbByCategory: vi.fn((category) => ({
+        text: `A ${category} proverb about coffee and patience.`,
+        category
+      })),
+      getRandomBaristaProverb: vi.fn(() => ({
+        text: 'Good coffee, like patience, takes time to perfect.',
+        category: 'patience'
+      })),
+      getProverbCategories: vi.fn(() => ['patience', 'encouragement', 'wisdom', 'coffee-love']),
+      getProverbCount: vi.fn(() => 28),
+      getProverbCountByCategory: vi.fn(() => 7)
+    }))
+
+    // Import components after mocking
+    const componentsModule = await import('../BaristaProverb')
+    BaristaProverb = componentsModule.BaristaProverb
+    BaristaProverbCompact = componentsModule.BaristaProverbCompact
+
+    // Import mocked utilities
+    const utilsModule = await import('@/utils/baristaProverbs')
+    mockGetRandomBaristaProverbText = vi.mocked(utilsModule.getRandomBaristaProverbText)
+    mockGetBaristaProverbByCategory = vi.mocked(utilsModule.getBaristaProverbByCategory)
+  })
+
+  afterAll(() => {
+    vi.doUnmock('@/utils/baristaProverbs')
+  })
+
   beforeEach(() => {
     vi.clearAllMocks()
     mockGetRandomBaristaProverbText.mockClear()

@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test'
 
 // Test configuration
-const ADMIN_PASSWORD = 'admin123' // This should match the configured admin password
-const BASE_URL = 'http://localhost:5173'
+const ADMIN_PASSWORD = 'admin456' // This should match the configured admin password
+const BASE_URL = 'http://localhost:5174'
 
 test.describe('Order Management Dashboard', () => {
   test.beforeEach(async ({ page }) => {
@@ -16,7 +16,11 @@ test.describe('Order Management Dashboard', () => {
       await page.keyboard.press('Enter')
     }
     
-    // Wait for dashboard to load
+    // Wait for admin dashboard to load and click Order Management
+    await page.waitForSelector('button:has-text("Order Management")', { timeout: 10000 })
+    await page.click('button:has-text("Order Management")')
+    
+    // Wait for order dashboard to load
     await page.waitForSelector('[data-testid="order-dashboard"]', { timeout: 10000 })
   })
 
@@ -24,7 +28,7 @@ test.describe('Order Management Dashboard', () => {
     test('should load order dashboard successfully', async ({ page }) => {
       // Verify main dashboard elements are present
       await expect(page.locator('[data-testid="order-dashboard"]')).toBeVisible()
-      await expect(page.locator('h1')).toContainText('Order Dashboard')
+      await expect(page.locator('[data-testid="order-dashboard"] h1')).toContainText('Order Dashboard')
       
       // Check for key dashboard components
       await expect(page.locator('[data-testid="order-list"]')).toBeVisible()
@@ -183,7 +187,7 @@ test.describe('Order Management Dashboard', () => {
       await expect(page.locator('[data-testid="order-dashboard"]')).toBeVisible()
       
       // Check that main elements are still visible
-      await expect(page.locator('h1')).toBeVisible()
+      await expect(page.locator('[data-testid="order-dashboard"] h1')).toBeVisible()
     })
 
     test('should work on tablet viewport', async ({ page }) => {
@@ -192,7 +196,7 @@ test.describe('Order Management Dashboard', () => {
       
       // Verify dashboard layout adapts
       await expect(page.locator('[data-testid="order-dashboard"]')).toBeVisible()
-      await expect(page.locator('h1')).toBeVisible()
+      await expect(page.locator('[data-testid="order-dashboard"] h1')).toBeVisible()
     })
   })
 
@@ -244,6 +248,10 @@ test.describe('Order Management Workflow Integration', () => {
       await passwordInput.fill(ADMIN_PASSWORD)
       await page.keyboard.press('Enter')
     }
+    
+    // Wait for admin dashboard to load and click Order Management
+    await page.waitForSelector('button:has-text("Order Management")', { timeout: 10000 })
+    await page.click('button:has-text("Order Management")')
     
     await page.waitForSelector('[data-testid="order-dashboard"]', { timeout: 10000 })
   })

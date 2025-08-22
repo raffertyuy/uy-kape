@@ -3,7 +3,7 @@ mode: "run-agent"
 description: "Run the application locally and fix any errors encountered."
 ---
 
-Your task is to run this application locally for functional testing.
+Your task is to use playwright MCP to run this application locally, to test and fix the task given to you.
 
 - Before attempting to run the app, check if it is already running.
 

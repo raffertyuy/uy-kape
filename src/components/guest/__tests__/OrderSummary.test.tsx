@@ -1,8 +1,28 @@
 import { render, screen } from '@/test-utils'
-import { describe, it, expect } from 'vitest'
-import { OrderSummary } from '../OrderSummary'
+import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
+
+// Component variables
+let OrderSummary: any
 
 describe('OrderSummary', () => {
+  beforeAll(async () => {
+    // Setup scoped mocks for this test file
+    vi.doMock('lucide-react', () => ({
+      Clock: () => <div data-testid="clock-icon" />,
+      CheckCircle2: () => <div data-testid="check-circle-icon" />,
+      User: () => <div data-testid="user-icon" />,
+      Coffee: () => <div data-testid="coffee-icon" />,
+      MessageSquare: () => <div data-testid="message-square-icon" />
+    }))
+
+    // Import component after mocking
+    const orderSummaryModule = await import('../OrderSummary')
+    OrderSummary = orderSummaryModule.OrderSummary
+  })
+
+  afterAll(() => {
+    vi.doUnmock('lucide-react')
+  })
   const mockDrink = {
     id: '1',
     name: 'Americano',

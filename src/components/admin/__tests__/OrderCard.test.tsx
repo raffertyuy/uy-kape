@@ -1,42 +1,56 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest'
 import { render, screen, fireEvent } from '../../../test-utils'
-import { OrderCard } from '../OrderCard'
 import type { AdminOrderListItem } from '../../../types/admin.types'
 
-// Mock the Lucide React icons
-vi.mock('lucide-react', () => ({
-  Clock: () => <div data-testid="clock-icon" />,
-  CheckCircle: () => <div data-testid="check-circle-icon" />,
-  XCircle: () => <div data-testid="x-circle-icon" />,
-  Coffee: () => <div data-testid="coffee-icon" />,
-  Users: () => <div data-testid="users-icon" />,
-  MessageSquare: () => <div data-testid="message-square-icon" />
-}))
+// Component variables
+let OrderCard: any
 
-// Mock queue utils
-vi.mock('@/utils/queueUtils', () => ({
-  calculateEstimatedTime: vi.fn(() => 15)
-}))
+describe('OrderCard', () => {
+  beforeAll(async () => {
+    // Setup scoped mocks for this test file
+    vi.doMock('lucide-react', () => ({
+      Clock: () => <div data-testid="clock-icon" />,
+      CheckCircle: () => <div data-testid="check-circle-icon" />,
+      XCircle: () => <div data-testid="x-circle-icon" />,
+      Coffee: () => <div data-testid="coffee-icon" />,
+      Users: () => <div data-testid="users-icon" />,
+      MessageSquare: () => <div data-testid="message-square-icon" />
+    }))
 
-// Mock OrderStatusBadge and QueuePosition components
-vi.mock('../OrderStatusBadge', () => ({
-  OrderStatusBadge: ({ status }: { status: string }) => (
-    <span data-testid="status-badge">{status}</span>
-  )
-}))
+    vi.doMock('@/utils/queueUtils', () => ({
+      calculateEstimatedTime: vi.fn(() => 15)
+    }))
 
-vi.mock('../QueuePosition', () => ({
-  QueuePosition: ({ position }: { position: number }) => (
-    <span data-testid="queue-position">Queue #{position}</span>
-  ),
-  QueuePriorityIndicator: ({ priority }: { priority: string }) => (
-    <span data-testid="priority-indicator">
-      {priority === 'normal' ? 'Normal Priority' : priority}
-    </span>
-  )
-}))
+    vi.doMock('../OrderStatusBadge', () => ({
+      OrderStatusBadge: ({ status }: { status: string }) => (
+        <span data-testid="status-badge">{status}</span>
+      )
+    }))
 
-const mockOrder: AdminOrderListItem = {
+    vi.doMock('../QueuePosition', () => ({
+      QueuePosition: ({ position }: { position: number }) => (
+        <span data-testid="queue-position">Queue #{position}</span>
+      ),
+      QueuePriorityIndicator: ({ priority }: { priority: string }) => (
+        <span data-testid="priority-indicator">
+          {priority === 'normal' ? 'Normal Priority' : priority}
+        </span>
+      )
+    }))
+
+    // Import component after mocking
+    const orderCardModule = await import('../OrderCard')
+    OrderCard = orderCardModule.OrderCard
+  })
+
+  afterAll(() => {
+    vi.doUnmock('lucide-react')
+    vi.doUnmock('@/utils/queueUtils')
+    vi.doUnmock('../OrderStatusBadge')
+    vi.doUnmock('../QueuePosition')
+  })
+
+  const mockOrder: AdminOrderListItem = {
   id: '550e8400-e29b-41d4-a716-446655440000',
   guest_name: 'John Doe',
   drink_id: 'drink-123',
@@ -65,7 +79,6 @@ const mockOrder: AdminOrderListItem = {
   priority_level: 'normal'
 }
 
-describe('OrderCard', () => {
   const mockOnStatusUpdate = vi.fn()
   const mockOnSelect = vi.fn()
 

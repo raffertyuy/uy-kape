@@ -1,9 +1,18 @@
-import { describe, it, expect } from 'vitest'
-import { render, screen } from '@testing-library/react'
-import { DrinkOptionsPreview } from '../DrinkOptionsPreview'
+import { describe, it, expect, beforeAll } from 'vitest'
+import { render, screen } from '@/test-utils'
 import type { DrinkOptionPreview } from '@/types/menu.types'
 
-const mockOptions: DrinkOptionPreview[] = [
+// Component variables
+let DrinkOptionsPreview: any
+
+describe('DrinkOptionsPreview', () => {
+  beforeAll(async () => {
+    // Import component after setup
+    const drinkOptionsModule = await import('../DrinkOptionsPreview')
+    DrinkOptionsPreview = drinkOptionsModule.DrinkOptionsPreview
+  })
+
+  const mockOptions: DrinkOptionPreview[] = [
   {
     id: '1',
     option_category_name: 'Number of Shots',
@@ -30,7 +39,7 @@ const mockOptions: DrinkOptionPreview[] = [
   }
 ]
 
-describe('DrinkOptionsPreview', () => {
+describe('DrinkOptionsPreview Component', () => {
   it('renders empty state when no options provided', () => {
     render(<DrinkOptionsPreview options={[]} variant="grid" />)
     
@@ -155,4 +164,5 @@ describe('DrinkOptionsPreview', () => {
     container = screen.getByRole('list')
     expect(container).toHaveClass('text-xs', 'flex', 'flex-wrap', 'gap-2')
   })
+})
 })

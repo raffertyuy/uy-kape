@@ -14,5 +14,6 @@ Implement and run the unit tests as described in the plan. Keep going through al
 For changes affecting the UI, use playwright MCP.
 For major UI changes, update the playwright test scripts.
 Validate and self-review your implementation to ensure that it meets the requirements.
+Fix ALL of the test failures that you encounter if unrelated to the task. Those failures only arose from the changes you made.
 
 Iterate with me until I am satisfied with the implementation.

@@ -1,4 +1,12 @@
 import { useState, useCallback } from 'react'
+import { 
+  handleGlobalError, 
+  isRetryableError, 
+  isOffline,
+  withRetry,
+  type RecoveryStrategy,
+  getRecoveryStrategy 
+} from '../utils/globalErrorHandler'
 
 export interface ErrorDetails {
   code?: string
@@ -23,63 +31,15 @@ export const useErrorHandling = () => {
     isRetrying: false
   })
 
-  const categorizeError = useCallback((error: any): ErrorCategory => {
-    if (error?.code === 'PGRST301' || error?.message?.includes('permission')) {
-      return 'permission'
-    }
-    if (error?.code === 'PGRST116' || error?.message?.includes('conflict')) {
-      return 'conflict'
-    }
-    if (error?.code?.startsWith('PGRST') || error?.name === 'ValidationError') {
-      return 'validation'
-    }
-    if (error?.name === 'NetworkError' || error?.message?.includes('fetch')) {
-      return 'network'
-    }
-    return 'unknown'
-  }, [])
-
-  const getUserFriendlyMessage = useCallback((error: any, category: ErrorCategory): string => {
-    switch (category) {
-      case 'network':
-        return 'Unable to connect to the server. Please check your internet connection and try again.'
-      case 'permission':
-        return 'You do not have permission to perform this action. Please contact your administrator.'
-      case 'validation':
-        return error?.message || 'The data you entered is invalid. Please check your input and try again.'
-      case 'conflict':
-        return 'This item was modified by another user. Please refresh and try again.'
-      default:
-        return error?.message || 'An unexpected error occurred. Please try again or contact support.'
-    }
-  }, [])
-
   const setError = useCallback((error: any, action?: string) => {
-    const category = categorizeError(error)
-    const userMessage = getUserFriendlyMessage(error, category)
+    const errorDetails = handleGlobalError(error, action)
     
-    const errorDetails: ErrorDetails = {
-      code: error?.code || error?.name,
-      message: userMessage,
-      details: process.env.NODE_ENV === 'development' ? error : undefined,
-      timestamp: new Date(),
-      ...(action && { action })
-    }
-
     setState({
       error: errorDetails,
       isError: true,
       isRetrying: false
     })
-
-    // Log error for debugging/monitoring
-    console.error('Menu Error:', {
-      category,
-      action,
-      originalError: error,
-      userMessage
-    })
-  }, [categorizeError, getUserFriendlyMessage])
+  }, [])
 
   const clearError = useCallback(() => {
     setState({
@@ -125,6 +85,85 @@ export const useErrorHandling = () => {
   }
 }
 
+// Enhanced network error handling hook
+export const useNetworkErrorHandling = () => {
+  const [networkState, setNetworkState] = useState({
+    isOffline: isOffline(),
+    retryCount: 0,
+    lastConnectionTime: null as Date | null
+  })
+
+  const retryWithBackoff = useCallback(async <T>(
+    operation: () => Promise<T>,
+    maxRetries: number = 3,
+    baseDelay: number = 1000,
+    context?: string
+  ): Promise<T> => {
+    return withRetry(operation, maxRetries, baseDelay, context)
+  }, [])
+
+  const handleNetworkError = useCallback(async <T>(
+    operation: () => Promise<T>,
+    context?: string,
+    options?: {
+      maxRetries?: number
+      baseDelay?: number
+      showOfflineMessage?: boolean
+    }
+  ): Promise<T | null> => {
+    const { maxRetries = 3, baseDelay = 1000, showOfflineMessage = true } = options || {}
+
+    try {
+      // Check if we're offline first
+      if (isOffline()) {
+        setNetworkState(prev => ({ ...prev, isOffline: true }))
+        if (showOfflineMessage) {
+          throw new Error('You appear to be offline. Please check your internet connection.')
+        }
+        return null
+      }
+
+      const result = await retryWithBackoff(operation, maxRetries, baseDelay, context)
+      
+      // Reset network state on successful operation
+      setNetworkState(prev => ({
+        ...prev,
+        isOffline: false,
+        retryCount: 0,
+        lastConnectionTime: new Date()
+      }))
+      
+      return result
+    } catch (error) {
+      // Update retry count
+      setNetworkState(prev => ({ 
+        ...prev, 
+        retryCount: prev.retryCount + 1,
+        isOffline: isOffline()
+      }))
+      
+      throw error
+    }
+  }, [retryWithBackoff])
+
+  const resetNetworkState = useCallback(() => {
+    setNetworkState({
+      isOffline: isOffline(),
+      retryCount: 0,
+      lastConnectionTime: new Date()
+    })
+  }, [])
+
+  return {
+    ...networkState,
+    retryWithBackoff,
+    handleNetworkError,
+    resetNetworkState,
+    isRetryableError,
+    checkOnlineStatus: () => !isOffline()
+  }
+}
+
 // Hook for specific error handling patterns
 export const useFormErrorHandling = () => {
   const { setError, clearError, isError, error } = useErrorHandling()
@@ -147,27 +186,72 @@ export const useFormErrorHandling = () => {
   }
 }
 
-// Hook for operation-specific error handling
+// Hook for operation-specific error handling with recovery strategies
 export const useOperationErrorHandling = () => {
   const errorHandling = useErrorHandling()
+  const networkHandling = useNetworkErrorHandling()
 
   const wrapOperation = useCallback(async <T>(
     operation: () => Promise<T>,
     operationName: string,
-    successMessage?: string
-  ): Promise<T | null> => {
-    const result = await errorHandling.handleAsyncOperation(operation, operationName)
-    
-    if (result && successMessage) {
-      // Integration with toast system will be added when ToastProvider is available
-      // For now, we'll leave this as a placeholder for future enhancement
+    options?: {
+      enableRetry?: boolean
+      maxRetries?: number
+      successMessage?: string
     }
-    
-    return result
-  }, [errorHandling])
+  ): Promise<T | null> => {
+    const { enableRetry = true, maxRetries = 3, successMessage } = options || {}
+
+    try {
+      let result: T
+
+      if (enableRetry) {
+        result = await networkHandling.handleNetworkError(
+          operation,
+          operationName,
+          { maxRetries }
+        ) as T
+      } else {
+        result = await errorHandling.handleAsyncOperation(operation, operationName) as T
+      }
+      
+      if (result && successMessage) {
+        // Integration with toast system will be added when ToastProvider is available
+        // For now, we'll leave this as a placeholder for future enhancement
+      }
+      
+      return result
+    } catch (error) {
+      return null
+    }
+  }, [errorHandling, networkHandling])
+
+  const getErrorRecoveryStrategy = useCallback((error: any): RecoveryStrategy => {
+    const category = errorHandling.error ? categorizeError(errorHandling.error as any) : 'unknown'
+    return getRecoveryStrategy(category, error)
+  }, [errorHandling.error])
 
   return {
     ...errorHandling,
-    wrapOperation
+    ...networkHandling,
+    wrapOperation,
+    getErrorRecoveryStrategy
   }
+}
+
+// Simple categorize function for backward compatibility
+const categorizeError = (error: any): ErrorCategory => {
+  if (error?.code === 'PGRST301' || error?.message?.includes('permission')) {
+    return 'permission'
+  }
+  if (error?.code === 'PGRST116' || error?.message?.includes('conflict')) {
+    return 'conflict'
+  }
+  if (error?.code?.startsWith('PGRST') || error?.name === 'ValidationError') {
+    return 'validation'
+  }
+  if (error?.name === 'NetworkError' || error?.message?.includes('fetch')) {
+    return 'network'
+  }
+  return 'unknown'
 }

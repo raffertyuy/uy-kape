@@ -122,18 +122,35 @@ const ToastItem: React.FC<ToastItemProps> = ({ toast, onDismiss }) => {
 interface ToastContainerProps {
   toasts: ToastData[]
   onDismiss: (_id: string) => void
+  onClearAll?: () => void
 }
 
-export const ToastContainer: React.FC<ToastContainerProps> = ({ toasts, onDismiss }) => {
+export const ToastContainer: React.FC<ToastContainerProps> = ({ toasts, onDismiss, onClearAll }) => {
   // Create portal to render toasts at the top level
   const toastRoot = document.getElementById('toast-root') || document.body
 
+  // Check if there's a global error banner by looking for the fixed top element
+  const hasGlobalErrorBanner = document.querySelector('.fixed.top-0.left-0.right-0.z-50') !== null
+  const topPosition = hasGlobalErrorBanner ? 'top-20' : 'top-4' // Adjust for banner height
+
   return createPortal(
     <div 
-      className="fixed top-4 right-4 z-50 space-y-2"
+      className={`fixed ${topPosition} right-4 z-40 space-y-2`} // z-40 to be below banner (z-50)
       aria-live="polite"
       aria-label="Notifications"
     >
+      {/* Show clear all button when there are 2+ toasts */}
+      {toasts.length >= 2 && onClearAll && (
+        <div className="flex justify-end mb-2">
+          <button
+            onClick={onClearAll}
+            className="text-xs px-2 py-1 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-md transition-colors"
+          >
+            Clear All
+          </button>
+        </div>
+      )}
+      
       {toasts.map((toast) => (
         <ToastItem
           key={toast.id}

@@ -1,6 +1,6 @@
 ---
-description: 'Initial idea and specifications of this application'
-last-modified: 2025-08-19
+description: 'Overview of this application'
+last-modified: 2025-08-22
 ---
 
 # ☕ Home Free Coffee Ordering System
@@ -12,14 +12,8 @@ A simple, free coffee ordering system for home guests. This application will be 
 ---
 
 ## Technology Stack
-
-- **Frontend:** React.js
-- **Programming Language:** Typescript
-- **Build Tool:** Vite (for a fast development experience)
-- **Styling:** Utility-first CSS (e.g., Tailwind CSS)
-- **Database:** Supabase (for a completely free, real-time, NoSQL-like database)
-- **Hosting:** Vercel (for free and easy front-end hosting)
-
+See [technology_stack](./technology_stack.md
+)
 ---
 
 ## Specifications

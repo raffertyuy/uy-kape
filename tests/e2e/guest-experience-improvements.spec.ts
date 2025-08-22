@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test'
 
 // Test configuration
-const BASE_URL = 'http://localhost:5173'
+const BASE_URL = 'http://localhost:5174'
 
 test.describe('Guest Ordering Experience Improvements', () => {
   test.beforeEach(async ({ page }) => {

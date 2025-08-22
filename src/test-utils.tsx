@@ -4,10 +4,11 @@ import type { RenderOptions } from '@testing-library/react';
 import { render, act, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import userEvent from '@testing-library/user-event'
+import { ErrorContextProvider } from './contexts/ErrorContext'
 
 /**
  * Enhanced provider wrapper for testing with React 19 features
- * Includes Router context and future toast provider context
+ * Includes Router context, ErrorContext, and future toast provider context
  */
 interface AllTheProvidersProps {
   children: React.ReactNode
@@ -21,16 +22,18 @@ const AllTheProviders = ({
   initialIndex = 0 
 }: AllTheProvidersProps) => {
   return (
-    <MemoryRouter 
-      initialEntries={initialEntries} 
-      initialIndex={initialIndex}
-      future={{
-        v7_startTransition: true,
-        v7_relativeSplatPath: true
-      }}
-    >
-      {children}
-    </MemoryRouter>
+    <ErrorContextProvider>
+      <MemoryRouter 
+        initialEntries={initialEntries} 
+        initialIndex={initialIndex}
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true
+        }}
+      >
+        {children}
+      </MemoryRouter>
+    </ErrorContextProvider>
   )
 }
 

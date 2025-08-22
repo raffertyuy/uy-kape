@@ -1,8 +1,15 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest'
 import { render, screen, fireEvent } from '@/test-utils'
-import { ToggleSwitch } from '../ToggleSwitch'
+
+let ToggleSwitch: any
 
 describe('ToggleSwitch', () => {
+  beforeAll(async () => {
+    // Import component after setup
+    const toggleModule = await import('../ToggleSwitch')
+    ToggleSwitch = toggleModule.ToggleSwitch
+  })
+
   const defaultProps = {
     id: 'test-toggle',
     checked: false,
