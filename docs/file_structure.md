@@ -26,12 +26,10 @@ uy-kape/
 ├── package-lock.json      # Locked dependency graph
 ├── postcss.config.js      # PostCSS (Tailwind)
 ├── tailwind.config.js     # Tailwind theme/config
-├── test-results.xml       # Test results output (DEPRECATED - moved to tests/outputs/)
 ├── tsconfig.json          # TS config (app)
 ├── tsconfig.node.json     # TS config (node scripts)
 ├── vite.config.ts         # Vite build config
 ├── vitest.config.ts       # Vitest config (re-exports from tests/unit/)
-├── vitest.config.ci.ts    # Vitest CI config (DEPRECATED - moved to tests/unit/)
 ├── docs/                  # (Fully expanded below)
 │   ├── file_structure.md  # This document
 │   ├── plans/
@@ -65,8 +63,12 @@ uy-kape/
 │   │   ├── vitest.config.ci.ts     # Vitest CI-specific configuration
 │   │   └── coverage/               # Test coverage reports (generated)
 │   ├── e2e/               # End-to-end tests (Playwright)
-│   │   ├── *.spec.ts              # E2E test files
-│   │   ├── playwright.config.ts   # Playwright configuration
+│   │   ├── basic-functionality.spec.ts        # Basic app functionality tests
+│   │   ├── guest-experience-improvements.spec.ts  # Guest UX tests
+│   │   ├── menu-crud.spec.ts                   # Menu management tests
+│   │   ├── order-management.spec.ts            # Order operations tests
+│   │   ├── wait-time-configuration.spec.ts     # Wait time formula tests
+│   │   ├── playwright.config.ts               # Playwright configuration
 │   │   ├── results/               # Test execution artifacts (generated)
 │   │   └── reports/               # HTML test reports (generated)
 │   └── outputs/           # Various test outputs
@@ -114,6 +116,7 @@ When adding a feature (example: inventory tracking):
 
 ## Change Log (File Structure)
 
+- 2025-08-22: Updated file structure to reflect current state: removed deprecated references to `test-results.xml` and `vitest.config.ci.ts` in root (now properly located in `tests/` subdirectories), expanded E2E test file listings to show specific test files (`basic-functionality.spec.ts`, `guest-experience-improvements.spec.ts`, `menu-crud.spec.ts`, `order-management.spec.ts`, `wait-time-configuration.spec.ts`), ensuring documentation matches actual workspace organization.
 - 2025-08-22: Reorganized all test-related folders under new `tests/` root directory: moved `vitest.config.ts` and `vitest.config.ci.ts` to `tests/unit/`, moved all Playwright files from `playwright-tests/` to `tests/e2e/`, consolidated test results and reports into `tests/e2e/results/` and `tests/e2e/reports/`, and moved JUnit XML output to `tests/outputs/`. Updated all configurations and scripts to use new paths. This consolidates scattered test artifacts and eliminates duplicate test-results folders.
 - 2025-08-22: Added `guest_ordering_experience_improvements.plan.md` to `docs/plans/` directory documenting implementation plan for guest UX improvements with funny name generation and barista proverbs.
 - 2025-08-20: Added `technology_stack.md` to `docs/specs/` directory documenting comprehensive technology stack decisions and versions.

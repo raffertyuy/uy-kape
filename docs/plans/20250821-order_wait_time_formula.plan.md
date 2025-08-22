@@ -1,6 +1,6 @@
 ---
 description: "Implementation plan for Order Wait Time formula"
-created-date: 2025-01-21
+created-date: 2025-08-21
 ---
 
 # Implementation Plan for Order Wait Time Formula

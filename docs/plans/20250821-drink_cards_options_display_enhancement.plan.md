@@ -1,6 +1,6 @@
 ---
 description: "Implementation plan for enhancing drink cards to display enabled options and default values"
-created-date: 2025-01-21
+created-date: 2025-08-21
 ---
 
 # Implementation Plan for Drink Cards Options Display Enhancement
