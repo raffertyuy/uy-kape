@@ -50,5 +50,7 @@ REPLACE_WITH_YOUR_REQUIREMENT
 - [ ] All 4 steps completed in order
 - [ ] New plan file created in `docs/plans/` with current date
 - [ ] Implementation matches the created plan
+- [ ] The created plan is followed step by step, and each step is marked as complete after finishing
 - [ ] All tests pass and functionality works
 - [ ] Code follows project standards and instructions
+- [ ] `docs/file_structure.md` is updated

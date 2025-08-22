@@ -25,38 +25,49 @@ uy-kape/
 ├── SECURITY.md            # Security policy
 ├── LICENSE                # OSS license
 ├── README.md              # Overview & onboarding
+├── eslint.config.js       # ESLint configuration
 ├── index.html             # Vite HTML entry
+├── log.local.txt          # Local development log (ignored)
 ├── package.json           # Dependencies & scripts
 ├── package-lock.json      # Locked dependency graph
 ├── postcss.config.js      # PostCSS (Tailwind)
 ├── tailwind.config.js     # Tailwind theme/config
+├── test-results.xml       # Test results output
 ├── tsconfig.json          # TS config (app)
 ├── tsconfig.node.json     # TS config (node scripts)
 ├── vite.config.ts         # Vite build config
 ├── vitest.config.ts       # Vitest test config
+├── vitest.config.ci.ts    # Vitest CI-specific config
 ├── docs/                  # (Fully expanded below)
 │   ├── file_structure.md  # This document
 │   ├── ci-workflow-guide.md  # CI/CD workflow documentation for React + Supabase
 │   ├── plans/
+│   │   ├── barista_admin_crud_fixes.plan.md
 │   │   ├── barista_admin_menu_management.plan.md
+│   │   ├── barista_admin_order_dashboard.plan.md
 │   │   ├── continuous_integration_workflow.plan.md
+│   │   ├── drink_cards_options_display_enhancement.plan.md
+│   │   ├── fix_mobile_responsiveness_barista_admin_menu_management.plan.md
+│   │   ├── guest_module.plan.md
+│   │   ├── guest_special_request.plan.md
 │   │   ├── initial_bootstrap_implementation.plan.md
 │   │   ├── logo_integration_ui_enhancement.plan.md  # Logo integration implementation plan
+│   │   ├── order_wait_time_formula.plan.md
+│   │   ├── unit_tests_ci_fixes.plan.md
 │   │   └── unit_tests_implementation.plan.md
 │   ├── screens/
 │   │   └── old_ordering_system.png
-│   ├── specs/
-│   │   ├── barista-admin-menu-management.md
-│   │   ├── db_schema.md
-│   │   ├── initial_idea.md
-│   │   └── technology_stack.md
-│   └── user-guides/
-│       ├── logo-usage-guide.md  # Comprehensive logo integration usage documentation
-│       └── menu-management-quick-start.md
+│   └── specs/
+│       ├── db_schema.md
+│       ├── definition_of_done.md
+│       ├── initial_idea.md
+│       └── technology_stack.md
 ├── scripts/               # Operational / helper scripts (not expanded)
 ├── database/              # Legacy SQL schema + seed (reference only)
 ├── media/                 # Static media assets: official "Uy, Kape!" logos (108px-1024px)
 ├── supabase/              # Supabase project (config, migrations, seed)
+├── coverage/              # Test coverage reports (generated)
+├── test-results/          # Test execution results (generated)
 ├── src/                   # React + TS application source
 │   ├── assets/            # Optimized logo assets organized by size (24px-256px)
 │   ├── components/        # React components including reusable Logo component
@@ -106,6 +117,7 @@ When adding a feature (example: inventory tracking):
 
 ## Change Log (File Structure)
 
+- 2025-01-22: Updated file structure to reflect current state: added missing plan files, removed non-existent user-guides directory, added missing root-level files (eslint.config.js, log.local.txt, test-results.xml, vitest.config.ci.ts), and added generated directories (coverage/, test-results/).
 - 2025-01-21: Reorganized E2E tests into dedicated `playwright-tests/` folder structure, updated package.json with E2E test scripts, and added E2E testing documentation to Notes & Conventions.
 - 2025-08-20: Added logo integration documentation and updated file structure to include optimized logo assets (`src/assets/logos/`), Logo component (`src/components/ui/Logo.tsx`), logo usage guide (`docs/user-guides/logo-usage-guide.md`), and implementation plan (`docs/plans/logo_integration_ui_enhancement.plan.md`).
 - 2025-08-20: Added `media/` folder documentation for brand assets (logos in multiple resolutions); updated Notes & Conventions section.
