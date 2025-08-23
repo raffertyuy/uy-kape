@@ -5,6 +5,74 @@ import { cleanup, configure } from "@testing-library/react";
 // Global test setup and environment configuration for React 19
 // This file is loaded before all tests as specified in vitest.config.ts
 
+// Import environment detection utilities
+const isCI = (): boolean => {
+  return (
+    process.env.CI === "true" ||
+    process.env.GITHUB_ACTIONS === "true" ||
+    Boolean(process.env.CI)
+  );
+};
+
+const isTestEnv = (): boolean => {
+  return process.env.NODE_ENV === "test" || Boolean(process.env.VITEST);
+};
+
+const shouldUseMocks = (): boolean => {
+  // Always use mocks in CI environment
+  if (isCI()) return true;
+
+  // Check if we should force mocks for testing
+  if (process.env.VITE_TEST_USE_MOCKS === "true") return true;
+
+  // Check if local database testing is explicitly enabled
+  if (process.env.VITE_TEST_USE_LOCAL_DB === "true") return false;
+
+  // Default to mocks for safety in test environment
+  return isTestEnv();
+};
+
+// Supabase mocking setup based on environment
+if (shouldUseMocks()) {
+  // Set up global Supabase mocking for CI environment or when mocks are forced
+  // We'll use vi.doMock to mock the Supabase module
+  vi.doMock("@/lib/supabase", async () => {
+    const { createCompleteSupabaseClient, mockConfigurations } = await import(
+      "../tests/config/supabase-mocks"
+    );
+
+    // Create mock client with basic menu data
+    const mockClient = createCompleteSupabaseClient(
+      mockConfigurations.basicMenu,
+    );
+
+    return {
+      supabase: mockClient,
+      isCI,
+      isTestEnv,
+      shouldUseMocks: () => true,
+    };
+  });
+} else {
+  // For local database testing, we still need to provide environment detection
+  // but use the real Supabase client configured for local development
+  vi.doMock("@/lib/supabase", async () => {
+    const { createLocalSupabaseClient } = await import(
+      "../tests/config/local-db-setup"
+    );
+
+    // Use local Supabase instance for integration testing
+    const localClient = createLocalSupabaseClient();
+
+    return {
+      supabase: localClient,
+      isCI,
+      isTestEnv,
+      shouldUseMocks: () => false,
+    };
+  });
+}
+
 // Configure React Testing Library for React 19 compatibility
 configure({
   // Enable automatic cleanup after each test
@@ -222,3 +290,8 @@ beforeEach(() => {
     vi.mocked(global.fetch).mockClear();
   }
 });
+
+// Log the test strategy being used
+const strategy = shouldUseMocks() ? "mocks" : "real database";
+const env = isCI() ? "CI" : "local";
+console.log(`Test setup: Using ${strategy} in ${env} environment`);

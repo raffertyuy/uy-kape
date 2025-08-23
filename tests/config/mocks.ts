@@ -21,40 +21,182 @@ export const mockCSSModule = {};
 // ===== SUPABASE MOCKS =====
 
 /**
- * Creates a mock Supabase client for testing
+ * Creates a mock Supabase query builder that supports method chaining
  */
-export const createMockSupabaseClient = () => ({
-  from: vi.fn(() => ({
-    select: vi.fn(() => ({
-      data: [],
-      error: null,
+const createMockQueryBuilder = (
+  mockData: unknown[] = [],
+  mockError: Error | null = null,
+) => {
+  const builder = {
+    // Select methods
+    select: vi.fn(() => builder),
+
+    // Filter methods
+    eq: vi.fn(() => builder),
+    neq: vi.fn(() => builder),
+    gt: vi.fn(() => builder),
+    gte: vi.fn(() => builder),
+    lt: vi.fn(() => builder),
+    lte: vi.fn(() => builder),
+    like: vi.fn(() => builder),
+    ilike: vi.fn(() => builder),
+    is: vi.fn(() => builder),
+    in: vi.fn(() => builder),
+    contains: vi.fn(() => builder),
+    containedBy: vi.fn(() => builder),
+    rangeGt: vi.fn(() => builder),
+    rangeGte: vi.fn(() => builder),
+    rangeLt: vi.fn(() => builder),
+    rangeLte: vi.fn(() => builder),
+    rangeAdjacent: vi.fn(() => builder),
+    overlaps: vi.fn(() => builder),
+    textSearch: vi.fn(() => builder),
+    match: vi.fn(() => builder),
+    not: vi.fn(() => builder),
+    or: vi.fn(() => builder),
+    filter: vi.fn(() => builder),
+
+    // Modifier methods
+    order: vi.fn(() => builder),
+    limit: vi.fn(() => builder),
+    range: vi.fn(() => builder),
+    abortSignal: vi.fn(() => builder),
+    single: vi.fn(() => ({
+      data: mockData.length > 0 ? mockData[0] : null,
+      error: mockError,
+      status: mockError ? 400 : 200,
+      statusText: mockError ? "Bad Request" : "OK",
+      count: null,
     })),
+    maybeSingle: vi.fn(() => ({
+      data: mockData.length > 0 ? mockData[0] : null,
+      error: mockError,
+      status: mockError ? 400 : 200,
+      statusText: mockError ? "Bad Request" : "OK",
+      count: null,
+    })),
+
+    // Mutation methods
     insert: vi.fn(() => ({
-      data: null,
-      error: null,
+      data: mockData,
+      error: mockError,
+      status: mockError ? 400 : 201,
+      statusText: mockError ? "Bad Request" : "Created",
+      count: null,
     })),
     update: vi.fn(() => ({
-      data: null,
-      error: null,
+      data: mockData,
+      error: mockError,
+      status: mockError ? 400 : 200,
+      statusText: mockError ? "Bad Request" : "OK",
+      count: null,
+    })),
+    upsert: vi.fn(() => ({
+      data: mockData,
+      error: mockError,
+      status: mockError ? 400 : 201,
+      statusText: mockError ? "Bad Request" : "Created",
+      count: null,
     })),
     delete: vi.fn(() => ({
-      data: null,
-      error: null,
+      data: mockData,
+      error: mockError,
+      status: mockError ? 400 : 200,
+      statusText: mockError ? "Bad Request" : "OK",
+      count: null,
     })),
-    eq: vi.fn(() => ({
-      data: [],
-      error: null,
+
+    // Terminal operations - these should return promises that resolve to responses
+    then: vi.fn((resolve) => {
+      const response = {
+        data: mockData,
+        error: mockError,
+        status: mockError ? 400 : 200,
+        statusText: mockError ? "Bad Request" : "OK",
+        count: mockData.length,
+      };
+      return Promise.resolve(resolve(response));
+    }),
+  };
+
+  // Make the builder thenable so it can be awaited directly
+  Object.defineProperty(builder, "then", {
+    value: vi.fn((resolve, reject) => {
+      const response = {
+        data: mockData,
+        error: mockError,
+        status: mockError ? 400 : 200,
+        statusText: mockError ? "Bad Request" : "OK",
+        count: mockData.length,
+      };
+
+      if (mockError && reject) {
+        return Promise.resolve().then(() => reject(mockError));
+      }
+      return Promise.resolve().then(() => resolve(response));
+    }),
+    writable: true,
+    configurable: true,
+  });
+
+  return builder;
+};
+
+/**
+ * Creates a mock Supabase client for testing
+ */
+export const createMockSupabaseClient = (options: {
+  mockData?: Record<string, unknown[]>;
+  mockErrors?: Record<string, Error | null>;
+} = {}) => {
+  const { mockData = {}, mockErrors = {} } = options;
+
+  return {
+    from: vi.fn((table: string) => {
+      const tableData = mockData[table] || [];
+      const tableError = mockErrors[table] || null;
+      return createMockQueryBuilder(tableData, tableError);
+    }),
+
+    // Auth mock
+    auth: {
+      getSession: vi.fn(() =>
+        Promise.resolve({ data: { session: null }, error: null })
+      ),
+      getUser: vi.fn(() =>
+        Promise.resolve({ data: { user: null }, error: null })
+      ),
+      signIn: vi.fn(() =>
+        Promise.resolve({ data: { user: null, session: null }, error: null })
+      ),
+      signOut: vi.fn(() => Promise.resolve({ error: null })),
+      onAuthStateChange: vi.fn(() => ({
+        data: { subscription: { unsubscribe: vi.fn() } },
+      })),
+    },
+
+    // Storage mock
+    storage: {
+      from: vi.fn(() => ({
+        upload: vi.fn(() => Promise.resolve({ data: null, error: null })),
+        download: vi.fn(() => Promise.resolve({ data: null, error: null })),
+        remove: vi.fn(() => Promise.resolve({ data: null, error: null })),
+        list: vi.fn(() => Promise.resolve({ data: [], error: null })),
+        getPublicUrl: vi.fn(() => ({ data: { publicUrl: "mock-url" } })),
+      })),
+    },
+
+    // Realtime mock
+    channel: vi.fn(() => ({
+      on: vi.fn(() => ({ subscribe: vi.fn() })),
+      subscribe: vi.fn(),
+      unsubscribe: vi.fn(),
     })),
-    order: vi.fn(() => ({
-      data: [],
-      error: null,
-    })),
-    single: vi.fn(() => ({
-      data: null,
-      error: null,
-    })),
-  })),
-});
+
+    // RPC mock
+    rpc: vi.fn(() => Promise.resolve({ data: null, error: null })),
+  };
+};
 
 /**
  * Creates a successful Supabase response

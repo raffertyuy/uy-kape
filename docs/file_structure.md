@@ -3,17 +3,19 @@
 ```text
 uy-kape/
 ├── .github/               # GitHub configs, workflows, AI instructions
+├── .env.ci                # CI environment variables
 ├── .env.example           # Template env vars
 ├── CODE_OF_CONDUCT.md     # Community guidelines
 ├── CONTRIBUTING.md        # Contribution workflow
 ├── eslint.config.js       # ESLint configuration
 ├── index.html             # Vite HTML entry
 ├── LICENSE                # OSS license
+├── LOCAL_DEVELOPMENT.md   # Local development setup guide
 ├── package.json           # Dependencies & scripts
-├── package-lock.json      # Locked dependency graph
 ├── playwright.config.ts   # Playwright configuration
 ├── postcss.config.js      # PostCSS (Tailwind)
 ├── README.md              # Overview & onboarding
+├── scratch.local.md       # Local development notes
 ├── SECURITY.md            # Security policy
 ├── tailwind.config.js     # Tailwind theme/config
 ├── tsconfig.json          # TS config (app)
@@ -21,7 +23,6 @@ uy-kape/
 ├── vercel.json            # Vercel deployment configuration
 ├── vite.config.ts         # Vite build config
 ├── vitest.config.ts       # Vitest config (re-exports from tests/config/)
-├── database/              # Legacy SQL schema + seed (reference only)
 ├── docs/                  # (Fully expanded below)
 │   ├── error-handling-system.md  # Global error handling system documentation
 │   ├── file_structure.md  # This document
@@ -49,6 +50,7 @@ uy-kape/
 │   ├── types/             # TypeScript definitions
 │   └── utils/             # Utility functions
 ├── supabase/              # Supabase project (config, migrations, seed)
+│   └── migrations/        # Database migration files
 └── tests/                 # All test-related files and outputs
     ├── config/            # Centralized test configuration files (Vitest, Playwright)
     ├── e2e/               # End-to-end tests (Playwright) organized by domain
@@ -91,6 +93,8 @@ When adding a feature (example: inventory tracking):
 10. Env: Amend `.env.example` if new variables are needed.
 
 ## Change Log (File Structure)
+
+- 2025-08-24: Updated file structure documentation to reflect current workspace state: added missing root-level files (`LOCAL_DEVELOPMENT.md`, `scratch.local.md`, `.env.ci`), removed references to system-generated and gitignored files (`package-lock.json`, `log.local.txt`, `.env`), removed non-existent `database/` directory reference, expanded supabase structure to show `migrations/` subdirectory, ensuring documentation accurately matches actual workspace organization while complying with file structure update rules.
 
 - 2025-08-23: Updated ESLint configuration to include `src/lib/**/*.ts` files in the utility files override rules, resolving lint warnings for library files like Supabase client configuration. Removed system-generated files (`.env`, `log.local.txt`) from file structure documentation per exclusion rules while maintaining focus on major project files and directories.
 
