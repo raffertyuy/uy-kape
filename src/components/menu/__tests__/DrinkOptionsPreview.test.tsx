@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll } from 'vitest'
-import { render, screen } from '@/test-utils'
+import { render, screen } from '../../../../tests/config/test-utils'
 import type { DrinkOptionPreview } from '@/types/menu.types'
 
 // Component variables

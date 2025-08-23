@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
-import { render, screen } from '@/test-utils'
+import { render, screen } from '../../../../tests/config/test-utils'
 
 let EmptyState: any
 

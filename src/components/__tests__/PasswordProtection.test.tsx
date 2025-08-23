@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi, beforeAll, afterAll } from 'vitest'
-import { render, screen, act, userEvent } from '@/test-utils'
+import { render, screen, act, userEvent } from '../../../tests/config/test-utils'
 
 // Mock variables
 let PasswordProtection: any

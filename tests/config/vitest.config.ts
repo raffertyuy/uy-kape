@@ -7,7 +7,9 @@ export default defineConfig({
   assetsInclude: ["**/*.png", "**/*.jpg", "**/*.jpeg", "**/*.svg", "**/*.gif"],
   test: {
     environment: "jsdom",
-    setupFiles: ["./src/setupTests.ts"],
+    setupFiles: [
+      fileURLToPath(new URL("../../src/setupTests.ts", import.meta.url)),
+    ],
     globals: true,
     // Ensure module isolation between test files
     isolate: true,
@@ -55,7 +57,7 @@ export default defineConfig({
       reporter: ["text"],
       exclude: [
         "node_modules/",
-        "src/test-utils.tsx",
+        "tests/config/test-utils.tsx",
         "src/setupTests.ts",
         "src/**/*.test.{ts,tsx}",
         "src/**/*.spec.{ts,tsx}",
@@ -84,10 +86,19 @@ export default defineConfig({
         },
       },
     },
+    // Mock static assets for tests
+    alias: {
+      "\\.(png|jpg|jpeg|gif|svg|ico|webp)$": fileURLToPath(
+        new URL("./fileMock.js", import.meta.url),
+      ),
+    },
   },
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("../../src", import.meta.url)),
+      "@/test-utils": fileURLToPath(
+        new URL("../../tests/config/test-utils.tsx", import.meta.url),
+      ),
     },
   },
   // Handle static assets in test environment

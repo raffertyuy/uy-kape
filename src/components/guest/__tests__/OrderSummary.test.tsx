@@ -1,4 +1,4 @@
-import { render, screen } from '@/test-utils'
+import { render, screen } from '../../../../tests/config/test-utils'
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest'
 
 // Component variables

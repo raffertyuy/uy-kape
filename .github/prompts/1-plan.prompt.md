@@ -35,6 +35,12 @@ description: "Implementation plan for <requirement>"
 created-date: YYYY-MM-DD
 ---
 
+## OBJECTIVE
+
+OBJECTIVE/REQUIREMENT/TASK HERE
+
+## IMPLEMENTATION PLAN
+
 PLAN HERE
 ```
 

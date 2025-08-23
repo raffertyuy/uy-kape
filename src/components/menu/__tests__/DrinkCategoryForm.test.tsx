@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest'
-import { render, screen, waitFor, userEvent } from '@/test-utils'
+import { render, screen, waitFor, userEvent } from '../../../../tests/config/test-utils'
 
 // Component variables
 let DrinkCategoryForm: any

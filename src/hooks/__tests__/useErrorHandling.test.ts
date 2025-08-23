@@ -15,7 +15,7 @@ let useErrorHandling: any;
 describe("useErrorHandling", () => {
   beforeAll(async () => {
     // Setup scoped mocks for this test file
-    vi.doMock("../../../src/utils/globalErrorHandler", () => ({
+    vi.doMock("../../utils/globalErrorHandler", () => ({
       handleGlobalError: vi.fn((error, context) => ({
         code: error?.code || "ERROR",
         message: "Mocked error message",
@@ -40,12 +40,12 @@ describe("useErrorHandling", () => {
     }));
 
     // Import hook after mocking
-    const hookModule = await import("../../../src/hooks/useErrorHandling");
+    const hookModule = await import("../useErrorHandling");
     useErrorHandling = hookModule.useErrorHandling;
   });
 
   afterAll(() => {
-    vi.doUnmock("../../../src/utils/globalErrorHandler");
+    vi.doUnmock("../../utils/globalErrorHandler");
   });
   beforeEach(() => {
     vi.clearAllMocks();

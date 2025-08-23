@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest'
-import { render, screen, waitFor } from '@/test-utils'
+import { render, screen, waitFor } from '../../../../tests/config/test-utils'
 import userEvent from '@testing-library/user-event'
 import type { Drink, DrinkCategory } from '@/types/menu.types'
 
