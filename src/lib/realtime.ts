@@ -352,7 +352,7 @@ class RealtimeConnectionManager {
 
 // Export singleton instance
 export const realtimeManager = new RealtimeConnectionManager({
-  enableLogging: process.env.NODE_ENV === 'development'
+  enableLogging: import.meta.env.DEV
 })
 
 // Export utilities for components
