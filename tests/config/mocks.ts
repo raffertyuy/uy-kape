@@ -22,6 +22,8 @@ export const mockCSSModule = {};
 
 /**
  * Creates a mock Supabase client for testing
+ * Note: Global Supabase mocking is configured in setupTests.ts
+ * This function is kept for backward compatibility and specific test scenarios
  */
 export const createMockSupabaseClient = () => ({
   from: vi.fn(() => ({

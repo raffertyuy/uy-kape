@@ -216,9 +216,103 @@ afterEach(() => {
 // Setup fetch mock for API testing
 global.fetch = vi.fn();
 
+// ===== SUPABASE MOCKS =====
+
+// Create a comprehensive mock for Supabase client
+const createMockSupabaseResponse = (data: any = null, error: any = null) => ({
+  data,
+  error,
+  status: error ? 400 : 200,
+  statusText: error ? 'Bad Request' : 'OK'
+});
+
+const createMockSupabaseQuery = () => ({
+  select: vi.fn().mockReturnThis(),
+  insert: vi.fn().mockReturnThis(),
+  update: vi.fn().mockReturnThis(),
+  delete: vi.fn().mockReturnThis(),
+  eq: vi.fn().mockReturnThis(),
+  neq: vi.fn().mockReturnThis(),
+  gt: vi.fn().mockReturnThis(),
+  gte: vi.fn().mockReturnThis(),
+  lt: vi.fn().mockReturnThis(),
+  lte: vi.fn().mockReturnThis(),
+  like: vi.fn().mockReturnThis(),
+  ilike: vi.fn().mockReturnThis(),
+  is: vi.fn().mockReturnThis(),
+  in: vi.fn().mockReturnThis(),
+  contains: vi.fn().mockReturnThis(),
+  containedBy: vi.fn().mockReturnThis(),
+  rangeGt: vi.fn().mockReturnThis(),
+  rangeGte: vi.fn().mockReturnThis(),
+  rangeLt: vi.fn().mockReturnThis(),
+  rangeLte: vi.fn().mockReturnThis(),
+  rangeAdjacent: vi.fn().mockReturnThis(),
+  overlaps: vi.fn().mockReturnThis(),
+  textSearch: vi.fn().mockReturnThis(),
+  match: vi.fn().mockReturnThis(),
+  not: vi.fn().mockReturnThis(),
+  or: vi.fn().mockReturnThis(),
+  filter: vi.fn().mockReturnThis(),
+  order: vi.fn().mockReturnThis(),
+  limit: vi.fn().mockReturnThis(),
+  range: vi.fn().mockReturnThis(),
+  single: vi.fn().mockResolvedValue(createMockSupabaseResponse(null, null)),
+  maybeSingle: vi.fn().mockResolvedValue(createMockSupabaseResponse(null, null)),
+  csv: vi.fn().mockResolvedValue(createMockSupabaseResponse(null, null)),
+  geojson: vi.fn().mockResolvedValue(createMockSupabaseResponse(null, null)),
+  explain: vi.fn().mockResolvedValue(createMockSupabaseResponse(null, null)),
+  rollback: vi.fn().mockResolvedValue(createMockSupabaseResponse(null, null)),
+  returns: vi.fn().mockReturnThis(),
+  then: vi.fn().mockResolvedValue(createMockSupabaseResponse([], null))
+});
+
+const mockSupabaseClient = {
+  from: vi.fn(() => createMockSupabaseQuery()),
+  rpc: vi.fn().mockResolvedValue(createMockSupabaseResponse(null, null)),
+  schema: vi.fn().mockReturnThis(),
+  auth: {
+    getSession: vi.fn().mockResolvedValue({ data: { session: null }, error: null }),
+    getUser: vi.fn().mockResolvedValue({ data: { user: null }, error: null }),
+    signIn: vi.fn().mockResolvedValue({ data: { user: null, session: null }, error: null }),
+    signOut: vi.fn().mockResolvedValue({ error: null }),
+    onAuthStateChange: vi.fn(() => ({
+      data: { subscription: { unsubscribe: vi.fn() } }
+    }))
+  },
+  channel: vi.fn(() => ({
+    on: vi.fn().mockReturnThis(),
+    subscribe: vi.fn().mockReturnThis(),
+    unsubscribe: vi.fn().mockReturnThis()
+  })),
+  removeChannel: vi.fn(),
+  removeAllChannels: vi.fn(),
+  getChannels: vi.fn(() => [])
+};
+
+// Mock the Supabase module globally
+vi.mock('@supabase/supabase-js', () => ({
+  createClient: vi.fn(() => mockSupabaseClient)
+}));
+
+// Mock the local supabase client
+vi.mock('@/lib/supabase', () => ({
+  supabase: mockSupabaseClient
+}));
+
 // Reset fetch mock before each test
 beforeEach(() => {
   if (global.fetch) {
     vi.mocked(global.fetch).mockClear();
   }
+  
+  // Reset Supabase mocks
+  Object.values(mockSupabaseClient).forEach(method => {
+    if (typeof method === 'function') {
+      vi.mocked(method).mockClear();
+    }
+  });
+  
+  // Reset the from() method to return fresh query objects
+  vi.mocked(mockSupabaseClient.from).mockImplementation(() => createMockSupabaseQuery());
 });

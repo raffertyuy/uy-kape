@@ -1,35 +1,13 @@
-import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest'
-
-// Service variables
-let drinkCategoriesService: any
-let drinksService: any
-let optionCategoriesService: any
-let optionValuesService: any
-let supabase: any
+import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { 
+  drinkCategoriesService, 
+  drinksService, 
+  optionCategoriesService, 
+  optionValuesService 
+} from '@/services/menuService'
+import { supabase } from '@/lib/supabase'
 
 describe('menuService', () => {
-  beforeAll(async () => {
-    // Setup scoped mocks for this test file
-    vi.doMock('@/lib/supabase', () => ({
-      supabase: {
-        from: vi.fn()
-      }
-    }))
-
-    // Import services and supabase after mocking
-    const menuServiceModule = await import('@/services/menuService')
-    drinkCategoriesService = menuServiceModule.drinkCategoriesService
-    drinksService = menuServiceModule.drinksService
-    optionCategoriesService = menuServiceModule.optionCategoriesService
-    optionValuesService = menuServiceModule.optionValuesService
-
-    const supabaseModule = await import('@/lib/supabase')
-    supabase = supabaseModule.supabase
-  })
-
-  afterAll(() => {
-    vi.doUnmock('@/lib/supabase')
-  })
   beforeEach(() => {
     vi.clearAllMocks()
   })
