@@ -10,7 +10,7 @@ CREATE TYPE order_status AS ENUM ('pending', 'completed', 'cancelled');
 
 -- Create drink_categories table
 CREATE TABLE drink_categories (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name TEXT NOT NULL UNIQUE,
   description TEXT,
   display_order INTEGER NOT NULL DEFAULT 0,
@@ -21,7 +21,7 @@ CREATE TABLE drink_categories (
 
 -- Create drinks table
 CREATE TABLE drinks (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name TEXT NOT NULL,
   description TEXT,
   category_id UUID NOT NULL REFERENCES drink_categories(id) ON DELETE RESTRICT,
@@ -34,7 +34,7 @@ CREATE TABLE drinks (
 
 -- Create option_categories table
 CREATE TABLE option_categories (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   name TEXT NOT NULL UNIQUE,
   description TEXT,
   is_required BOOLEAN NOT NULL DEFAULT false,
@@ -45,7 +45,7 @@ CREATE TABLE option_categories (
 
 -- Create option_values table
 CREATE TABLE option_values (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   option_category_id UUID NOT NULL REFERENCES option_categories(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   description TEXT,
@@ -58,7 +58,7 @@ CREATE TABLE option_values (
 
 -- Create drink_options table (links drinks to available option categories)
 CREATE TABLE drink_options (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   drink_id UUID NOT NULL REFERENCES drinks(id) ON DELETE CASCADE,
   option_category_id UUID NOT NULL REFERENCES option_categories(id) ON DELETE CASCADE,
   default_option_value_id UUID REFERENCES option_values(id) ON DELETE SET NULL,
@@ -68,7 +68,7 @@ CREATE TABLE drink_options (
 
 -- Create orders table
 CREATE TABLE orders (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   guest_name TEXT NOT NULL,
   drink_id UUID NOT NULL REFERENCES drinks(id) ON DELETE RESTRICT,
   special_request TEXT,
@@ -80,7 +80,7 @@ CREATE TABLE orders (
 
 -- Create order_options table (stores selected options for each order)
 CREATE TABLE order_options (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   order_id UUID NOT NULL REFERENCES orders(id) ON DELETE CASCADE,
   option_category_id UUID NOT NULL REFERENCES option_categories(id) ON DELETE RESTRICT,
   option_value_id UUID NOT NULL REFERENCES option_values(id) ON DELETE RESTRICT,
@@ -114,7 +114,8 @@ BEGIN
   NEW.updated_at = now();
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SECURITY DEFINER
+SET search_path = public;
 
 CREATE TRIGGER update_drink_categories_updated_at
   BEFORE UPDATE ON drink_categories
@@ -152,7 +153,8 @@ BEGIN
       AND created_at < order_created_at
   );
 END;
-$$ LANGUAGE plpgsql STABLE;
+$$ LANGUAGE plpgsql STABLE SECURITY DEFINER
+SET search_path = public;
 
 -- Enable Row Level Security (RLS)
 ALTER TABLE drink_categories ENABLE ROW LEVEL SECURITY;
@@ -196,6 +198,57 @@ CREATE POLICY "Enable insert for all users" ON order_options
 CREATE POLICY "Enable read access for all users" ON order_options
   FOR SELECT USING (true);
 
+-- Create policies for menu management (insert, update, delete)
+-- Drink categories management policies
+CREATE POLICY "Enable insert for all users" ON drink_categories
+  FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Enable update for all users" ON drink_categories
+  FOR UPDATE USING (true);
+
+CREATE POLICY "Enable delete for all users" ON drink_categories
+  FOR DELETE USING (true);
+
+-- Drinks management policies
+CREATE POLICY "Enable insert for all users" ON drinks
+  FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Enable update for all users" ON drinks
+  FOR UPDATE USING (true);
+
+CREATE POLICY "Enable delete for all users" ON drinks
+  FOR DELETE USING (true);
+
+-- Option categories management policies
+CREATE POLICY "Enable insert for all users" ON option_categories
+  FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Enable update for all users" ON option_categories
+  FOR UPDATE USING (true);
+
+CREATE POLICY "Enable delete for all users" ON option_categories
+  FOR DELETE USING (true);
+
+-- Option values management policies
+CREATE POLICY "Enable insert for all users" ON option_values
+  FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Enable update for all users" ON option_values
+  FOR UPDATE USING (true);
+
+CREATE POLICY "Enable delete for all users" ON option_values
+  FOR DELETE USING (true);
+
+-- Drink options management policies
+CREATE POLICY "Enable insert for all users" ON drink_options
+  FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Enable update for all users" ON drink_options
+  FOR UPDATE USING (true);
+
+CREATE POLICY "Enable delete for all users" ON drink_options
+  FOR DELETE USING (true);
+
 -- Note: In a production environment, you would want more restrictive policies
 -- For example, only authenticated admin users should be able to update order status
 -- and manage the drinks menu. This simplified approach is for development purposes.
@@ -203,7 +256,8 @@ CREATE POLICY "Enable read access for all users" ON order_options
 -- Views for easier querying
 
 -- View to get drinks with their category information
-CREATE VIEW drinks_with_categories AS
+CREATE VIEW drinks_with_categories 
+WITH (security_invoker=true) AS
 SELECT d.id
      , d.name
      , d.description
@@ -219,7 +273,8 @@ WHERE d.is_active = true
 ORDER BY dc.display_order, d.display_order;
 
 -- View to get complete order information
-CREATE VIEW orders_with_details AS
+CREATE VIEW orders_with_details 
+WITH (security_invoker=true) AS
 SELECT o.id
      , o.guest_name
      , o.special_request

@@ -265,6 +265,28 @@ customErrorHandler: (error) => {
 - Test network failures, server errors, and edge cases
 - Verify that error messages are helpful and actionable
 
+## Known Resolved Issues
+
+### Menu Management Edit Errors (Fixed - Aug 23, 2025)
+
+**Issue**: "Cannot coerce the result to a single JSON object" (PGRST116) errors occurred when editing menu management entities.
+
+**Root Cause**: Missing Row Level Security (RLS) UPDATE policies for menu management tables:
+- `drink_categories`
+- `drinks` 
+- `option_categories`
+- `option_values`
+- `drink_options`
+
+**Solution**: Created database migration `20250823120000_add_menu_management_policies.sql` to add required INSERT and UPDATE policies.
+
+**Resolution**: All menu management editing functionality now works correctly:
+- Drink Categories editing
+- Drinks editing
+- Option Categories editing
+
+**Error Handling**: Existing error handling in `menuService.ts` was sufficient and properly handled the errors once the database permissions were fixed.
+
 ## Integration with Existing Code
 
 The enhanced error handling system is designed to integrate seamlessly with existing code:
