@@ -106,7 +106,6 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
   // Calculate statistics
   const stats = {
     pending: orders.filter(o => o.status === 'pending').length,
-    ready: orders.filter(o => o.status === 'ready').length,
     completed: orders.filter(o => o.status === 'completed').length,
     cancelled: orders.filter(o => o.status === 'cancelled').length,
     total: orders.length
@@ -213,7 +212,7 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
         </div>
 
         {/* Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4" data-testid="order-statistics">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4" data-testid="order-statistics">
           <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
             <div className="p-5">
               <div className="flex items-center">
@@ -229,28 +228,6 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
                     </dt>
                     <dd className="text-lg font-medium text-gray-900 dark:text-gray-100">
                       {stats.pending}
-                    </dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
-            <div className="p-5">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
-                    <span className="text-white text-sm">✅</span>
-                  </div>
-                </div>
-                <div className="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
-                      Ready
-                    </dt>
-                    <dd className="text-lg font-medium text-gray-900 dark:text-gray-100">
-                      {stats.ready}
                     </dd>
                   </dl>
                 </div>
@@ -326,7 +303,6 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
               >
                 <option value="all">All Orders</option>
                 <option value="pending">Pending</option>
-                <option value="ready">Ready</option>
                 <option value="completed">Completed</option>
                 <option value="cancelled">Cancelled</option>
               </select>

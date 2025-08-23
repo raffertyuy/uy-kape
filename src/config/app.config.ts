@@ -13,8 +13,6 @@ export const APP_DESCRIPTION = 'Your friend\'s coffee ordering system'
 // Order status display names
 export const ORDER_STATUS_LABELS = {
   pending: 'Pending',
-  preparing: 'Preparing',
-  ready: 'Ready',
   completed: 'Completed',
   cancelled: 'Cancelled',
 } as const

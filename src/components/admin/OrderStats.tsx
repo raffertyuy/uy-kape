@@ -104,7 +104,7 @@ export const OrderStats = ({
     }
   }
 
-  const totalOrders = stats.total_pending + stats.total_ready + stats.total_completed + stats.total_cancelled
+  const totalOrders = stats.total_pending + stats.total_completed + stats.total_cancelled
 
   return (
     <div className={cn('bg-white border border-gray-200 rounded-lg p-4 dark:bg-gray-800 dark:border-gray-700', className)}>
@@ -127,7 +127,7 @@ export const OrderStats = ({
       </div>
 
       {/* Main Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
         {/* Pending Orders */}
         <div className={cn('p-3 rounded-lg', getStatusConfig('pending').bg)}>
           <div className="flex items-center justify-between">
@@ -138,19 +138,6 @@ export const OrderStats = ({
               </p>
             </div>
             <span className="text-2xl" role="img" aria-label="Pending">⏳</span>
-          </div>
-        </div>
-
-        {/* Ready Orders */}
-        <div className={cn('p-3 rounded-lg', getStatusConfig('ready').bg)}>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Ready</p>
-              <p className={cn('text-2xl font-bold', getStatusConfig('ready').color)}>
-                {stats.total_ready}
-              </p>
-            </div>
-            <span className="text-2xl" role="img" aria-label="Ready">✅</span>
           </div>
         </div>
 

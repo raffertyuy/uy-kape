@@ -13,7 +13,6 @@ export interface OrderFilters {
 // Order statistics for dashboard
 export interface OrderStatistics {
   total_pending: number
-  total_ready: number
   total_completed: number
   total_cancelled: number
   average_wait_time: number
@@ -27,7 +26,7 @@ export interface OrderStatistics {
 // Bulk operation types
 export interface BulkOrderOperation {
   order_ids: string[]
-  operation: 'mark_ready' | 'mark_completed' | 'cancel' | 'delete'
+  operation: 'mark_completed' | 'cancel' | 'delete'
 }
 
 // Bulk operation result
@@ -82,7 +81,6 @@ export interface AdminOperationLog {
 export interface NotificationSettings {
   new_order_sound: boolean
   new_order_browser: boolean
-  order_ready_sound: boolean
   volume_level: number
   notification_duration: number
 }

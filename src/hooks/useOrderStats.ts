@@ -146,9 +146,8 @@ export const formatStatistics = (stats: OrderStatistics | null) => {
   if (!stats) return null
 
   return {
-    totalOrders: stats.total_pending + stats.total_ready + stats.total_completed + stats.total_cancelled,
+    totalOrders: stats.total_pending + stats.total_completed + stats.total_cancelled,
     pendingOrders: stats.total_pending,
-    readyOrders: stats.total_ready,
     completedOrders: stats.total_completed,
     cancelledOrders: stats.total_cancelled,
     averageWaitTime: `${stats.average_wait_time} min`,

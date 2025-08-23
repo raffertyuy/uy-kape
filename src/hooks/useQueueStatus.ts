@@ -8,7 +8,7 @@ interface QueueStatusData {
   position: number
   estimatedWaitTime: string
   isReady: boolean
-  orderStatus: 'pending' | 'preparing' | 'ready' | 'completed' | 'cancelled'
+  orderStatus: 'pending' | 'completed' | 'cancelled'
 }
 
 interface UseQueueStatusReturn {
@@ -52,13 +52,13 @@ export function useQueueStatus(orderId: string | null): UseQueueStatusReturn {
       }
       
       const status = orderDetails.status as QueueStatusData['orderStatus']
-      const isReady = status === 'ready'
+      const isReady = status === 'completed'
       
       // Calculate estimated wait time based on position
       const estimatedWaitTime = position > 0 
         ? `${Math.max(1, position * appConfig.waitTimePerOrder)} minutes`
         : isReady 
-        ? 'Ready for pickup!'
+        ? 'Order completed!'
         : 'Preparing your order...'
 
       setQueueStatus({

@@ -5,7 +5,7 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Create custom types
-CREATE TYPE order_status AS ENUM ('pending', 'ready', 'completed', 'cancelled');
+CREATE TYPE order_status AS ENUM ('pending', 'completed', 'cancelled');
 
 -- Create drink_categories table
 CREATE TABLE drink_categories (

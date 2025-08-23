@@ -11,16 +11,6 @@ export const STATUS_CONFIG = {
     darkTextColor: 'dark:text-yellow-400',
     darkBorderColor: 'dark:border-yellow-800'
   },
-  ready: {
-    label: 'Ready',
-    icon: '✅',
-    bgColor: 'bg-green-100',
-    textColor: 'text-green-800',
-    borderColor: 'border-green-200',
-    darkBgColor: 'dark:bg-green-900/20',
-    darkTextColor: 'dark:text-green-400',
-    darkBorderColor: 'dark:border-green-800'
-  },
   completed: {
     label: 'Completed',
     icon: '🎉',
@@ -62,15 +52,13 @@ export const getStatusColorClass = (status: OrderStatus, variant: 'bg' | 'text' 
 
 // Helper function to check if status is actionable
 export const isStatusActionable = (status: OrderStatus): boolean => {
-  return status === 'pending' || status === 'ready'
+  return status === 'pending'
 }
 
 // Helper function to get next possible statuses
 export const getNextStatuses = (currentStatus: OrderStatus): OrderStatus[] => {
   switch (currentStatus) {
     case 'pending':
-      return ['ready', 'cancelled']
-    case 'ready':
       return ['completed', 'cancelled']
     case 'completed':
     case 'cancelled':

@@ -293,9 +293,6 @@ export const adminOrderService = {
     for (const orderId of operation.order_ids) {
       try {
         switch (operation.operation) {
-          case 'mark_ready':
-            await adminOrderService.updateOrderStatus(orderId, 'ready')
-            break
           case 'mark_completed':
             await adminOrderService.updateOrderStatus(orderId, 'completed')
             break
@@ -376,7 +373,6 @@ export const adminOrderService = {
       if (!orders) {
         return {
           total_pending: 0,
-          total_ready: 0,
           total_completed: 0,
           total_cancelled: 0,
           average_wait_time: 0,
@@ -388,7 +384,6 @@ export const adminOrderService = {
       // Calculate statistics
       const stats = {
         total_pending: orders.filter(o => o.status === 'pending').length,
-        total_ready: orders.filter(o => o.status === 'ready').length,
         total_completed: orders.filter(o => o.status === 'completed').length,
         total_cancelled: orders.filter(o => o.status === 'cancelled').length,
         average_wait_time: (() => {

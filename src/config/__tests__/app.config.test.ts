@@ -56,8 +56,6 @@ describe('App Configuration', () => {
     it('should export correct ORDER_STATUS_LABELS', () => {
       expect(ORDER_STATUS_LABELS).toEqual({
         pending: 'Pending',
-        preparing: 'Preparing',
-        ready: 'Ready',
         completed: 'Completed',
         cancelled: 'Cancelled',
       })
@@ -69,7 +67,7 @@ describe('App Configuration', () => {
     })
 
     it('should have all required order status labels', () => {
-      const expectedStatuses = ['pending', 'preparing', 'ready', 'completed', 'cancelled']
+      const expectedStatuses = ['pending', 'completed', 'cancelled']
       expectedStatuses.forEach(status => {
         expect(ORDER_STATUS_LABELS).toHaveProperty(status)
       })
