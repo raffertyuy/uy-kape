@@ -3,14 +3,12 @@
 ```text
 uy-kape/
 ├── .github/               # GitHub configs, workflows, AI instructions
-├── .env                   # Local (ignored) env vars
 ├── .env.example           # Template env vars
 ├── CODE_OF_CONDUCT.md     # Community guidelines
 ├── CONTRIBUTING.md        # Contribution workflow
 ├── eslint.config.js       # ESLint configuration
 ├── index.html             # Vite HTML entry
 ├── LICENSE                # OSS license
-├── log.local.txt          # Local application logs
 ├── package.json           # Dependencies & scripts
 ├── package-lock.json      # Locked dependency graph
 ├── playwright.config.ts   # Playwright configuration
@@ -52,8 +50,13 @@ uy-kape/
 │   └── utils/             # Utility functions
 ├── supabase/              # Supabase project (config, migrations, seed)
 └── tests/                 # All test-related files and outputs
-    ├── config/            # Test configuration files
+    ├── config/            # Centralized test configuration files (Vitest, Playwright)
     ├── e2e/               # End-to-end tests (Playwright) organized by domain
+    │   ├── admin/         # Admin-specific E2E tests
+    │   ├── fixtures/      # Test fixtures and mock data
+    │   ├── guest/         # Guest user flow E2E tests
+    │   ├── system/        # System-level E2E tests
+    │   └── utils/         # E2E testing utilities and helpers
     └── outputs/           # Test execution outputs and reports
 ```
 
@@ -61,12 +64,12 @@ uy-kape/
 
 1. Source of Truth (Database): Always introduce schema changes via a new timestamped file in `supabase/migrations/` (never retro‑edit existing migrations). The old `database/` folder is historical.
 2. Seeding: Prefer `supabase/seed.sql`. The legacy `database/seed.sql` should not be extended further.
-3. Testing Layout: Unit tests colocated in `__tests__` directories inside feature folders (components, hooks, services, pages, types, utils). Global setup in `src/setupTests.ts`. All test configurations are organized under `tests/config/`, E2E tests are organized by domain in `tests/e2e/` (admin/, guest/, system/), and shared outputs in `tests/outputs/`.
+3. Testing Layout: Unit tests colocated in `__tests__` directories inside feature folders (components, hooks, services, pages, types, utils) following React.js industry best practices. Global setup in `src/setupTests.ts`. All test configurations are centralized under `tests/config/` including shared Vitest and Playwright configurations. E2E tests are organized by domain in `tests/e2e/` with subdirectories for admin/, guest/, and system/ flows. Test outputs, reports, and artifacts are consolidated in `tests/outputs/`.
 4. Environment Variables: Keep secrets local (`.env` not committed). Update `.env.example` when new required variables are introduced.
 5. Styling: Tailwind first; add component‑level overrides sparingly. Central theme config lives in `tailwind.config.js`.
 6. Real‑Time Features: Supabase channels & presence are encapsulated in hooks (`useMenuSubscriptions`) and service abstractions; UI surfaces connection via components like `RealtimeIndicator`.
 7. Logo Integration: The reusable Logo component (`src/components/ui/Logo.tsx`) provides consistent branding across the application with responsive sizing variants (xs, sm, md, lg, xl, hero) and accessibility features.
-8. E2E Testing: End-to-end tests are organized in `tests/e2e/` with domain-specific subdirectories (admin/, guest/, system/) for better organization. Shared test configurations are in `tests/config/` and outputs in `tests/outputs/`. Test scripts are available in `package.json` (`test:e2e`, `test:e2e:headed`, `test:e2e:debug`).
+8. E2E Testing: End-to-end tests are organized in `tests/e2e/` with domain-specific subdirectories (admin/, guest/, system/) for better organization and maintainability. Centralized test configurations are located in `tests/config/` with shared Vitest and Playwright setup files. All test execution outputs, reports, and artifacts are consolidated in `tests/outputs/`. Test scripts are available in `package.json` (`test:e2e`, `test:e2e:headed`, `test:e2e:debug`).
 9. AI Assistant Context: The `.github/instructions/` directory contains augmentation rules leveraged by automated agents—keep these synchronized with code changes that alter public contracts.
 10. Build Artifacts: `dist/` is disposable; never commit manual edits there.
 11. Scripts: Keep cross‑platform operational scripts idempotent. For new scripts, provide Windows (`.ps1`) and POSIX (`.sh`) variants when feasible.
@@ -88,6 +91,10 @@ When adding a feature (example: inventory tracking):
 10. Env: Amend `.env.example` if new variables are needed.
 
 ## Change Log (File Structure)
+
+- 2025-08-23: Updated ESLint configuration to include `src/lib/**/*.ts` files in the utility files override rules, resolving lint warnings for library files like Supabase client configuration. Removed system-generated files (`.env`, `log.local.txt`) from file structure documentation per exclusion rules while maintaining focus on major project files and directories.
+
+- 2025-08-23: Implemented comprehensive test structure reorganization following React.js industry best practices: centralized all test configurations in `tests/config/` directory with shared Vitest and Playwright configuration files, enhanced E2E test organization with domain-specific subdirectories (`tests/e2e/admin/`, `tests/e2e/guest/`, `tests/e2e/system/`) and added supporting infrastructure including `tests/e2e/fixtures/` for test data and `tests/e2e/utils/` for shared E2E utilities. Created validation tooling with `tests/config/validate-structure.ts` CLI script to ensure test structure compliance. All test outputs and reports are now consolidated in `tests/outputs/` directory. Updated root-level configuration files (`vitest.config.ts`, `playwright.config.ts`) to reference centralized configurations, ensuring consistent test execution across all environments.
 
 - 2025-08-23: Updated file structure documentation to comply with exclusion rules: removed system-generated files (`.git/`, `.gitignore`, `.vscode/`, `node_modules/`, `dist/`, `.vite/`, `.playwright-mcp/`) per gitignore and temporary file exclusions, reorganized root-level files in alphabetical order for better readability, simplified test structure documentation to show only the main organizational folders without excessive subdirectory detail, and maintained focus on major files and directories that are important for project understanding and documentation purposes.
 

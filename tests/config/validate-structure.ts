@@ -251,7 +251,11 @@ class TestValidator {
     message: string,
     details?: string,
   ): void {
-    this.results.push({ name, passed, message, details });
+    const result: TestResult = { name, passed, message };
+    if (details !== undefined) {
+      result.details = details;
+    }
+    this.results.push(result);
     const icon = passed ? "✅" : "❌";
     console.log(`  ${icon} ${name}: ${message}`);
     if (details && !passed) {
