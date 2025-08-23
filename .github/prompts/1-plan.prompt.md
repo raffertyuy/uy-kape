@@ -81,4 +81,5 @@ PLAN HERE
 
 ### 4. FINALLY:
 
+- Make sure the plan document ends with a new line (for markdown linting compliance).
 - DO NOT start implementation without my permission.
