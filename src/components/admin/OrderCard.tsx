@@ -40,13 +40,19 @@ export const OrderCard = ({
   }
 
   const handleClick = () => {
-    onSelect?.(order.id, !isSelected)
+    // Only allow selection for pending orders
+    if (order.status === 'pending') {
+      onSelect?.(order.id, !isSelected)
+    }
   }
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault()
-      handleClick()
+      // Only allow selection for pending orders
+      if (order.status === 'pending') {
+        handleClick()
+      }
     }
   }
 
@@ -62,16 +68,16 @@ export const OrderCard = ({
         compact ? 'p-3' : 'p-4',
         className
       )}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      tabIndex={0}
-      role="button"
-      aria-label={`Select order for ${order.guest_name}`}
+      onClick={order.status === 'pending' ? handleClick : undefined}
+      onKeyDown={order.status === 'pending' ? handleKeyDown : undefined}
+      tabIndex={order.status === 'pending' ? 0 : undefined}
+      role={order.status === 'pending' ? "button" : undefined}
+      aria-label={order.status === 'pending' ? `Select order for ${order.guest_name}` : undefined}
     >
       {/* Header with selection and status */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center space-x-3">
-          {onSelect && (
+          {onSelect && order.status === 'pending' && (
             <input
               type="checkbox"
               checked={isSelected}
