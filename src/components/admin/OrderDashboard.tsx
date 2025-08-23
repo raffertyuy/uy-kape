@@ -139,13 +139,13 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0" data-testid="dashboard-controls">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            <h1 className="text-2xl font-bold text-gray-900">
               Order Dashboard
             </h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-gray-600">
               {filteredOrders.length} order{filteredOrders.length !== 1 ? 's' : ''}
               {selectedOrders.length > 0 && (
-                <span className="ml-2 text-coffee-600 dark:text-coffee-400">
+                <span className="ml-2 text-coffee-600">
                   • {selectedOrders.length} selected
                 </span>
               )}
@@ -156,14 +156,14 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
             {/* Connection Status */}
             <div className="flex items-center space-x-2" data-testid="connection-status">
               <div className="w-2 h-2 bg-green-500 rounded-full" />
-              <span className="text-sm text-gray-600 dark:text-gray-400">Connected</span>
+              <span className="text-sm text-gray-600">Connected</span>
             </div>
 
             {/* Show Completed Toggle */}
             <div className="flex items-center space-x-2">
               <label 
                 htmlFor="show-completed-toggle" 
-                className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                className="text-sm font-medium text-gray-700"
               >
                 Show Completed
               </label>
@@ -171,7 +171,7 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
                 id="show-completed-toggle"
                 onClick={() => setShowCompleted(!showCompleted)}
                 className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:ring-offset-2 ${
-                  showCompleted ? 'bg-coffee-600' : 'bg-gray-200 dark:bg-gray-600'
+                  showCompleted ? 'bg-coffee-600' : 'bg-gray-200'
                 }`}
                 role="switch"
                 aria-checked={showCompleted}
@@ -189,7 +189,7 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
             {stats.pending > 0 && (
               <button
                 onClick={handleClearAllPending}
-                className="inline-flex items-center px-3 py-2 border border-red-300 shadow-sm text-sm leading-4 font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 dark:bg-gray-700 dark:text-red-300 dark:border-red-600 dark:hover:bg-red-900/20"
+                className="inline-flex items-center px-3 py-2 border border-red-300 shadow-sm text-sm leading-4 font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
               >
                 <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -201,7 +201,7 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
             {/* Refresh Button */}
             <button
               onClick={refetch}
-              className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-coffee-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+              className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-coffee-500"
             >
               <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -213,7 +213,7 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
 
         {/* Statistics */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4" data-testid="order-statistics">
-          <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+          <div className="bg-white overflow-hidden shadow rounded-lg">
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
@@ -223,10 +223,10 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+                    <dt className="text-sm font-medium text-gray-500 truncate">
                       Pending
                     </dt>
-                    <dd className="text-lg font-medium text-gray-900 dark:text-gray-100">
+                    <dd className="text-lg font-medium text-gray-900">
                       {stats.pending}
                     </dd>
                   </dl>
@@ -235,7 +235,7 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+          <div className="bg-white overflow-hidden shadow rounded-lg">
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
@@ -245,10 +245,10 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+                    <dt className="text-sm font-medium text-gray-500 truncate">
                       Completed
                     </dt>
-                    <dd className="text-lg font-medium text-gray-900 dark:text-gray-100">
+                    <dd className="text-lg font-medium text-gray-900">
                       {stats.completed}
                     </dd>
                   </dl>
@@ -257,7 +257,7 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+          <div className="bg-white overflow-hidden shadow rounded-lg">
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
@@ -267,10 +267,10 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">
+                    <dt className="text-sm font-medium text-gray-500 truncate">
                       Total
                     </dt>
-                    <dd className="text-lg font-medium text-gray-900 dark:text-gray-100">
+                    <dd className="text-lg font-medium text-gray-900">
                       {stats.total}
                     </dd>
                   </dl>
@@ -281,7 +281,7 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
         </div>
 
         {/* Filters */}
-        <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-4" data-testid="order-filters">
+        <div className="bg-white shadow rounded-lg p-4" data-testid="order-filters">
           <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
             {/* Search */}
             <div className="flex-1">
@@ -290,7 +290,7 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
                 placeholder="Search orders by guest name or order ID..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 text-gray-900 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:placeholder-gray-400"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 text-gray-900 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500"
               />
             </div>
 
@@ -299,7 +299,7 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value as OrderStatus | 'all')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white text-gray-900 focus:outline-none focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md leading-5 bg-white text-gray-900 focus:outline-none focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500"
               >
                 <option value="all">All Orders</option>
                 <option value="pending">Pending</option>
@@ -311,15 +311,15 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
         </div>
 
         {/* Order List */}
-        <div className="bg-white dark:bg-gray-800 shadow rounded-lg" data-testid="order-list">
+        <div className="bg-white shadow rounded-lg" data-testid="order-list">
           <div className="px-4 py-5 sm:p-6">
             {filteredOrders.length === 0 ? (
               <div className="text-center py-12" data-testid="empty-orders">
                 <div className="text-6xl mb-4">📦</div>
-                <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
+                <h3 className="text-lg font-medium text-gray-900 mb-2">
                   {searchTerm || statusFilter !== 'all' ? 'No orders match your filters' : 'No orders found'}
                 </h3>
-                <p className="text-gray-500 dark:text-gray-400">
+                <p className="text-gray-500">
                   {searchTerm || statusFilter !== 'all' 
                     ? 'Try adjusting your search or filters'
                     : 'Orders will appear here when they are placed'
@@ -347,17 +347,17 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
 
         {/* Error Display */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 dark:bg-red-900/20 dark:border-red-800">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
             <div className="flex items-center">
               <svg className="h-5 w-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <p className="text-sm text-red-700 dark:text-red-300">
+              <p className="text-sm text-red-700">
                 {error}
               </p>
               <button
                 onClick={refetch}
-                className="ml-auto text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-200"
+                className="ml-auto text-red-600 hover:text-red-800"
               >
                 Retry
               </button>
@@ -368,11 +368,11 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
         {/* Clear All Pending Orders Confirmation Modal */}
         {showClearConfirm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md">
               <div className="flex items-center mb-4">
-                <div className="w-10 h-10 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mr-3">
+                <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center mr-3">
                   <svg
-                    className="w-6 h-6 text-red-600 dark:text-red-400"
+                    className="w-6 h-6 text-red-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -387,12 +387,12 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Clear All Pending Orders</h3>
-                  <p className="text-gray-600 dark:text-gray-400">This action cannot be undone.</p>
+                  <h3 className="text-lg font-semibold text-gray-900">Clear All Pending Orders</h3>
+                  <p className="text-gray-600">This action cannot be undone.</p>
                 </div>
               </div>
               
-              <p className="text-gray-700 dark:text-gray-300 mb-6">
+              <p className="text-gray-700 mb-6">
                 Are you sure you want to cancel all {stats.pending} pending order{stats.pending !== 1 ? 's' : ''}? 
                 This will set all pending orders to "cancelled" status and cannot be reversed.
               </p>
@@ -400,8 +400,8 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
               <div className="flex space-x-3">
                 <button
                   onClick={handleCancelClearAll}
-                  className="flex-1 px-4 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md 
-                           hover:bg-gray-200 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 
+                  className="flex-1 px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-md 
+                           hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 
                            focus:ring-offset-2 transition-colors duration-200"
                 >
                   Cancel

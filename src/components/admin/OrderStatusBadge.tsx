@@ -46,7 +46,7 @@ export const OrderStatusBadge = ({
       <span className={cn(
         'inline-flex items-center rounded-full border',
         'bg-gray-100 text-gray-800 border-gray-200',
-        'dark:bg-gray-900/20 dark:text-gray-400 dark:border-gray-800',
+        '',
         sizeConfig.padding,
         sizeConfig.text,
         className
@@ -63,9 +63,6 @@ export const OrderStatusBadge = ({
         statusConfig.bgColor,
         statusConfig.textColor,
         statusConfig.borderColor,
-        statusConfig.darkBgColor,
-        statusConfig.darkTextColor,
-        statusConfig.darkBorderColor,
         sizeConfig.padding,
         sizeConfig.text,
         className

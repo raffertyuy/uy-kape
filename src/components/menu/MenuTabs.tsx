@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 
 export type MenuTab = 'categories' | 'drinks' | 'options'
 
@@ -17,6 +17,75 @@ export const MenuTabs: React.FC<MenuTabsProps> = ({
   drinksCount,
   optionCategoriesCount
 }) => {
+  const scrollContainerRef = useRef<HTMLElement>(null)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const activeTabRef = useRef<any>(null)
+
+  // Scroll active tab into view when it changes
+  useEffect(() => {
+    if (activeTabRef.current && scrollContainerRef.current) {
+      const container = scrollContainerRef.current
+      const activeButton = activeTabRef.current
+      
+      // Check if the active tab is fully visible
+      try {
+        const containerRect = container.getBoundingClientRect()
+        const buttonRect = activeButton.getBoundingClientRect()
+        
+        // Ensure we have valid rect objects (for test environments)
+        if (!containerRect || !buttonRect || 
+            typeof containerRect.left === 'undefined' || 
+            typeof buttonRect.left === 'undefined') {
+          return
+        }
+        
+        const isVisible = 
+          buttonRect.left >= containerRect.left && 
+          buttonRect.right <= containerRect.right
+        
+        if (!isVisible) {
+          activeButton.scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'center'
+          })
+        }
+      } catch (error) {
+        // Handle test environment or browser compatibility issues
+        // Silent fail in production, this is for browser measurement only
+      }
+    }
+  }, [activeTab])
+
+  // Handle keyboard navigation
+  const handleKeyDown = (event: React.KeyboardEvent, currentTab: MenuTab) => {
+    let nextTab: MenuTab | null = null
+    
+    switch (event.key) {
+      case 'ArrowLeft':
+        if (currentTab === 'drinks') nextTab = 'categories'
+        else if (currentTab === 'options') nextTab = 'drinks'
+        break
+      case 'ArrowRight':
+        if (currentTab === 'categories') nextTab = 'drinks'
+        else if (currentTab === 'drinks') nextTab = 'options'
+        break
+      case 'Home':
+        nextTab = 'categories'
+        break
+      case 'End':
+        nextTab = 'options'
+        break
+      default:
+        return
+    }
+    
+    if (nextTab) {
+      event.preventDefault()
+      onTabChange(nextTab)
+    }
+  }
+
   const tabs = [
     {
       id: 'categories' as MenuTab,
@@ -52,12 +121,20 @@ export const MenuTabs: React.FC<MenuTabsProps> = ({
 
   return (
     <div className="border-b border-coffee-200">
-      <nav className="-mb-px flex space-x-8" aria-label="Menu management tabs" role="tablist">
+      <nav 
+        ref={scrollContainerRef}
+        className="-mb-px flex space-x-4 sm:space-x-8 overflow-x-auto scroll-smooth" 
+        aria-label="Menu management tabs" 
+        role="tablist"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
         {tabs.map((tab) => (
           <button
             key={tab.id}
+            ref={activeTab === tab.id ? activeTabRef : null}
             onClick={() => onTabChange(tab.id)}
-            className={`py-4 px-1 flex items-center space-x-2 border-b-2 font-medium text-sm transition-colors duration-200 ${
+            onKeyDown={(e) => handleKeyDown(e, tab.id)}
+            className={`py-4 px-1 flex items-center space-x-2 border-b-2 font-medium text-sm transition-colors duration-200 whitespace-nowrap flex-shrink-0 ${
               activeTab === tab.id
                 ? 'border-coffee-500 text-coffee-600'
                 : 'border-transparent text-coffee-500 hover:text-coffee-700 hover:border-coffee-300'

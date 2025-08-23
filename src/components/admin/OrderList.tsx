@@ -77,14 +77,14 @@ export const OrderList = ({
       <div className={cn(
         'flex flex-col items-center justify-center p-8 text-center',
         'bg-white rounded-lg border border-red-200 shadow-sm',
-        'dark:bg-gray-800 dark:border-red-800',
+        '',
         className
       )}>
         <div className="text-4xl mb-4">⚠️</div>
-        <h3 className="text-lg font-semibold text-red-800 dark:text-red-400 mb-2">
+        <h3 className="text-lg font-semibold text-red-800 mb-2">
           Error Loading Orders
         </h3>
-        <p className="text-red-600 dark:text-red-500 text-sm">
+        <p className="text-red-600 text-sm">
           {error.message}
         </p>
       </div>
@@ -108,14 +108,14 @@ export const OrderList = ({
       <div className={cn(
         'flex flex-col items-center justify-center p-12 text-center',
         'bg-white rounded-lg border border-gray-200 shadow-sm',
-        'dark:bg-gray-800 dark:border-gray-700',
+        '',
         className
       )}>
         <div className="text-6xl mb-4">{emptyIcon}</div>
-        <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+        <h3 className="text-lg font-semibold text-gray-800 mb-2">
           {emptyMessage}
         </h3>
-        <p className="text-gray-600 dark:text-gray-400 text-sm">
+        <p className="text-gray-600 text-sm">
           Orders will appear here when they are placed.
         </p>
       </div>
@@ -126,7 +126,7 @@ export const OrderList = ({
     <div className={cn('space-y-4', className)}>
       {/* Header with sorting and bulk selection */}
       {(showSelection || orders.length > 1) && (
-        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200 dark:bg-gray-900 dark:border-gray-700">
+        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-200 ">
           <div className="flex items-center space-x-4">
             {showSelection && (
               <label className="flex items-center space-x-2">
@@ -140,7 +140,7 @@ export const OrderList = ({
                   className="rounded border-gray-300 text-coffee-600 focus:ring-coffee-500"
                   aria-label="Select all orders"
                 />
-                <span className="text-sm text-gray-700 dark:text-gray-300">
+                <span className="text-sm text-gray-700 ">
                   {selectedOrders.length > 0 
                     ? `${selectedOrders.length} selected`
                     : 'Select all'
@@ -149,14 +149,14 @@ export const OrderList = ({
               </label>
             )}
             
-            <div className="text-sm text-gray-600 dark:text-gray-400">
+            <div className="text-sm text-gray-600 ">
               {orders.length} order{orders.length !== 1 ? 's' : ''}
             </div>
           </div>
 
           {/* Sort controls */}
           <div className="flex items-center space-x-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Sort by:</span>
+            <span className="text-sm text-gray-600 ">Sort by:</span>
             <select
               value={`${sortBy}-${sortOrder}`}
               onChange={(e) => {
@@ -164,7 +164,7 @@ export const OrderList = ({
                 setSortBy(field)
                 setSortOrder(order)
               }}
-              className="text-sm border border-gray-300 rounded-md px-2 py-1 bg-white dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200"
+              className="text-sm border border-gray-300 rounded-md px-2 py-1 bg-white "
             >
               <option value="queue_number-asc">Queue Position (Low to High)</option>
               <option value="queue_number-desc">Queue Position (High to Low)</option>

@@ -5,4 +5,4 @@ Check the implementation plan as there are still steps that are not marked as co
 
 Continue iterating until all steps are complete.
 
-**DO NOT FORGET** to update the plan and mark the steps as complete as you go.
+**DO NOT FORGET** to update the plan and mark the steps as complete and add a note/summary of what you did (in the plan document) before proceeding to the next step.
