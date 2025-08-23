@@ -56,8 +56,9 @@ PLAN HERE
     - `path/to/file1.ts`: [Description of changes], [Pseudocode for implementation]
   - **Dependencies**: [Dependencies for step]
   - **Additional Instructions**:
+    - Before proceeding with this step, check the conversation history and see if you already completed this step.
     - You do not need to follow this step strictly, consider the output of the previous step and adjust this step as needed.
-    - If you are running the app, check if it is already running before attempting to do so. The app runs locally on port 5137 by default. If this port is in use, that means the app is already running and you do not need to run the app anymore. Think and assess if you need to kill/restart the process as needed.
+    - If you are running the app, check if it is already running before attempting to do so. The app runs locally on port 5173 by default. If this port is in use, that means the app is already running and you do not need to run the app anymore. Think and assess if you need to kill/restart the process as needed.
     - If you are running any CLI command, check if if the existing terminal is ready to accept new commands first.
       - For example, it might be running a foreground process and is not ready. In this situation, launch a new terminal to run the CLI command.
     - If you are running any CLI command, run as a background process as much as possible.
