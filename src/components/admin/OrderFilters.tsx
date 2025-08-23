@@ -64,7 +64,7 @@ export const OrderFilters = ({
   const presetRanges = getPresetDateRanges()
 
   return (
-    <div className={cn('bg-white p-4 rounded-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700', className)}>
+    <div className={cn('bg-white p-4 rounded-lg border border-gray-200 ', className)}>
       {/* Search and Quick Filters */}
       <div className="flex flex-col sm:flex-row gap-4 mb-4">
         {/* Search Input */}
@@ -84,7 +84,7 @@ export const OrderFilters = ({
               value={searchTerm}
               onChange={(e) => onSearchUpdate(e.target.value)}
               placeholder="Search by guest name..."
-              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 text-gray-900 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:placeholder-gray-400"
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 text-gray-900 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500 "
             />
           </div>
         </div>
@@ -98,7 +98,7 @@ export const OrderFilters = ({
             id="status-filter"
             value={filters.status || 'all'}
             onChange={(e) => onFilterUpdate({ status: e.target.value as OrderStatus | 'all' })}
-            className="block w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+            className="block w-full px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500 "
           >
             {statusOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -115,8 +115,8 @@ export const OrderFilters = ({
             'px-4 py-2 text-sm font-medium rounded-md border transition-colors',
             'focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:ring-offset-1',
             showAdvanced
-              ? 'bg-coffee-100 text-coffee-700 border-coffee-300 dark:bg-coffee-900 dark:text-coffee-300 dark:border-coffee-700'
-              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600'
+              ? 'bg-coffee-100 text-coffee-700 border-coffee-300 '
+              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 '
           )}
         >
           Advanced {showAdvanced ? '▼' : '▶'}
@@ -126,7 +126,7 @@ export const OrderFilters = ({
         {activeFilterCount > 0 && (
           <button
             onClick={onClearFilters}
-            className="px-4 py-2 text-sm font-medium text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+            className="px-4 py-2 text-sm font-medium text-red-600 hover:text-red-700 "
           >
             Clear ({activeFilterCount})
           </button>
@@ -135,11 +135,11 @@ export const OrderFilters = ({
 
       {/* Advanced Filters */}
       {showAdvanced && (
-        <div className="border-t border-gray-200 pt-4 dark:border-gray-700">
+        <div className="border-t border-gray-200 pt-4 ">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* Date Range */}
             <div>
-              <label htmlFor="date-range-inputs" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label htmlFor="date-range-inputs" className="block text-sm font-medium text-gray-700 mb-2">
                 Date Range
               </label>
               <div id="date-range-inputs" className="space-y-2">
@@ -152,7 +152,7 @@ export const OrderFilters = ({
                         date_from: range.from,
                         date_to: range.to
                       })}
-                      className="px-3 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                      className="px-3 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 "
                     >
                       {range.label}
                     </button>
@@ -168,7 +168,7 @@ export const OrderFilters = ({
                       type="date"
                       value={filters.date_from || ''}
                       onChange={(e) => onFilterUpdate({ date_from: e.target.value })}
-                      className="block w-full px-3 py-1 text-sm border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+                      className="block w-full px-3 py-1 text-sm border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500 "
                     />
                   </div>
                   <div>
@@ -178,7 +178,7 @@ export const OrderFilters = ({
                       type="date"
                       value={filters.date_to || ''}
                       onChange={(e) => onFilterUpdate({ date_to: e.target.value })}
-                      className="block w-full px-3 py-1 text-sm border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+                      className="block w-full px-3 py-1 text-sm border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500 "
                     />
                   </div>
                 </div>
@@ -187,7 +187,7 @@ export const OrderFilters = ({
 
             {/* Queue Position Range */}
             <div>
-              <label htmlFor="queue-position-inputs" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label htmlFor="queue-position-inputs" className="block text-sm font-medium text-gray-700 mb-2">
                 Queue Position
               </label>
               <div id="queue-position-inputs" className="flex space-x-2">
@@ -207,7 +207,7 @@ export const OrderFilters = ({
                         onFilterUpdate(rest)
                       }
                     }}
-                    className="block w-full px-3 py-1 text-sm border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+                    className="block w-full px-3 py-1 text-sm border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500 "
                   />
                 </div>
                 <div>
@@ -226,7 +226,7 @@ export const OrderFilters = ({
                         onFilterUpdate(rest)
                       }
                     }}
-                    className="block w-full px-3 py-1 text-sm border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+                    className="block w-full px-3 py-1 text-sm border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500 "
                   />
                 </div>
               </div>
@@ -234,7 +234,7 @@ export const OrderFilters = ({
 
             {/* Guest Name Filter */}
             <div>
-              <label htmlFor="guest-filter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label htmlFor="guest-filter" className="block text-sm font-medium text-gray-700 mb-2">
                 Guest Name
               </label>
               <input
@@ -243,7 +243,7 @@ export const OrderFilters = ({
                 placeholder="Filter by guest name..."
                 value={filters.guest_name || ''}
                 onChange={(e) => onFilterUpdate({ guest_name: e.target.value })}
-                className="block w-full px-3 py-1 text-sm border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+                className="block w-full px-3 py-1 text-sm border border-gray-300 rounded-md bg-white text-gray-900 focus:outline-none focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500 "
               />
             </div>
           </div>
@@ -252,46 +252,46 @@ export const OrderFilters = ({
 
       {/* Active Filters Summary */}
       {activeFilterCount > 0 && (
-        <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <div className="mt-4 pt-4 border-t border-gray-200 ">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-600 dark:text-gray-400">
+            <span className="text-sm text-gray-600 ">
               {activeFilterCount} filter{activeFilterCount !== 1 ? 's' : ''} applied
             </span>
             <div className="flex flex-wrap gap-2">
               {filters.status && filters.status !== 'all' && (
-                <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-md dark:bg-blue-900 dark:text-blue-200">
+                <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-md ">
                   Status: {filters.status}
                   <button
                     onClick={() => onFilterUpdate({ status: 'all' })}
-                    className="ml-1 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
+                    className="ml-1 text-blue-600 hover:text-blue-800 "
                   >
                     ×
                   </button>
                 </span>
               )}
               {filters.date_from && (
-                <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-md dark:bg-green-900 dark:text-green-200">
+                <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-md ">
                   From: {filters.date_from}
                   <button
                     onClick={() => {
                       const { date_from, ...rest } = filters
                       onFilterUpdate(rest)
                     }}
-                    className="ml-1 text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-200"
+                    className="ml-1 text-green-600 hover:text-green-800 "
                   >
                     ×
                   </button>
                 </span>
               )}
               {filters.date_to && (
-                <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-md dark:bg-green-900 dark:text-green-200">
+                <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-md ">
                   To: {filters.date_to}
                   <button
                     onClick={() => {
                       const { date_to, ...rest } = filters
                       onFilterUpdate(rest)
                     }}
-                    className="ml-1 text-green-600 hover:text-green-800 dark:text-green-400 dark:hover:text-green-200"
+                    className="ml-1 text-green-600 hover:text-green-800 "
                   >
                     ×
                   </button>

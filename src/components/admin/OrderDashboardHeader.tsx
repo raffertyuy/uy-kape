@@ -26,18 +26,18 @@ export const OrderDashboardHeader = ({
   className
 }: OrderDashboardHeaderProps) => {
   return (
-    <div className={cn('bg-white border-b border-gray-200 px-4 py-4 dark:bg-gray-800 dark:border-gray-700', className)}>
+    <div className={cn('bg-white border-b border-gray-200 px-4 py-4 ', className)}>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
         {/* Title and Order Count */}
         <div className="flex items-center space-x-4">
           <div>
-            <h1 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+            <h1 className="text-xl font-semibold text-gray-900 ">
               Order Dashboard
             </h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-gray-600 ">
               {totalOrders} order{totalOrders !== 1 ? 's' : ''}
               {selectedCount > 0 && (
-                <span className="ml-2 text-coffee-600 dark:text-coffee-400">
+                <span className="ml-2 text-coffee-600 ">
                   • {selectedCount} selected
                 </span>
               )}
@@ -51,7 +51,7 @@ export const OrderDashboardHeader = ({
           <div className="flex items-center space-x-2">
             <label
               htmlFor="show-completed"
-              className="text-sm font-medium text-gray-700 dark:text-gray-300"
+              className="text-sm font-medium text-gray-700 "
             >
               Show Completed
             </label>
@@ -62,7 +62,7 @@ export const OrderDashboardHeader = ({
                 'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:ring-offset-2',
                 showCompleted
                   ? 'bg-coffee-600'
-                  : 'bg-gray-200 dark:bg-gray-600'
+                  : 'bg-gray-200 '
               )}
               role="switch"
               aria-checked={showCompleted}
@@ -78,14 +78,14 @@ export const OrderDashboardHeader = ({
           </div>
 
           {/* View Mode Toggle */}
-          <div className="flex items-center bg-gray-100 rounded-lg p-1 dark:bg-gray-700">
+          <div className="flex items-center bg-gray-100 rounded-lg p-1 ">
             <button
               onClick={() => onViewModeChange('list')}
               className={cn(
                 'px-3 py-1 text-sm font-medium rounded-md transition-colors',
                 viewMode === 'list'
-                  ? 'bg-white text-coffee-600 shadow-sm dark:bg-gray-600 dark:text-coffee-400'
-                  : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200'
+                  ? 'bg-white text-coffee-600 shadow-sm '
+                  : 'text-gray-600 hover:text-gray-900 '
               )}
               aria-label="List view"
             >
@@ -98,8 +98,8 @@ export const OrderDashboardHeader = ({
               className={cn(
                 'px-3 py-1 text-sm font-medium rounded-md transition-colors',
                 viewMode === 'grid'
-                  ? 'bg-white text-coffee-600 shadow-sm dark:bg-gray-600 dark:text-coffee-400'
-                  : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200'
+                  ? 'bg-white text-coffee-600 shadow-sm '
+                  : 'text-gray-600 hover:text-gray-900 '
               )}
               aria-label="Grid view"
             >
@@ -112,7 +112,7 @@ export const OrderDashboardHeader = ({
           {/* Refresh Button */}
           <button
             onClick={onRefresh}
-            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-coffee-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+            className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-coffee-500 "
             aria-label="Refresh orders"
           >
             <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -124,7 +124,7 @@ export const OrderDashboardHeader = ({
           {/* Settings/Options Menu */}
           <div className="relative">
             <button
-              className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-coffee-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600"
+              className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-coffee-500 "
               aria-label="Dashboard options"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -137,15 +137,15 @@ export const OrderDashboardHeader = ({
 
       {/* Quick Actions Bar - Only shown when orders are selected */}
       {selectedCount > 0 && (
-        <div className="mt-4 p-3 bg-coffee-50 border border-coffee-200 rounded-lg dark:bg-coffee-900/20 dark:border-coffee-800">
+        <div className="mt-4 p-3 bg-coffee-50 border border-coffee-200 rounded-lg ">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium text-coffee-700 dark:text-coffee-300">
+              <span className="text-sm font-medium text-coffee-700 ">
                 {selectedCount} order{selectedCount !== 1 ? 's' : ''} selected
               </span>
             </div>
             
-            <div className="text-sm text-coffee-600 dark:text-coffee-400">
+            <div className="text-sm text-coffee-600 ">
               Bulk actions available below
             </div>
           </div>

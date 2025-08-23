@@ -75,7 +75,7 @@ export const OrderStatusSelector = ({
       {/* Current Status Display */}
       {showCurrentStatus && (
         <div className="mb-2">
-          <div className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <div className="block text-sm font-medium text-gray-700 mb-1">
             Current Status
           </div>
           <OrderStatusBadge status={order.status} size="lg" />
@@ -84,7 +84,7 @@ export const OrderStatusSelector = ({
 
       {/* Status Selector */}
       <div className="relative">
-        <label htmlFor={`status-selector-${order.id}`} className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+        <label htmlFor={`status-selector-${order.id}`} className="block text-sm font-medium text-gray-700 mb-1">
           Change Status
         </label>
         
@@ -97,8 +97,8 @@ export const OrderStatusSelector = ({
             'focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:ring-offset-1',
             'disabled:opacity-50 disabled:cursor-not-allowed',
             disabled || loading
-              ? 'bg-gray-100 text-gray-500 border-gray-300 dark:bg-gray-700 dark:text-gray-500 dark:border-gray-600'
-              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700'
+              ? 'bg-gray-100 text-gray-500 border-gray-300'
+              : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
           )}
           aria-label={`Change status for order ${order.id}`}
           aria-expanded={isOpen}
@@ -147,7 +147,7 @@ export const OrderStatusSelector = ({
             />
             
             {/* Dropdown */}
-            <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-md shadow-lg border border-gray-200 z-20 dark:bg-gray-800 dark:border-gray-700">
+            <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-md shadow-lg border border-gray-200 z-20">
               <div className="py-1" role="listbox">
                 {availableStatuses.map((status) => {
                   const config = statusConfig[status]
@@ -156,7 +156,7 @@ export const OrderStatusSelector = ({
                     <button
                       key={status}
                       onClick={() => handleStatusChange(status)}
-                      className="w-full flex items-start px-4 py-3 text-sm text-left hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:hover:bg-gray-700 dark:focus:bg-gray-700"
+                      className="w-full flex items-start px-4 py-3 text-sm text-left hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
                       role="option"
                       aria-selected="false"
                     >
@@ -164,10 +164,10 @@ export const OrderStatusSelector = ({
                         {config.icon}
                       </span>
                       <div className="flex-1">
-                        <div className="font-medium text-gray-900 dark:text-gray-100">
+                        <div className="font-medium text-gray-900">
                           {config.label}
                         </div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                        <div className="text-xs text-gray-500 mt-1">
                           {config.description}
                         </div>
                       </div>
@@ -182,11 +182,11 @@ export const OrderStatusSelector = ({
 
       {/* Status Transition Info */}
       {showCurrentStatus && (
-        <div className="mt-3 p-3 bg-gray-50 rounded-md dark:bg-gray-700">
-          <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+        <div className="mt-3 p-3 bg-gray-50 rounded-md">
+          <h4 className="text-sm font-medium text-gray-900 mb-2">
             Order Information
           </h4>
-          <div className="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+          <div className="space-y-1 text-sm text-gray-600">
             <div>Guest: {order.guest_name}</div>
             <div>Drink: {order.drink_name || 'Unknown'}</div>
             <div>Queue: #{order.queue_number}</div>

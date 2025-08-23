@@ -56,7 +56,6 @@ export const QueuePosition = ({
       className={cn(
         'inline-flex items-center rounded-lg border',
         'bg-coffee-50 text-coffee-800 border-coffee-200',
-        'dark:bg-coffee-900/20 dark:text-coffee-400 dark:border-coffee-800',
         sizeConfig.container,
         showAnimation && 'transition-all duration-300 ease-in-out',
         className
@@ -76,7 +75,7 @@ export const QueuePosition = ({
         </span>
         <span 
           className={cn(
-            'leading-none text-coffee-900 dark:text-coffee-300',
+            'leading-none text-coffee-900',
             sizeConfig.number,
             showAnimation && 'animate-pulse'
           )}
@@ -106,7 +105,6 @@ export const QueuePositionCompact = ({
       className={cn(
         'inline-flex items-center px-2 py-1 rounded-md text-xs font-medium',
         'bg-coffee-100 text-coffee-800 border border-coffee-200',
-        'dark:bg-coffee-900/30 dark:text-coffee-400 dark:border-coffee-700',
         showAnimation && 'transition-all duration-300 ease-in-out animate-pulse',
         className
       )}

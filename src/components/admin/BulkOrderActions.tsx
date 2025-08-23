@@ -99,20 +99,20 @@ export const BulkOrderActions = ({
   const availableActions = getAvailableActions()
 
   return (
-    <div className={cn('bg-white border border-gray-200 rounded-lg p-4 shadow-sm dark:bg-gray-800 dark:border-gray-700', className)}>
+    <div className={cn('bg-white border border-gray-200 rounded-lg p-4 shadow-sm ', className)}>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center space-x-3">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          <h3 className="text-lg font-semibold text-gray-900 ">
             Bulk Actions
           </h3>
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-coffee-100 text-coffee-800 dark:bg-coffee-900 dark:text-coffee-200">
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-coffee-100 text-coffee-800 ">
             {selectedOrders.length} selected
           </span>
         </div>
         
         <button
           onClick={onClearSelection}
-          className="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+          className="text-sm text-gray-500 hover:text-gray-700 "
           aria-label="Clear selection"
         >
           Clear selection
@@ -157,7 +157,7 @@ export const BulkOrderActions = ({
       </div>
 
       {/* Selected Orders Preview */}
-      <div className="text-sm text-gray-600 dark:text-gray-400">
+      <div className="text-sm text-gray-600 ">
         <p className="mb-2">Selected orders:</p>
         <div className="max-h-32 overflow-y-auto">
           {selectedOrders.map((order) => (
@@ -165,7 +165,7 @@ export const BulkOrderActions = ({
               <span>
                 {order.guest_name} - {order.selected_options.length} option{order.selected_options.length !== 1 ? 's' : ''}
               </span>
-              <span className="text-xs capitalize bg-gray-100 text-gray-700 px-2 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">
+              <span className="text-xs capitalize bg-gray-100 text-gray-700 px-2 py-0.5 rounded ">
                 {order.status}
               </span>
             </div>
@@ -175,14 +175,14 @@ export const BulkOrderActions = ({
 
       {/* Results Display */}
       {lastResult && (
-        <div className="mt-4 p-3 bg-gray-50 rounded-md dark:bg-gray-700">
-          <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+        <div className="mt-4 p-3 bg-gray-50 rounded-md ">
+          <h4 className="text-sm font-medium text-gray-900 mb-2">
             Operation Results
           </h4>
           
           {lastResult.success_count > 0 && (
             <div className="mb-2">
-              <p className="text-sm text-green-700 dark:text-green-400">
+              <p className="text-sm text-green-700 ">
                 ✅ {lastResult.success_count} orders updated successfully
               </p>
             </div>
@@ -190,10 +190,10 @@ export const BulkOrderActions = ({
           
           {lastResult.errors.length > 0 && (
             <div>
-              <p className="text-sm text-red-700 dark:text-red-400 mb-1">
+              <p className="text-sm text-red-700 mb-1">
                 ❌ {lastResult.errors.length} errors:
               </p>
-              <ul className="text-xs text-red-600 dark:text-red-400 space-y-1">
+              <ul className="text-xs text-red-600 space-y-1">
                 {lastResult.errors.map((error) => (
                   <li key={error.order_id}>
                     Order {error.order_id}: {error.error}
@@ -205,7 +205,7 @@ export const BulkOrderActions = ({
           
           <button
             onClick={() => setLastResult(null)}
-            className="mt-2 text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+            className="mt-2 text-xs text-gray-500 hover:text-gray-700 "
           >
             Dismiss
           </button>
@@ -215,19 +215,19 @@ export const BulkOrderActions = ({
       {/* Confirmation Dialog */}
       {showConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md mx-4 shadow-xl dark:bg-gray-800">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+          <div className="bg-white rounded-lg p-6 max-w-md mx-4 shadow-xl ">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Confirm Bulk Action
             </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-gray-600 mb-6">
               Are you sure you want to {showConfirm} {selectedOrders.length} selected order{selectedOrders.length !== 1 ? 's' : ''}?
             </p>
             
-            <div className="bg-gray-50 rounded-md p-3 mb-6 dark:bg-gray-700">
-              <p className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+            <div className="bg-gray-50 rounded-md p-3 mb-6 ">
+              <p className="text-sm font-medium text-gray-900 mb-2">
                 This will affect:
               </p>
-              <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+              <ul className="text-sm text-gray-600 space-y-1">
                 {selectedOrders.slice(0, 5).map((order) => (
                   <li key={order.id}>
                     • {order.guest_name} ({order.status})
@@ -244,7 +244,7 @@ export const BulkOrderActions = ({
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => setShowConfirm(null)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1 "
               >
                 Cancel
               </button>

@@ -50,6 +50,23 @@
     0 4px 6px -2px rgba(77, 44, 26, 0.05);
 }
 
+/* Enforce light theme globally - override system dark mode preferences */
+html {
+  color-scheme: light only;
+}
+
+/* Force light mode regardless of system preference */
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: light only;
+  }
+
+  body {
+    background-color: var(--coffee-cream) !important;
+    color: var(--coffee-darkest) !important;
+  }
+}
+
 body {
   margin: 0;
   font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",

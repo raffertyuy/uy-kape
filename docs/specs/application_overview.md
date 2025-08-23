@@ -9,12 +9,11 @@ last-modified: 2025-08-22
 
 A simple, free coffee ordering system for home guests. This application will be a two-part system: a guest-facing module for placing orders and a barista admin module for managing the menu and viewing incoming orders in real-time. The core principle of this project is to use a "vibe coding" approach, leveraging natural language prompts to rapidly prototype components and functionality.
 
----
-
 ## Technology Stack
-See [technology_stack](./technology_stack.md
-)
----
+See [technology_stack](./technology_stack.md)
+
+## Light Theme Only
+This app enforces light theme, there is no dark theme implementation.
 
 ## Specifications
 

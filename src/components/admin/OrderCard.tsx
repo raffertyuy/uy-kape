@@ -55,7 +55,7 @@ export const OrderCard = ({
       className={cn(
         'bg-white rounded-lg border border-gray-200 shadow-sm',
         'hover:shadow-md transition-shadow duration-200',
-        'dark:bg-gray-800 dark:border-gray-700',
+        '',
         isSelected && 'ring-2 ring-coffee-500 border-coffee-300',
         order.priority_level === 'urgent' && 'border-red-300 shadow-red-100',
         order.priority_level === 'high' && 'border-orange-300 shadow-orange-100',
@@ -81,10 +81,10 @@ export const OrderCard = ({
             />
           )}
           <div>
-            <h3 className="font-semibold text-gray-900 dark:text-gray-100">
+            <h3 className="font-semibold text-gray-900 ">
               {order.guest_name}
             </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-gray-500 ">
               Order #{order.id.slice(-8)}
             </p>
           </div>
@@ -100,10 +100,10 @@ export const OrderCard = ({
       {/* Order details */}
       <div className="space-y-2">
         <div>
-          <p className="font-medium text-coffee-800 dark:text-coffee-200">
+          <p className="font-medium text-coffee-800 ">
             {order.drink_name}
           </p>
-          <p className="text-sm text-gray-600 dark:text-gray-400">
+          <p className="text-sm text-gray-600 ">
             {order.category_name}
           </p>
         </div>
@@ -111,14 +111,14 @@ export const OrderCard = ({
         {/* Selected options */}
         {order.selected_options && order.selected_options.length > 0 && (
           <div className="space-y-1">
-            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <p className="text-sm font-medium text-gray-700 ">
               Options:
             </p>
             <div className="flex flex-wrap gap-1">
               {order.selected_options.map((option, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center px-2 py-1 rounded-md text-xs bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
+                  className="inline-flex items-center px-2 py-1 rounded-md text-xs bg-gray-100 text-gray-800 "
                 >
                   {option.option_category_name}: {option.option_value_name}
                 </span>
@@ -130,10 +130,10 @@ export const OrderCard = ({
         {/* Special request */}
         {order.special_request && (
           <div>
-            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <p className="text-sm font-medium text-gray-700 ">
               Special Request:
             </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400 italic">
+            <p className="text-sm text-gray-600 italic">
               "{order.special_request}"
             </p>
           </div>
@@ -141,7 +141,7 @@ export const OrderCard = ({
       </div>
 
       {/* Footer with queue info and timing */}
-      <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
+      <div className="mt-4 pt-3 border-t border-gray-200 ">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             {order.status === 'pending' && order.queue_number && (
@@ -151,7 +151,7 @@ export const OrderCard = ({
                 showAnimation
               />
             )}
-            <div className="text-sm text-gray-500 dark:text-gray-400">
+            <div className="text-sm text-gray-500 ">
               <p>
                 Ordered: {new Date(order.created_at).toLocaleTimeString()}
                 {orderAge > 0 && ` (${orderAge}m ago)`}
@@ -197,29 +197,29 @@ export const OrderCardSkeleton = ({ compact = false }: { compact?: boolean }) =>
   return (
     <div className={cn(
       'bg-white rounded-lg border border-gray-200 shadow-sm animate-pulse',
-      'dark:bg-gray-800 dark:border-gray-700',
+      '',
       compact ? 'p-3' : 'p-4'
     )}>
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center space-x-3">
-          <div className="w-4 h-4 bg-gray-300 rounded dark:bg-gray-600" />
+          <div className="w-4 h-4 bg-gray-300 rounded " />
           <div>
-            <div className="w-24 h-4 bg-gray-300 rounded dark:bg-gray-600 mb-1" />
-            <div className="w-16 h-3 bg-gray-300 rounded dark:bg-gray-600" />
+            <div className="w-24 h-4 bg-gray-300 rounded mb-1" />
+            <div className="w-16 h-3 bg-gray-300 rounded " />
           </div>
         </div>
-        <div className="w-16 h-6 bg-gray-300 rounded-full dark:bg-gray-600" />
+        <div className="w-16 h-6 bg-gray-300 rounded-full " />
       </div>
       
       <div className="space-y-2">
-        <div className="w-32 h-4 bg-gray-300 rounded dark:bg-gray-600" />
-        <div className="w-24 h-3 bg-gray-300 rounded dark:bg-gray-600" />
+        <div className="w-32 h-4 bg-gray-300 rounded " />
+        <div className="w-24 h-3 bg-gray-300 rounded " />
       </div>
       
-      <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
+      <div className="mt-4 pt-3 border-t border-gray-200 ">
         <div className="flex items-center justify-between">
-          <div className="w-40 h-3 bg-gray-300 rounded dark:bg-gray-600" />
-          <div className="w-20 h-6 bg-gray-300 rounded dark:bg-gray-600" />
+          <div className="w-40 h-3 bg-gray-300 rounded " />
+          <div className="w-20 h-6 bg-gray-300 rounded " />
         </div>
       </div>
     </div>

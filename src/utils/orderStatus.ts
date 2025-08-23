@@ -7,9 +7,6 @@ export const STATUS_CONFIG = {
     bgColor: "bg-yellow-100",
     textColor: "text-yellow-800",
     borderColor: "border-yellow-200",
-    darkBgColor: "dark:bg-yellow-900/20",
-    darkTextColor: "dark:text-yellow-400",
-    darkBorderColor: "dark:border-yellow-800",
   },
   completed: {
     label: "Completed",
@@ -17,9 +14,6 @@ export const STATUS_CONFIG = {
     bgColor: "bg-blue-100",
     textColor: "text-blue-800",
     borderColor: "border-blue-200",
-    darkBgColor: "dark:bg-blue-900/20",
-    darkTextColor: "dark:text-blue-400",
-    darkBorderColor: "dark:border-blue-800",
   },
   cancelled: {
     label: "Cancelled",
@@ -27,9 +21,6 @@ export const STATUS_CONFIG = {
     bgColor: "bg-red-100",
     textColor: "text-red-800",
     borderColor: "border-red-200",
-    darkBgColor: "dark:bg-red-900/20",
-    darkTextColor: "dark:text-red-400",
-    darkBorderColor: "dark:border-red-800",
   },
 } as const;
 

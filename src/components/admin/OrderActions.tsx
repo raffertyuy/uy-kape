@@ -126,17 +126,17 @@ export const OrderActions = ({
       {/* Confirmation Dialog */}
       {showConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl dark:bg-gray-800">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
+          <div className="bg-white rounded-lg p-6 max-w-sm mx-4 shadow-xl ">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
               Confirm Action
             </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
+            <p className="text-gray-600 mb-6">
               Are you sure you want to {showConfirm === 'cancelled' ? 'cancel' : 'complete'} this order for {order.guest_name}?
             </p>
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => setShowConfirm(null)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1 "
               >
                 Cancel
               </button>
@@ -209,7 +209,7 @@ export const OrderStatusDropdown = ({
           'inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm',
           'hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:ring-offset-1',
           'disabled:opacity-50 disabled:cursor-not-allowed',
-          'dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700'
+          ''
         )}
         aria-label={`Change status for order ${order.id}`}
         aria-expanded={isOpen}
@@ -246,7 +246,7 @@ export const OrderStatusDropdown = ({
           />
           
           {/* Dropdown */}
-          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-20 dark:bg-gray-800 dark:border-gray-700">
+          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-20 ">
             <div className="py-1">
               {availableStatuses.map((status) => {
                 const config = {
@@ -259,7 +259,7 @@ export const OrderStatusDropdown = ({
                   <button
                     key={status}
                     onClick={() => handleStatusChange(status)}
-                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+                    className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 "
                   >
                     <span className="mr-2" aria-hidden="true">
                       {config.icon}
