@@ -35,11 +35,11 @@ description: "Implementation plan for <requirement>"
 created-date: YYYY-MM-DD
 ---
 
+# Implementation Plan for [Spec Name]
+
 ## OBJECTIVE
 
 OBJECTIVE/REQUIREMENT/TASK HERE
-
-## IMPLEMENTATION PLAN
 
 PLAN HERE
 ```
@@ -48,7 +48,7 @@ PLAN HERE
 - Structure your plan as follows, and output as Markdown code block
 
 ```markdown
-# Implementation Plan for [Spec Name]
+## IMPLEMENTATION PLAN
 
 - [ ] Step 1: [Brief title]
   - **Task**: [Detailed explanation of what needs to be implemented]

@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useRealtimeOrders } from '@/hooks/useRealtimeOrders';
 import { adminOrderService } from '@/services/adminOrderService';
+import { OrderCard } from './OrderCard';
 import type { AdminOrderListItem } from '@/types/admin.types';
 import type { OrderStatus } from '@/types/order.types';
 
@@ -352,63 +353,16 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
             ) : (
               <div className="space-y-4">
                 {filteredOrders.map((order) => (
-                  <div
+                  <OrderCard
                     key={order.id}
-                    className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:shadow-md transition-shadow"
+                    order={order}
+                    isSelected={selectedOrders.includes(order.id)}
+                    onSelect={handleOrderSelect}
+                    onStatusUpdate={handleStatusUpdate}
+                    showActions
+                    className="mb-4"
                     data-testid={`order-card-${order.id}`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-4">
-                        <input
-                          type="checkbox"
-                          checked={selectedOrders.includes(order.id)}
-                          onChange={(e) => handleOrderSelect(order.id, e.target.checked)}
-                          className="h-4 w-4 text-coffee-600 focus:ring-coffee-500 border-gray-300 rounded"
-                        />
-                        
-                        <div>
-                          <div className="flex items-center space-x-2">
-                            <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                              Order #{order.id.slice(-8)}
-                            </h4>
-                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                              order.status === 'ready' ? 'bg-green-100 text-green-800' :
-                              order.status === 'completed' ? 'bg-blue-100 text-blue-800' :
-                              'bg-gray-100 text-gray-800'
-                            }`} data-testid="order-status">
-                              {order.status}
-                            </span>
-                          </div>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Guest: {order.guest_name || 'Anonymous'}
-                          </p>
-                          <p className="text-sm text-gray-500 dark:text-gray-500">
-                            Created: {new Date(order.created_at).toLocaleString()}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-2">
-                        {order.status === 'pending' && (
-                          <button
-                            onClick={() => handleStatusUpdate(order.id, 'ready')}
-                            className="px-3 py-1 text-sm bg-green-100 text-green-800 rounded-md hover:bg-green-200 transition-colors"
-                          >
-                            Mark Ready
-                          </button>
-                        )}
-                        {order.status === 'ready' && (
-                          <button
-                            onClick={() => handleStatusUpdate(order.id, 'completed')}
-                            className="px-3 py-1 text-sm bg-blue-100 text-blue-800 rounded-md hover:bg-blue-200 transition-colors"
-                          >
-                            Complete
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                  />
                 ))}
               </div>
             )}
