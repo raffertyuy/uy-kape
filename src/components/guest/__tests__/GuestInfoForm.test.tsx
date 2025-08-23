@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@/test-utils'
+import { render, screen, fireEvent } from '../../../../tests/config/test-utils'
 import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest'
 
 // Component variables

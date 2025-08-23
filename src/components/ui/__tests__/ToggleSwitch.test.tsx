@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest'
-import { render, screen, fireEvent } from '@/test-utils'
+import { render, screen, fireEvent } from '../../../../tests/config/test-utils'
 
 let ToggleSwitch: any
 

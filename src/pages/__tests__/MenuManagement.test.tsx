@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest'
-import { render, screen } from '@/test-utils'
+import { render, screen } from '../../../tests/config/test-utils'
 import { MenuManagement } from '@/pages/MenuManagement'
 
 describe('MenuManagement - Basic Rendering', () => {

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach, beforeAll, afterAll } from 'vitest'
 import { screen, act } from '@testing-library/react'
-import { render } from '@/test-utils'
+import { render } from '../../../tests/config/test-utils'
 import '@testing-library/jest-dom/vitest'
 
 // Component variables

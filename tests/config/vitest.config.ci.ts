@@ -6,7 +6,9 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: "jsdom",
-    setupFiles: [fileURLToPath(new URL("../../src/setupTests.ts", import.meta.url))],
+    setupFiles: [
+      fileURLToPath(new URL("../../src/setupTests.ts", import.meta.url)),
+    ],
     globals: true,
     // Single-threaded execution for CI stability
     pool: "threads",
@@ -81,7 +83,9 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("../../src", import.meta.url)),
-      "@/test-utils": fileURLToPath(new URL("./test-utils.tsx", import.meta.url)),
+      "@/test-utils": fileURLToPath(
+        new URL("../../tests/config/test-utils.tsx", import.meta.url),
+      ),
     },
   },
 });

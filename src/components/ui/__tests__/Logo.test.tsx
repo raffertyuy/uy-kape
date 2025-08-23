@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeAll, afterAll } from 'vitest'
-import { render, screen, fireEvent } from '@/test-utils'
+import { render, screen, fireEvent } from '../../../../tests/config/test-utils'
 
 let Logo: any
 

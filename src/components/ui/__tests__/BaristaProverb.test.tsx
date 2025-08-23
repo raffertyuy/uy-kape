@@ -1,4 +1,4 @@
-import { render, screen } from '@/test-utils'
+import { render, screen } from '../../../../tests/config/test-utils'
 import { describe, it, expect, vi, beforeEach, afterAll, beforeAll } from 'vitest'
 
 // Create spies for the functions
