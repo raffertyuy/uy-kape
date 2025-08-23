@@ -15,7 +15,7 @@ const isCI = (): boolean => {
 };
 
 const isTestEnv = (): boolean => {
-  return process.env.NODE_ENV === 'test' || Boolean(process.env.VITEST);
+  return process.env.NODE_ENV === "test" || Boolean(process.env.VITEST);
 };
 
 const shouldUseMocks = (): boolean => {
@@ -23,10 +23,10 @@ const shouldUseMocks = (): boolean => {
   if (isCI()) return true;
 
   // Check if we should force mocks for testing
-  if (process.env.VITE_TEST_USE_MOCKS === 'true') return true;
-  
+  if (process.env.VITE_TEST_USE_MOCKS === "true") return true;
+
   // Check if local database testing is explicitly enabled
-  if (process.env.VITE_TEST_USE_LOCAL_DB === 'true') return false;
+  if (process.env.VITE_TEST_USE_LOCAL_DB === "true") return false;
 
   // Default to mocks for safety in test environment
   return isTestEnv();
