@@ -95,7 +95,8 @@ export const MenuManagement: React.FC = () => {
   const { 
     connectionStatus, 
     recentChanges, 
-    clearRecentChanges 
+    clearRecentChanges,
+    reconnect
   } = useMenuSubscriptions()
 
   const handleSearch = (query: string) => {
@@ -176,6 +177,8 @@ export const MenuManagement: React.FC = () => {
               {/* Real-time Indicator */}
               <RealtimeIndicator 
                 connectionStatus={connectionStatus}
+                onReconnect={reconnect}
+                showDetails={true}
                 className="bg-white rounded-lg border border-gray-200 px-3 py-2 shadow-sm"
               />
             </div>

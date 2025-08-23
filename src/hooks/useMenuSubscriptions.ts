@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
-import { supabase } from '@/lib/supabase'
+import { useRealtimeConnection, type RealtimeConnectionStatus } from '@/lib/realtime'
 
 export interface MenuChange {
   table: string
@@ -9,184 +9,139 @@ export interface MenuChange {
   userId?: string
 }
 
+// Legacy interface for backward compatibility
 export interface ConnectionStatus {
   connected: boolean
   lastUpdate: Date | null
   error: string | null
 }
 
+// Enhanced connection status with real-time manager features
+export interface EnhancedConnectionStatus extends ConnectionStatus {
+  status: RealtimeConnectionStatus['status']
+  retryCount: number
+  latency: number | null
+  quality: RealtimeConnectionStatus['quality']
+}
+
 export const useMenuSubscriptions = () => {
-  const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>({
+  const [connectionStatus, setConnectionStatus] = useState<EnhancedConnectionStatus>({
     connected: false,
     lastUpdate: null,
-    error: null
+    error: null,
+    status: 'disconnected',
+    retryCount: 0,
+    latency: null,
+    quality: 'offline'
   })
   
   const [recentChanges, setRecentChanges] = useState<MenuChange[]>([])
   const [conflictItems, setConflictItems] = useState<Set<string>>(new Set())
+  const [subscribed, setSubscribed] = useState(false)
+
+  const { subscribe, onStatusChange, reconnect } = useRealtimeConnection()
 
   // Track external changes (not from current user)
   const handleExternalChange = useCallback((change: MenuChange) => {
     // Add to recent changes (keep last 10)
     setRecentChanges(prev => [change, ...prev].slice(0, 10))
     
-    // Update connection status
+    // Update connection status with last update time
     setConnectionStatus(prev => ({
       ...prev,
       lastUpdate: new Date(),
-      error: null
+      connected: prev.status === 'connected'
     }))
   }, [])
 
-  // Subscribe to drink categories changes
+  // Create change handler for each table
+  const createChangeHandler = useCallback((tableName: string) => ({
+    onInsert: (payload: any) => {
+      const change: MenuChange = {
+        table: tableName,
+        event: 'INSERT',
+        data: payload.new,
+        timestamp: new Date()
+      }
+      handleExternalChange(change)
+    },
+    onUpdate: (payload: any) => {
+      const change: MenuChange = {
+        table: tableName,
+        event: 'UPDATE',
+        data: payload.new,
+        timestamp: new Date()
+      }
+      handleExternalChange(change)
+    },
+    onDelete: (payload: any) => {
+      const change: MenuChange = {
+        table: tableName,
+        event: 'DELETE',
+        data: payload.old,
+        timestamp: new Date()
+      }
+      handleExternalChange(change)
+    },
+    onError: (error: string) => {
+      console.error(`Real-time error for ${tableName}:`, error)
+      setConnectionStatus(prev => ({
+        ...prev,
+        error
+      }))
+    }
+  }), [handleExternalChange])
+
+  // Subscribe to real-time status changes
   useEffect(() => {
-    const subscription = supabase
-      .channel('drink_categories_realtime')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'drink_categories'
-      }, (payload) => {
-        const change: MenuChange = {
-          table: 'drink_categories',
-          event: payload.eventType as any,
-          data: payload.new || payload.old,
-          timestamp: new Date()
-        }
-        handleExternalChange(change)
+    const unsubscribeStatus = onStatusChange((status: RealtimeConnectionStatus) => {
+      setConnectionStatus(prev => ({
+        ...prev,
+        connected: status.status === 'connected',
+        error: status.error,
+        status: status.status,
+        retryCount: status.retryCount,
+        latency: status.latency,
+        quality: status.quality,
+        lastUpdate: status.lastConnected || prev.lastUpdate
+      }))
+    })
+
+    return unsubscribeStatus
+  }, [onStatusChange])
+
+  // Setup all subscriptions
+  useEffect(() => {
+    if (subscribed) return
+
+    const unsubscribeFunctions: (() => void)[] = []
+
+    // Subscribe to all menu-related tables
+    const tables = [
+      'drink_categories',
+      'drinks', 
+      'option_categories',
+      'option_values',
+      'drink_options'
+    ]
+
+    for (const table of tables) {
+      const unsubscribeTable = subscribe(`${table}_realtime`, {
+        table,
+        ...createChangeHandler(table)
       })
-      .subscribe((status) => {
-        setConnectionStatus(prev => ({
-          ...prev,
-          connected: status === 'SUBSCRIBED',
-          error: status === 'CLOSED' ? 'Failed to connect to drink categories' : null
-        }))
-      })
+      unsubscribeFunctions.push(unsubscribeTable)
+    }
+
+    setSubscribed(true)
 
     return () => {
-      subscription.unsubscribe()
+      for (const unsub of unsubscribeFunctions) {
+        unsub()
+      }
+      setSubscribed(false)
     }
-  }, [handleExternalChange])
-
-  // Subscribe to drinks changes
-  useEffect(() => {
-    const subscription = supabase
-      .channel('drinks_realtime')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'drinks'
-      }, (payload) => {
-        const change: MenuChange = {
-          table: 'drinks',
-          event: payload.eventType as any,
-          data: payload.new || payload.old,
-          timestamp: new Date()
-        }
-        handleExternalChange(change)
-      })
-      .subscribe((status) => {
-        setConnectionStatus(prev => ({
-          ...prev,
-          connected: status === 'SUBSCRIBED',
-          error: status === 'CLOSED' ? 'Failed to connect to drinks' : null
-        }))
-      })
-
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [handleExternalChange])
-
-  // Subscribe to option categories changes
-  useEffect(() => {
-    const subscription = supabase
-      .channel('option_categories_realtime')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'option_categories'
-      }, (payload) => {
-        const change: MenuChange = {
-          table: 'option_categories',
-          event: payload.eventType as any,
-          data: payload.new || payload.old,
-          timestamp: new Date()
-        }
-        handleExternalChange(change)
-      })
-      .subscribe((status) => {
-        setConnectionStatus(prev => ({
-          ...prev,
-          connected: status === 'SUBSCRIBED',
-          error: status === 'CLOSED' ? 'Failed to connect to option categories' : null
-        }))
-      })
-
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [handleExternalChange])
-
-  // Subscribe to option values changes
-  useEffect(() => {
-    const subscription = supabase
-      .channel('option_values_realtime')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'option_values'
-      }, (payload) => {
-        const change: MenuChange = {
-          table: 'option_values',
-          event: payload.eventType as any,
-          data: payload.new || payload.old,
-          timestamp: new Date()
-        }
-        handleExternalChange(change)
-      })
-      .subscribe((status) => {
-        setConnectionStatus(prev => ({
-          ...prev,
-          connected: status === 'SUBSCRIBED',
-          error: status === 'CLOSED' ? 'Failed to connect to option values' : null
-        }))
-      })
-
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [handleExternalChange])
-
-  // Subscribe to drink options changes
-  useEffect(() => {
-    const subscription = supabase
-      .channel('drink_options_realtime')
-      .on('postgres_changes', {
-        event: '*',
-        schema: 'public',
-        table: 'drink_options'
-      }, (payload) => {
-        const change: MenuChange = {
-          table: 'drink_options',
-          event: payload.eventType as any,
-          data: payload.new || payload.old,
-          timestamp: new Date()
-        }
-        handleExternalChange(change)
-      })
-      .subscribe((status) => {
-        setConnectionStatus(prev => ({
-          ...prev,
-          connected: status === 'SUBSCRIBED',
-          error: status === 'CLOSED' ? 'Failed to connect to drink options' : null
-        }))
-      })
-
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [handleExternalChange])
+  }, [subscribe, createChangeHandler, subscribed])
 
   // Add conflict detection
   const markAsConflicted = useCallback((itemId: string) => {
@@ -206,12 +161,18 @@ export const useMenuSubscriptions = () => {
     setRecentChanges([])
   }, [])
 
+  // Manual reconnection
+  const handleReconnect = useCallback(() => {
+    reconnect()
+  }, [reconnect])
+
   return {
     connectionStatus,
     recentChanges,
     conflictItems,
     markAsConflicted,
     resolveConflict,
-    clearRecentChanges
+    clearRecentChanges,
+    reconnect: handleReconnect
   }
 }

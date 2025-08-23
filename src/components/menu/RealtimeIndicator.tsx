@@ -1,50 +1,93 @@
 import React from 'react'
-import type { ConnectionStatus } from '@/hooks/useMenuSubscriptions'
+import type { EnhancedConnectionStatus } from '@/hooks/useMenuSubscriptions'
 
 interface RealtimeIndicatorProps {
-  connectionStatus: ConnectionStatus
+  connectionStatus: EnhancedConnectionStatus
+  onReconnect?: () => void
   className?: string
+  showDetails?: boolean
 }
 
 export const RealtimeIndicator: React.FC<RealtimeIndicatorProps> = ({
   connectionStatus,
-  className = ''
+  onReconnect,
+  className = '',
+  showDetails = false
 }) => {
-  const { connected, lastUpdate, error } = connectionStatus
+  const { lastUpdate, error, status, retryCount, latency, quality } = connectionStatus
 
   const getStatusColor = () => {
-    if (error) return 'text-red-500'
-    if (connected) return 'text-green-500'
-    return 'text-yellow-500'
+    switch (status) {
+      case 'connected':
+        return quality === 'excellent' ? 'text-green-500' : 
+               quality === 'good' ? 'text-yellow-500' : 'text-orange-500'
+      case 'connecting':
+      case 'reconnecting':
+        return 'text-blue-500'
+      case 'error':
+      case 'disconnected':
+        return 'text-red-500'
+      default:
+        return 'text-gray-500'
+    }
   }
 
   const getStatusText = () => {
-    if (error) return 'Connection Error'
-    if (connected) return 'Live'
-    return 'Connecting...'
+    switch (status) {
+      case 'connected':
+        return showDetails ? `Live (${quality})` : 'Live'
+      case 'connecting':
+        return 'Connecting...'
+      case 'reconnecting':
+        return `Reconnecting... (${retryCount})`
+      case 'error':
+        return 'Connection Error'
+      case 'disconnected':
+        return 'Disconnected'
+      default:
+        return 'Unknown'
+    }
   }
 
   const getStatusIcon = () => {
-    if (error) {
-      return (
-        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-        </svg>
-      )
+    switch (status) {
+      case 'error':
+      case 'disconnected':
+        return (
+          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+          </svg>
+        )
+      
+      case 'connected':
+        return (
+          <div className="relative">
+            <div className={`w-3 h-3 rounded-full ${
+              quality === 'excellent' ? 'bg-green-500' :
+              quality === 'good' ? 'bg-yellow-500' : 'bg-orange-500'
+            }`} />
+            <div className={`absolute top-0 left-0 w-3 h-3 rounded-full animate-ping ${
+              quality === 'excellent' ? 'bg-green-500' :
+              quality === 'good' ? 'bg-yellow-500' : 'bg-orange-500'
+            }`} />
+          </div>
+        )
+      
+      case 'connecting':
+        return (
+          <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse" />
+        )
+      
+      case 'reconnecting':
+        return (
+          <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce" />
+        )
+      
+      default:
+        return (
+          <div className="w-3 h-3 bg-gray-500 rounded-full" />
+        )
     }
-    
-    if (connected) {
-      return (
-        <div className="relative">
-          <div className="w-3 h-3 bg-green-500 rounded-full" />
-          <div className="absolute top-0 left-0 w-3 h-3 bg-green-500 rounded-full animate-ping" />
-        </div>
-      )
-    }
-    
-    return (
-      <div className="w-3 h-3 bg-yellow-500 rounded-full animate-pulse" />
-    )
   }
 
   const formatLastUpdate = (date: Date | null) => {
@@ -64,6 +107,13 @@ export const RealtimeIndicator: React.FC<RealtimeIndicatorProps> = ({
     }
   }
 
+  const formatLatency = (latency: number | null) => {
+    if (latency === null) return null
+    return `${Math.round(latency)}ms`
+  }
+
+  const canReconnect = status === 'error' || status === 'disconnected'
+
   return (
     <div className={`flex items-center gap-2 text-sm ${className}`} data-testid="realtime-indicator">
       <div className="flex items-center gap-1">
@@ -73,15 +123,37 @@ export const RealtimeIndicator: React.FC<RealtimeIndicatorProps> = ({
         </span>
       </div>
       
-      {lastUpdate && !error && (
+      {showDetails && latency !== null && status === 'connected' && (
+        <span className="text-gray-500 text-xs">
+          {formatLatency(latency)}
+        </span>
+      )}
+      
+      {lastUpdate && status === 'connected' && (
         <span className="text-gray-500 text-xs">
           Last update: {formatLastUpdate(lastUpdate)}
         </span>
       )}
       
       {error && (
-        <span className="text-red-500 text-xs">
+        <span className="text-red-500 text-xs truncate max-w-32" title={error}>
           {error}
+        </span>
+      )}
+
+      {canReconnect && onReconnect && (
+        <button
+          onClick={onReconnect}
+          className="text-xs px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+          title="Manually reconnect to real-time updates"
+        >
+          Reconnect
+        </button>
+      )}
+      
+      {status === 'reconnecting' && retryCount > 0 && (
+        <span className="text-blue-500 text-xs">
+          Attempt {retryCount}
         </span>
       )}
     </div>

@@ -21,7 +21,8 @@
     "test:memory": "vitest run --config=tests/config/vitest.config.ci.ts --reporter=verbose --logHeapUsage",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
-    "test:e2e:debug": "playwright test --debug"
+    "test:e2e:debug": "playwright test --debug",
+    "validate-env": "node scripts/validate-environment.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.55.0",
