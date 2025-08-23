@@ -5,7 +5,8 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Create custom types
-CREATE TYPE order_status AS ENUM ('pending', 'ready', 'completed', 'cancelled');
+CREATE TYPE order_status AS ENUM ('pending', 'completed', 'cancelled');
+-- Order status enum: pending (awaiting preparation), completed (finished and picked up), cancelled (cancelled by guest or barista)
 
 -- Create drink_categories table
 CREATE TABLE drink_categories (
@@ -70,6 +71,7 @@ CREATE TABLE orders (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   guest_name TEXT NOT NULL,
   drink_id UUID NOT NULL REFERENCES drinks(id) ON DELETE RESTRICT,
+  special_request TEXT,
   status order_status DEFAULT 'pending',
   queue_number INTEGER,
   created_at TIMESTAMPTZ DEFAULT now(),
@@ -220,6 +222,7 @@ ORDER BY dc.display_order, d.display_order;
 CREATE VIEW orders_with_details AS
 SELECT o.id
      , o.guest_name
+     , o.special_request
      , o.status
      , o.queue_number
      , o.created_at
@@ -237,6 +240,6 @@ JOIN drink_categories dc ON d.category_id = dc.id
 LEFT JOIN order_options oo ON o.id = oo.order_id
 LEFT JOIN option_categories oc ON oo.option_category_id = oc.id
 LEFT JOIN option_values ov ON oo.option_value_id = ov.id
-GROUP BY o.id, o.guest_name, o.status, o.queue_number, o.created_at, o.updated_at
+GROUP BY o.id, o.guest_name, o.special_request, o.status, o.queue_number, o.created_at, o.updated_at
        , d.name, dc.name
 ORDER BY o.created_at DESC;
