@@ -92,6 +92,8 @@ _For detailed version information, architectural decisions, and configuration de
 5. **Open your browser:**
    - Navigate to `http://localhost:5173` (or the port shown in the terminal)
 
+📋 **[View Complete Local Development Documentation →](LOCAL_DEVELOPMENT.md)**
+
 ### Accessing Features
 
 **Guest Interface:**
