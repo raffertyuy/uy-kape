@@ -1,8 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach, beforeAll, afterAll } from 'vitest'
 import { screen, act } from '@testing-library/react'
-import { render } from '../../../src/test-utils'
+import { render } from '@/test-utils'
 import '@testing-library/jest-dom/vitest'
-import React from 'react'
 
 // Component variables
 let ErrorContextProvider: any
@@ -11,7 +10,7 @@ let useGlobalError: any
 describe('ErrorContext', () => {
   beforeAll(async () => {
     // Setup scoped mocks for this test file
-    vi.doMock('../../../src/utils/globalErrorHandler', () => ({
+    vi.doMock('../../utils/globalErrorHandler', () => ({
       handleGlobalError: vi.fn((error, context) => ({
         id: `error-${Date.now()}-${Math.random()}`,
         code: error?.code || 'ERROR',
@@ -23,15 +22,15 @@ describe('ErrorContext', () => {
     }))
 
     // Import components after mocking
-    const contextModule = await import('../../../src/contexts/ErrorContext')
+    const contextModule = await import('../ErrorContext')
     ErrorContextProvider = contextModule.ErrorContextProvider
 
-    const hookModule = await import('../../../src/hooks/useGlobalError')
+    const hookModule = await import('../../hooks/useGlobalError')
     useGlobalError = hookModule.useGlobalError
   })
 
   afterAll(() => {
-    vi.doUnmock('../../../src/utils/globalErrorHandler')
+    vi.doUnmock('../../utils/globalErrorHandler')
   })
 
   // Test component that uses the error context

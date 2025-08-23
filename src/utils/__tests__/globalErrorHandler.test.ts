@@ -6,7 +6,7 @@ import {
   getRecoveryStrategy,
   withRetry,
   configureGlobalErrorHandler
-} from '../../../src/utils/globalErrorHandler'
+} from '../globalErrorHandler'
 
 // Mock console methods to track calls but still allow output for debugging
 const consoleSpy = vi.spyOn(console, 'error')

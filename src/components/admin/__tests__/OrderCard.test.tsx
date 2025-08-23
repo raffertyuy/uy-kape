@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest'
-import { render, screen, fireEvent } from '../../../test-utils'
+import { render, screen, fireEvent } from '@/test-utils'
 import type { AdminOrderListItem } from '../../../types/admin.types'
 
 // Component variables

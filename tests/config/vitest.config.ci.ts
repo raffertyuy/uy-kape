@@ -1,11 +1,12 @@
 import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
+import { fileURLToPath, URL } from "node:url";
 
 export default defineConfig({
   plugins: [react()],
   test: {
     environment: "jsdom",
-    setupFiles: ["./src/setupTests.ts"],
+    setupFiles: [fileURLToPath(new URL("../../src/setupTests.ts", import.meta.url))],
     globals: true,
     // Single-threaded execution for CI stability
     pool: "threads",
@@ -52,7 +53,7 @@ export default defineConfig({
       reporter: ["text", "json", "html"],
       exclude: [
         "node_modules/",
-        "src/test-utils.tsx",
+        "tests/config/test-utils.tsx",
         "src/setupTests.ts",
         "src/**/*.test.{ts,tsx}",
         "src/**/*.spec.{ts,tsx}",
@@ -79,7 +80,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": "/src",
+      "@": fileURLToPath(new URL("../../src", import.meta.url)),
+      "@/test-utils": fileURLToPath(new URL("./test-utils.tsx", import.meta.url)),
     },
   },
 });
