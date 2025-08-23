@@ -198,10 +198,10 @@ test.describe("Order Dashboard - Options and Special Requests Display", () => {
 
     if (await pendingOrder.count() > 0) {
       // Check that action buttons are present
-      const markReadyButton = pendingOrder.locator(
-        'button:has-text("Mark Ready")',
+      const completeButton = pendingOrder.locator(
+        'button:has-text("Complete")',
       );
-      await expect(markReadyButton).toBeVisible();
+      await expect(completeButton).toBeVisible();
 
       const cancelButton = pendingOrder.locator('button:has-text("Cancel")');
       await expect(cancelButton).toBeVisible();

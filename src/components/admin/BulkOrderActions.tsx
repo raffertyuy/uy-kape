@@ -67,17 +67,10 @@ export const BulkOrderActions = ({
     
     // Only show actions that apply to at least some selected orders
     const hasActionableOrders = selectedOrders.some(order => 
-      order.status === 'pending' || order.status === 'ready'
+      order.status === 'pending'
     )
 
     if (hasActionableOrders) {
-      actions.push({
-        status: 'ready',
-        label: 'Mark Ready',
-        icon: '✅',
-        className: 'text-green-700 bg-green-100 hover:bg-green-200 focus:ring-green-500'
-      })
-      
       actions.push({
         status: 'completed',
         label: 'Complete',
@@ -262,13 +255,10 @@ export const BulkOrderActions = ({
                   'px-4 py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-1',
                   showConfirm === 'cancelled' 
                     ? 'text-red-700 bg-red-100 hover:bg-red-200 focus:ring-red-500'
-                    : showConfirm === 'ready'
-                    ? 'text-green-700 bg-green-100 hover:bg-green-200 focus:ring-green-500'
                     : 'text-blue-700 bg-blue-100 hover:bg-blue-200 focus:ring-blue-500'
                 )}
               >
-                Confirm {showConfirm === 'cancelled' ? 'Cancellation' : 
-                        showConfirm === 'ready' ? 'Mark Ready' : 'Complete'}
+                Confirm {showConfirm === 'cancelled' ? 'Cancellation' : 'Complete'}
               </button>
             </div>
           </div>

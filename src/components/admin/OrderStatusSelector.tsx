@@ -33,11 +33,6 @@ export const OrderStatusSelector = ({
       icon: '⏳',
       description: 'Order is being prepared'
     },
-    ready: {
-      label: 'Ready',
-      icon: '✅',
-      description: 'Order is ready for pickup'
-    },
     completed: {
       label: 'Completed',
       icon: '🎉',
@@ -53,7 +48,7 @@ export const OrderStatusSelector = ({
   // Get available status options (excluding current status)
   const getAvailableStatuses = (): OrderStatus[] => {
     const currentStatus = order.status
-    const allStatuses: OrderStatus[] = ['pending', 'ready', 'completed', 'cancelled']
+    const allStatuses: OrderStatus[] = ['pending', 'completed', 'cancelled']
     
     // Filter out current status
     return allStatuses.filter(status => status !== currentStatus)
@@ -222,7 +217,7 @@ export const InlineStatusSelector = ({
   )
 }
 
-// Quick toggle for binary status changes (e.g., pending <-> ready)
+// Quick toggle for binary status changes (e.g., pending <-> completed)
 export const StatusToggle = ({
   order,
   onStatusUpdate,
@@ -233,8 +228,6 @@ export const StatusToggle = ({
   const getToggleStatus = (): OrderStatus | null => {
     switch (order.status) {
       case 'pending':
-        return 'ready'
-      case 'ready':
         return 'completed'
       default:
         return null
@@ -260,12 +253,6 @@ export const StatusToggle = ({
 
   const getToggleConfig = () => {
     switch (toggleStatus) {
-      case 'ready':
-        return {
-          label: 'Mark Ready',
-          icon: '✅',
-          className: 'text-green-700 bg-green-100 hover:bg-green-200 focus:ring-green-500'
-        }
       case 'completed':
         return {
           label: 'Complete',

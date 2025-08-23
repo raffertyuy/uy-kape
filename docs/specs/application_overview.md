@@ -51,8 +51,9 @@ It has 2 links:
    A simple, on-screen confirmation message that appears after the order is submitted.
    The confirmation should include:
    - A thank you message, e.g. "Thank you! Your order has been placed"
-   - A queue number to indicate how many pending orders before the guests's order (this can be computed based on the # of orders in "pending" status that is less than this items order id)
-   - A button to refresh the page (to update the queue number) or to cancel the order
+   - A queue number to indicate how many pending orders before the guest's order (this can be computed based on the # of orders in "pending" status that is less than this items order id)
+   - A button to refresh the page (to update the queue number)
+   - A button to cancel the order (allowing guests to cancel their pending order)
 
 ### Barista Admin Module
 
@@ -69,9 +70,13 @@ It has 2 links:
    - Cappucino will have # of shots (single or double) and also the choice of milk (whole, low-fat, non-fat, oat)
     
 2. **Order Dashboard:**  
-   A mobile responsive real-time dashboard that displays all pending guest orders. This includes
+   A mobile responsive real-time dashboard that displays all guest orders. This includes
    - Order queue: A queue/list of orders which includes the details: drink, drink options, special request, name of the guest
-   - Order status: A button or toggle next to each order to mark it as "Ready", "Completed", or "Cancelled". This action should update the order's status in Supabase.
+   - Order status: Orders flow through three simple statuses:
+     - **Pending**: Order placed, awaiting preparation
+     - **Completed**: Order finished and picked up by guest
+     - **Cancelled**: Order cancelled by guest or barista
+   - Order actions: A button next to each order to mark it directly as "Completed" or "Cancelled". This action updates the order's status in Supabase.
    - Clear orders: A button to cancel all pending orders from the `orders` table, allowing for a fresh start each day.
 
    Keep it simple. This is a home coffee ordering system for guests. Nothing about money as everything is free. No data analytic features needed.

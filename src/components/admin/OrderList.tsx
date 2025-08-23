@@ -214,17 +214,6 @@ export const PendingOrdersList = ({ orders, ...props }: Omit<OrderListProps, 'em
   )
 }
 
-export const ReadyOrdersList = ({ orders, ...props }: Omit<OrderListProps, 'emptyMessage' | 'emptyIcon'>) => {
-  return (
-    <OrderList
-      {...props}
-      orders={orders.filter(order => order.status === 'ready')}
-      emptyMessage="No orders ready for pickup"
-      emptyIcon="📋"
-    />
-  )
-}
-
 export const CompletedOrdersList = ({ orders, ...props }: Omit<OrderListProps, 'emptyMessage' | 'emptyIcon'>) => {
   return (
     <OrderList

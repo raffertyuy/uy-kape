@@ -52,7 +52,7 @@ erDiagram
         string guest_name "the guest's name"
         int drink_id FK "references drinks.id"
         string special_request "optional guest instructions for order preparation"
-        string status "pending, ready, completed, cancelled"
+        string status "pending, completed, cancelled"
         int queue_number "computed queue position"
         timestamp created_at "timestamp of the order"
         timestamp updated_at "timestamp of last status update"
@@ -148,7 +148,7 @@ Stores all guest orders with status tracking and queue management.
 | guest_name   | string    | the guest's name                                   |
 | drink_id     | int       | Foreign Key to drinks.id                           |
 | special_request | string | optional guest instructions for order preparation |
-| status       | string    | "pending", "ready", "completed", "cancelled"      |
+| status       | string    | "pending", "completed", "cancelled"              |
 | queue_number | int       | computed queue position for pending orders        |
 | created_at   | timestamp | timestamp when order was placed                    |
 | updated_at   | timestamp | timestamp when order status was last updated      |

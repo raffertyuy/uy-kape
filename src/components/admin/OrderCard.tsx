@@ -163,26 +163,15 @@ export const OrderCard = ({
           </div>
 
           {/* Quick action buttons */}
-          {showActions && (order.status === 'pending' || order.status === 'ready') && (
+          {showActions && order.status === 'pending' && (
             <div className="flex space-x-2">
-              {order.status === 'pending' && (
-                <button
-                  onClick={() => handleStatusUpdate('ready')}
-                  className="px-3 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-md hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1 transition-colors"
-                  aria-label="Mark order as ready"
-                >
-                  Mark Ready
-                </button>
-              )}
-              {order.status === 'ready' && (
-                <button
-                  onClick={() => handleStatusUpdate('completed')}
-                  className="px-3 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors"
-                  aria-label="Mark order as completed"
-                >
-                  Complete
-                </button>
-              )}
+              <button
+                onClick={() => handleStatusUpdate('completed')}
+                className="px-3 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors"
+                aria-label="Mark order as completed"
+              >
+                Complete
+              </button>
               <button
                 onClick={() => handleStatusUpdate('cancelled')}
                 className="px-3 py-1 text-xs font-medium text-red-700 bg-red-100 rounded-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 transition-colors"
