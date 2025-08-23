@@ -110,7 +110,7 @@ export const mockOrders: Order[] = [
     id: "order-2",
     guest_name: "Jane Smith",
     drink_id: "drink-2",
-    status: "ready",
+    status: "completed",
     queue_number: 2,
     special_request: null,
     created_at: "2024-01-01T10:05:00Z",

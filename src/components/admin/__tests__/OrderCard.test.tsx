@@ -258,19 +258,19 @@ describe('OrderCard', () => {
       expect(screen.getByTestId('status-badge')).toHaveTextContent('cancelled')
     })
 
-    it('should render ready status correctly', () => {
-      const readyOrder = { ...mockOrder, status: 'ready' as const }
+    it('should render completed status correctly', () => {
+      const completedOrder = { ...mockOrder, status: 'completed' as const }
       
       render(
         <OrderCard
-          order={readyOrder}
+          order={completedOrder}
           onStatusUpdate={mockOnStatusUpdate}
           onSelect={mockOnSelect}
           isSelected={false}
         />
       )
 
-      expect(screen.getByTestId('status-badge')).toHaveTextContent('ready')
+      expect(screen.getByTestId('status-badge')).toHaveTextContent('completed')
     })
   })
 

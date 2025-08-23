@@ -37,7 +37,7 @@ export interface NotificationOptions {
   /**
    * Audio alert type
    */
-  audioType?: "new-order" | "order-ready" | "order-completed" | "error";
+  audioType?: "new-order" | "order-completed" | "error";
 }
 
 export interface NotificationServiceInterface {
@@ -220,8 +220,6 @@ class BrowserNotificationService implements NotificationServiceInterface {
     switch (type) {
       case "new-order":
         return 800; // High, attention-getting
-      case "order-ready":
-        return 600; // Medium, pleasant
       case "order-completed":
         return 400; // Low, completion
       case "error":
@@ -284,16 +282,6 @@ export const orderNotifications = {
     playAudio: true,
     audioType: "new-order" as const,
     data: { type: "new-order", orderNumber },
-  }),
-
-  orderReady: (orderNumber: string, customerName: string) => ({
-    title: `Order #${orderNumber} Ready`,
-    body: `${customerName}'s order is ready for pickup`,
-    tag: "order-ready",
-    requireInteraction: false,
-    playAudio: true,
-    audioType: "order-ready" as const,
-    data: { type: "order-ready", orderNumber },
   }),
 
   orderCompleted: (orderNumber: string, customerName: string) => ({

@@ -217,7 +217,7 @@ export const InlineStatusSelector = ({
   )
 }
 
-// Quick toggle for binary status changes (e.g., pending <-> ready)
+// Quick toggle for binary status changes (e.g., pending <-> completed)
 export const StatusToggle = ({
   order,
   onStatusUpdate,

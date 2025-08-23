@@ -31,7 +31,6 @@ export const OrderFilters = ({
   const statusOptions: { value: OrderStatus | 'all'; label: string }[] = [
     { value: 'all', label: 'All Orders' },
     { value: 'pending', label: 'Pending' },
-    { value: 'ready', label: 'Ready' },
     { value: 'completed', label: 'Completed' },
     { value: 'cancelled', label: 'Cancelled' }
   ]

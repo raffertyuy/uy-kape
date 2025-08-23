@@ -108,6 +108,7 @@ export const DrinkGrid = memo<DrinkGridProps>(
         role="tabpanel"
         id="drinks-panel"
         aria-label={selectedCategoryId ? 'Drinks in selected category' : 'All available drinks'}
+        data-testid="drink-selection"
       >
         {activeDrinks.map((drink: DrinkWithOptionsPreview) => (
           <DrinkCard

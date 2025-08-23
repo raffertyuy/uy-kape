@@ -59,13 +59,6 @@ export const OrderActions = ({
 
   const getButtonConfig = (status: OrderStatus) => {
     switch (status) {
-      case 'ready':
-        return {
-          label: 'Mark Ready',
-          icon: '✅',
-          className: 'text-green-700 bg-green-100 hover:bg-green-200 focus:ring-green-500',
-          loadingText: 'Marking Ready...'
-        }
       case 'completed':
         return {
           label: 'Complete',
@@ -191,7 +184,7 @@ export const OrderStatusDropdown = ({
   const [isOpen, setIsOpen] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  const allStatuses: OrderStatus[] = ['pending', 'ready', 'completed', 'cancelled']
+    const allStatuses: OrderStatus[] = ['pending', 'completed', 'cancelled']
   const availableStatuses = allStatuses.filter(status => status !== order.status)
 
   const handleStatusChange = async (newStatus: OrderStatus) => {
@@ -258,7 +251,6 @@ export const OrderStatusDropdown = ({
               {availableStatuses.map((status) => {
                 const config = {
                   pending: { label: 'Mark as Pending', icon: '⏳' },
-                  ready: { label: 'Mark as Ready', icon: '✅' },
                   completed: { label: 'Mark as Completed', icon: '🎉' },
                   cancelled: { label: 'Mark as Cancelled', icon: '❌' }
                 }[status]
