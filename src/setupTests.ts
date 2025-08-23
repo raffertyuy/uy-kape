@@ -14,18 +14,27 @@ const isCI = (): boolean => {
   );
 };
 
+const isTestEnv = (): boolean => {
+  return process.env.NODE_ENV === 'test' || Boolean(process.env.VITEST);
+};
+
 const shouldUseMocks = (): boolean => {
   // Always use mocks in CI environment
   if (isCI()) return true;
 
-  // For now, always use mocks in tests until we implement local DB connectivity check
-  // This prevents connection errors during tests
-  return true;
+  // Check if we should force mocks for testing
+  if (process.env.VITE_TEST_USE_MOCKS === 'true') return true;
+  
+  // Check if local database testing is explicitly enabled
+  if (process.env.VITE_TEST_USE_LOCAL_DB === 'true') return false;
+
+  // Default to mocks for safety in test environment
+  return isTestEnv();
 };
 
 // Supabase mocking setup based on environment
 if (shouldUseMocks()) {
-  // Set up global Supabase mocking for CI environment
+  // Set up global Supabase mocking for CI environment or when mocks are forced
   // We'll use vi.doMock to mock the Supabase module
   vi.doMock("@/lib/supabase", async () => {
     const { createCompleteSupabaseClient, mockConfigurations } = await import(
@@ -40,8 +49,26 @@ if (shouldUseMocks()) {
     return {
       supabase: mockClient,
       isCI,
-      isTestEnv: () => true,
+      isTestEnv,
       shouldUseMocks: () => true,
+    };
+  });
+} else {
+  // For local database testing, we still need to provide environment detection
+  // but use the real Supabase client configured for local development
+  vi.doMock("@/lib/supabase", async () => {
+    const { createLocalSupabaseClient } = await import(
+      "../tests/config/local-db-setup"
+    );
+
+    // Use local Supabase instance for integration testing
+    const localClient = createLocalSupabaseClient();
+
+    return {
+      supabase: localClient,
+      isCI,
+      isTestEnv,
+      shouldUseMocks: () => false,
     };
   });
 }
