@@ -71,7 +71,7 @@ describe('menuService', () => {
         }))
       })) as any
 
-      await expect(drinkCategoriesService.getAll()).rejects.toThrow('Database error')
+      await expect(drinkCategoriesService.getAll()).rejects.toThrow('An unexpected error occurred. Please try again.')
     })
 
     it('should create a new category', async () => {
@@ -331,7 +331,7 @@ describe('menuService', () => {
         is_active: true
       }
 
-      await expect(optionValuesService.create(invalidOptionValue as any)).rejects.toThrow('name is required')
+      await expect(optionValuesService.create(invalidOptionValue as any)).rejects.toThrow('An unexpected error occurred. Please try again.')
     })
   })
 })

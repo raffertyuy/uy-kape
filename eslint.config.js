@@ -42,6 +42,9 @@ export default [
         Element: 'readonly',
         Event: 'readonly',
         EventTarget: 'readonly',
+        navigator: 'readonly',
+        URL: 'readonly',
+        Navigator: 'readonly',
       },
     },
     plugins: {

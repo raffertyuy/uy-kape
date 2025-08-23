@@ -5,7 +5,7 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "types": ["vite/client", "vitest"],
+    "types": ["vite/client", "vitest", "node"],
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -29,6 +29,6 @@
       "@/test-utils": ["./tests/config/test-utils.tsx"]
     }
   },
-  "include": ["src", "tests"],
+  "include": ["src", "tests", "src/types/globals.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

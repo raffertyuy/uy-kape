@@ -8,7 +8,7 @@ export interface RetryOptions {
   maxDelay: number
   exponentialBase: number
   jitter: boolean
-  shouldRetry?: (error: any, attempt: number) => boolean
+  shouldRetry?: (_error: unknown, _attempt: number) => boolean
 }
 
 export interface RetryResult<T> {
@@ -134,7 +134,7 @@ export const retryNetworkOperation = async <T>(
     throw result.error
   }
   
-  return result.data!
+  return result.data as T
 }
 
 // Specialized retry for Supabase operations
@@ -183,22 +183,22 @@ export const retrySupabaseOperation = async <T>(
     throw result.error
   }
   
-  return result.data!
+  return result.data as T
 }
 
 // Create a retry wrapper for any function
-export const withRetry = <T extends any[], R>(
-  fn: (...args: T) => Promise<R>,
+export const withRetry = <T extends unknown[], R>(
+  fn: (..._args: T) => Promise<R>,
   options: Partial<RetryOptions> = {}
 ) => {
-  return async (...args: T): Promise<R> => {
-    const result = await retryOperation(() => fn(...args), options)
+  return async (..._args: T): Promise<R> => {
+    const result = await retryOperation(() => fn(..._args), options)
     
     if (!result.success) {
       throw result.error
     }
     
-    return result.data!
+    return result.data as R
   }
 }
 
@@ -242,16 +242,16 @@ class OperationCache<T> {
 }
 
 // Create global cache instances
-export const menuCache = new OperationCache<any>()
+export const menuCache = new OperationCache<unknown>()
 
 // Cache wrapper for operations
-export const withCache = <T extends any[], R>(
-  fn: (...args: T) => Promise<R>,
-  getCacheKey: (...args: T) => string,
+export const withCache = <T extends unknown[], R>(
+  fn: (..._args: T) => Promise<R>,
+  getCacheKey: (..._args: T) => string,
   ttl: number = 300000
 ) => {
-  return async (...args: T): Promise<R> => {
-    const cacheKey = getCacheKey(...args)
+  return async (..._args: T): Promise<R> => {
+    const cacheKey = getCacheKey(..._args)
     
     // Try to get from cache first
     const cached = menuCache.get(cacheKey)
@@ -260,7 +260,7 @@ export const withCache = <T extends any[], R>(
     }
     
     // Execute operation
-    const result = await fn(...args)
+    const result = await fn(..._args)
     
     // Cache successful result
     menuCache.set(cacheKey, result, ttl)
@@ -270,9 +270,9 @@ export const withCache = <T extends any[], R>(
 }
 
 // Combine retry and cache
-export const withRetryAndCache = <T extends any[], R>(
-  fn: (...args: T) => Promise<R>,
-  getCacheKey: (...args: T) => string,
+export const withRetryAndCache = <T extends unknown[], R>(
+  fn: (..._args: T) => Promise<R>,
+  getCacheKey: (..._args: T) => string,
   retryOptions: Partial<RetryOptions> = {},
   cacheTtl: number = 300000
 ) => {
@@ -297,16 +297,16 @@ export const createManualRetryState = (): ManualRetryState => ({
 
 export const executeWithManualRetry = async <T>(
   operation: () => Promise<T>,
-  state: ManualRetryState,
-  updateState: (state: ManualRetryState) => void,
+  _state: ManualRetryState,
+  updateState: (_state: ManualRetryState) => void,
   maxRetries: number = 5
 ): Promise<T | null> => {
-  if (state.isRetrying || !state.canRetry) {
+  if (_state.isRetrying || !_state.canRetry) {
     return null
   }
   
   updateState({
-    ...state,
+    ..._state,
     isRetrying: true,
     lastError: null
   })
@@ -315,6 +315,7 @@ export const executeWithManualRetry = async <T>(
     const result = await operation()
     
     updateState({
+      ..._state,
       isRetrying: false,
       lastError: null,
       retryCount: 0,
@@ -323,10 +324,11 @@ export const executeWithManualRetry = async <T>(
     
     return result
   } catch (error) {
-    const newRetryCount = state.retryCount + 1
+    const newRetryCount = _state.retryCount + 1
     const canRetry = newRetryCount < maxRetries
     
     updateState({
+      ..._state,
       isRetrying: false,
       lastError: error instanceof Error ? error : new Error(String(error)),
       retryCount: newRetryCount,

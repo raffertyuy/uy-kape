@@ -33,7 +33,7 @@ export const MenuManagement: React.FC = () => {
   // Health check effect
   useEffect(() => {
     let isSubscribed = true
-    let timeoutId: NodeJS.Timeout
+    let timeoutId: number
 
     const performHealthCheck = async () => {
       if (!isOnline) {
@@ -70,7 +70,7 @@ export const MenuManagement: React.FC = () => {
 
     // Schedule periodic health checks
     const scheduleNextCheck = () => {
-      timeoutId = setTimeout(() => {
+      timeoutId = window.setTimeout(() => {
         performHealthCheck()
         scheduleNextCheck()
       }, 30000) // Check every 30 seconds
@@ -80,7 +80,7 @@ export const MenuManagement: React.FC = () => {
 
     return () => {
       isSubscribed = false
-      clearTimeout(timeoutId)
+      window.clearTimeout(timeoutId)
     }
   }, [isOnline])
 

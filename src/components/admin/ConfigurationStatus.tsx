@@ -111,9 +111,11 @@ export const ConfigurationStatus: React.FC<ConfigurationStatusProps> = ({ classN
 
   const copyConfigReport = () => {
     const report = generateConfigReport()
-    navigator.clipboard.writeText(report).then(() => {
+    navigator?.clipboard?.writeText(report).then(() => {
       // Could add a toast notification here
-      console.log('Configuration report copied to clipboard')
+      // console.log('Configuration report copied to clipboard')
+    }).catch(() => {
+      // Handle copy failure silently or show user feedback
     })
   }
 
