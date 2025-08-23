@@ -3,7 +3,7 @@ name: 'New Issue for the GitHub Copilot Coding Agent'
 about: 'Assign a new task for the GitHub Copilot Coding Agent to implement'
 title: 'Implement {task}'
 labels: 'enhancement'
-assignees: 'copilot'
+assignees: 'copilot-swe-agent'
 ---
 
 Your goal is to implement the specified task by **STRICTLY FOLLOWING** the mandatory 4-step process below.
