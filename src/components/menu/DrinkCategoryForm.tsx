@@ -147,6 +147,30 @@ export const DrinkCategoryForm: React.FC<DrinkCategoryFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Network/Service Error Display */}
+      {(createMutation.state === 'error' || updateMutation.state === 'error') && (
+        <div className="p-3 bg-red-50 border border-red-200 rounded-md">
+          <div className="flex items-center">
+            <svg className="w-5 h-5 text-red-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div>
+              <h4 className="text-sm font-medium text-red-800">
+                {isEditing ? 'Update Failed' : 'Creation Failed'}
+              </h4>
+              <p className="text-sm text-red-700 mt-1">
+                {createMutation.error?.message || updateMutation.error?.message || 'An error occurred while saving the category.'}
+              </p>
+              {(createMutation.error?.retryable !== false && updateMutation.error?.retryable !== false) && (
+                <p className="text-xs text-red-600 mt-1">
+                  Please check your connection and try again.
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Name Field */}
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-coffee-700 mb-1">

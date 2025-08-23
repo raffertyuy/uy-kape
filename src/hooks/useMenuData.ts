@@ -26,7 +26,8 @@ import type {
   CreateOptionValueDto,
   UpdateOptionValueDto,
   CreateDrinkOptionDto,
-  UpdateDrinkOptionDto
+  UpdateDrinkOptionDto,
+  MenuServiceError
 } from '@/types/menu.types'
 
 // Hook for managing loading state and errors
@@ -42,11 +43,29 @@ const useAsyncOperation = <T>() => {
       setState({ state: 'success', data })
       return data
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
-      setState({
-        state: 'error',
-        error: { type: 'unknown', message: errorMessage }
-      })
+      // Check if it's an enhanced MenuServiceError
+      if (error instanceof Error && 'menuError' in error) {
+        const menuError = (error as any).menuError as MenuServiceError
+        setState({
+          state: 'error',
+          error: { 
+            type: menuError.type, 
+            message: menuError.userMessage,
+            retryable: menuError.retryable,
+            details: menuError
+          }
+        })
+      } else {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+        setState({
+          state: 'error',
+          error: { 
+            type: 'unknown', 
+            message: errorMessage,
+            retryable: true
+          }
+        })
+      }
       throw error
     }
   }, [])

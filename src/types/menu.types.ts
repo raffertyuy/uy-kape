@@ -81,10 +81,21 @@ export interface ValidationResult {
 
 // Error types for menu operations
 export type MenuOperationError = 
-  | { type: 'network'; message: string }
-  | { type: 'validation'; field: string; message: string }
-  | { type: 'database'; message: string }
-  | { type: 'unknown'; message: string }
+  | { type: 'network'; message: string; retryable?: boolean; details?: any }
+  | { type: 'validation'; field?: string; message: string; retryable?: boolean; details?: any }
+  | { type: 'database'; message: string; retryable?: boolean; details?: any }
+  | { type: 'authentication'; message: string; retryable?: boolean; details?: any }
+  | { type: 'server'; message: string; retryable?: boolean; details?: any }
+  | { type: 'unknown'; message: string; retryable?: boolean; details?: any }
+
+// Enhanced error interface for better error handling
+export interface MenuServiceError {
+  type: 'network' | 'authentication' | 'validation' | 'server' | 'unknown'
+  message: string
+  userMessage: string
+  details?: any
+  retryable: boolean
+}
 
 // Loading states for menu operations
 export type MenuLoadingState = 'idle' | 'loading' | 'success' | 'error'

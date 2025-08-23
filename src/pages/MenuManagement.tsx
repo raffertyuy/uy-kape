@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { MenuTabs, type MenuTab } from '@/components/menu/MenuTabs'
 import { MenuSearch, type MenuFilters } from '@/components/menu/MenuSearch'
 import { RealtimeIndicator } from '@/components/menu/RealtimeIndicator'
@@ -13,16 +13,76 @@ import {
   useOptionCategories 
 } from '@/hooks/useMenuData'
 import { useMenuSubscriptions } from '@/hooks/useMenuSubscriptions'
+import { useNetworkStatus } from '@/hooks/useNetworkStatus'
+import { checkSupabaseHealth, type SupabaseHealthCheck } from '@/lib/supabase'
 
 export const MenuManagement: React.FC = () => {
   const [activeTab, setActiveTab] = useState<MenuTab>('categories')
   const [searchQuery, setSearchQuery] = useState('')
   const [filters, setFilters] = useState<MenuFilters>({})
+  const [supabaseHealth, setSupabaseHealth] = useState<SupabaseHealthCheck | null>(null)
+
+  // Network status monitoring
+  const { isOnline } = useNetworkStatus()
 
   // Data hooks
   const { data: categories, isLoading: loadingCategories, refetch: refetchCategories } = useDrinkCategories()
   const { data: drinks, isLoading: loadingDrinks, refetch: refetchDrinks } = useDrinks()
   const { data: optionCategories, isLoading: loadingOptions, refetch: refetchOptions } = useOptionCategories()
+
+  // Health check effect
+  useEffect(() => {
+    let isSubscribed = true
+    let timeoutId: NodeJS.Timeout
+
+    const performHealthCheck = async () => {
+      if (!isOnline) {
+        if (isSubscribed) {
+          setSupabaseHealth({
+            isHealthy: false,
+            latency: null,
+            error: 'Network is offline',
+            timestamp: new Date()
+          })
+        }
+        return
+      }
+
+      try {
+        const health = await checkSupabaseHealth()
+        if (isSubscribed) {
+          setSupabaseHealth(health)
+        }
+      } catch (error) {
+        if (isSubscribed) {
+          setSupabaseHealth({
+            isHealthy: false,
+            latency: null,
+            error: error instanceof Error ? error.message : 'Health check failed',
+            timestamp: new Date()
+          })
+        }
+      }
+    }
+
+    // Initial health check
+    performHealthCheck()
+
+    // Schedule periodic health checks
+    const scheduleNextCheck = () => {
+      timeoutId = setTimeout(() => {
+        performHealthCheck()
+        scheduleNextCheck()
+      }, 30000) // Check every 30 seconds
+    }
+
+    scheduleNextCheck()
+
+    return () => {
+      isSubscribed = false
+      clearTimeout(timeoutId)
+    }
+  }, [isOnline])
 
   // Handle data changes from child components
   const handleDataChange = () => {
@@ -76,10 +136,49 @@ export const MenuManagement: React.FC = () => {
                 </p>
               </div>
             </div>
-            <RealtimeIndicator 
-              connectionStatus={connectionStatus}
-              className="bg-white rounded-lg border border-gray-200 px-3 py-2 shadow-sm"
-            />
+            <div className="flex flex-col space-y-2">
+              {/* Network Status Display */}
+              <div className="bg-white rounded-lg border border-gray-200 px-3 py-2 shadow-sm">
+                <div className="flex items-center text-sm">
+                  <div className={`w-2 h-2 rounded-full mr-2 ${
+                    !isOnline 
+                      ? 'bg-red-500' 
+                      : supabaseHealth?.isHealthy 
+                        ? 'bg-green-500' 
+                        : 'bg-yellow-500'
+                  }`} />
+                  <span className="font-medium">
+                    {!isOnline 
+                      ? 'Offline' 
+                      : supabaseHealth?.isHealthy 
+                        ? 'Connected' 
+                        : 'Connection Issues'
+                    }
+                  </span>
+                  {isOnline && supabaseHealth?.latency && (
+                    <span className="text-gray-500 ml-2">
+                      {supabaseHealth.latency}ms
+                    </span>
+                  )}
+                </div>
+                {!isOnline && (
+                  <p className="text-xs text-red-600 mt-1">
+                    Check your internet connection
+                  </p>
+                )}
+                {isOnline && !supabaseHealth?.isHealthy && supabaseHealth?.error && (
+                  <p className="text-xs text-yellow-600 mt-1">
+                    {supabaseHealth.error}
+                  </p>
+                )}
+              </div>
+
+              {/* Real-time Indicator */}
+              <RealtimeIndicator 
+                connectionStatus={connectionStatus}
+                className="bg-white rounded-lg border border-gray-200 px-3 py-2 shadow-sm"
+              />
+            </div>
           </div>
         </div>
 

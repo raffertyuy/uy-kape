@@ -1,4 +1,5 @@
 import { supabase } from '@/lib/supabase'
+import { retrySupabaseOperation } from '@/utils/retryUtils'
 import type {
   DrinkCategory,
   Drink,
@@ -17,13 +18,81 @@ import type {
   UpdateDrinkOptionDto,
   DrinkWithOptionsAndCategory,
   OptionCategoryWithValues,
-  DrinkWithOptionsPreview
+  DrinkWithOptionsPreview,
+  MenuServiceError
 } from '@/types/menu.types'
 
-// Utility function for handling Supabase errors
-const handleSupabaseError = (error: any): never => {
+// Utility function for handling Supabase errors with better categorization
+const handleSupabaseError = (error: any, operation: string = 'database operation'): never => {
   console.error('Supabase operation failed:', error)
-  throw new Error(error.message || 'Database operation failed')
+  
+  let menuError: MenuServiceError
+  
+  // Network connectivity errors
+  if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+    menuError = {
+      type: 'network',
+      message: `Network error during ${operation}: ${error.message}`,
+      userMessage: 'Unable to connect to the server. Please check your internet connection and try again.',
+      details: error,
+      retryable: true
+    }
+  }
+  // Supabase specific errors
+  else if (error?.code) {
+    switch (error.code) {
+      case 'PGRST116': // Not found
+        menuError = {
+          type: 'validation',
+          message: `Item not found during ${operation}`,
+          userMessage: 'The requested item could not be found.',
+          details: error,
+          retryable: false
+        }
+        break
+      case '401':
+      case 'UNAUTHORIZED':
+        menuError = {
+          type: 'authentication',
+          message: `Authentication error during ${operation}`,
+          userMessage: 'Access denied. Please check your permissions.',
+          details: error,
+          retryable: false
+        }
+        break
+      case '23505': // Unique constraint violation
+        menuError = {
+          type: 'validation',
+          message: `Duplicate entry during ${operation}`,
+          userMessage: 'An item with this name already exists. Please use a different name.',
+          details: error,
+          retryable: false
+        }
+        break
+      default:
+        menuError = {
+          type: 'server',
+          message: `Server error during ${operation}: ${error.message}`,
+          userMessage: 'A server error occurred. Please try again in a moment.',
+          details: error,
+          retryable: true
+        }
+    }
+  }
+  // Generic errors
+  else {
+    menuError = {
+      type: 'unknown',
+      message: `Unknown error during ${operation}: ${error?.message || 'Unknown error'}`,
+      userMessage: 'An unexpected error occurred. Please try again.',
+      details: error,
+      retryable: true
+    }
+  }
+  
+  const enhancedError = new Error(menuError.userMessage) as Error & { menuError: MenuServiceError }
+  enhancedError.menuError = menuError
+  throw enhancedError
 }
 
 // Drink Categories Service
@@ -34,7 +103,7 @@ export const drinkCategoriesService = {
       .select('*')
       .order('display_order', { ascending: true })
     
-    if (error) handleSupabaseError(error)
+    if (error) handleSupabaseError(error, 'fetch drink categories')
     return data || []
   },
 
@@ -47,43 +116,49 @@ export const drinkCategoriesService = {
     
     if (error) {
       if (error.code === 'PGRST116') return null // Not found
-      handleSupabaseError(error)
+      handleSupabaseError(error, 'fetch drink category')
     }
     return data as DrinkCategory
   },
 
   create: async (category: CreateDrinkCategoryDto): Promise<DrinkCategory> => {
-    const { data, error } = await supabase
-      .from('drink_categories')
-      .insert(category)
-      .select()
-      .single()
-    
-    if (error) handleSupabaseError(error)
-    if (!data) throw new Error('Failed to create category')
-    return data as DrinkCategory
+    return await retrySupabaseOperation(async () => {
+      const { data, error } = await supabase
+        .from('drink_categories')
+        .insert(category)
+        .select()
+        .single()
+      
+      if (error) handleSupabaseError(error, 'create drink category')
+      if (!data) throw new Error('Failed to create category')
+      return data as DrinkCategory
+    })
   },
 
   update: async (id: string, updates: UpdateDrinkCategoryDto): Promise<DrinkCategory> => {
-    const { data, error } = await supabase
-      .from('drink_categories')
-      .update({ ...updates, updated_at: new Date().toISOString() })
-      .eq('id', id)
-      .select()
-      .single()
-    
-    if (error) handleSupabaseError(error)
-    if (!data) throw new Error('Failed to update category')
-    return data as DrinkCategory
+    return await retrySupabaseOperation(async () => {
+      const { data, error } = await supabase
+        .from('drink_categories')
+        .update({ ...updates, updated_at: new Date().toISOString() })
+        .eq('id', id)
+        .select()
+        .single()
+      
+      if (error) handleSupabaseError(error, 'update drink category')
+      if (!data) throw new Error('Failed to update category')
+      return data as DrinkCategory
+    })
   },
 
   delete: async (id: string): Promise<void> => {
-    const { error } = await supabase
-      .from('drink_categories')
-      .delete()
-      .eq('id', id)
-    
-    if (error) handleSupabaseError(error)
+    return await retrySupabaseOperation(async () => {
+      const { error } = await supabase
+        .from('drink_categories')
+        .delete()
+        .eq('id', id)
+      
+      if (error) handleSupabaseError(error, 'delete drink category')
+    })
   },
 
   updateDisplayOrder: async (categories: Array<{ id: string; display_order: number }>): Promise<void> => {
@@ -94,7 +169,7 @@ export const drinkCategoriesService = {
         .update({ display_order: category.display_order })
         .eq('id', category.id)
       
-      if (error) handleSupabaseError(error)
+      if (error) handleSupabaseError(error, 'update drink category display order')
     }
   }
 }
@@ -110,7 +185,7 @@ export const drinksService = {
       `)
       .order('display_order', { ascending: true })
     
-    if (error) handleSupabaseError(error)
+    if (error) handleSupabaseError(error, 'fetch drinks')
     return data || []
   },
 
@@ -168,43 +243,49 @@ export const drinksService = {
   },
 
   create: async (drink: CreateDrinkDto): Promise<Drink> => {
-    const { data, error } = await supabase
-      .from('drinks')
-      .insert(drink)
-      .select(`
-        *,
-        category:drink_categories(*)
-      `)
-      .single()
-    
-    if (error) handleSupabaseError(error)
-    if (!data) throw new Error('Failed to create drink')
-    return data as Drink
+    return await retrySupabaseOperation(async () => {
+      const { data, error } = await supabase
+        .from('drinks')
+        .insert(drink)
+        .select(`
+          *,
+          category:drink_categories(*)
+        `)
+        .single()
+      
+      if (error) handleSupabaseError(error, 'create drink')
+      if (!data) throw new Error('Failed to create drink')
+      return data as Drink
+    })
   },
 
   update: async (id: string, updates: UpdateDrinkDto): Promise<Drink> => {
-    const { data, error } = await supabase
-      .from('drinks')
-      .update({ ...updates, updated_at: new Date().toISOString() })
-      .eq('id', id)
-      .select(`
-        *,
-        category:drink_categories(*)
-      `)
-      .single()
-    
-    if (error) handleSupabaseError(error)
-    if (!data) throw new Error('Failed to update drink')
-    return data as Drink
+    return await retrySupabaseOperation(async () => {
+      const { data, error } = await supabase
+        .from('drinks')
+        .update({ ...updates, updated_at: new Date().toISOString() })
+        .eq('id', id)
+        .select(`
+          *,
+          category:drink_categories(*)
+        `)
+        .single()
+      
+      if (error) handleSupabaseError(error, 'update drink')
+      if (!data) throw new Error('Failed to update drink')
+      return data as Drink
+    })
   },
 
   delete: async (id: string): Promise<void> => {
-    const { error } = await supabase
-      .from('drinks')
-      .delete()
-      .eq('id', id)
-    
-    if (error) handleSupabaseError(error)
+    return await retrySupabaseOperation(async () => {
+      const { error } = await supabase
+        .from('drinks')
+        .delete()
+        .eq('id', id)
+      
+      if (error) handleSupabaseError(error, 'delete drink')
+    })
   },
 
   updateDisplayOrder: async (drinks: Array<{ id: string; display_order: number }>): Promise<void> => {
@@ -324,7 +405,7 @@ export const optionCategoriesService = {
       .select()
       .single()
     
-    if (error) handleSupabaseError(error)
+    if (error) handleSupabaseError(error, 'create option category')
     if (!data) throw new Error('Failed to create option category')
     return data as OptionCategory
   },
@@ -337,7 +418,7 @@ export const optionCategoriesService = {
       .select()
       .single()
     
-    if (error) handleSupabaseError(error)
+    if (error) handleSupabaseError(error, 'update option category')
     if (!data) throw new Error('Failed to update option category')
     return data as OptionCategory
   },
@@ -348,7 +429,7 @@ export const optionCategoriesService = {
       .delete()
       .eq('id', id)
     
-    if (error) handleSupabaseError(error)
+    if (error) handleSupabaseError(error, 'delete option category')
   }
 }
 
@@ -395,7 +476,7 @@ export const optionValuesService = {
       `)
       .single()
     
-    if (error) handleSupabaseError(error)
+    if (error) handleSupabaseError(error, 'create option value')
     if (!data) throw new Error('Failed to create option value')
     return data as OptionValue
   },
@@ -411,7 +492,7 @@ export const optionValuesService = {
       `)
       .single()
     
-    if (error) handleSupabaseError(error)
+    if (error) handleSupabaseError(error, 'update option value')
     if (!data) throw new Error('Failed to update option value')
     return data as OptionValue
   },
@@ -422,7 +503,7 @@ export const optionValuesService = {
       .delete()
       .eq('id', id)
     
-    if (error) handleSupabaseError(error)
+    if (error) handleSupabaseError(error, 'delete option value')
   },
 
   updateDisplayOrder: async (values: Array<{ id: string; display_order: number }>): Promise<void> => {

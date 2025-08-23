@@ -5,13 +5,21 @@ interface LoadingSpinnerProps {
   message?: string
   className?: string
   centered?: boolean
+  showRetry?: boolean
+  onRetry?: () => void
+  retryMessage?: string
+  error?: string | null
 }
 
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = 'md',
   message = 'Loading...',
   className = '',
-  centered = true
+  centered = true,
+  showRetry = false,
+  onRetry,
+  retryMessage = 'Try again',
+  error = null
 }) => {
   const sizeClasses = {
     sm: 'w-4 h-4',
@@ -48,11 +56,30 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         role="status"
         aria-label="Loading"
       />
-      {message && (
-        <span className={`text-coffee-600 ${textSizeClasses[size]} font-medium`}>
-          {message}
-        </span>
-      )}
+      <div className="flex flex-col items-center space-y-2">
+        {message && (
+          <span className={`text-coffee-600 ${textSizeClasses[size]} font-medium`}>
+            {message}
+          </span>
+        )}
+        {error && (
+          <p className={`text-red-600 ${textSizeClasses[size]} text-center max-w-xs`}>
+            {error}
+          </p>
+        )}
+        {showRetry && onRetry && (
+          <button
+            onClick={onRetry}
+            className={`
+              px-3 py-1 bg-coffee-600 text-white rounded text-xs 
+              hover:bg-coffee-700 transition-colors focus:outline-none 
+              focus:ring-2 focus:ring-coffee-500 focus:ring-offset-2
+            `}
+          >
+            {retryMessage}
+          </button>
+        )}
+      </div>
     </div>
   )
 

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import PasswordProtection from '@/components/PasswordProtection'
 import { MenuManagement } from '@/pages/MenuManagement'
 import { OrderDashboard } from '@/components/admin/OrderDashboard'
+import { ConfigurationStatus } from '@/components/admin/ConfigurationStatus'
 import { appConfig } from '@/config/app.config'
 import { Logo } from '@/components/ui/Logo'
 
@@ -101,6 +102,11 @@ function AdminDashboard({ onNavigate }: { onNavigate: (_view: AdminView) => void
               <div className="text-xs text-blue-600">Active</div>
             </div>
           </div>
+        </div>
+
+        {/* Configuration Status */}
+        <div className="mt-6">
+          <ConfigurationStatus />
         </div>
       </div>
     </div>
