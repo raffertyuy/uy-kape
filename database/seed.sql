@@ -59,8 +59,7 @@ INSERT INTO drinks (name, description, category_id, display_order, is_active) VA
 ('Americano', 'Espresso with hot water', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 6, true),
 ('Black Coffee (Moka Pot)', 'Coffee brewed in a moka pot', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 7, true),
 ('Black Coffee (V60)', 'Pour-over coffee using V60 dripper', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 8, true),
-('Black Coffee (Aeropress)', 'Black coffee using an Aeropress', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 9, true),
-('Ice-Blended Coffee', 'Blended iced coffee drink', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 10, true);
+('Black Coffee (Aeropress)', 'Black coffee using an Aeropress', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 9, true);
 
 -- Tea category drinks
 INSERT INTO drinks (name, description, category_id, display_order, is_active) VALUES
@@ -75,8 +74,9 @@ INSERT INTO drinks (name, description, category_id, display_order, is_active) VA
 
 -- Special Coffee category drinks
 INSERT INTO drinks (name, description, category_id, display_order, is_active) VALUES
-('Affogato', 'Ice cream with an espresso shot', (SELECT id FROM drink_categories WHERE name = 'Special Coffee'), 41, true),
-('Amaretto Coffee', 'Americano with amaretto dessert liquor', (SELECT id FROM drink_categories WHERE name = 'Special Coffee'), 42, true);
+('Ice-Blended Coffee', 'Blended iced coffee drink', (SELECT id FROM drink_categories WHERE name = 'Special Coffee'), 41, true),
+('Affogato', 'Ice cream with an espresso shot', (SELECT id FROM drink_categories WHERE name = 'Special Coffee'), 42, true),
+('Amaretto Coffee', 'Americano with amaretto dessert liquor', (SELECT id FROM drink_categories WHERE name = 'Special Coffee'), 43, true);
 
 -- Link drinks to their available option categories
 -- Espresso-based drinks that can have shot options and milk options
