@@ -1,4 +1,4 @@
-name: CI
+name: CI & Security
 
 on:
   push:
@@ -8,6 +8,8 @@ on:
 
 permissions:
   contents: read
+  security-events: write
+  actions: read
 
 jobs:
   # Check what files changed to optimize workflow execution
@@ -121,3 +123,135 @@ jobs:
       #   with:
       #     fail_ci_if_error: false
       #     verbose: true
+
+  security:
+    name: Security and Dependency Scanning
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: "npm"
+
+      - name: Cache dependencies for faster scanning
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            node_modules
+          key: ${{ runner.os }}-security-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-security-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run npm audit for React/Supabase dependencies
+        run: |
+          echo "🔍 Checking for security vulnerabilities in dependencies..."
+          npm audit --audit-level=moderate || echo "Security issues found - review needed"
+
+      - name: Check for hardcoded Supabase keys or secrets
+        run: |
+          echo "🔍 Scanning for hardcoded secrets..."
+
+          # Check for potential Supabase API keys or secrets
+          if grep -r --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
+            -E "(anon|service_role)\.ey[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+" src/; then
+            echo "❌ Potential hardcoded Supabase keys found!"
+            exit 1
+          fi
+
+          # Check for URLs with keys
+          if grep -r --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
+            -E "https://[a-zA-Z0-9]+\.supabase\.co.*eyJ" src/; then
+            echo "❌ Potential hardcoded Supabase URLs with keys found!"
+            exit 1
+          fi
+
+          echo "✅ No hardcoded secrets detected"
+
+      - name: Validate environment variable usage
+        run: |
+          echo "🔍 Validating environment variable patterns..."
+
+          # Check for proper environment variable usage
+          if grep -r --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
+            -E "process\.env\.[A-Z_]+" src/ | grep -v "VITE_"; then
+            echo "⚠️  Non-Vite environment variables found - ensure they're available at build time"
+          fi
+
+          # Check for missing VITE_ prefix on client-side env vars
+          if grep -r --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
+            -E "import\.meta\.env\.[A-Z_]+" src/ | grep -v "VITE_"; then
+            echo "❌ Environment variables must have VITE_ prefix for client-side access!"
+            exit 1
+          fi
+
+          echo "✅ Environment variable usage looks good"
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript
+          config-file: ./.github/codeql-config.yml
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:javascript"
+
+  react-security:
+    name: React Security Patterns
+    runs-on: ubuntu-latest
+    needs: changes
+    if: needs.changes.outputs.react == 'true'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Scan for React security anti-patterns
+        run: |
+          echo "🔍 Scanning for React security anti-patterns..."
+
+          # Check for dangerous innerHTML usage
+          if grep -r --include="*.tsx" --include="*.jsx" "dangerouslySetInnerHTML" src/; then
+            echo "⚠️  dangerouslySetInnerHTML usage found - ensure content is sanitized"
+          fi
+
+          # Check for eval usage
+          if grep -r --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
+            -E "\beval\s*\(" src/; then
+            echo "❌ eval() usage found - this is a security risk!"
+            exit 1
+          fi
+
+          # Check for document.write usage
+          if grep -r --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
+            "document\.write" src/; then
+            echo "❌ document.write usage found - this can lead to XSS!"
+            exit 1
+          fi
+
+          # Check for window.location assignment patterns that might be unsafe
+          if grep -r --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
+            -E "window\.location\s*=" src/; then
+            echo "⚠️  Direct window.location assignment found - ensure URL is validated"
+          fi
+
+          echo "✅ React security scan completed"

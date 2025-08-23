@@ -38,146 +38,77 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build with Vite (analyze bundle)
+      - name: Build and analyze bundle
         run: |
-          echo "📦 Building application with Vite..."
+          echo "📦 Building application..."
           npm run build
 
-          # Get build output statistics
+          # Get key metrics only
           BUILD_SIZE=$(du -sh dist | cut -f1)
-          echo "Total build size: $BUILD_SIZE"
+          JS_COUNT=$(find dist/assets -name "*.js" | wc -l)
+          CSS_COUNT=$(find dist/assets -name "*.css" | wc -l)
+          LARGE_FILES=$(find dist -size +100k -type f | wc -l)
 
-          # Check for large chunks
-          echo "📊 Analyzing chunk sizes..."
-          find dist/assets -name "*.js" -exec ls -lh {} \; | sort -k5 -hr | head -10
+          # Code splitting metrics
+          LAZY_COUNT=$(grep -r "React.lazy\|lazy(" src/ --include="*.tsx" --include="*.ts" 2>/dev/null | wc -l || echo "0")
+          DYNAMIC_IMPORTS=$(grep -r "import(" src/ --include="*.tsx" --include="*.ts" 2>/dev/null | wc -l || echo "0")
 
-      - name: Analyze bundle composition
-        run: |
-          echo "🔍 Analyzing bundle composition..."
+          # Save metrics
+          echo "BUILD_SIZE=$BUILD_SIZE" >> $GITHUB_ENV
+          echo "JS_COUNT=$JS_COUNT" >> $GITHUB_ENV
+          echo "CSS_COUNT=$CSS_COUNT" >> $GITHUB_ENV
+          echo "LARGE_FILES=$LARGE_FILES" >> $GITHUB_ENV
+          echo "LAZY_COUNT=$LAZY_COUNT" >> $GITHUB_ENV
+          echo "DYNAMIC_IMPORTS=$DYNAMIC_IMPORTS" >> $GITHUB_ENV
 
-          # Check for potential optimizations
-          echo "## Bundle Analysis Results" > bundle-analysis.md
-          echo "" >> bundle-analysis.md
-
-          # JavaScript chunks analysis
-          echo "### JavaScript Chunks" >> bundle-analysis.md
-          echo "\`\`\`" >> bundle-analysis.md
-          find dist/assets -name "*.js" -exec basename {} \; | sort >> bundle-analysis.md
-          echo "\`\`\`" >> bundle-analysis.md
-          echo "" >> bundle-analysis.md
-
-          # CSS chunks analysis
-          echo "### CSS Files" >> bundle-analysis.md
-          echo "\`\`\`" >> bundle-analysis.md
-          find dist/assets -name "*.css" -exec basename {} \; | sort >> bundle-analysis.md
-          echo "\`\`\`" >> bundle-analysis.md
-          echo "" >> bundle-analysis.md
-
-          # Check for large files
-          echo "### Large Files (>100KB)" >> bundle-analysis.md
-          echo "\`\`\`" >> bundle-analysis.md
-          find dist -size +100k -type f -exec ls -lh {} \; >> bundle-analysis.md
-          echo "\`\`\`" >> bundle-analysis.md
-
-      - name: Check for React component code splitting
-        run: |
-          echo "🧩 Checking for code splitting opportunities..."
-
-          # Look for potential code splitting opportunities
-          echo "## Code Splitting Analysis" >> bundle-analysis.md
-          echo "" >> bundle-analysis.md
-
-          # Check if React.lazy is used
-          LAZY_COUNT=$(grep -r "React.lazy\|lazy(" src/ --include="*.tsx" --include="*.ts" | wc -l || echo "0")
-          echo "- React.lazy implementations found: $LAZY_COUNT" >> bundle-analysis.md
-
-          # Check for dynamic imports
-          DYNAMIC_IMPORTS=$(grep -r "import(" src/ --include="*.tsx" --include="*.ts" | wc -l || echo "0")
-          echo "- Dynamic imports found: $DYNAMIC_IMPORTS" >> bundle-analysis.md
-
-          # Check for route-based splitting
-          ROUTE_COMPONENTS=$(find src/pages -name "*.tsx" | wc -l || echo "0")
-          echo "- Page components: $ROUTE_COMPONENTS" >> bundle-analysis.md
-
-      - name: Monitor Supabase client bundle impact
-        run: |
-          echo "📡 Analyzing Supabase bundle impact..."
-
-          echo "## Supabase Bundle Impact" >> bundle-analysis.md
-          echo "" >> bundle-analysis.md
-
-          # Check Supabase imports
-          SUPABASE_IMPORTS=$(grep -r "@supabase" src/ --include="*.tsx" --include="*.ts" | wc -l || echo "0")
-          echo "- Supabase import statements: $SUPABASE_IMPORTS" >> bundle-analysis.md
-
-          # Check if Supabase client is properly tree-shaken
-          if grep -r "createClient" src/ --include="*.ts"; then
-            echo "- ✅ Supabase client creation found" >> bundle-analysis.md
-          else
-            echo "- ❌ No Supabase client creation found" >> bundle-analysis.md
-          fi
-
-      - name: Validate mobile-first performance metrics
-        run: |
-          echo "📱 Checking mobile performance considerations..."
-
-          echo "## Mobile Performance Considerations" >> bundle-analysis.md
-          echo "" >> bundle-analysis.md
-
-          # Check for lazy loading images
-          LAZY_IMAGES=$(grep -r "loading.*lazy" src/ --include="*.tsx" | wc -l || echo "0")
-          echo "- Lazy-loaded images: $LAZY_IMAGES" >> bundle-analysis.md
-
-          # Check for responsive image usage
-          RESPONSIVE_IMAGES=$(grep -r "srcSet\|sizes" src/ --include="*.tsx" | wc -l || echo "0")
-          echo "- Responsive image implementations: $RESPONSIVE_IMAGES" >> bundle-analysis.md
-
-          # Check Tailwind CSS purging (should be minimal final CSS)
-          CSS_SIZE=$(find dist/assets -name "*.css" -exec cat {} \; | wc -c || echo "0")
-          echo "- Total CSS size: $(echo $CSS_SIZE | numfmt --to=iec)" >> bundle-analysis.md
-
-          # Performance recommendations
-          echo "" >> bundle-analysis.md
-          echo "### Performance Recommendations" >> bundle-analysis.md
-          echo "- Ensure images are optimized and use appropriate formats (WebP, AVIF)" >> bundle-analysis.md
-          echo "- Consider implementing virtual scrolling for long menu lists" >> bundle-analysis.md
-          echo "- Use React.memo for components that don't need frequent re-renders" >> bundle-analysis.md
-          echo "- Implement service worker for offline coffee menu access" >> bundle-analysis.md
-
-      - name: Comment PR with performance analysis
+      - name: Update or create performance comment
         uses: actions/github-script@v7
         with:
           script: |
-            const fs = require('fs');
+            const { BUILD_SIZE, JS_COUNT, CSS_COUNT, LARGE_FILES, LAZY_COUNT, DYNAMIC_IMPORTS } = process.env;
 
-            // Read the analysis file
-            let analysisContent = '';
-            try {
-              analysisContent = fs.readFileSync('bundle-analysis.md', 'utf8');
-            } catch (error) {
-              analysisContent = '❌ Bundle analysis failed to generate report.';
-            }
+            // Concise performance summary
+            const body = `## 📦 Bundle Performance Summary
 
-            // Create comment body
-            const body = `## 📦 Vite Bundle Analysis Results
+            | Metric | Value |
+            |--------|-------|
+            | 📊 Total Size | ${BUILD_SIZE} |
+            | 🧩 JS Chunks | ${JS_COUNT} |
+            | 🎨 CSS Files | ${CSS_COUNT} |
+            | ⚠️ Large Files (>100KB) | ${LARGE_FILES} |
+            | ⚡ Code Splitting | ${LAZY_COUNT} lazy + ${DYNAMIC_IMPORTS} dynamic |
 
-            ${analysisContent}
+            ${LARGE_FILES > 0 ? '⚠️ **Consider optimizing large files for better mobile performance**' : '✅ **Bundle size looks good**'}
 
-            ---
+            <!-- performance-comment-marker -->`;
 
-            This analysis helps ensure optimal performance for mobile coffee ordering. 
-
-            **Key Metrics for Coffee Shop App:**
-            - ✅ Fast initial load (< 3s on 3G)
-            - ✅ Efficient menu browsing
-            - ✅ Smooth ordering experience
-            - ✅ Offline-capable menu access
-            `;
-
-            // Post comment
-            github.rest.issues.createComment({
+            // Find existing comment to update
+            const comments = await github.rest.issues.listComments({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: body
             });
+
+            const existingComment = comments.data.find(comment => 
+              comment.body.includes('<!-- performance-comment-marker -->')
+            );
+
+            if (existingComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                comment_id: existingComment.id,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+              console.log('Updated existing performance comment');
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+              console.log('Created new performance comment');
+            }
