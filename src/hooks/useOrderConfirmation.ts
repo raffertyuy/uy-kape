@@ -82,18 +82,12 @@ export function useOrderConfirmation(
 
         setOrderDetails(details);
 
-        // Create order result from details if not already set
-        if (!orderResult) {
-          const result: OrderSubmissionResult = {
-            order_id: details.id,
-            queue_number: details.queue_number,
-            ...(queueStatusHook.queueStatus?.estimatedWaitTime && {
-              estimated_wait_time:
-                queueStatusHook.queueStatus.estimatedWaitTime,
-            }),
-          };
-          setOrderResult(result);
-        }
+        // Create order result from details - always create when fetching via URL
+        const result: OrderSubmissionResult = {
+          order_id: details.id,
+          queue_number: details.queue_number,
+        };
+        setOrderResult(result);
       } catch (err) {
         // Enhanced error handling with specific error types
         if (err && typeof err === "object" && "type" in err) {
@@ -129,7 +123,7 @@ export function useOrderConfirmation(
         setIsLoading(false);
       }
     },
-    [orderResult, queueStatusHook.queueStatus?.estimatedWaitTime],
+    [], // Remove problematic dependencies to fix infinite loop
   );
 
   // Refresh order action
