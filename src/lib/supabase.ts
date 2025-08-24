@@ -3,6 +3,15 @@ import type { Database } from "@/types/database.types";
 
 // Environment detection functions
 const isCI = (): boolean => {
+  // Check if we're in a browser environment and avoid using process
+  if (typeof process === "undefined") {
+    // In browser, check import.meta.env for Vite environment variables
+    return (
+      import.meta.env.VITE_CI === "true" ||
+      import.meta.env.VITE_GITHUB_ACTIONS === "true"
+    );
+  }
+
   return (
     process.env.CI === "true" ||
     process.env.GITHUB_ACTIONS === "true" ||
@@ -11,6 +20,15 @@ const isCI = (): boolean => {
 };
 
 const isTestEnv = (): boolean => {
+  // Check if we're in a browser environment and avoid using process
+  if (typeof process === "undefined") {
+    // In browser, check import.meta.env and vitest indicator
+    return (
+      import.meta.env.VITE_IS_TEST === "true" ||
+      Boolean((import.meta as { vitest?: boolean })?.vitest)
+    );
+  }
+
   return (
     process.env.NODE_ENV === "test" ||
     process.env.VITE_IS_TEST === "true" ||
