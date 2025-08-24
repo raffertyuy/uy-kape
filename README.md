@@ -8,7 +8,10 @@
 
 ## Vibe Coding
 
-This app is **100% vibe coded!** using [GitHub Copilot](https://copilot.github.com).
+This app is **100% vibe coded!** using [GitHub Copilot](https://copilot.github.com). We do this mostly by following the [plan-implement-run pattern](https://raffertyuy.com/raztype/vibe-coding-plan-implement-run/).
+
+This starts with writing a task objective in [scratch.md](/scratch.md) and then running `/1-plan #file:scratch.md` in GitHub Copilot Chat.
+
 Explore the files in the `.github` and `docs/` folder that made this possible.
 
 ## Features
