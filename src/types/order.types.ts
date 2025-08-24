@@ -89,3 +89,16 @@ export interface GuestCancellationResult {
   success: boolean;
   error?: OrderServiceError;
 }
+
+// Order confirmation URL parameters interface
+export interface OrderConfirmationParams {
+  orderId: string;
+}
+
+// Order confirmation state interface
+export interface OrderConfirmationState {
+  result: OrderSubmissionResult | null;
+  orderDetails: OrderWithDetails | null;
+  isLoading: boolean;
+  error: OrderServiceError | null;
+}

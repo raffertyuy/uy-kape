@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import PasswordProtection from '@/components/PasswordProtection'
 import { appConfig } from '@/config/app.config'
 import { Logo } from '@/components/ui/Logo'
@@ -18,12 +19,36 @@ import { OrderSuccess } from '@/components/guest/OrderSuccess'
 
 function GuestModulePage() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('')
+  const [searchParams, setSearchParams] = useSearchParams()
   
   // Form state management
   const orderForm = useOrderForm()
   
   // Get all drinks data (for drink lookup in handleDrinkSelect)
   const { data: allDrinks = [] } = useDrinksWithOptionsPreview()
+
+  // URL parameter handling for order confirmation
+  useEffect(() => {
+    const orderId = searchParams.get('orderId')
+    if (orderId && orderForm.currentStep !== 'success') {
+      // If there's an orderId in URL and we're not on success step, 
+      // set to success step to display confirmation
+      orderForm.goToStep('success')
+    }
+  }, [searchParams, orderForm])
+
+  // Update URL when reaching success step
+  useEffect(() => {
+    if (orderForm.currentStep === 'success' && orderForm.orderSubmission.result) {
+      const orderId = orderForm.orderSubmission.result.order_id
+      if (!searchParams.get('orderId')) {
+        setSearchParams({ orderId })
+      }
+    } else if (orderForm.currentStep !== 'success' && searchParams.get('orderId')) {
+      // Remove orderId from URL when leaving success step
+      setSearchParams({})
+    }
+  }, [orderForm.currentStep, orderForm.orderSubmission.result, searchParams, setSearchParams])
 
   // Generate funny name when guest-info step is reached for the first time
   useEffect(() => {
@@ -200,14 +225,12 @@ function GuestModulePage() {
 
   const renderSuccess = () => (
     <div className="space-y-6">
-      {orderForm.orderSubmission.result && (
-        <OrderSuccess
-          result={orderForm.orderSubmission.result}
-          guestName={orderForm.guestInfo.trimmedName}
-          specialRequest={orderForm.guestInfo.specialRequest}
-          onCreateNewOrder={orderForm.startNewOrder}
-        />
-      )}
+      <OrderSuccess
+        {...(orderForm.orderSubmission.result && { result: orderForm.orderSubmission.result })}
+        {...(orderForm.guestInfo.trimmedName && { guestName: orderForm.guestInfo.trimmedName })}
+        {...(orderForm.guestInfo.specialRequest && { specialRequest: orderForm.guestInfo.specialRequest })}
+        onCreateNewOrder={orderForm.startNewOrder}
+      />
     </div>
   )
 

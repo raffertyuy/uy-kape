@@ -1,11 +1,13 @@
 import { memo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import type { OrderSubmissionResult } from '@/types/order.types'
 import { BaristaProverb } from '@/components/ui/BaristaProverb'
 import { useGuestOrderActions } from '@/hooks/useGuestOrderActions'
+import { useOrderConfirmation } from '@/hooks/useOrderConfirmation'
 
 interface OrderSuccessProps {
-  result: OrderSubmissionResult
-  guestName: string
+  result?: OrderSubmissionResult
+  guestName?: string
   specialRequest?: string
   onCreateNewOrder: () => void
   className?: string
@@ -19,9 +21,117 @@ export const OrderSuccess = memo<OrderSuccessProps>(
     onCreateNewOrder, 
     className = '' 
   }) {
+    const [searchParams] = useSearchParams()
     const [showCancelDialog, setShowCancelDialog] = useState(false)
     const [cancellationMessage, setCancellationMessage] = useState<string | null>(null)
     const { cancelOrder, isCancelling, cancelError, clearError } = useGuestOrderActions()
+    
+    // Get orderId from URL if not provided via props
+    const orderId = result?.order_id || searchParams.get('orderId')
+    
+    // Use order confirmation hook for URL-based confirmations
+    const orderConfirmation = useOrderConfirmation(orderId)
+    
+    // Use data from hook if no props provided
+    const effectiveResult = result || orderConfirmation.orderResult
+    const effectiveGuestName = guestName || orderConfirmation.orderDetails?.guest_name || 'Guest'
+    const effectiveSpecialRequest = specialRequest || orderConfirmation.orderDetails?.special_request || undefined
+    
+    // Show loading state if we're fetching order data from URL
+    if (!result && orderConfirmation.isLoading) {
+      return (
+        <div className={`text-center space-y-6 ${className}`}>
+          <div className="mx-auto w-16 h-16 bg-coffee-100 rounded-full flex items-center justify-center animate-pulse">
+            <svg 
+              className="w-8 h-8 text-coffee-600 animate-spin" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" 
+              />
+            </svg>
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-bold text-coffee-800">Loading Order...</h2>
+            <p className="text-lg text-coffee-600">Retrieving your order confirmation</p>
+          </div>
+        </div>
+      )
+    }
+    
+    // Show error state if order couldn't be loaded
+    if (!result && orderConfirmation.error) {
+      return (
+        <div className={`text-center space-y-6 ${className}`}>
+          <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+            <svg 
+              className="w-8 h-8 text-red-600" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" 
+              />
+            </svg>
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-bold text-red-800">Order Not Found</h2>
+            <p className="text-lg text-red-600">
+              {orderConfirmation.error.message}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onCreateNewOrder}
+            className="
+              inline-flex items-center px-6 py-3 
+              bg-coffee-600 hover:bg-coffee-700 
+              text-white font-semibold rounded-lg
+              transition-colors duration-200
+              focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:ring-offset-2
+            "
+          >
+            Place New Order
+          </button>
+        </div>
+      )
+    }
+    
+    // Return early if no order data is available
+    if (!effectiveResult) {
+      return (
+        <div className={`text-center space-y-6 ${className}`}>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-bold text-coffee-800">No Order Found</h2>
+            <p className="text-lg text-coffee-600">Unable to display order confirmation</p>
+          </div>
+          <button
+            type="button"
+            onClick={onCreateNewOrder}
+            className="
+              inline-flex items-center px-6 py-3 
+              bg-coffee-600 hover:bg-coffee-700 
+              text-white font-semibold rounded-lg
+              transition-colors duration-200
+              focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:ring-offset-2
+            "
+          >
+            Place New Order
+          </button>
+        </div>
+      )
+    }
 
     const handleCancelRequest = () => {
       setShowCancelDialog(true)
@@ -29,7 +139,9 @@ export const OrderSuccess = memo<OrderSuccessProps>(
     }
 
     const handleCancelConfirm = async () => {
-      const result_cancellation = await cancelOrder(result.order_id, guestName)
+      if (!effectiveResult || !effectiveGuestName) return
+      
+      const result_cancellation = await cancelOrder(effectiveResult.order_id, effectiveGuestName)
       
       if (result_cancellation.success) {
         setCancellationMessage('Your order has been cancelled successfully.')
@@ -118,7 +230,7 @@ export const OrderSuccess = memo<OrderSuccessProps>(
             Order Confirmed!
           </h2>
           <p className="text-lg text-coffee-600">
-            Thanks {guestName}! Your order has been received.
+            Thanks {effectiveGuestName}! Your order has been received.
           </p>
         </div>
 
@@ -133,7 +245,7 @@ export const OrderSuccess = memo<OrderSuccessProps>(
             <div className="flex justify-between items-center">
               <span className="text-coffee-600">Order ID:</span>
               <span className="font-mono text-coffee-800 bg-white px-2 py-1 rounded">
-                #{result.order_id.slice(-8).toUpperCase()}
+                #{effectiveResult.order_id.slice(-8).toUpperCase()}
               </span>
             </div>
 
@@ -141,16 +253,16 @@ export const OrderSuccess = memo<OrderSuccessProps>(
             <div className="flex justify-between items-center">
               <span className="text-coffee-600">Queue Number:</span>
               <span className="text-2xl font-bold text-coffee-800">
-                {result.queue_number}
+                {effectiveResult.queue_number}
               </span>
             </div>
 
             {/* Estimated Wait Time */}
-            {result.estimated_wait_time && (
+            {effectiveResult.estimated_wait_time && (
               <div className="flex justify-between items-center">
                 <span className="text-coffee-600">Estimated Wait:</span>
                 <span className="font-semibold text-coffee-800">
-                  {result.estimated_wait_time}
+                  {effectiveResult.estimated_wait_time}
                 </span>
               </div>
             )}
@@ -158,7 +270,7 @@ export const OrderSuccess = memo<OrderSuccessProps>(
         </div>
 
         {/* Barista Proverb - shown after wait time to manage expectations */}
-        {result.estimated_wait_time && (
+        {effectiveResult.estimated_wait_time && (
           <BaristaProverb 
             category="patience" 
             className="mt-4" 
@@ -166,7 +278,7 @@ export const OrderSuccess = memo<OrderSuccessProps>(
         )}
 
         {/* Special Request */}
-        {specialRequest && specialRequest.trim() && (
+        {effectiveSpecialRequest && effectiveSpecialRequest.trim() && (
           <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
             <div className="flex items-start space-x-3">
               <svg 
@@ -188,7 +300,7 @@ export const OrderSuccess = memo<OrderSuccessProps>(
                   Special Request:
                 </p>
                 <p className="text-sm text-blue-700 whitespace-pre-wrap">
-                  {specialRequest.trim()}
+                  {effectiveSpecialRequest.trim()}
                 </p>
               </div>
             </div>
@@ -319,7 +431,7 @@ export const OrderSuccess = memo<OrderSuccessProps>(
                   </p>
                   <div className="bg-gray-50 rounded-lg p-3 mt-3">
                     <p className="text-xs text-gray-700">
-                      <strong>Order #{result.order_id.slice(-8).toUpperCase()}</strong> • Queue #{result.queue_number}
+                      <strong>Order #{effectiveResult.order_id.slice(-8).toUpperCase()}</strong> • Queue #{effectiveResult.queue_number}
                     </p>
                   </div>
                 </div>
