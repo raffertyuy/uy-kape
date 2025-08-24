@@ -13,7 +13,7 @@ Check the files in `/.github/instructions/*.instructions.md` for any additional 
 
 ### Creating/Updating Markdown Files
 
-When creating/updating markdown `*.md` files, always end with a new line character.
+When creating/updating markdown `*.md` files, always add a blank line at the end.
 
 ### File and Folder Structure
 

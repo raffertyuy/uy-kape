@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import PasswordProtection from '@/components/PasswordProtection'
 import { MenuManagement } from '@/pages/MenuManagement'
 import { OrderDashboard } from '@/components/admin/OrderDashboard'
@@ -8,7 +9,17 @@ import { Logo } from '@/components/ui/Logo'
 type AdminView = 'dashboard' | 'menu' | 'orders'
 
 function BaristaModulePage() {
-  const [activeView, setActiveView] = useState<AdminView>('dashboard')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const viewParam = searchParams.get('view') as AdminView | null
+  const activeView: AdminView = viewParam && ['dashboard', 'menu', 'orders'].includes(viewParam) ? viewParam : 'dashboard'
+
+  const setActiveView = (view: AdminView) => {
+    if (view === 'dashboard') {
+      setSearchParams({}) // Clear parameters for dashboard
+    } else {
+      setSearchParams({ view })
+    }
+  }
 
   const renderContent = () => {
     switch (activeView) {
