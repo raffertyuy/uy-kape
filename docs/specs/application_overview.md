@@ -49,13 +49,14 @@ See detailed [technology_stack](./technology_stack.md) for complete technical sp
 **Purpose**: Enable guests to browse the menu, customize their drinks, and place orders
 
 **Key Features:**
-- Password-protected access (`guest123` default)
-- 4-step ordering wizard with progress tracking
-- 17 drinks across 4 categories (Coffee, Special Coffee, Tea, Kids Drinks)
-- Dynamic drink customization (shots, milk type, temperature, etc.)
-- Funny auto-generated names with override option
-- Special request field for dietary requirements
-- Order confirmation with queue position and estimated wait time
+- Password-protected access
+- 4-step ordering wizard with visual progress tracking (25%, 50%, 75%, 100%)
+- 17 drinks across 4 categories (Coffee: 9, Special Coffee: 3, Tea: 1, Kids Drinks: 4)
+- Category-based browsing with tabbed interface
+- Dynamic drink customization with required and optional options
+- Funny auto-generated names (e.g., "Mega Mug Steamer") with override capability
+- Special request field for dietary requirements and preferences
+- Comprehensive order confirmation with Order ID, queue position, estimated wait time, and barista quotes
 
 **User Journey**: Authentication → Drink Selection → Customization → Guest Info → Review → Confirmation
 
@@ -64,17 +65,18 @@ See detailed [technology_stack](./technology_stack.md) for complete technical sp
 **Purpose**: Manage menu items, track orders, and control the ordering system
 
 **Key Features:**
-- Password-protected access (`admin456` default)
-- Real-time order dashboard with live updates
-- Comprehensive menu management (categories, drinks, options)
-- Order status tracking (Pending, Completed, Cancelled)
-- Queue management with position tracking
-- Bulk order operations (clear all pending)
-- Search and filter capabilities
+- Password-protected access
+- Real-time order dashboard with live statistics and connectivity status
+- Order management with priority levels (Normal, High Priority ⚡, Urgent 🚨)
+- Individual order actions (Complete, Cancel) and bulk operations (Clear All Pending)
+- Order filtering (All, Pending, Completed, Cancelled) and search functionality
+- Comprehensive menu management across 3 tabs (Categories, Drinks, Option Categories)
+- Advanced view options (Grid/List view, Show Options Preview, Show Completed toggle)
+- System status monitoring (Menu System ✓, Order System ✓, Real-time Updates 🔄)
 
 **Administrative Areas:**
-- **Order Management**: Real-time order tracking and status updates
-- **Menu Management**: Complete control over drinks, categories, and customization options
+- **Order Management**: Real-time order tracking with detailed order cards and statistics
+- **Menu Management**: Complete control over drinks, categories, and customization options with enhanced filtering
 
 ## Technology Stack
 
@@ -131,4 +133,4 @@ This document includes:
 
 ---
 
-*Last updated: August 24, 2025 - This overview provides a high-level view of the Uy, Kape! system. For detailed functional specifications, implementation guides, and user workflows, refer to the linked functional specifications document.*
+*Last updated: August 24, 2025 - This overview provides a high-level view of the Uy, Kape! system updated following comprehensive application exploration via Playwright MCP. All features documented have been verified as working. For detailed functional specifications, implementation guides, and user workflows, refer to the linked functional specifications document.*

@@ -31,7 +31,6 @@ Uy, Kape! is a dual-module coffee ordering system designed for home environments
 
 **Password Protection**
 - Password-protected entry point at `/order`
-- Default password: `guest123` (configurable via `VITE_GUEST_PASSWORD`)
 - Session persistence using `sessionStorage`
 - Automatic redirect to ordering interface upon successful authentication
 
@@ -65,15 +64,15 @@ The guest ordering process follows a 4-step wizard with progress indicator:
   - Help text for each option category
 - **Common Options**:
   - Number of Shots: Single/Double
-  - Milk Type: None, Low Fat Milk, Oatmilk (varies by drink)
+  - Milk Type: None/Low Fat Milk/Oatmilk (varies by drink)
   - Temperature: Hot/Cold
-  - Ice Cream Flavor: (for special drinks like Affogato)
-  - Tea Type: (for tea beverages)
+  - Ice Cream Flavor: None/Chocolate (for special drinks like Affogato)
+  - Tea Type: Jasmine Green Tea/Other varieties (for tea beverages)
 
 #### Step 3: Guest Information (75% progress)
 - **Name Input**:
   - Auto-generates funny coffee-themed names by default
-  - Examples: "Professor Mocha Burner", "The Cup Steamer"
+  - Examples: "Mega Mug Steamer", "Professor Mocha Burner", "The Cup Steamer"
   - Users can override by typing their own name
   - Character limit: 50 characters with counter
   - Required field with validation
@@ -99,14 +98,16 @@ The guest ordering process follows a 4-step wizard with progress indicator:
 **Confirmation Screen Features**:
 - **Success Message**: Personalized thank you with customer name
 - **Order Details**:
-  - Unique Order ID (8-character hex: e.g., #A7776A4C)
-  - Queue Number (position in line: e.g., "2")
-  - Estimated Wait Time (calculated: e.g., "8 minutes")
+  - Unique Order ID (8-character hex: e.g., #1DEFF2F7)
+  - Queue Number (position in line: e.g., "1")
+  - Estimated Wait Time (calculated: e.g., "4 minutes")
 - **Barista Motivation**: Random coffee-themed quotes from barista
   - Example: "Wonder Bean's secret power? Perfect patience - and really strong coffee."
 - **Next Steps Instructions**:
   - Clear list of what happens next
-  - Pickup instructions
+  - "We'll start preparing your order"
+  - "Listen for your name to be called"
+  - "Your order will be ready at the pickup counter"
 - **Post-Order Actions**:
   - Cancel This Order (removes from queue)
   - Place Another Order (restart process)
@@ -135,7 +136,6 @@ The guest ordering process follows a 4-step wizard with progress indicator:
 
 **Password Protection**
 - Password-protected entry point at `/admin`
-- Default password: `admin456` (configurable via `VITE_ADMIN_PASSWORD`)
 - Session persistence using `sessionStorage`
 - Automatic redirect to admin dashboard upon successful authentication
 
@@ -165,14 +165,18 @@ The guest ordering process follows a 4-step wizard with progress indicator:
 - **Order Cards**: Each order shows:
   - Customer name as heading
   - Unique order ID (8-character hex)
-  - Order status with color coding and icons
-  - Priority level (Normal/High with ⚡ for high)
+  - Order status with color coding and icons (⏳ Pending, 🎉 Completed, ❌ Cancelled)
+  - Priority level with visual indicators:
+    - Normal Priority (no icon)
+    - High Priority ⚡
+    - Urgent 🚨
   - Selected drink name and category
   - All customization options clearly listed
-  - Special requests (when provided)
+  - Special requests (when provided) with quotes
   - Queue position with 🏃‍♂️ icon
-  - Order timestamp and elapsed time
+  - Order timestamp with elapsed time display (e.g., "51m ago")
   - Estimated completion time
+- **Order Selection**: Checkbox selection for bulk operations
 
 #### Order Actions
 - **Individual Order Actions**:
@@ -224,7 +228,9 @@ The guest ordering process follows a 4-step wizard with progress indicator:
 - **View Options**:
   - Grid view (default)
   - List view toggle
-  - Options Preview toggle (shows customization options on cards)
+  - **Options Preview Toggle**: Shows customization options with default values on cards
+    - Example: "Number of Shots: Single", "Milk Type: Low Fat Milk", "Temperature: Hot"
+    - Displays drink-specific defaults like "Tea Type: Jasmine Green Tea", "Ice Cream Flavor: Chocolate"
 - **Filtering and Search**:
   - Category filter dropdown
   - Text search by drink name
@@ -309,4 +315,4 @@ The guest ordering process follows a 4-step wizard with progress indicator:
 
 ---
 
-*This document reflects the current implementation as of August 24, 2025. For the latest updates, refer to the application overview and technical documentation.*
+*This document reflects the current implementation as of August 24, 2025, updated following comprehensive application exploration. All features documented have been verified as working in the live application. For the latest updates, refer to the application overview and technical documentation.*

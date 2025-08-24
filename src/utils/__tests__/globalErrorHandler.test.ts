@@ -209,9 +209,7 @@ describe("globalErrorHandler", () => {
 
     it("should process and log error correctly", () => {
       // Suppress console.error for this specific test
-      const consoleSpy = vi.spyOn(console, "error").mockImplementation(
-        () => {},
-      );
+      vi.spyOn(console, "error").mockImplementation(() => {});
 
       const error = new Error("Test error");
       const result = handleGlobalError(error, "test_context");

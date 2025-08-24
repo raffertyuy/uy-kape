@@ -22,3 +22,4 @@ See `docs/specs/application_overview.md` to know the different functions of this
 After updating the documents, take a step back and review the changes.
 Include high-level sections on top with the details below. Write in markdown format and include links to the detailed sections.
 Ensure that the document is properly organized and readable for both a human and an AI agent.
+Ensure that there are no confidential information or sensitive data included in the documents (such as passwords).

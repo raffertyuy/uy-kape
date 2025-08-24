@@ -211,23 +211,27 @@ const ErrorManagementTestComponent = () => {
     expect(screen.getByTestId('error-count')).toHaveTextContent('2')
   })
 
-  it.skip('should throw error when useGlobalError is used outside provider', () => {
-    // This test is skipped due to complications with dynamic imports in test environment
-    // The functionality is verified in actual application usage
-    // Create a component that uses the imported hook
+  it('should throw error when useGlobalError is used outside provider', () => {
+    // Create a component that uses the hook outside of provider
     const TestComponentOutsideProvider = () => {
       const { errors } = useGlobalError()
       return <div data-testid="error-count">{errors.length}</div>
     }
 
-    // Suppress console.error for this test
+    // Suppress console.error for this test since React will log the error
     const originalError = console.error
     console.error = vi.fn()
 
+    // Import the base render function directly from @testing-library/react
+    // to avoid the custom render that includes ErrorContextProvider
+    const { render: baseRender } = require('@testing-library/react')
+
+    // Test that rendering the component without provider throws an error
     expect(() => {
-      render(<TestComponentOutsideProvider />)
+      baseRender(<TestComponentOutsideProvider />)
     }).toThrow('useGlobalError must be used within an ErrorContextProvider')
 
+    // Restore console.error
     console.error = originalError
   })
 
