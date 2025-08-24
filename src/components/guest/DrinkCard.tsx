@@ -30,6 +30,7 @@ export const DrinkCard = memo<DrinkCardProps>(
         tabIndex={0}
         aria-pressed={isSelected}
         aria-describedby={`drink-${drink.id}-description`}
+        data-testid={`drink-card-${drink.id}`}
         className={`
           relative border-2 rounded-lg p-4 cursor-pointer transition-all duration-200
           focus:outline-none focus:ring-2 focus:ring-coffee-400 focus:ring-offset-2

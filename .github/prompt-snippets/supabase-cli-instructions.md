@@ -1,0 +1,1 @@
+Supabase CLI is not globally installed. To run, use `npx supabase`.

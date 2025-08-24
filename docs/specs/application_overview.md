@@ -1,81 +1,134 @@
 ---
 description: 'Overview of this application'
-last-modified: 2025-08-22
+last-modified: 2025-08-24
 ---
 
-# ☕ Home Free Coffee Ordering System
+# ☕ Uy, Kape! Coffee Ordering System
+
+## Table of Contents
+
+- [Project Overview](#project-overview)
+- [System Architecture](#system-architecture)
+- [Core Modules](#core-modules)
+- [Technology Stack](#technology-stack)
+- [User Experience](#user-experience)
+- [Detailed Specifications](#detailed-specifications)
 
 ## Project Overview
 
-A simple, free coffee ordering system for home guests. This application will be a two-part system: a guest-facing module for placing orders and a barista admin module for managing the menu and viewing incoming orders in real-time. The core principle of this project is to use a "vibe coding" approach, leveraging natural language prompts to rapidly prototype components and functionality.
+Uy, Kape! is a free coffee ordering system designed for home environments where guests can easily place coffee orders and administrators can manage the menu and order queue in real-time. The application emphasizes simplicity, modern design, and seamless user experience across both guest and administrator workflows.
 
-## Technology Stack
-See [technology_stack](./technology_stack.md)
+**Key Characteristics:**
+- Dual-module system (Guest + Admin)
+- Password-protected access for security
+- Real-time order management and updates
+- Mobile-responsive design
+- Light theme only (no dark mode)
+- Free coffee ordering (no payment processing)
 
-## Light Theme Only
-This app enforces light theme, there is no dark theme implementation.
+## System Architecture
 
-## Specifications
+### Application Structure
+The system consists of two main access points from a welcome landing page:
 
-### Main welcome page
+1. **"Order Here"** → [Guest Module](#guest-module)
+2. **"Barista Administration"** → [Barista Admin Module](#barista-admin-module)
 
-A mobile responsive welcome landing page showing the "Uy, Kape!" coffee welcome.
-It has 2 links:
-1. A main "Order Here" for guests, this leads to the [Guest Module](#guest-module) 
-2. A small "Barista administration" link for the Barista, this leads to the [Barista Admin Module](#barista-admin-module) 
+### Technical Foundation
+- **Frontend**: React + TypeScript with Tailwind CSS
+- **Backend**: Supabase (PostgreSQL with real-time subscriptions)
+- **Authentication**: Password-based role separation
+- **Deployment**: Vercel hosting with CI/CD
+
+See detailed [technology_stack](./technology_stack.md) for complete technical specifications.
+
+## Core Modules
 
 ### Guest Module
 
-**User Interface:**  
-- A password-protected page. The password is retrieved from the application config file, with key "guest-password".
-- A mobile responsive intuitive page for a person to choose a drink, select options, enter their name, and place an order.
-- This page should have modern look and feel to it, it should be a big improvement to the ![old ordering system](../screens/old_ordering_system.png).
+**Purpose**: Enable guests to browse the menu, customize their drinks, and place orders
 
-**Functionality:**
-1. **Name Input:**  
-   A text field for the guest to enter their name.
+**Key Features:**
+- Password-protected access (`guest123` default)
+- 4-step ordering wizard with progress tracking
+- 17 drinks across 4 categories (Coffee, Special Coffee, Tea, Kids Drinks)
+- Dynamic drink customization (shots, milk type, temperature, etc.)
+- Funny auto-generated names with override option
+- Special request field for dietary requirements
+- Order confirmation with queue position and estimated wait time
 
-2. **Drink Selection:**  
-   A list of available drinks (fetched from Supabase's `drinks` table). The user should be able to select only one.
-
-3. **Drink Options:**
-   Some drink will have options, for example:
-   - single or double shot
-   - whole, low-fat, non-fat or oat milk.
-
-5. **Order Submission:**  
-   A "Place Order" button that, when clicked, saves the order to Supabase's `orders` table.
-
-4. **Confirmation:**  
-   A simple, on-screen confirmation message that appears after the order is submitted.
-   The confirmation should include:
-   - A thank you message, e.g. "Thank you! Your order has been placed"
-   - A queue number to indicate how many pending orders before the guest's order (this can be computed based on the # of orders in "pending" status that is less than this items order id)
-   - A button to refresh the page (to update the queue number)
-   - A button to cancel the order (allowing guests to cancel their pending order)
+**User Journey**: Authentication → Drink Selection → Customization → Guest Info → Review → Confirmation
 
 ### Barista Admin Module
 
-**User Interface:**  
-- A password-protected page. The password is retrieved from the application config file, with key "admin-password".
-- A mobile responsive intuitive page for a barista to work with each of the admin functionalities.
-- This page should have modern look and feel to it.
+**Purpose**: Manage menu items, track orders, and control the ordering system
 
-**Functionality:**
-1. **Menu Management:**  
-   A mobile responsive form or list to add, edit, and delete available coffee drinks. The data is saved to the `drinks` table in Supabase.
-   This includes the available options for each coffee drink, for example:
-   - Espresso will have # of shots (single or double)
-   - Cappucino will have # of shots (single or double) and also the choice of milk (whole, low-fat, non-fat, oat)
-    
-2. **Order Dashboard:**  
-   A mobile responsive real-time dashboard that displays all guest orders. This includes
-   - Order queue: A queue/list of orders which includes the details: drink, drink options, special request, name of the guest
-   - Order status: Orders flow through three simple statuses:
-     - **Pending**: Order placed, awaiting preparation
-     - **Completed**: Order finished and picked up by guest
-     - **Cancelled**: Order cancelled by guest or barista
-   - Order actions: A button next to each order to mark it directly as "Completed" or "Cancelled". This action updates the order's status in Supabase.
-   - Clear orders: A button to cancel all pending orders from the `orders` table, allowing for a fresh start each day.
+**Key Features:**
+- Password-protected access (`admin456` default)
+- Real-time order dashboard with live updates
+- Comprehensive menu management (categories, drinks, options)
+- Order status tracking (Pending, Completed, Cancelled)
+- Queue management with position tracking
+- Bulk order operations (clear all pending)
+- Search and filter capabilities
 
-   Keep it simple. This is a home coffee ordering system for guests. Nothing about money as everything is free. No data analytic features needed.
+**Administrative Areas:**
+- **Order Management**: Real-time order tracking and status updates
+- **Menu Management**: Complete control over drinks, categories, and customization options
+
+## Technology Stack
+
+**Core Technologies:**
+- React 18 with TypeScript for type-safe development
+- Tailwind CSS for responsive design system
+- Supabase for backend services and real-time functionality
+- Vite for fast development and optimized builds
+
+**Key Libraries:**
+- React Router for navigation
+- Lucide React for consistent iconography
+- Vitest for comprehensive testing
+- Playwright for end-to-end testing
+
+**Development Features:**
+- ESLint for code quality
+- TypeScript for type safety
+- Real-time database subscriptions
+- Mobile-first responsive design
+
+## User Experience
+
+### Design Principles
+- **Simplicity**: Clean, intuitive interfaces for both guests and administrators
+- **Speed**: Fast loading and responsive interactions
+- **Clarity**: Clear visual hierarchy and obvious next actions
+- **Accessibility**: Keyboard navigation, screen reader support, and high contrast
+
+### Guest Experience Highlights
+- Auto-generated funny coffee names for engagement
+- Visual progress tracking through the ordering process
+- Real-time validation and helpful error messages
+- Clear order confirmation with actionable next steps
+
+### Admin Experience Highlights
+- Real-time order updates without manual refresh
+- Comprehensive filtering and search capabilities
+- Bulk operations for efficient order management
+- Intuitive menu management with drag-and-drop organization
+
+## Detailed Specifications
+
+For comprehensive technical details, user workflows, and implementation specifications, see:
+
+📋 **[Functional Specifications](./functional_specifications.md)**
+
+This document includes:
+- Complete user workflows and UI specifications
+- Technical implementation details
+- Database schema and API interactions
+- Security and access control measures
+- User experience enhancements and accessibility features
+
+---
+
+*Last updated: August 24, 2025 - This overview provides a high-level view of the Uy, Kape! system. For detailed functional specifications, implementation guides, and user workflows, refer to the linked functional specifications document.*

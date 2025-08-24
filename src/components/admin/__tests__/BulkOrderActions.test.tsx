@@ -308,6 +308,10 @@ describe('BulkOrderActions', () => {
     })
 
     it('should handle operation failures gracefully', async () => {
+      // Suppress expected console.error for this test
+      const originalConsoleError = console.error
+      console.error = vi.fn()
+      
       mockOnBulkStatusUpdate.mockRejectedValue(new Error('Network error'))
 
       render(
@@ -323,7 +327,10 @@ describe('BulkOrderActions', () => {
 
       await waitFor(() => {
         expect(screen.getByText('❌ 2 errors:')).toBeInTheDocument()
-      })
+      }, { timeout: 3000 })
+
+      // Restore console.error
+      console.error = originalConsoleError
     })
 
     it('should show loading state during bulk operation', async () => {

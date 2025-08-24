@@ -1,79 +1,48 @@
 import "@testing-library/jest-dom";
 import { afterEach, beforeEach, vi } from "vitest";
 import { cleanup, configure } from "@testing-library/react";
+import { isCI, shouldUseMocks } from "@/lib/supabase";
 
 // Global test setup and environment configuration for React 19
 // This file is loaded before all tests as specified in vitest.config.ts
 
-// Import environment detection utilities
-const isCI = (): boolean => {
-  return (
-    process.env.CI === "true" ||
-    process.env.GITHUB_ACTIONS === "true" ||
-    Boolean(process.env.CI)
-  );
-};
+// Ensure proper test environment globals
+// @ts-ignore
+globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 
-const isTestEnv = (): boolean => {
-  return process.env.NODE_ENV === "test" || Boolean(process.env.VITEST);
-};
-
-const shouldUseMocks = (): boolean => {
-  // Always use mocks in CI environment
-  if (isCI()) return true;
-
-  // Check if we should force mocks for testing
-  if (process.env.VITE_TEST_USE_MOCKS === "true") return true;
-
-  // Check if local database testing is explicitly enabled
-  if (process.env.VITE_TEST_USE_LOCAL_DB === "true") return false;
-
-  // Default to mocks for safety in test environment
-  return isTestEnv();
-};
-
-// Supabase mocking setup based on environment
+// Conditionally mock Supabase based on environment
 if (shouldUseMocks()) {
-  // Set up global Supabase mocking for CI environment or when mocks are forced
-  // We'll use vi.doMock to mock the Supabase module
-  vi.doMock("@/lib/supabase", async () => {
+  // Use mocks for CI or when explicitly requested
+  vi.mock("@/lib/supabase", async (importOriginal) => {
+    const actual = await importOriginal() as any;
     const { createCompleteSupabaseClient, mockConfigurations } = await import(
       "../tests/config/supabase-mocks"
     );
 
-    // Create mock client with basic menu data
     const mockClient = createCompleteSupabaseClient(
       mockConfigurations.basicMenu,
     );
 
     return {
+      ...actual,
       supabase: mockClient,
-      isCI,
-      isTestEnv,
-      shouldUseMocks: () => true,
-    };
-  });
-} else {
-  // For local database testing, we still need to provide environment detection
-  // but use the real Supabase client configured for local development
-  vi.doMock("@/lib/supabase", async () => {
-    const { createLocalSupabaseClient } = await import(
-      "../tests/config/local-db-setup"
-    );
-
-    // Use local Supabase instance for integration testing
-    const localClient = createLocalSupabaseClient();
-
-    return {
-      supabase: localClient,
-      isCI,
-      isTestEnv,
-      shouldUseMocks: () => false,
     };
   });
 }
 
-// Configure React Testing Library for React 19 compatibility
+// Log the test strategy being used
+const strategy = shouldUseMocks() ? "mocks" : "real database";
+const env = isCI() ? "CI" : "local";
+console.log(`Test setup: Using ${strategy} in ${env} environment`);
+
+// Configure global error handler to reduce verbosity in tests
+import { configureGlobalErrorHandler } from "./utils/globalErrorHandler";
+configureGlobalErrorHandler({
+  enableLogging: import.meta.env.VITE_VITEST_DEBUG === "true",
+  logLevel: "error",
+  enableDevDetails: false,
+});
+
 configure({
   // Enable automatic cleanup after each test
   testIdAttribute: "data-testid",
@@ -215,6 +184,44 @@ const originalConsole = {
   log: console.log,
 };
 
+// Enhanced console override to suppress noisy warnings in tests
+const createFilteredConsole = (originalFn: typeof console.warn | typeof console.error) => {
+  return (...args: any[]) => {
+    const message = args[0];
+
+    // Suppress React act() warnings unless debug mode is enabled
+    if (
+      typeof message === "string" &&
+      import.meta.env.VITE_VITEST_DEBUG !== "true"
+    ) {
+      if (
+        message.includes("Warning: An update to") &&
+        message.includes("was not wrapped in act(...)")
+      ) {
+        return;
+      }
+      if (
+        message.includes("Warning: You seem to have overlapping act() calls")
+      ) {
+        return;
+      }
+      if (message.includes("The current testing environment is not configured to support act")) {
+        return;
+      }
+      // Suppress expected Supabase service error messages in tests
+      if (message.includes("Supabase operation failed:")) {
+        return;
+      }
+    }
+
+    originalFn(...args);
+  };
+};
+
+// Override console methods
+console.warn = createFilteredConsole(originalConsole.warn);
+console.error = createFilteredConsole(originalConsole.error);
+
 // Reset storage and specific mocks before each test, but preserve component mocks
 beforeEach(() => {
   sessionStorageMock.clear();
@@ -224,9 +231,9 @@ beforeEach(() => {
     vi.mocked(global.fetch).mockClear();
   }
 
-  // Reset console mocks but allow them through unless explicitly suppressed
-  console.error = originalConsole.error;
-  console.warn = originalConsole.warn;
+  // Reset console mocks but maintain filtering
+  console.error = createFilteredConsole(originalConsole.error);
+  console.warn = createFilteredConsole(originalConsole.warn);
   console.log = originalConsole.log;
 });
 
@@ -290,8 +297,3 @@ beforeEach(() => {
     vi.mocked(global.fetch).mockClear();
   }
 });
-
-// Log the test strategy being used
-const strategy = shouldUseMocks() ? "mocks" : "real database";
-const env = isCI() ? "CI" : "local";
-console.log(`Test setup: Using ${strategy} in ${env} environment`);

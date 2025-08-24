@@ -1,0 +1,1 @@
+If you are running the app, check if it is already running before attempting to do so. The app runs locally on port 5173 by default. If this port is in use, that means the app is already running and you do not need to run the app anymore. Think and assess if you need to kill/restart the process as needed.

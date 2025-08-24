@@ -5,8 +5,8 @@ description: "Updates the functional documents using playwright mcp."
 
 Your task is to use playwright MCP to run the app, go through every functionality and update these 2 documents:
 
-- `docs/specs/application_overview.md`
-- `docs/specs/functional_specifications.md`
+- `docs/specs/application_overview.md` # high level description of the functional modules available, DO NOT include detailed features here.
+- `docs/specs/functional_specifications.md` # documentation of all functional specifications, including detailed features.
 
 Of course, refer to the above documents to understand what's currently documented.
 Do not be limited to what's in the document, explore the application thoroughly.

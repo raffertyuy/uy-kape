@@ -26,6 +26,13 @@ const originalNavigator = window.navigator;
 
 describe("globalErrorHandler", () => {
   beforeAll(() => {
+    // Suppress Global Error logging during tests
+    configureGlobalErrorHandler({
+      enableLogging: false,
+      logLevel: "error",
+      enableDevDetails: false,
+    });
+
     // Mock navigator for all tests in this suite
     Object.defineProperty(window, "navigator", {
       value: {
@@ -42,6 +49,13 @@ describe("globalErrorHandler", () => {
   });
 
   afterAll(() => {
+    // Restore logging after tests
+    configureGlobalErrorHandler({
+      enableLogging: import.meta.env.VITE_VITEST_DEBUG === "true",
+      logLevel: "error",
+      enableDevDetails: false,
+    });
+
     // Restore original navigator after all tests in this suite
     Object.defineProperty(window, "navigator", {
       value: originalNavigator,
@@ -181,7 +195,24 @@ describe("globalErrorHandler", () => {
   });
 
   describe("handleGlobalError", () => {
+    beforeEach(() => {
+      // Suppress console.error and console.info for these specific tests
+      vi.spyOn(console, "error").mockImplementation(() => {});
+      vi.spyOn(console, "info").mockImplementation(() => {});
+      vi.spyOn(console, "warn").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      // Restore console methods after each test
+      vi.restoreAllMocks();
+    });
+
     it("should process and log error correctly", () => {
+      // Suppress console.error for this specific test
+      const consoleSpy = vi.spyOn(console, "error").mockImplementation(
+        () => {},
+      );
+
       const error = new Error("Test error");
       const result = handleGlobalError(error, "test_context");
 
@@ -215,13 +246,26 @@ describe("globalErrorHandler", () => {
     });
 
     it("should handle errors without context", () => {
+      // Suppress console.error for this specific test
+      const _consoleSpy = vi.spyOn(console, "error").mockImplementation(
+        () => {},
+      );
+
       const error = new Error("Test error without context");
       const result = handleGlobalError(error);
 
       expect(result.action).toBeUndefined();
+
+      // Restore console after test
+      _consoleSpy.mockRestore();
     });
 
     it("should generate different timestamps for different errors", () => {
+      // Suppress console.error for this specific test
+      const _consoleSpy = vi.spyOn(console, "error").mockImplementation(
+        () => {},
+      );
+
       const error1 = new Error("Error 1");
       const error2 = new Error("Error 2");
 
@@ -232,6 +276,9 @@ describe("globalErrorHandler", () => {
 
       // Should have different timestamps (or at least different milliseconds)
       expect(result1.timestamp.getTime()).not.toBe(result2.timestamp.getTime());
+
+      // Restore console after test
+      _consoleSpy.mockRestore();
     });
   });
 
@@ -301,6 +348,18 @@ describe("globalErrorHandler", () => {
   });
 
   describe("error handling edge cases", () => {
+    beforeEach(() => {
+      // Suppress console.error and console.info for these specific tests
+      vi.spyOn(console, "error").mockImplementation(() => {});
+      vi.spyOn(console, "info").mockImplementation(() => {});
+      vi.spyOn(console, "warn").mockImplementation(() => {});
+    });
+
+    afterEach(() => {
+      // Restore console methods after each test
+      vi.restoreAllMocks();
+    });
+
     it("should handle missing navigator.connection gracefully", () => {
       // Store current navigator
       const currentNavigator = window.navigator;

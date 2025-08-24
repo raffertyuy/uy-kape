@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest'
-import { render, screen } from '../../../tests/config/test-utils'
+import { render, screen, waitFor, act } from '../../../tests/config/test-utils'
 import { MenuManagement } from '@/pages/MenuManagement'
 
 describe('MenuManagement - Basic Rendering', () => {
@@ -141,11 +141,16 @@ describe('MenuManagement - Basic Rendering', () => {
     vi.clearAllMocks()
   })
 
-  it('renders the menu management page correctly', () => {
-    render(<MenuManagement />)
+  it('renders the menu management page correctly', async () => {
+    await act(async () => {
+      render(<MenuManagement />)
+    })
 
     // Check main elements are present
-    expect(screen.getByText('Menu Management')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(screen.getByText('Menu Management')).toBeInTheDocument()
+    })
+    
     expect(screen.getByText('Manage your coffee shop menu categories, drinks, and customization options.')).toBeInTheDocument()
     
     // Check tabs are present
@@ -157,11 +162,13 @@ describe('MenuManagement - Basic Rendering', () => {
     expect(screen.getByTestId('realtime-indicator')).toBeInTheDocument()
   })
 
-  it('has proper accessibility attributes', () => {
-    render(<MenuManagement />)
+  it('has proper accessibility attributes', async () => {
+    await act(async () => {
+      render(<MenuManagement />)
+    })
 
     // Check main heading
-    const heading = screen.getByRole('heading', { name: /menu management/i })
+    const heading = await waitFor(() => screen.getByRole('heading', { name: /menu management/i }))
     expect(heading).toBeInTheDocument()
 
     // Check tab list

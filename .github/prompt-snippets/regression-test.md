@@ -1,6 +1,8 @@
-Your task is to use playwright MCP to run this application locally and go through every functionality to ensure that everything is working.
+Your task is to use playwright MCP to run this application locally and go through every functionality to ensure that everything is working. And also ensure compliance with our [definition_of_done](/docs/specs/definition_of_done.md).
 
-See `docs/specs/application_overview.md` to know the different functions of this application.
+Refer to these documents for our functional regression testing
+- [application_overview](/docs/specs/application_overview.md): high level description of the functional modules available, DO NOT include detailed features here.
+- [functional_specifications](/docs/specs/functional_specifications.md): documentation of all functional specifications, including detailed features.
 
 ## Rules for Running the App
 

@@ -15,6 +15,16 @@ let optionCategoriesService: any;
 let optionValuesService: any;
 let supabase: any;
 
+// Suppress expected console.error messages for service error tests
+const originalConsoleError = console.error;
+beforeAll(() => {
+  console.error = vi.fn();
+});
+
+afterAll(() => {
+  console.error = originalConsoleError;
+});
+
 describe("menuService", () => {
   beforeAll(async () => {
     // Setup scoped mocks for this test file
