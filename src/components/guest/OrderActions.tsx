@@ -1,7 +1,7 @@
 import { memo } from 'react'
 
 interface OrderActionsProps {
-  onSubmit: () => void
+  onSubmit: () => void | Promise<void> | Promise<boolean>
   onReset: () => void
   onCancel?: () => void
   isSubmitting: boolean

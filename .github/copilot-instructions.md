@@ -13,7 +13,7 @@ Check the files in `/.github/instructions/*.instructions.md` for any additional 
 
 ### Creating/Updating Markdown Files
 
-When creating/updating markdown `*.md` files, always add a blank line at the end.
+When creating/updating markdown `*.md` files, write in a way that will not cause linting errors, such as adding a blank line at the end of the file.
 
 ### File and Folder Structure
 

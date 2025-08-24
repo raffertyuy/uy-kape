@@ -67,7 +67,7 @@ export const GuestInfoForm = memo<GuestInfoFormProps>(
     const remainingChars = 500 - specialRequest.length
 
     return (
-      <div className={`space-y-3 ${className}`}>
+      <div className={`space-y-3 ${className}`} data-testid="guest-info-form">
         <div className="space-y-2">
           <label 
             htmlFor="guest-name"
