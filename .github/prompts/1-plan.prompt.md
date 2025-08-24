@@ -1,4 +1,5 @@
 ---
+mode: "agent"
 description: "Plan for a coding implementation for an AI coding assistant to follow."
 ---
 
@@ -58,10 +59,10 @@ PLAN HERE
   - **Additional Instructions**:
     - Before proceeding with this step, check the conversation history and see if you already completed this step.
     - You do not need to follow this step strictly, consider the output of the previous step and adjust this step as needed.
-    - If you are running the app, check if it is already running before attempting to do so. The app runs locally on port 5173 by default. If this port is in use, that means the app is already running and you do not need to run the app anymore. Think and assess if you need to kill/restart the process as needed.
-    - If you are running any CLI command, check if if the existing terminal is ready to accept new commands first.
-      - For example, it might be running a foreground process and is not ready. In this situation, launch a new terminal to run the CLI command.
-    - If you are running any CLI command, run as a background process as much as possible.
+    - If you are running the app, follow [npm-run-instructions](/.github/prompt-snippets/npm-run-instructions.md)
+    - If you are running any CLI command, follow [cli-execution-instructions](/.github/prompt-snippets/cli-execution-instructions.md)
+    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.github/prompt-snippets/supabase-cli-instructions.md)
+    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.github/prompt-snippets/playwright-mcp-instructions.md)
     - When you are done with this step, mark this step as complete and add a note/summary of what you did (in the plan document) before proceeding to the next step.
     - If you decide to proceed to the next step even if there are remaining issues/errors/failed tests, make a note of the issues (by updating the plan document) and address them in subsequent steps.
 

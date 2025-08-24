@@ -96,6 +96,15 @@ describe('PasswordProtection - Basic Functionality', () => {
   })
 
   it('should handle form submission correctly', async () => {
+    // Temporarily suppress the act() environment warning for this test
+    const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation((message: string, ...args: any[]) => {
+      if (typeof message === 'string' && message.includes('The current testing environment is not configured to support act')) {
+        return // Suppress this specific warning
+      }
+      // For any other warnings, call the original console.warn
+      console.warn.call(console, message, ...args)
+    })
+
     const user = userEvent.setup()
     mockAuthenticate.mockResolvedValue(true)
     
@@ -110,6 +119,9 @@ describe('PasswordProtection - Basic Functionality', () => {
     })
 
     expect(mockAuthenticate).toHaveBeenCalledWith('test123')
+    
+    // Restore console.warn
+    consoleWarnSpy.mockRestore()
   })
 
   it('should have proper accessibility attributes', () => {

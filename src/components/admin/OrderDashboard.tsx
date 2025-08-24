@@ -2,7 +2,8 @@ import { useState, useCallback } from 'react';
 import { useRealtimeOrders } from '@/hooks/useRealtimeOrders';
 import { adminOrderService } from '@/services/adminOrderService';
 import { OrderCard } from './OrderCard';
-import type { AdminOrderListItem } from '@/types/admin.types';
+import { BulkOrderActions } from './BulkOrderActions';
+import type { AdminOrderListItem, BulkOperationResult } from '@/types/admin.types';
 import type { OrderStatus } from '@/types/order.types';
 
 interface OrderDashboardProps {
@@ -51,6 +52,29 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
     }
   }, [refetch]);
 
+  // Handle clearing selection
+  const handleClearSelection = useCallback(() => {
+    setSelectedOrders([]);
+  }, []);
+
+  // Handle bulk status updates
+  const handleBulkStatusUpdate = useCallback(async (orderIds: string[], status: OrderStatus): Promise<BulkOperationResult> => {
+    try {
+      const result = await adminOrderService.performBulkOperation({
+        order_ids: orderIds,
+        operation: status === 'completed' ? 'mark_completed' : 'cancel'
+      });
+      
+      // Refetch orders after bulk operation
+      await refetch();
+      
+      return result;
+    } catch (error) {
+      console.error('Failed to perform bulk operation:', error);
+      throw error;
+    }
+  }, [refetch]);
+
   // Handle clearing all pending orders
   const handleClearAllPending = useCallback(async () => {
     setShowClearConfirm(true);
@@ -92,8 +116,8 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
         return false;
       }
 
-      // Show completed filter
-      if (!showCompleted && order.status === 'completed') {
+      // Show completed filter - when OFF, only show pending orders
+      if (!showCompleted && order.status !== 'pending') {
         return false;
       }
 
@@ -102,6 +126,9 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
   };
 
   const filteredOrders = getFilteredOrders();
+
+  // Get selected order objects for bulk actions
+  const selectedOrderObjects = filteredOrders.filter(order => selectedOrders.includes(order.id));
 
   // Calculate statistics
   const stats = {
@@ -309,6 +336,16 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
             </div>
           </div>
         </div>
+
+        {/* Bulk Actions */}
+        {selectedOrders.length > 0 && (
+          <BulkOrderActions
+            selectedOrders={selectedOrderObjects}
+            onBulkStatusUpdate={handleBulkStatusUpdate}
+            onClearSelection={handleClearSelection}
+            className="mb-6"
+          />
+        )}
 
         {/* Order List */}
         <div className="bg-white shadow rounded-lg" data-testid="order-list">

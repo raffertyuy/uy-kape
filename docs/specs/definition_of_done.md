@@ -110,8 +110,8 @@ This document defines the criteria that all development work must meet before be
 - [ ] **Browser Testing**: Cross-browser compatibility verified
 
 ### **Automated Testing**
-
-- [ ] **CI Pipeline**: All GitHub Actions workflows pass successfully
+- [ ] **Unit Testing**: All unit tests must pass. if running unit tests locally where the supabase DB is present, unit tests must pass with NO database mocks. Refer to the [dual testing strategy](../dual-strategy-testing.md) details. 
+- [ ] **CI Pipeline**: All GitHub Actions workflows pass successfully, use supabase DB mocks.
 - [ ] **Playwright Tests**: UI tests pass for major user flows (where applicable)
 - [ ] **Test Stability**: Tests are reliable and don't have flaky failures
 - [ ] **Test Performance**: Test suite runs efficiently without excessive duration
@@ -185,10 +185,3 @@ This Definition of Done applies to:
 - CI/CD pipeline changes
 
 **Exceptions**: Any deviations from these standards must be explicitly documented and justified in the pull request description.
-
-**Review**: This document should be reviewed and updated quarterly or when significant project changes occur.
-
----
-
-*Last updated: August 21, 2025*
-*Next review date: November 21, 2025*

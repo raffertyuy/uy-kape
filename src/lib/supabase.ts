@@ -3,14 +3,31 @@ import type { Database } from "@/types/database.types";
 
 // Environment detection functions
 const isCI = (): boolean => {
+  // Check if we're in a browser environment and avoid using process
+  if (typeof process === "undefined") {
+    // In browser, check import.meta.env for Vite environment variables
+    return (
+      import.meta.env.VITE_CI === "true" ||
+      import.meta.env.VITE_GITHUB_ACTIONS === "true"
+    );
+  }
+
   return (
     process.env.CI === "true" ||
-    process.env.GITHUB_ACTIONS === "true" ||
-    Boolean(process.env.CI)
+    process.env.GITHUB_ACTIONS === "true"
   );
 };
 
 const isTestEnv = (): boolean => {
+  // Check if we're in a browser environment and avoid using process
+  if (typeof process === "undefined") {
+    // In browser, check import.meta.env and vitest indicator
+    return (
+      import.meta.env.VITE_IS_TEST === "true" ||
+      Boolean((import.meta as { vitest?: boolean })?.vitest)
+    );
+  }
+
   return (
     process.env.NODE_ENV === "test" ||
     process.env.VITE_IS_TEST === "true" ||
@@ -22,15 +39,27 @@ const shouldUseMocks = (): boolean => {
   // Always use mocks in CI environment
   if (isCI()) return true;
 
-  // For local development tests, check if we have local Supabase
-  if (isTestEnv()) {
-    const hasLocalSupabase = Boolean(
-      import.meta.env.VITE_SUPABASE_URL?.includes("localhost") ||
-        import.meta.env.VITE_SUPABASE_URL?.includes("127.0.0.1"),
-    );
+  // Check if we should force mocks for testing (explicit override)
+  if (
+    import.meta.env.VITE_TEST_USE_MOCKS === "true" ||
+    (typeof process !== "undefined" &&
+      process.env.VITE_TEST_USE_MOCKS === "true")
+  ) {
+    return true;
+  }
 
-    // Use real DB if available locally, otherwise use mocks
-    return !hasLocalSupabase;
+  // Check if local database testing is explicitly disabled (override to use mocks)
+  if (
+    import.meta.env.VITE_TEST_USE_LOCAL_DB === "false" ||
+    (typeof process !== "undefined" &&
+      process.env.VITE_TEST_USE_LOCAL_DB === "false")
+  ) {
+    return true;
+  }
+
+  // For local development tests, default to using real local database
+  if (isTestEnv()) {
+    return false; // Use real local Supabase by default
   }
 
   // For production, never use mocks
@@ -69,7 +98,6 @@ if (!resolvedUrl || !resolvedAnonKey) {
 }
 
 // Create the Supabase client
-// In test environments with mocks, this will be replaced by test setup
 export const supabase = createClient<Database>(resolvedUrl, resolvedAnonKey);
 
 // Export environment detection for use in tests

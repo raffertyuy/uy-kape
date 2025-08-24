@@ -373,8 +373,65 @@ describe('OrderCard', () => {
     })
   })
 
-  describe('Accessibility', () => {
-    it('should be keyboard accessible', () => {
+  describe('Checkbox Behavior for Order Status', () => {
+    it('should show checkbox for pending orders when onSelect is provided', () => {
+      render(
+        <OrderCard
+          order={mockOrder}
+          onStatusUpdate={mockOnStatusUpdate}
+          onSelect={mockOnSelect}
+          isSelected={false}
+        />
+      )
+
+      const checkbox = screen.getByRole('checkbox')
+      expect(checkbox).toBeInTheDocument()
+      expect(checkbox).toHaveAttribute('aria-label', 'Select order for John Doe')
+    })
+
+    it('should not show checkbox for completed orders', () => {
+      const completedOrder = { ...mockOrder, status: 'completed' as const }
+      
+      render(
+        <OrderCard
+          order={completedOrder}
+          onStatusUpdate={mockOnStatusUpdate}
+          onSelect={mockOnSelect}
+          isSelected={false}
+        />
+      )
+
+      expect(screen.queryByRole('checkbox')).not.toBeInTheDocument()
+    })
+
+    it('should not show checkbox for cancelled orders', () => {
+      const cancelledOrder = { ...mockOrder, status: 'cancelled' as const }
+      
+      render(
+        <OrderCard
+          order={cancelledOrder}
+          onStatusUpdate={mockOnStatusUpdate}
+          onSelect={mockOnSelect}
+          isSelected={false}
+        />
+      )
+
+      expect(screen.queryByRole('checkbox')).not.toBeInTheDocument()
+    })
+
+    it('should not show checkbox when onSelect is not provided', () => {
+      render(
+        <OrderCard
+          order={mockOrder}
+          onStatusUpdate={mockOnStatusUpdate}
+          isSelected={false}
+        />
+      )
+
+      expect(screen.queryByRole('checkbox')).not.toBeInTheDocument()
+    })
+
+    it('should only allow click interaction for pending orders', () => {
       const { container } = render(
         <OrderCard
           order={mockOrder}
@@ -385,10 +442,72 @@ describe('OrderCard', () => {
       )
 
       const card = container.firstChild as HTMLElement
-      expect(card).toHaveAttribute('tabIndex')
+      expect(card).toHaveAttribute('role', 'button')
+      expect(card).toHaveAttribute('tabIndex', '0')
+      expect(card).toHaveAttribute('aria-label', 'Select order for John Doe')
     })
 
-    it('should have proper role attributes', () => {
+    it('should not allow click interaction for completed orders', () => {
+      const completedOrder = { ...mockOrder, status: 'completed' as const }
+      const { container } = render(
+        <OrderCard
+          order={completedOrder}
+          onStatusUpdate={mockOnStatusUpdate}
+          onSelect={mockOnSelect}
+          isSelected={false}
+        />
+      )
+
+      const card = container.firstChild as HTMLElement
+      expect(card).not.toHaveAttribute('role')
+      expect(card).not.toHaveAttribute('tabIndex')
+      expect(card).not.toHaveAttribute('aria-label')
+    })
+
+    it('should not allow click interaction for cancelled orders', () => {
+      const cancelledOrder = { ...mockOrder, status: 'cancelled' as const }
+      const { container } = render(
+        <OrderCard
+          order={cancelledOrder}
+          onStatusUpdate={mockOnStatusUpdate}
+          onSelect={mockOnSelect}
+          isSelected={false}
+        />
+      )
+
+      const card = container.firstChild as HTMLElement
+      expect(card).not.toHaveAttribute('role')
+      expect(card).not.toHaveAttribute('tabIndex')
+      expect(card).not.toHaveAttribute('aria-label')
+    })
+
+    it('should not call onSelect when completed order is clicked', () => {
+      const completedOrder = { ...mockOrder, status: 'completed' as const }
+      const { container } = render(
+        <OrderCard
+          order={completedOrder}
+          onStatusUpdate={mockOnStatusUpdate}
+          onSelect={mockOnSelect}
+          isSelected={false}
+        />
+      )
+
+      const card = container.firstChild as HTMLElement
+      fireEvent.click(card)
+
+      expect(mockOnSelect).not.toHaveBeenCalled()
+    })
+
+    it('should handle keyboard navigation only for pending orders', () => {
+      render(
+        <OrderCard
+          order={mockOrder}
+          onStatusUpdate={mockOnStatusUpdate}
+          onSelect={mockOnSelect}
+          isSelected={false}
+        />
+      )
+
       const { container } = render(
         <OrderCard
           order={mockOrder}
@@ -398,8 +517,105 @@ describe('OrderCard', () => {
         />
       )
 
-      // The card should be interactive
-      expect(container.firstChild).toBeInTheDocument()
+      const card = container.firstChild as HTMLElement
+      fireEvent.keyDown(card, { key: 'Enter' })
+
+      expect(mockOnSelect).toHaveBeenCalledWith(mockOrder.id, true)
+    })
+
+    it('should handle space key for pending orders', () => {
+      const { container } = render(
+        <OrderCard
+          order={mockOrder}
+          onStatusUpdate={mockOnStatusUpdate}
+          onSelect={mockOnSelect}
+          isSelected={false}
+        />
+      )
+
+      const card = container.firstChild as HTMLElement
+      fireEvent.keyDown(card, { key: ' ' })
+
+      expect(mockOnSelect).toHaveBeenCalledWith(mockOrder.id, true)
+    })
+
+    it('should not handle keyboard events for completed orders', () => {
+      const completedOrder = { ...mockOrder, status: 'completed' as const }
+      const { container } = render(
+        <OrderCard
+          order={completedOrder}
+          onStatusUpdate={mockOnStatusUpdate}
+          onSelect={mockOnSelect}
+          isSelected={false}
+        />
+      )
+
+      const card = container.firstChild as HTMLElement
+      fireEvent.keyDown(card, { key: 'Enter' })
+
+      expect(mockOnSelect).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('Accessibility', () => {
+    it('should be keyboard accessible for pending orders', () => {
+      const { container } = render(
+        <OrderCard
+          order={mockOrder}
+          onStatusUpdate={mockOnStatusUpdate}
+          onSelect={mockOnSelect}
+          isSelected={false}
+        />
+      )
+
+      const card = container.firstChild as HTMLElement
+      expect(card).toHaveAttribute('tabIndex', '0')
+    })
+
+    it('should not be keyboard accessible for completed orders', () => {
+      const completedOrder = { ...mockOrder, status: 'completed' as const }
+      const { container } = render(
+        <OrderCard
+          order={completedOrder}
+          onStatusUpdate={mockOnStatusUpdate}
+          onSelect={mockOnSelect}
+          isSelected={false}
+        />
+      )
+
+      const card = container.firstChild as HTMLElement
+      expect(card).not.toHaveAttribute('tabIndex')
+    })
+
+    it('should have proper role attributes for pending orders', () => {
+      const { container } = render(
+        <OrderCard
+          order={mockOrder}
+          onStatusUpdate={mockOnStatusUpdate}
+          onSelect={mockOnSelect}
+          isSelected={false}
+        />
+      )
+
+      const card = container.firstChild as HTMLElement
+      expect(card).toHaveAttribute('role', 'button')
+      expect(card).toHaveAttribute('aria-label', 'Select order for John Doe')
+    })
+
+    it('should not have interactive role attributes for completed orders', () => {
+      const completedOrder = { ...mockOrder, status: 'completed' as const }
+      const { container } = render(
+        <OrderCard
+          order={completedOrder}
+          onStatusUpdate={mockOnStatusUpdate}
+          onSelect={mockOnSelect}
+          isSelected={false}
+        />
+      )
+
+      const card = container.firstChild as HTMLElement
+      expect(card).not.toHaveAttribute('role')
+      expect(card).not.toHaveAttribute('aria-label')
     })
   })
 })

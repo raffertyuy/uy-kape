@@ -1,4 +1,5 @@
 ---
+mode: "agent"
 description: "Implement a plan step by step"
 ---
 
