@@ -17,7 +17,7 @@ describe('OrderDashboard - Show Completed Filter', () => {
       updated_at: '2024-01-01T10:00:00Z',
       drink_id: 'drink-1',
       category_name: 'Coffee',
-      options: []
+      selected_options: []
     },
     {
       id: 'order-2',
@@ -29,7 +29,7 @@ describe('OrderDashboard - Show Completed Filter', () => {
       updated_at: '2024-01-01T10:15:00Z',
       drink_id: 'drink-2',
       category_name: 'Coffee',
-      options: []
+      selected_options: []
     },
     {
       id: 'order-3',
@@ -41,7 +41,7 @@ describe('OrderDashboard - Show Completed Filter', () => {
       updated_at: '2024-01-01T10:20:00Z',
       drink_id: 'drink-3',
       category_name: 'Coffee',
-      options: []
+      selected_options: []
     },
     {
       id: 'order-4',
@@ -53,7 +53,7 @@ describe('OrderDashboard - Show Completed Filter', () => {
       updated_at: '2024-01-01T10:15:00Z',
       drink_id: 'drink-4',
       category_name: 'Coffee',
-      options: []
+      selected_options: []
     }
   ];
 
