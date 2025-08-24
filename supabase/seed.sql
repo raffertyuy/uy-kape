@@ -6,7 +6,7 @@ INSERT INTO drink_categories (name, description, display_order, is_active) VALUE
 ('Coffee', 'Espresso-based and black coffee drinks', 1, true),
 ('Special Coffee', 'Premium coffee drinks with unique ingredients', 2, true),
 ('Tea', 'Hot and cold tea beverages', 3, true),
-('Kids Drinks', 'Drinks from my child''s stash!', 4, true);
+('Kids Drinks', 'Drinks from my child''s stash!', 5, true);
 
 -- Insert option categories
 INSERT INTO option_categories (name, description, is_required, display_order) VALUES
@@ -61,22 +61,22 @@ INSERT INTO drinks (name, description, category_id, display_order, is_active) VA
 ('Black Coffee (V60)', 'Pour-over coffee using V60 dripper', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 8, true),
 ('Black Coffee (Aeropress)', 'Black coffee using an Aeropress', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 9, true);
 
+-- Special Coffee category drinks
+INSERT INTO drinks (name, description, category_id, display_order, is_active) VALUES
+('Ice-Blended Coffee', 'Blended iced coffee drink', (SELECT id FROM drink_categories WHERE name = 'Special Coffee'), 21, true),
+('Affogato', 'Ice cream with an espresso shot', (SELECT id FROM drink_categories WHERE name = 'Special Coffee'), 22, true),
+('Amaretto Coffee', 'Americano with amaretto dessert liquor', (SELECT id FROM drink_categories WHERE name = 'Special Coffee'), 23, true);
+
 -- Tea category drinks
 INSERT INTO drinks (name, description, category_id, display_order, is_active) VALUES
-('Chinese Tea', 'Traditional Chinese tea varieties', (SELECT id FROM drink_categories WHERE name = 'Tea'), 21, true);
+('Chinese Tea', 'Traditional Chinese tea varieties', (SELECT id FROM drink_categories WHERE name = 'Tea'), 31, true);
 
 -- Kids Drinks category
 INSERT INTO drinks (name, description, category_id, display_order, is_active) VALUES
-('Babyccino', 'Frothed milk drink for children', (SELECT id FROM drink_categories WHERE name = 'Kids Drinks'), 31, true),
-('Milo', 'Chocolate malt drink', (SELECT id FROM drink_categories WHERE name = 'Kids Drinks'), 32, true),
-('Ribena', 'Blackcurrant juice drink', (SELECT id FROM drink_categories WHERE name = 'Kids Drinks'), 33, true), 
-('Yakult', 'Probiotic dairy drink', (SELECT id FROM drink_categories WHERE name = 'Kids Drinks'), 34, true);
-
--- Special Coffee category drinks
-INSERT INTO drinks (name, description, category_id, display_order, is_active) VALUES
-('Ice-Blended Coffee', 'Blended iced coffee drink', (SELECT id FROM drink_categories WHERE name = 'Special Coffee'), 41, true),
-('Affogato', 'Ice cream with an espresso shot', (SELECT id FROM drink_categories WHERE name = 'Special Coffee'), 42, true),
-('Amaretto Coffee', 'Americano with amaretto dessert liquor', (SELECT id FROM drink_categories WHERE name = 'Special Coffee'), 43, true);
+('Babyccino', 'Frothed milk drink for children', (SELECT id FROM drink_categories WHERE name = 'Kids Drinks'), 51, true),
+('Milo', 'Chocolate malt drink', (SELECT id FROM drink_categories WHERE name = 'Kids Drinks'), 52, true),
+('Ribena', 'Blackcurrant juice drink', (SELECT id FROM drink_categories WHERE name = 'Kids Drinks'), 53, true), 
+('Yakult', 'Probiotic dairy drink', (SELECT id FROM drink_categories WHERE name = 'Kids Drinks'), 54, true);
 
 -- Link drinks to their available option categories
 -- Espresso-based drinks that can have shot options and milk options

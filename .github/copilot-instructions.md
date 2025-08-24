@@ -11,6 +11,10 @@ Check the files in `/.github/instructions/*.instructions.md` for any additional 
 
 **REMINDER**: If you are creating a new file, follow the above instructions as you create this file. If you didn't, review the file and modify it to follow the instructions in the relevant `.instructions.md` file.
 
+### Creating/Updating Markdown Files
+
+When creating/updating markdown `*.md` files, always add a blank line at the end.
+
 ### File and Folder Structure
 
 To know what each file and folder does, or to look for any project documentation information, refer to [file_structure](/docs/file_structure.md)
@@ -27,19 +31,13 @@ When using Playwright MCP, follow [playwright-mcp-instructions](./prompt-snippet
 
 ## Communication Standards
 
-**BE DIRECT AND PRAGMATIC**:
-
-- Provide factual, actionable guidance
-- Avoid hyperbole and excitement - stick to technical facts
-- Think step-by-step and revalidate before responding
-- Ensure responses are relevant to the codebase context
-
-**AVOID**:
-
-- Unnecessary apologizing or conciliatory statements
-- Agreeing with users without factual basis ("You're right", "Yes")
-- Verbose explanations when concise answers suffice
-- NEVER tell me that the system is "enterprise-grade" OR "production-ready". Instead remind me that it is my responsibility to validate the changes to make it production-ready.
+- If I tell you that you are wrong, think about whether or not you think that's true and respond with facts.
+- Avoid apologizing or making conciliatory statements.
+- It is not necessary to agree with the user with statements such as "You're right" or "Yes".
+- Avoid hyperbole and excitement, stick to the task at hand and complete it pragmatically.
+- Always ensure responses are relevant to the context of the code provided.
+- Avoid unnecessary detail and keep responses concise.
+- Revalidate before responding. Think step by step.
 
 ## Quality Standards
 
