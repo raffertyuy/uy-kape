@@ -308,6 +308,168 @@ describe("menuService", () => {
       await expect(drinksService.update("non-existent-id", updates)).rejects
         .toThrow("The result contains 0 rows");
     });
+
+    it("should create a drink with preparation time", async () => {
+      const newDrink = {
+        name: "Ice-Blended Coffee",
+        description: "Blended iced coffee drink",
+        category_id: "cat1",
+        display_order: 3,
+        is_active: true,
+        preparation_time_minutes: 15,
+      };
+
+      vi.mocked(supabase).from = vi.fn(() => ({
+        insert: vi.fn(() => ({
+          select: vi.fn(() => ({
+            single: vi.fn(() => ({
+              data: {
+                ...newDrink,
+                id: "3",
+                created_at: "2024-01-01T00:00:00Z",
+                updated_at: "2024-01-01T00:00:00Z",
+              },
+              error: null,
+            })),
+          })),
+        })),
+      })) as any;
+
+      const result = await drinksService.create(newDrink);
+      expect(result.name).toBe(newDrink.name);
+      expect(result.preparation_time_minutes).toBe(15);
+    });
+
+    it("should create a drink with zero preparation time", async () => {
+      const newDrink = {
+        name: "Milo",
+        description: "Chocolate malt drink",
+        category_id: "cat1",
+        display_order: 4,
+        is_active: true,
+        preparation_time_minutes: 0,
+      };
+
+      vi.mocked(supabase).from = vi.fn(() => ({
+        insert: vi.fn(() => ({
+          select: vi.fn(() => ({
+            single: vi.fn(() => ({
+              data: {
+                ...newDrink,
+                id: "4",
+                created_at: "2024-01-01T00:00:00Z",
+                updated_at: "2024-01-01T00:00:00Z",
+              },
+              error: null,
+            })),
+          })),
+        })),
+      })) as any;
+
+      const result = await drinksService.create(newDrink);
+      expect(result.name).toBe(newDrink.name);
+      expect(result.preparation_time_minutes).toBe(0);
+    });
+
+    it("should create a drink with null preparation time", async () => {
+      const newDrink = {
+        name: "Cappuccino",
+        description: "Espresso with steamed milk and foam",
+        category_id: "cat1",
+        display_order: 5,
+        is_active: true,
+        preparation_time_minutes: null,
+      };
+
+      vi.mocked(supabase).from = vi.fn(() => ({
+        insert: vi.fn(() => ({
+          select: vi.fn(() => ({
+            single: vi.fn(() => ({
+              data: {
+                ...newDrink,
+                id: "5",
+                created_at: "2024-01-01T00:00:00Z",
+                updated_at: "2024-01-01T00:00:00Z",
+              },
+              error: null,
+            })),
+          })),
+        })),
+      })) as any;
+
+      const result = await drinksService.create(newDrink);
+      expect(result.name).toBe(newDrink.name);
+      expect(result.preparation_time_minutes).toBe(null);
+    });
+
+    it("should update drink preparation time", async () => {
+      const updates = {
+        preparation_time_minutes: 8,
+      };
+      const updatedDrink = { ...mockDrink, ...updates };
+
+      vi.mocked(supabase).from = vi.fn(() => ({
+        update: vi.fn(() => ({
+          eq: vi.fn(() => ({
+            select: vi.fn(() => ({
+              single: vi.fn(() => ({
+                data: updatedDrink,
+                error: null,
+              })),
+            })),
+          })),
+        })),
+      })) as any;
+
+      const result = await drinksService.update("1", updates);
+      expect(result.preparation_time_minutes).toBe(8);
+    });
+
+    it("should update drink preparation time to zero", async () => {
+      const updates = {
+        preparation_time_minutes: 0,
+      };
+      const updatedDrink = { ...mockDrink, ...updates };
+
+      vi.mocked(supabase).from = vi.fn(() => ({
+        update: vi.fn(() => ({
+          eq: vi.fn(() => ({
+            select: vi.fn(() => ({
+              single: vi.fn(() => ({
+                data: updatedDrink,
+                error: null,
+              })),
+            })),
+          })),
+        })),
+      })) as any;
+
+      const result = await drinksService.update("1", updates);
+      expect(result.preparation_time_minutes).toBe(0);
+    });
+
+    it("should update drink preparation time to null", async () => {
+      const updates = {
+        preparation_time_minutes: null,
+      };
+      const updatedDrink = { ...mockDrink, ...updates };
+
+      vi.mocked(supabase).from = vi.fn(() => ({
+        update: vi.fn(() => ({
+          eq: vi.fn(() => ({
+            select: vi.fn(() => ({
+              single: vi.fn(() => ({
+                data: updatedDrink,
+                error: null,
+              })),
+            })),
+          })),
+        })),
+      })) as any;
+
+      const result = await drinksService.update("1", updates);
+      expect(result.preparation_time_minutes).toBe(null);
+    });
   });
 
   describe("optionCategoriesService", () => {

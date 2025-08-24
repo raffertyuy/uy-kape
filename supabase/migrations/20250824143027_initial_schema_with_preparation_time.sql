@@ -1,5 +1,6 @@
--- Uy, Kape! Database Schema and Seed Data
+-- Uy, Kape! Database Schema with Preparation Time Feature
 -- This migration contains the complete schema and initial data for the coffee ordering system
+-- including the new preparation_time_minutes column for drinks
 
 -- Enable required extensions
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -25,6 +26,7 @@ CREATE TABLE drinks (
   name TEXT NOT NULL,
   description TEXT,
   category_id UUID NOT NULL REFERENCES drink_categories(id) ON DELETE RESTRICT,
+  preparation_time_minutes INTEGER,
   display_order INTEGER NOT NULL DEFAULT 0,
   is_active BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMPTZ DEFAULT now(),
@@ -261,6 +263,7 @@ WITH (security_invoker=true) AS
 SELECT d.id
      , d.name
      , d.description
+     , d.preparation_time_minutes
      , d.display_order
      , d.is_active
      , dc.name AS category_name
@@ -283,6 +286,7 @@ SELECT o.id
      , o.created_at
      , o.updated_at
      , d.name AS drink_name
+     , d.preparation_time_minutes
      , dc.name AS category_name
      , STRING_AGG(
          CONCAT(oc.name, ': ', ov.name),
@@ -296,7 +300,7 @@ LEFT JOIN order_options oo ON o.id = oo.order_id
 LEFT JOIN option_categories oc ON oo.option_category_id = oc.id
 LEFT JOIN option_values ov ON oo.option_value_id = ov.id
 GROUP BY o.id, o.guest_name, o.special_request, o.status, o.queue_number, o.created_at, o.updated_at
-       , d.name, dc.name
+       , d.name, d.preparation_time_minutes, dc.name
 ORDER BY o.created_at DESC;
 
 -- ============================================================================
@@ -350,35 +354,35 @@ INSERT INTO option_values (option_category_id, name, description, display_order,
 ((SELECT id FROM option_categories WHERE name = 'Ice Cream Flavor'), 'Vanilla', 'Classic vanilla ice cream', 2, false),
 ((SELECT id FROM option_categories WHERE name = 'Ice Cream Flavor'), 'Chocolate', 'Rich chocolate ice cream', 3, true);
 
--- Insert drinks
+-- Insert drinks with preparation times
 -- Coffee category drinks
-INSERT INTO drinks (name, description, category_id, display_order, is_active) VALUES
-('Espresso', 'Pure espresso shot', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 1, true),
-('Espresso Macchiato', 'Espresso with a dollop of foamed milk', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 2, true),
-('Piccolo Latte', 'Small latte with equal parts espresso and steamed milk', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 3, true),
-('Caffe Latte', 'Espresso with steamed milk and light foam', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 4, true),
-('Cappuccino', 'Equal parts espresso, steamed milk, and milk foam', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 5, true),
-('Americano', 'Espresso with hot water', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 6, true),
-('Black Coffee (Moka Pot)', 'Coffee brewed in a moka pot', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 7, true),
-('Black Coffee (V60)', 'Pour-over coffee using V60 dripper', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 8, true),
-('Black Coffee (Aeropress)', 'Black coffee using an Aeropress', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 9, true);
+INSERT INTO drinks (name, description, category_id, preparation_time_minutes, display_order, is_active) VALUES
+('Espresso', 'Pure espresso shot', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 3, 1, true),
+('Espresso Macchiato', 'Espresso with a dollop of foamed milk', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 3, 2, true),
+('Piccolo Latte', 'Small latte with equal parts espresso and steamed milk', (SELECT id FROM drink_categories WHERE name = 'Coffee'), NULL, 3, true),
+('Caffe Latte', 'Espresso with steamed milk and light foam', (SELECT id FROM drink_categories WHERE name = 'Coffee'), NULL, 4, true),
+('Cappuccino', 'Equal parts espresso, steamed milk, and milk foam', (SELECT id FROM drink_categories WHERE name = 'Coffee'), NULL, 5, true),
+('Americano', 'Espresso with hot water', (SELECT id FROM drink_categories WHERE name = 'Coffee'), NULL, 6, true),
+('Black Coffee (Moka Pot)', 'Coffee brewed in a moka pot', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 10, 7, true),
+('Black Coffee (V60)', 'Pour-over coffee using V60 dripper', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 10, 8, true),
+('Black Coffee (Aeropress)', 'Black coffee using an Aeropress', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 10, 9, true);
 
 -- Special Coffee category drinks
-INSERT INTO drinks (name, description, category_id, display_order, is_active) VALUES
-('Ice-Blended Coffee', 'Blended iced coffee drink', (SELECT id FROM drink_categories WHERE name = 'Special Coffee'), 21, true),
-('Affogato', 'Ice cream with an espresso shot', (SELECT id FROM drink_categories WHERE name = 'Special Coffee'), 22, true),
-('Amaretto Coffee', 'Americano with amaretto dessert liquor', (SELECT id FROM drink_categories WHERE name = 'Special Coffee'), 23, true);
+INSERT INTO drinks (name, description, category_id, preparation_time_minutes, display_order, is_active) VALUES
+('Ice-Blended Coffee', 'Blended iced coffee drink', (SELECT id FROM drink_categories WHERE name = 'Special Coffee'), 15, 21, true),
+('Affogato', 'Ice cream with an espresso shot', (SELECT id FROM drink_categories WHERE name = 'Special Coffee'), 7, 22, true),
+('Amaretto Coffee', 'Americano with amaretto dessert liquor', (SELECT id FROM drink_categories WHERE name = 'Special Coffee'), NULL, 23, true);
 
 -- Tea category drinks
-INSERT INTO drinks (name, description, category_id, display_order, is_active) VALUES
-('Chinese Tea', 'Traditional Chinese tea varieties', (SELECT id FROM drink_categories WHERE name = 'Tea'), 31, true);
+INSERT INTO drinks (name, description, category_id, preparation_time_minutes, display_order, is_active) VALUES
+('Chinese Tea', 'Traditional Chinese tea varieties', (SELECT id FROM drink_categories WHERE name = 'Tea'), NULL, 31, true);
 
 -- Kids Drinks category
-INSERT INTO drinks (name, description, category_id, display_order, is_active) VALUES
-('Babyccino', 'Frothed milk drink for children', (SELECT id FROM drink_categories WHERE name = 'Kids Drinks'), 51, true),
-('Milo', 'Chocolate malt drink', (SELECT id FROM drink_categories WHERE name = 'Kids Drinks'), 52, true),
-('Ribena', 'Blackcurrant juice drink', (SELECT id FROM drink_categories WHERE name = 'Kids Drinks'), 53, true), 
-('Yakult', 'Probiotic dairy drink', (SELECT id FROM drink_categories WHERE name = 'Kids Drinks'), 54, true);
+INSERT INTO drinks (name, description, category_id, preparation_time_minutes, display_order, is_active) VALUES
+('Babyccino', 'Frothed milk drink for children', (SELECT id FROM drink_categories WHERE name = 'Kids Drinks'), NULL, 51, true),
+('Milo', 'Chocolate malt drink', (SELECT id FROM drink_categories WHERE name = 'Kids Drinks'), 0, 52, true),
+('Ribena', 'Blackcurrant juice drink', (SELECT id FROM drink_categories WHERE name = 'Kids Drinks'), 0, 53, true), 
+('Yakult', 'Probiotic dairy drink', (SELECT id FROM drink_categories WHERE name = 'Kids Drinks'), 0, 54, true);
 
 -- Link drinks to their available option categories
 -- Espresso-based drinks that can have shot options and milk options

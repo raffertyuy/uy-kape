@@ -39,6 +39,7 @@ export interface OrderWithDetails {
   drink_id: string;
   drink_name?: string;
   category_name?: string;
+  drink_preparation_time_minutes?: number | null;
   special_request?: string | null;
   status: OrderStatus;
   queue_number: number;

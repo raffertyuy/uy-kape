@@ -24,7 +24,8 @@ export const DrinkForm: React.FC<DrinkFormProps> = ({
     description: '',
     category_id: '',
     display_order: 1,
-    is_active: true
+    is_active: true,
+    preparation_time_minutes: '' as string | number
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -49,7 +50,8 @@ export const DrinkForm: React.FC<DrinkFormProps> = ({
         description: drink.description || '',
         category_id: drink.category_id,
         display_order: drink.display_order,
-        is_active: drink.is_active
+        is_active: drink.is_active,
+        preparation_time_minutes: drink.preparation_time_minutes ?? ''
       })
     } else {
       // Set default display order for new drinks
@@ -85,6 +87,18 @@ export const DrinkForm: React.FC<DrinkFormProps> = ({
       newErrors.display_order = 'Display order must be at least 1'
     }
 
+    const prepTime = typeof formData.preparation_time_minutes === 'string' 
+      ? parseInt(formData.preparation_time_minutes) 
+      : formData.preparation_time_minutes
+    
+    if (formData.preparation_time_minutes !== '' && !isNaN(prepTime)) {
+      if (prepTime < 0) {
+        newErrors.preparation_time_minutes = 'Preparation time cannot be negative'
+      } else if (prepTime > 120) {
+        newErrors.preparation_time_minutes = 'Preparation time cannot exceed 120 minutes'
+      }
+    }
+
     // Check for duplicate name within the same category (excluding current drink if editing)
     const duplicateName = drinks.find(d => 
       d.name.toLowerCase() === formData.name.toLowerCase().trim() &&
@@ -106,21 +120,35 @@ export const DrinkForm: React.FC<DrinkFormProps> = ({
 
     try {
       if (isEditing && drink) {
+        const prepTime = formData.preparation_time_minutes === '' 
+          ? null 
+          : typeof formData.preparation_time_minutes === 'string' 
+            ? parseInt(formData.preparation_time_minutes) || null
+            : formData.preparation_time_minutes
+
         const updateData: UpdateDrinkDto = {
           name: formData.name.trim(),
           description: formData.description.trim() || null,
           category_id: formData.category_id,
           display_order: formData.display_order,
-          is_active: formData.is_active
+          is_active: formData.is_active,
+          preparation_time_minutes: prepTime
         }
         await updateMutation.updateDrink(drink.id, updateData)
       } else {
+        const prepTime = formData.preparation_time_minutes === '' 
+          ? null 
+          : typeof formData.preparation_time_minutes === 'string' 
+            ? parseInt(formData.preparation_time_minutes) || null
+            : formData.preparation_time_minutes
+
         const createData: CreateDrinkDto = {
           name: formData.name.trim(),
           description: formData.description.trim() || null,
           category_id: formData.category_id,
           display_order: formData.display_order,
-          is_active: formData.is_active
+          is_active: formData.is_active,
+          preparation_time_minutes: prepTime
         }
         await createMutation.createDrink(createData)
       }
@@ -149,11 +177,19 @@ export const DrinkForm: React.FC<DrinkFormProps> = ({
   }
 
   const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value) || 1
-    setFormData(prev => ({ ...prev, display_order: value }))
+    const { name, value } = e.target
     
-    if (errors.display_order) {
-      setErrors(prev => ({ ...prev, display_order: '' }))
+    if (name === 'preparation_time_minutes') {
+      // Allow empty string for preparation time, convert to number or keep as empty string
+      setFormData(prev => ({ ...prev, [name]: value === '' ? '' : parseInt(value) || '' }))
+    } else {
+      // For other number fields like display_order, use default values
+      const numValue = parseInt(value) || 1
+      setFormData(prev => ({ ...prev, [name]: numValue }))
+    }
+    
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }))
     }
   }
 
@@ -319,6 +355,39 @@ export const DrinkForm: React.FC<DrinkFormProps> = ({
         )}
         <p className="mt-1 text-xs text-coffee-500">
           Controls the order this drink appears in the menu
+        </p>
+      </div>
+
+      {/* Preparation Time Field */}
+      <div>
+        <label htmlFor="preparation_time_minutes" className="block text-sm font-medium text-coffee-700 mb-1">
+          Preparation Time (minutes)
+        </label>
+        <input
+          type="number"
+          id="preparation_time_minutes"
+          name="preparation_time_minutes"
+          value={formData.preparation_time_minutes}
+          onChange={handleNumberChange}
+          min="0"
+          max="120"
+          placeholder="Optional"
+          className={`w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 
+                     focus:ring-coffee-500 focus:border-coffee-500 ${
+            errors.preparation_time_minutes 
+              ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
+              : 'border-coffee-300'
+          }`}
+          disabled={isSubmitting || isLoading}
+          aria-describedby={errors.preparation_time_minutes ? 'preparation-time-error' : undefined}
+        />
+        {errors.preparation_time_minutes && (
+          <p id="preparation-time-error" className="mt-1 text-sm text-red-600" role="alert">
+            {errors.preparation_time_minutes}
+          </p>
+        )}
+        <p className="mt-1 text-xs text-coffee-500">
+          Estimated time to prepare this drink (optional, leave blank if not applicable)
         </p>
       </div>
 

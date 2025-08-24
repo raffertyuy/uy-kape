@@ -25,6 +25,7 @@ CREATE TABLE drinks (
   name TEXT NOT NULL,
   description TEXT,
   category_id UUID NOT NULL REFERENCES drink_categories(id) ON DELETE RESTRICT,
+  preparation_time_minutes INTEGER,
   display_order INTEGER NOT NULL DEFAULT 0,
   is_active BOOLEAN NOT NULL DEFAULT true,
   created_at TIMESTAMPTZ DEFAULT now(),

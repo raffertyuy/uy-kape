@@ -21,6 +21,7 @@ erDiagram
         string name "e.g., Espresso, Latte, Chamomile Tea, Milo"
         string description "drink description"
         uuid category_id FK "references drink_categories.id"
+        int preparation_time_minutes "optional preparation time in minutes for wait time calculation"
         int display_order "order for display within category"
         boolean is_active "whether drink is currently available"
         timestamptz created_at "creation timestamp"
@@ -119,16 +120,17 @@ Organizes drinks into logical categories for better menu management.
 
 Stores all available menu items with category relationships.
 
-| Column        | Type         | Description                                           |
-|---------------|--------------|-------------------------------------------------------|
-| id            | UUID         | UUID primary key (generated with uuid_generate_v4()) |
-| name          | TEXT         | e.g., "Espresso", "Latte", "Chamomile Tea", "Milo"   |
-| description   | TEXT         | drink description                                     |
-| category_id   | UUID         | Foreign Key to drink_categories.id                   |
-| display_order | INTEGER      | order for display within category                    |
-| is_active     | BOOLEAN      | whether drink is currently available (default: true) |
-| created_at    | TIMESTAMPTZ  | creation timestamp (default: now())                  |
-| updated_at    | TIMESTAMPTZ  | last update timestamp (auto-updated by trigger)      |
+| Column                  | Type         | Description                                           |
+|-------------------------|--------------|-------------------------------------------------------|
+| id                      | UUID         | UUID primary key (generated with uuid_generate_v4()) |
+| name                    | TEXT         | e.g., "Espresso", "Latte", "Chamomile Tea", "Milo"   |
+| description             | TEXT         | drink description                                     |
+| category_id             | UUID         | Foreign Key to drink_categories.id                   |
+| preparation_time_minutes| INTEGER      | Optional preparation time in minutes for wait time calculation |
+| display_order           | INTEGER      | order for display within category                    |
+| is_active               | BOOLEAN      | whether drink is currently available (default: true) |
+| created_at              | TIMESTAMPTZ  | creation timestamp (default: now())                  |
+| updated_at              | TIMESTAMPTZ  | last update timestamp (auto-updated by trigger)      |
 
 **Constraints:**
 
