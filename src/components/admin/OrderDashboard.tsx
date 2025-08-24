@@ -116,8 +116,8 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
         return false;
       }
 
-      // Show completed filter
-      if (!showCompleted && order.status === 'completed') {
+      // Show completed filter - when OFF, only show pending orders
+      if (!showCompleted && order.status !== 'pending') {
         return false;
       }
 
