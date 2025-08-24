@@ -44,7 +44,7 @@ export const OrderSummary = memo<OrderSummaryProps>(
     })
 
     return (
-      <div className={`bg-coffee-50 rounded-lg p-6 border border-coffee-200 ${className}`}>
+      <div className={`bg-coffee-50 rounded-lg p-6 border border-coffee-200 ${className}`} data-testid="order-summary">
         <h3 className="text-xl font-semibold text-coffee-800 mb-4">
           Order Summary
         </h3>

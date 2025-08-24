@@ -105,9 +105,6 @@ The guest ordering process follows a 4-step wizard with progress indicator:
   - Example: "Wonder Bean's secret power? Perfect patience - and really strong coffee."
 - **Next Steps Instructions**:
   - Clear list of what happens next
-  - "We'll start preparing your order"
-  - "Listen for your name to be called"
-  - "Your order will be ready at the pickup counter"
 - **Post-Order Actions**:
   - Cancel This Order (removes from queue)
   - Place Another Order (restart process)

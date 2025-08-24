@@ -112,7 +112,7 @@ export const DrinkOptionsForm = memo<DrinkOptionsFormProps>(
     }
 
     return (
-      <div className={`space-y-6 ${className}`}>
+      <div className={`space-y-6 ${className}`} data-testid="drink-customization">
         <div className="border-b border-coffee-200 pb-4">
           <h3 className="text-xl font-semibold text-coffee-800">
             Customize Your {drink.name}

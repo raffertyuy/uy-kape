@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import PasswordProtection from '@/components/PasswordProtection'
 import { appConfig } from '@/config/app.config'
@@ -6,6 +6,7 @@ import { Logo } from '@/components/ui/Logo'
 import { useOrderForm } from '@/hooks/useOrderForm'
 import { useDrinksWithOptionsPreview } from '@/hooks/useMenuData'
 import type { DrinkWithOptionsAndCategory } from '@/types/menu.types'
+import type { OrderSubmissionResult } from '@/types/order.types'
 import { useEffect } from 'react'
 
 // Step components
@@ -21,34 +22,32 @@ function GuestModulePage() {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>('')
   const [searchParams, setSearchParams] = useSearchParams()
   
-  // Form state management
-  const orderForm = useOrderForm()
+  // Get URL parameters
+  const orderIdParam = searchParams.get('orderId')
+  
+  // Initialize order form with URL parameter support
+  const orderForm = useOrderForm(orderIdParam)
   
   // Get all drinks data (for drink lookup in handleDrinkSelect)
   const { data: allDrinks = [] } = useDrinksWithOptionsPreview()
 
-  // URL parameter handling for order confirmation
-  useEffect(() => {
-    const orderId = searchParams.get('orderId')
-    if (orderId && orderForm.currentStep !== 'success') {
-      // If there's an orderId in URL and we're not on success step, 
-      // set to success step to display confirmation
-      orderForm.goToStep('success')
+  // Handle order submission success - set URL parameter
+  const handleOrderSuccess = useCallback((result: OrderSubmissionResult) => {
+    if (result?.order_id) {
+      setSearchParams({ orderId: result.order_id }, { replace: true });
     }
-  }, [searchParams, orderForm])
+  }, [setSearchParams])
 
-  // Update URL when reaching success step
+  // Handle starting new order - clear URL parameters
+  const handleNewOrder = useCallback(() => {
+    setSearchParams({})
+    orderForm.startNewOrder()
+  }, [setSearchParams, orderForm])
+
+  // Set up the order success callback
   useEffect(() => {
-    if (orderForm.currentStep === 'success' && orderForm.orderSubmission.result) {
-      const orderId = orderForm.orderSubmission.result.order_id
-      if (!searchParams.get('orderId')) {
-        setSearchParams({ orderId })
-      }
-    } else if (orderForm.currentStep !== 'success' && searchParams.get('orderId')) {
-      // Remove orderId from URL when leaving success step
-      setSearchParams({})
-    }
-  }, [orderForm.currentStep, orderForm.orderSubmission.result, searchParams, setSearchParams])
+    orderForm.setOrderSuccessCallback(handleOrderSuccess)
+  }, [orderForm, handleOrderSuccess])
 
   // Generate funny name when guest-info step is reached for the first time
   useEffect(() => {
@@ -229,7 +228,7 @@ function GuestModulePage() {
         {...(orderForm.orderSubmission.result && { result: orderForm.orderSubmission.result })}
         {...(orderForm.guestInfo.trimmedName && { guestName: orderForm.guestInfo.trimmedName })}
         {...(orderForm.guestInfo.specialRequest && { specialRequest: orderForm.guestInfo.specialRequest })}
-        onCreateNewOrder={orderForm.startNewOrder}
+        onCreateNewOrder={handleNewOrder}
       />
     </div>
   )
@@ -354,6 +353,9 @@ function GuestModulePage() {
     </div>
   )
 }
+
+// Export for testing
+export { GuestModulePage }
 
 function ProtectedGuestModule() {
   return (

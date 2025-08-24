@@ -69,10 +69,10 @@ PLAN HERE
 [Additional steps...]
 ```
 
-- After the steps to implement the feature, add a step to build and run the app
-- Add a step to write unit tests for the feature
-- For major UI changes, add a step to write playwright UI tests for the feature
-- Add a step to run all unit and UI tests as last step (with no -destination set to ensure active simulator is used)
+- After the steps to implement the objective, add a step to run the app and test it against the original objective specified in the plan. Use the right tool to test this (playwright MCP, CLI, or something else).
+- Add a step to write unit tests for what has been implemented.
+- Add a step to write playwright UI tests for the feature, keep the test simple and focused on the intent of the objective.
+- Add a step to run all unit and UI tests as last step.
 - Add a step to make sure it complies with our [definition_of_done](/docs/specs/definition_of_done.md)
 
 ### 3. NEXT:

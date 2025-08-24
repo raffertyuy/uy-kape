@@ -1,179 +1,222 @@
-import { useState, useCallback, useEffect, useMemo } from 'react'
-import type { DrinkWithOptionsAndCategory } from '@/types/menu.types'
-import type { GuestOrderForm } from '@/types/order.types'
-import { useGuestInfo } from './useGuestInfo'
-import { useOptionSelection } from './useOptionSelection'
-import { useOrderSubmission } from './useOrderSubmission'
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { DrinkWithOptionsAndCategory } from "@/types/menu.types";
+import type {
+  GuestOrderForm,
+  OrderSubmissionResult,
+} from "@/types/order.types";
+import { useGuestInfo } from "./useGuestInfo";
+import { useOptionSelection } from "./useOptionSelection";
+import { useOrderSubmission } from "./useOrderSubmission";
 
-export type OrderFormStep = 'drink-selection' | 'customization' | 'guest-info' | 'review' | 'success'
+export type OrderFormStep =
+  | "drink-selection"
+  | "customization"
+  | "guest-info"
+  | "review"
+  | "success";
 
 interface UseOrderFormReturn {
   // Form state
-  currentStep: OrderFormStep
-  selectedDrink: DrinkWithOptionsAndCategory | null
-  
+  currentStep: OrderFormStep;
+  selectedDrink: DrinkWithOptionsAndCategory | null;
+
   // Guest info hook
-  guestInfo: ReturnType<typeof useGuestInfo>
-  
+  guestInfo: ReturnType<typeof useGuestInfo>;
+
   // Options hook
-  optionSelection: ReturnType<typeof useOptionSelection>
-  
-  // Submission hook  
-  orderSubmission: ReturnType<typeof useOrderSubmission>
-  
+  optionSelection: ReturnType<typeof useOptionSelection>;
+
+  // Submission hook
+  orderSubmission: ReturnType<typeof useOrderSubmission>;
+
   // Navigation
-  goToStep: (_step: OrderFormStep) => void
-  nextStep: () => void
-  previousStep: () => void
-  canGoNext: boolean
-  canGoPrevious: boolean
-  
+  goToStep: (_step: OrderFormStep) => void;
+  nextStep: () => void;
+  previousStep: () => void;
+  canGoNext: boolean;
+  canGoPrevious: boolean;
+
   // Actions
-  selectDrink: (_drink: DrinkWithOptionsAndCategory) => void
-  resetForm: () => void
-  submitOrder: () => Promise<boolean>
-  startNewOrder: () => void
-  
+  selectDrink: (_drink: DrinkWithOptionsAndCategory) => void;
+  resetForm: () => void;
+  submitOrder: () => Promise<boolean>;
+  startNewOrder: () => void;
+
+  // URL parameter callback support
+  setOrderSuccessCallback: (
+    _callback: (_result: OrderSubmissionResult) => void,
+  ) => void;
+
   // Computed state
-  isFormValid: boolean
-  orderData: GuestOrderForm | null
-  progress: number
+  isFormValid: boolean;
+  orderData: GuestOrderForm | null;
+  progress: number;
 }
 
-export function useOrderForm(): UseOrderFormReturn {
-  // Form state
-  const [currentStep, setCurrentStep] = useState<OrderFormStep>('drink-selection')
-  const [selectedDrink, setSelectedDrink] = useState<DrinkWithOptionsAndCategory | null>(null)
-  
+export function useOrderForm(
+  orderIdFromUrl?: string | null,
+): UseOrderFormReturn {
+  // Form state - initialize step based on URL parameter
+  const [currentStep, setCurrentStep] = useState<OrderFormStep>(
+    "drink-selection",
+  );
+  const [selectedDrink, setSelectedDrink] = useState<
+    DrinkWithOptionsAndCategory | null
+  >(null);
+
+  // Effect to handle URL parameter changes and set initial step
+  useEffect(() => {
+    if (orderIdFromUrl) {
+      setCurrentStep("success");
+    } else {
+      setCurrentStep("drink-selection");
+    }
+  }, [orderIdFromUrl]);
+
+  // Order success callback using useRef for stability
+  const orderSuccessCallbackRef = useRef<
+    ((_result: OrderSubmissionResult) => void) | null
+  >(null);
+
   // Hook instances
-  const guestInfo = useGuestInfo()
-  const optionSelection = useOptionSelection(selectedDrink)
-  const orderSubmission = useOrderSubmission()
+  const guestInfo = useGuestInfo();
+  const optionSelection = useOptionSelection(selectedDrink);
+  const orderSubmission = useOrderSubmission();
 
   // Memoize step order to prevent dependency issues
-  const stepOrder: OrderFormStep[] = useMemo(() => 
-    ['drink-selection', 'customization', 'guest-info', 'review', 'success'], 
-    []
-  )
+  const stepOrder: OrderFormStep[] = useMemo(
+    () => [
+      "drink-selection",
+      "customization",
+      "guest-info",
+      "review",
+      "success",
+    ],
+    [],
+  );
 
   // Reset options when drink changes
   useEffect(() => {
-    if (!selectedDrink) {
-      setCurrentStep('drink-selection')
+    if (!selectedDrink && !orderIdFromUrl) {
+      setCurrentStep("drink-selection");
     }
-  }, [selectedDrink])
+  }, [selectedDrink, orderIdFromUrl]);
 
   // Auto-advance to success step when order is submitted successfully
   useEffect(() => {
     if (orderSubmission.isSuccess) {
-      setCurrentStep('success')
+      setCurrentStep("success");
     }
-  }, [orderSubmission.isSuccess])
+  }, [orderSubmission.isSuccess]);
 
   // Step validation
   const isStepValid = useCallback((step: OrderFormStep): boolean => {
     switch (step) {
-      case 'drink-selection':
-        return selectedDrink !== null
-      
-      case 'customization': {
-        if (!selectedDrink) return false
+      case "drink-selection":
+        return selectedDrink !== null;
+
+      case "customization": {
+        if (!selectedDrink) return false;
         // If drink has no options, skip this step
-        const hasOptions = selectedDrink.drink_options && selectedDrink.drink_options.length > 0
-        if (!hasOptions) return true
+        const hasOptions = selectedDrink.drink_options &&
+          selectedDrink.drink_options.length > 0;
+        if (!hasOptions) return true;
         // Check required options are selected
-        return optionSelection.hasRequiredSelections
+        return optionSelection.hasRequiredSelections;
       }
-      
-      case 'guest-info':
-        return guestInfo.isValid && guestInfo.trimmedName.length >= 2
-      
-      case 'review':
-        return isStepValid('drink-selection') && 
-               isStepValid('customization') && 
-               isStepValid('guest-info')
-      
-      case 'success':
-        return orderSubmission.isSuccess
-      
+
+      case "guest-info":
+        return guestInfo.isValid && guestInfo.trimmedName.length >= 2;
+
+      case "review":
+        return isStepValid("drink-selection") &&
+          isStepValid("customization") &&
+          isStepValid("guest-info");
+
+      case "success":
+        return orderSubmission.isSuccess;
+
       default:
-        return false
+        return false;
     }
-  }, [selectedDrink, optionSelection, guestInfo, orderSubmission.isSuccess])
+  }, [selectedDrink, optionSelection, guestInfo, orderSubmission.isSuccess]);
 
   const goToStep = useCallback((step: OrderFormStep) => {
-    setCurrentStep(step)
-  }, [])
+    setCurrentStep(step);
+  }, []);
 
   const nextStep = useCallback(() => {
-    const currentIndex = stepOrder.indexOf(currentStep)
+    const currentIndex = stepOrder.indexOf(currentStep);
     if (currentIndex < stepOrder.length - 1) {
-      const nextStepIndex = currentIndex + 1
-      const nextStepName = stepOrder[nextStepIndex]
-      
+      const nextStepIndex = currentIndex + 1;
+      const nextStepName = stepOrder[nextStepIndex];
+
       // Skip customization step if drink has no options
-      const hasOptions = selectedDrink?.drink_options && selectedDrink.drink_options.length > 0
-      if (nextStepName === 'customization' && selectedDrink && !hasOptions) {
+      const hasOptions = selectedDrink?.drink_options &&
+        selectedDrink.drink_options.length > 0;
+      if (nextStepName === "customization" && selectedDrink && !hasOptions) {
         if (nextStepIndex + 1 < stepOrder.length) {
-          setCurrentStep(stepOrder[nextStepIndex + 1])
+          setCurrentStep(stepOrder[nextStepIndex + 1]);
         }
       } else {
-        setCurrentStep(nextStepName)
+        setCurrentStep(nextStepName);
       }
     }
-  }, [currentStep, selectedDrink, stepOrder])
+  }, [currentStep, selectedDrink, stepOrder]);
 
   const previousStep = useCallback(() => {
-    const currentIndex = stepOrder.indexOf(currentStep)
+    const currentIndex = stepOrder.indexOf(currentStep);
     if (currentIndex > 0) {
-      const prevStepIndex = currentIndex - 1
-      const prevStepName = stepOrder[prevStepIndex]
-      
+      const prevStepIndex = currentIndex - 1;
+      const prevStepName = stepOrder[prevStepIndex];
+
       // Skip customization step if drink has no options
-      const hasOptions = selectedDrink?.drink_options && selectedDrink.drink_options.length > 0
-      if (prevStepName === 'customization' && selectedDrink && !hasOptions) {
+      const hasOptions = selectedDrink?.drink_options &&
+        selectedDrink.drink_options.length > 0;
+      if (prevStepName === "customization" && selectedDrink && !hasOptions) {
         if (prevStepIndex - 1 >= 0) {
-          setCurrentStep(stepOrder[prevStepIndex - 1])
+          setCurrentStep(stepOrder[prevStepIndex - 1]);
         }
       } else {
-        setCurrentStep(prevStepName)
+        setCurrentStep(prevStepName);
       }
     }
-  }, [currentStep, selectedDrink, stepOrder])
+  }, [currentStep, selectedDrink, stepOrder]);
 
   // Navigation state
-  const canGoNext = isStepValid(currentStep) && currentStep !== 'success'
-  const canGoPrevious = currentStep !== 'drink-selection' && currentStep !== 'success'
+  const canGoNext = isStepValid(currentStep) && currentStep !== "success";
+  const canGoPrevious = currentStep !== "drink-selection" &&
+    currentStep !== "success";
 
   // Actions
   const selectDrink = useCallback((drink: DrinkWithOptionsAndCategory) => {
-    setSelectedDrink(drink)
+    setSelectedDrink(drink);
     // Auto-advance to next step based on drink's options
-    const hasOptions = drink.drink_options && drink.drink_options.length > 0
+    const hasOptions = drink.drink_options && drink.drink_options.length > 0;
     if (hasOptions) {
-      setCurrentStep('customization')
+      setCurrentStep("customization");
     } else {
-      setCurrentStep('guest-info')
+      setCurrentStep("guest-info");
     }
-  }, [])
+  }, []);
 
   const resetForm = useCallback(() => {
-    setCurrentStep('drink-selection')
-    setSelectedDrink(null)
-    guestInfo.setGuestName('')
-    guestInfo.setSpecialRequest('')
-    guestInfo.clearError()
-    orderSubmission.resetSubmission()
-  }, [guestInfo, orderSubmission])
+    setCurrentStep("drink-selection");
+    setSelectedDrink(null);
+    guestInfo.setGuestName("");
+    guestInfo.setSpecialRequest("");
+    guestInfo.clearError();
+    orderSubmission.resetSubmission();
+  }, [guestInfo, orderSubmission]);
 
   const submitOrder = useCallback(async (): Promise<boolean> => {
     if (!selectedDrink || !guestInfo.trimmedName) {
-      return false
+      return false;
     }
 
     // Validate guest info
     if (!guestInfo.validateName()) {
-      return false
+      return false;
     }
 
     // Validate options
@@ -186,59 +229,90 @@ export function useOrderForm(): UseOrderFormReturn {
       guest_name: guestInfo.trimmedName,
       drink_id: selectedDrink.id,
       selected_options: optionSelection.selectedOptions,
-      ...(trimmedRequest && { special_request: trimmedRequest })
+      ...(trimmedRequest && { special_request: trimmedRequest }),
     };
 
-    return await orderSubmission.submitGuestOrder(orderData);
-  }, [selectedDrink, guestInfo, optionSelection, orderSubmission]);
+    const submissionResult = await orderSubmission.submitGuestOrder(orderData);
+
+    // Handle success - call callback only (let parent component handle URL)
+    if (submissionResult.success && submissionResult.result) {
+      // Call external callback if provided - parent component will handle URL
+      if (orderSuccessCallbackRef.current) {
+        orderSuccessCallbackRef.current(submissionResult.result);
+      }
+    }
+
+    return submissionResult.success;
+  }, [
+    selectedDrink,
+    guestInfo,
+    optionSelection,
+    orderSubmission,
+  ]);
 
   const startNewOrder = useCallback(() => {
     resetForm();
   }, [resetForm]);
 
+  // Callback setter function
+  const setOrderSuccessCallback = useCallback((
+    callback: (_result: OrderSubmissionResult) => void,
+  ) => {
+    orderSuccessCallbackRef.current = callback;
+  }, []);
+
   // Computed state
-  const isFormValid = isStepValid('review');
-  
-  const orderData: GuestOrderForm | null = selectedDrink && guestInfo.trimmedName ? {
-    guest_name: guestInfo.trimmedName,
-    drink_id: selectedDrink.id,
-    selected_options: optionSelection.selectedOptions,
-    ...(guestInfo.specialRequest.trim() && { special_request: guestInfo.specialRequest.trim() })
-  } : null;
+  const isFormValid = isStepValid("review");
+
+  const orderData: GuestOrderForm | null =
+    selectedDrink && guestInfo.trimmedName
+      ? {
+        guest_name: guestInfo.trimmedName,
+        drink_id: selectedDrink.id,
+        selected_options: optionSelection.selectedOptions,
+        ...(guestInfo.specialRequest.trim() &&
+          { special_request: guestInfo.specialRequest.trim() }),
+      }
+      : null;
 
   // Progress calculation (excluding success step)
   const progressSteps = stepOrder.slice(0, -1); // Remove 'success'
   const currentProgressIndex = progressSteps.indexOf(currentStep);
-  const progress = currentProgressIndex >= 0 ? ((currentProgressIndex + 1) / progressSteps.length) * 100 : 0;
+  const progress = currentProgressIndex >= 0
+    ? ((currentProgressIndex + 1) / progressSteps.length) * 100
+    : 0;
 
   return {
     // Form state
     currentStep,
     selectedDrink,
-    
+
     // Hook instances
     guestInfo,
     optionSelection,
     orderSubmission,
-    
+
     // Navigation
     goToStep,
     nextStep,
     previousStep,
     canGoNext,
     canGoPrevious,
-    
+
     // Actions
     selectDrink,
     resetForm,
     submitOrder,
     startNewOrder,
-    
+
+    // URL parameter callback support
+    setOrderSuccessCallback,
+
     // Computed state
     isFormValid,
     orderData,
-    progress
-  }
+    progress,
+  };
 }
 
-export default useOrderForm
+export default useOrderForm;

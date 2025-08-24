@@ -205,7 +205,7 @@ export const OrderSuccess = memo<OrderSuccessProps>(
       )
     }
     return (
-      <div className={`text-center space-y-6 ${className}`}>
+      <div className={`text-center space-y-6 ${className}`} data-testid="order-success">
         {/* Success Icon */}
         <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
           <svg 
@@ -236,9 +236,45 @@ export const OrderSuccess = memo<OrderSuccessProps>(
 
         {/* Order Details */}
         <div className="bg-coffee-50 rounded-lg p-6 border border-coffee-200">
-          <h3 className="text-lg font-semibold text-coffee-800 mb-4">
-            Order Details
-          </h3>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold text-coffee-800">
+              Order Details
+            </h3>
+            {/* Refresh button for URL-based confirmations */}
+            {!result && orderId && (
+              <button
+                type="button"
+                onClick={orderConfirmation.refreshOrder}
+                disabled={orderConfirmation.isLoading}
+                className="
+                  inline-flex items-center px-3 py-1 
+                  bg-coffee-100 hover:bg-coffee-200 
+                  text-coffee-700 text-sm font-medium rounded-md
+                  border border-coffee-300 hover:border-coffee-400
+                  transition-colors duration-200
+                  focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:ring-offset-2
+                  disabled:opacity-50 disabled:cursor-not-allowed
+                "
+                title="Refresh queue status"
+              >
+                <svg 
+                  className={`w-4 h-4 mr-1 ${orderConfirmation.isLoading ? 'animate-spin' : ''}`}
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round" 
+                    strokeWidth={2} 
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" 
+                  />
+                </svg>
+                Refresh
+              </button>
+            )}
+          </div>
           
           <div className="space-y-3">
             {/* Order ID */}
@@ -258,11 +294,53 @@ export const OrderSuccess = memo<OrderSuccessProps>(
             </div>
 
             {/* Estimated Wait Time */}
-            {effectiveResult.estimated_wait_time && (
+            {(effectiveResult.estimated_wait_time || orderConfirmation.queueStatus?.estimatedWaitTime) && (
               <div className="flex justify-between items-center">
                 <span className="text-coffee-600">Estimated Wait:</span>
-                <span className="font-semibold text-coffee-800">
-                  {effectiveResult.estimated_wait_time}
+                <div className="flex items-center space-x-2">
+                  <span className="font-semibold text-coffee-800">
+                    {orderConfirmation.queueStatus?.estimatedWaitTime || effectiveResult.estimated_wait_time}
+                  </span>
+                  {orderConfirmation.isConnected && (
+                    <div className="flex items-center space-x-1">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" title="Live updates enabled" />
+                      <span className="text-xs text-green-600">Live</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Current Queue Position (from real-time data) */}
+            {orderConfirmation.queueStatus?.position && orderConfirmation.queueStatus.position > 0 && (
+              <div className="flex justify-between items-center">
+                <span className="text-coffee-600">Current Position:</span>
+                <div className="flex items-center space-x-2">
+                  <span className="text-2xl font-bold text-coffee-800">
+                    #{orderConfirmation.queueStatus.position}
+                  </span>
+                  {orderConfirmation.queueStatus.position !== effectiveResult.queue_number && (
+                    <span className="text-xs text-coffee-500">
+                      (was #{effectiveResult.queue_number})
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Order Status */}
+            {orderConfirmation.queueStatus?.orderStatus && orderConfirmation.queueStatus.orderStatus !== 'pending' && (
+              <div className="flex justify-between items-center">
+                <span className="text-coffee-600">Status:</span>
+                <span className={`font-semibold px-2 py-1 rounded text-sm ${
+                  orderConfirmation.queueStatus.orderStatus === 'completed' 
+                    ? 'bg-green-100 text-green-800'
+                    : orderConfirmation.queueStatus.orderStatus === 'cancelled'
+                    ? 'bg-red-100 text-red-800'
+                    : 'bg-yellow-100 text-yellow-800'
+                }`}>
+                  {orderConfirmation.queueStatus.orderStatus === 'completed' && '✅ Ready for pickup!'}
+                  {orderConfirmation.queueStatus.orderStatus === 'cancelled' && '❌ Cancelled'}
                 </span>
               </div>
             )}
@@ -329,9 +407,9 @@ export const OrderSuccess = memo<OrderSuccessProps>(
                 What happens next:
               </p>
               <ul className="text-sm text-amber-700 mt-1 space-y-1">
-                <li>• We&apos;ll start preparing your order</li>
+                <li>• Wait for your queue for the barista to start preparing your order</li>
                 <li>• Listen for your name to be called</li>
-                <li>• Your order will be ready at the pickup counter</li>
+                <li>• In the meantime, please make yourself at home!</li>
               </ul>
             </div>
           </div>
@@ -473,7 +551,7 @@ export const OrderSuccess = memo<OrderSuccessProps>(
 
         {/* Footer Note */}
         <p className="text-xs text-coffee-500">
-          Need help? Please ask a staff member at the counter.
+          Need help? Please do not hesitate to ask your host!
         </p>
       </div>
     )

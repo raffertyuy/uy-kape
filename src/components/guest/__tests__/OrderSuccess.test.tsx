@@ -1,11 +1,24 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { vi, describe, it, expect, beforeEach } from 'vitest'
+import { MemoryRouter } from 'react-router-dom'
 import { OrderSuccess } from '../OrderSuccess'
 import { useGuestOrderActions } from '@/hooks/useGuestOrderActions'
 import type { OrderSubmissionResult } from '@/types/order.types'
 
 // Mock the useGuestOrderActions hook
 vi.mock('@/hooks/useGuestOrderActions')
+
+// Mock the useOrderConfirmation hook
+vi.mock('@/hooks/useOrderConfirmation', () => ({
+  useOrderConfirmation: () => ({
+    orderResult: null,
+    orderDetails: null,
+    isLoading: false,
+    error: null,
+    refreshOrder: vi.fn(),
+    clearError: vi.fn()
+  })
+}))
 
 // Mock the BaristaProverb component
 vi.mock('@/components/ui/BaristaProverb', () => ({
@@ -31,6 +44,15 @@ const defaultProps = {
   className: ''
 }
 
+// Wrapper component that provides Router context
+const renderWithRouter = (component: React.ReactElement) => {
+  return render(
+    <MemoryRouter>
+      {component}
+    </MemoryRouter>
+  )
+}
+
 describe('OrderSuccess', () => {
   const mockCancelOrder = vi.fn()
   const mockClearError = vi.fn()
@@ -48,7 +70,7 @@ describe('OrderSuccess', () => {
 
   describe('Initial Display', () => {
     it('should render order confirmation details', () => {
-      render(<OrderSuccess {...defaultProps} />)
+      renderWithRouter(<OrderSuccess {...defaultProps} />)
 
       expect(screen.getByText('Order Confirmed!')).toBeInTheDocument()
       expect(screen.getByText('Thanks John Doe! Your order has been received.')).toBeInTheDocument()
@@ -65,26 +87,26 @@ describe('OrderSuccess', () => {
         specialRequest: 'Extra hot, no foam'
       }
       
-      render(<OrderSuccess {...propsWithSpecialRequest} />)
+      renderWithRouter(<OrderSuccess {...propsWithSpecialRequest} />)
 
       expect(screen.getByText('Special Request:')).toBeInTheDocument()
       expect(screen.getByText('Extra hot, no foam')).toBeInTheDocument()
     })
 
     it('should not display special request section when not provided', () => {
-      render(<OrderSuccess {...defaultProps} />)
+      renderWithRouter(<OrderSuccess {...defaultProps} />)
 
       expect(screen.queryByText('Special Request:')).not.toBeInTheDocument()
     })
 
     it('should display cancel order button', () => {
-      render(<OrderSuccess {...defaultProps} />)
+      renderWithRouter(<OrderSuccess {...defaultProps} />)
 
       expect(screen.getByRole('button', { name: /cancel this order/i })).toBeInTheDocument()
     })
 
     it('should display place another order button', () => {
-      render(<OrderSuccess {...defaultProps} />)
+      renderWithRouter(<OrderSuccess {...defaultProps} />)
 
       expect(screen.getByRole('button', { name: /place another order/i })).toBeInTheDocument()
     })
@@ -92,7 +114,7 @@ describe('OrderSuccess', () => {
 
   describe('Order Cancellation', () => {
     it('should show confirmation dialog when cancel button is clicked', async () => {
-      render(<OrderSuccess {...defaultProps} />)
+      renderWithRouter(<OrderSuccess {...defaultProps} />)
 
       const cancelButton = screen.getByRole('button', { name: /cancel this order/i })
       fireEvent.click(cancelButton)
@@ -106,7 +128,7 @@ describe('OrderSuccess', () => {
     })
 
     it('should close confirmation dialog when "Keep Order" is clicked', async () => {
-      render(<OrderSuccess {...defaultProps} />)
+      renderWithRouter(<OrderSuccess {...defaultProps} />)
 
       const cancelButton = screen.getByRole('button', { name: /cancel this order/i })
       fireEvent.click(cancelButton)
@@ -122,7 +144,7 @@ describe('OrderSuccess', () => {
     it('should call cancelOrder when "Yes, Cancel Order" is clicked', async () => {
       mockCancelOrder.mockResolvedValue({ success: true })
       
-      render(<OrderSuccess {...defaultProps} />)
+      renderWithRouter(<OrderSuccess {...defaultProps} />)
 
       const cancelButton = screen.getByRole('button', { name: /cancel this order/i })
       fireEvent.click(cancelButton)
@@ -138,7 +160,7 @@ describe('OrderSuccess', () => {
     it('should show success message after successful cancellation', async () => {
       mockCancelOrder.mockResolvedValue({ success: true })
       
-      render(<OrderSuccess {...defaultProps} />)
+      renderWithRouter(<OrderSuccess {...defaultProps} />)
 
       const cancelButton = screen.getByRole('button', { name: /cancel this order/i })
       fireEvent.click(cancelButton)
@@ -161,7 +183,7 @@ describe('OrderSuccess', () => {
         clearError: mockClearError
       })
 
-      render(<OrderSuccess {...defaultProps} />)
+      renderWithRouter(<OrderSuccess {...defaultProps} />)
 
       const cancelButton = screen.getByRole('button', { name: /cancelling.../i })
       expect(cancelButton).toBeDisabled()
@@ -176,7 +198,7 @@ describe('OrderSuccess', () => {
         clearError: mockClearError
       })
 
-      render(<OrderSuccess {...defaultProps} />)
+      renderWithRouter(<OrderSuccess {...defaultProps} />)
 
       expect(screen.getByText('Cancellation Failed')).toBeInTheDocument()
       expect(screen.getByText(errorMessage)).toBeInTheDocument()
@@ -191,7 +213,7 @@ describe('OrderSuccess', () => {
         clearError: mockClearError
       })
 
-      render(<OrderSuccess {...defaultProps} />)
+      renderWithRouter(<OrderSuccess {...defaultProps} />)
 
       const cancelButton = screen.getByRole('button', { name: /cancel this order/i })
       fireEvent.click(cancelButton)
@@ -202,7 +224,7 @@ describe('OrderSuccess', () => {
 
   describe('Navigation', () => {
     it('should call onCreateNewOrder when "Place Another Order" is clicked', () => {
-      render(<OrderSuccess {...defaultProps} />)
+      renderWithRouter(<OrderSuccess {...defaultProps} />)
 
       const newOrderButton = screen.getByRole('button', { name: /place another order/i })
       fireEvent.click(newOrderButton)
@@ -213,7 +235,7 @@ describe('OrderSuccess', () => {
     it('should call onCreateNewOrder when "Place New Order Now" is clicked after cancellation', async () => {
       mockCancelOrder.mockResolvedValue({ success: true })
       
-      render(<OrderSuccess {...defaultProps} />)
+      renderWithRouter(<OrderSuccess {...defaultProps} />)
 
       // Cancel the order
       const cancelButton = screen.getByRole('button', { name: /cancel this order/i })
@@ -234,7 +256,7 @@ describe('OrderSuccess', () => {
 
   describe('Accessibility', () => {
     it('should have proper ARIA roles and labels', () => {
-      render(<OrderSuccess {...defaultProps} />)
+      renderWithRouter(<OrderSuccess {...defaultProps} />)
 
       const cancelButton = screen.getByRole('button', { name: /cancel this order/i })
       const newOrderButton = screen.getByRole('button', { name: /place another order/i })
@@ -251,7 +273,7 @@ describe('OrderSuccess', () => {
         clearError: mockClearError
       })
 
-      render(<OrderSuccess {...defaultProps} />)
+      renderWithRouter(<OrderSuccess {...defaultProps} />)
 
       const cancelButton = screen.getByRole('button', { name: /cancelling.../i })
       expect(cancelButton).toBeDisabled()
@@ -260,7 +282,7 @@ describe('OrderSuccess', () => {
 
   describe('BaristaProverb Integration', () => {
     it('should display BaristaProverb when estimated wait time is provided', () => {
-      render(<OrderSuccess {...defaultProps} />)
+      renderWithRouter(<OrderSuccess {...defaultProps} />)
 
       expect(screen.getByTestId('barista-proverb')).toBeInTheDocument()
       expect(screen.getByTestId('barista-proverb')).toHaveAttribute('data-category', 'patience')
@@ -275,7 +297,7 @@ describe('OrderSuccess', () => {
         }
       }
 
-      render(<OrderSuccess {...propsWithoutWaitTime} />)
+      renderWithRouter(<OrderSuccess {...propsWithoutWaitTime} />)
 
       expect(screen.queryByTestId('barista-proverb')).not.toBeInTheDocument()
     })
