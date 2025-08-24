@@ -45,7 +45,6 @@ Thumbs.db
 # Logs
 logs/
 *.log
-*.log.md
 
 # Runtime data
 pids/
@@ -125,4 +124,6 @@ config.*.json
 
 # Test artifacts and outputs (consolidated)
 tests/outputs/
+!tests/outputs/regression-tests/
+!tests/outputs/regression-tests/*
 test-results/
