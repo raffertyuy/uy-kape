@@ -2,10 +2,10 @@ Your task is to do a regression test of this application and ensure compliance w
 
 Run these tests and fix every issue that arise.
 
-- [ ] Run all unit tests, including e2e testing
+- [ ] Run all unit tests, including e2e testing (**IMPORTANT**: Take note of the [dual-testing-strategy](/docs/dual-strategy-testing.md). After testing, set the environment variable back to not using mocks)
 - [ ] Run all linting checks
 - [ ] Run all playwright tests
-- [ ] Do exploratory functional testing using playwright MCP (reference: [playwright-mcp-instructions.md](./playwright-mcp-instructions.md)).
+- [ ] Do exploratory functional testing using playwright MCP (reference: [playwright-mcp-instructions.md](./playwright-mcp-instructions.md))
 
 ## References
 

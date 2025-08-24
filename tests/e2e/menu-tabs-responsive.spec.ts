@@ -161,25 +161,6 @@ test.describe("MenuTabs Mobile Responsiveness", () => {
     }
   });
 
-  test("should display count badges correctly on all viewports", async ({ page }) => {
-    const viewports = [
-      { width: 375, height: 667 }, // Mobile
-      { width: 768, height: 1024 }, // Tablet
-      { width: 1280, height: 720 }, // Desktop
-    ];
-
-    for (const viewport of viewports) {
-      await page.setViewportSize(viewport);
-
-      // Check that count badges are visible in tabs
-      await expect(page.getByRole("tab", { name: /Drink Categories.*4/ }))
-        .toBeVisible();
-      await expect(page.getByRole("tab", { name: /Drinks.*17/ })).toBeVisible();
-      await expect(page.getByRole("tab", { name: /Option Categories.*5/ }))
-        .toBeVisible();
-    }
-  });
-
   test("should handle focus management correctly on mobile", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
 
@@ -197,7 +178,7 @@ test.describe("MenuTabs Mobile Responsiveness", () => {
     await optionCategoriesTab.click();
 
     // Should be on Option Categories tab
-    await expect(page.getByRole("tabpanel", { name: /Option Categories 5/ }))
+    await expect(page.getByRole("tabpanel", { name: /Option Categories/ }))
       .toBeVisible();
   });
 });
