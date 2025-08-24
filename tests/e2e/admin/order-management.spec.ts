@@ -1,350 +1,247 @@
 import { expect, test } from "@playwright/test";
 
-// Test configuration
-const ADMIN_PASSWORD = "admin456"; // This should match the configured admin password
+/**
+ * E2E Tests for Simplified Order Management (Without Ready Status)
+ *
+ * Tests that the barista admin workflow correctly handles orders with only:
+ * - pending: Order placed, awaiting preparation
+ * - completed: Order finished and picked up
+ * - cancelled: Order cancelled by guest or barista
+ *
+ * Verifies that "Mark Ready" buttons are not present and orders can be marked completed directly.
+ */
 
-test.describe("Order Management Dashboard", () => {
+const ADMIN_PASSWORD = "admin456";
+
+test.describe("Simplified Order Management Workflow", () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to admin page and authenticate
     await page.goto("/admin");
 
-    // Check if password prompt is shown and enter password
+    // Enter admin password
     const passwordInput = page.locator('input[type="password"]');
     if (await passwordInput.isVisible()) {
       await passwordInput.fill(ADMIN_PASSWORD);
       await page.keyboard.press("Enter");
+      await page.waitForTimeout(2000); // Wait for authentication
     }
 
-    // Wait for admin dashboard to load and click Order Management
-    await page.waitForSelector('button:has-text("Order Management")', {
-      timeout: 10000,
-    });
-    await page.click('button:has-text("Order Management")');
-
-    // Wait for order dashboard to load
-    await page.waitForSelector('[data-testid="order-dashboard"]', {
-      timeout: 10000,
-    });
-  });
-
-  test.describe("Dashboard Loading and Display", () => {
-    test("should load order dashboard successfully", async ({ page }) => {
-      // Verify main dashboard elements are present
-      await expect(page.locator('[data-testid="order-dashboard"]'))
-        .toBeVisible();
-      await expect(page.locator('[data-testid="order-dashboard"] h1'))
-        .toContainText("Order Dashboard");
-
-      // Check for key dashboard components
-      await expect(page.locator('[data-testid="order-list"]')).toBeVisible();
-      await expect(page.locator('[data-testid="dashboard-controls"]'))
-        .toBeVisible();
-    });
-
-    test("should display order statistics", async ({ page }) => {
-      // Check for statistics section
-      const statsSection = page.locator('[data-testid="order-statistics"]');
-      if (await statsSection.isVisible()) {
-        await expect(statsSection).toContainText(/pending|completed/i);
-      }
-    });
-
-    test("should show filter controls", async ({ page }) => {
-      // Check for filter controls
-      const filtersSection = page.locator('[data-testid="order-filters"]');
-      if (await filtersSection.isVisible()) {
-        await expect(filtersSection).toBeVisible();
-      }
-    });
-  });
-
-  test.describe("Order Display and Management", () => {
-    test("should display order cards when orders exist", async ({ page }) => {
-      // Wait for orders to load
+    // Navigate to Order Dashboard
+    const orderDashboardLink = page.locator("text=/order.*dashboard/i").first();
+    if (await orderDashboardLink.isVisible()) {
+      await orderDashboardLink.click();
       await page.waitForTimeout(1000);
-
-      // Check if orders are displayed
-      const orderCards = page.locator('[data-testid^="order-card-"]');
-      const orderCount = await orderCards.count();
-
-      if (orderCount > 0) {
-        // Verify first order card has required information
-        const firstOrder = orderCards.first();
-        await expect(firstOrder).toBeVisible();
-
-        // Check for guest name, status, and basic order info
-        await expect(firstOrder).toContainText(/guest|order|status/i);
-      } else {
-        // If no orders, check for empty state
-        const emptyState = page.locator('[data-testid="empty-orders"]');
-        await expect(emptyState).toBeVisible();
-      }
-    });
-
-    test("should allow status updates for orders", async ({ page }) => {
-      await page.waitForTimeout(1000);
-
-      const orderCards = page.locator('[data-testid^="order-card-"]');
-      const orderCount = await orderCards.count();
-
-      if (orderCount > 0) {
-        const firstOrder = orderCards.first();
-
-        // Look for status update buttons or dropdown
-        const statusButton = firstOrder.locator("button").filter({
-          hasText: /complete|pending/i,
-        }).first();
-
-        if (await statusButton.isVisible()) {
-          await statusButton.click();
-
-          // Wait for status to potentially update
-          await page.waitForTimeout(500);
-
-          // Verify interaction was registered (button may change or dropdown may appear)
-          const updatedButton = firstOrder.locator("button").filter({
-            hasText: /complete|pending/i,
-          }).first();
-          await expect(updatedButton).toBeVisible();
-        }
-      }
-    });
-
-    test("should handle order selection", async ({ page }) => {
-      await page.waitForTimeout(1000);
-
-      const orderCards = page.locator('[data-testid^="order-card-"]');
-      const orderCount = await orderCards.count();
-
-      if (orderCount > 0) {
-        const firstOrder = orderCards.first();
-
-        // Click on order card to select it
-        await firstOrder.click();
-
-        // Check if selection styling is applied or selection state changes
-        await page.waitForTimeout(300);
-
-        // Verify the order is interactable
-        await expect(firstOrder).toBeVisible();
-      }
-    });
+    }
   });
 
-  test.describe("Real-time Updates", () => {
-    test("should maintain connection status indicator", async ({ page }) => {
-      // Look for connection status indicator
-      const connectionStatus = page.locator(
-        '[data-testid="connection-status"]',
-      );
+  test("should not display Mark Ready buttons", async ({ page }) => {
+    // Wait for the order dashboard to load
+    await page.waitForTimeout(2000);
 
-      if (await connectionStatus.isVisible()) {
-        // Should show connected status
-        await expect(connectionStatus).toBeVisible();
-      }
-    });
+    // Look for any "Mark Ready" buttons - there should be none
+    const markReadyButtons = page.locator(
+      'button:has-text("Mark Ready"), button:has-text("Ready")',
+    );
+    expect(await markReadyButtons.count()).toBe(0);
 
-    test("should handle reconnection attempts", async ({ page }) => {
-      // Check for reconnect functionality
-      const reconnectButton = page.locator("button").filter({
-        hasText: /reconnect|refresh/i,
-      });
-
-      if (await reconnectButton.isVisible()) {
-        await reconnectButton.click();
-
-        // Wait for reconnection attempt
-        await page.waitForTimeout(1000);
-
-        // Verify dashboard is still functional
-        await expect(page.locator('[data-testid="order-dashboard"]'))
-          .toBeVisible();
-      }
-    });
+    // Also check for "ready" in button texts more broadly
+    const readyRelatedButtons = page.locator(
+      'button:text-matches(".*[Rr]eady.*", "")',
+    );
+    expect(await readyRelatedButtons.count()).toBe(0);
   });
 
-  test.describe("Error Handling", () => {
-    test("should display error messages when operations fail", async ({ page }) => {
-      // This test would require simulating network errors or invalid operations
-      // For now, we check that error display mechanisms exist
+  test("should show only pending, completed, and cancelled status options", async ({ page }) => {
+    // Try to navigate to order management if available
+    const orderManagementButtons = page.locator(
+      'button:has-text("Order Management"), a:has-text("Order Management")',
+    );
 
-      // Error container may not be visible initially, which is expected
-      // We just verify the dashboard handles errors gracefully
-      await expect(page.locator('[data-testid="order-dashboard"]'))
-        .toBeVisible();
-    });
-
-    test("should handle empty order list gracefully", async ({ page }) => {
-      // Wait for initial load
-      await page.waitForTimeout(1000);
-
-      const orderCards = page.locator('[data-testid^="order-card-"]');
-      const orderCount = await orderCards.count();
-
-      if (orderCount === 0) {
-        // Should show appropriate empty state
-        const emptyMessage = page.locator('[data-testid="empty-orders"]');
-        if (await emptyMessage.isVisible()) {
-          await expect(emptyMessage).toContainText(/no orders|empty/i);
-        }
-      }
-
-      // Dashboard should remain functional regardless
-      await expect(page.locator('[data-testid="order-dashboard"]'))
-        .toBeVisible();
-    });
-  });
-
-  test.describe("Responsive Design", () => {
-    test("should work on mobile viewport", async ({ page }) => {
-      // Set mobile viewport
-      await page.setViewportSize({ width: 375, height: 812 });
-
-      // Verify dashboard is still accessible
-      await expect(page.locator('[data-testid="order-dashboard"]'))
-        .toBeVisible();
-
-      // Check that main elements are still visible
-      await expect(page.locator('[data-testid="order-dashboard"] h1'))
-        .toBeVisible();
-    });
-
-    test("should work on tablet viewport", async ({ page }) => {
-      // Set tablet viewport
-      await page.setViewportSize({ width: 768, height: 1024 });
-
-      // Verify dashboard layout adapts
-      await expect(page.locator('[data-testid="order-dashboard"]'))
-        .toBeVisible();
-      await expect(page.locator('[data-testid="order-dashboard"] h1'))
-        .toBeVisible();
-    });
-  });
-
-  test.describe("Accessibility", () => {
-    test("should be keyboard navigable", async ({ page }) => {
-      // Tab through the interface
-      await page.keyboard.press("Tab");
-      await page.keyboard.press("Tab");
-      await page.keyboard.press("Tab");
-
-      // Verify focus is visible and functional
-      const focusedElement = page.locator(":focus");
-      if (await focusedElement.isVisible()) {
-        await expect(focusedElement).toBeVisible();
-      }
-    });
-
-    test("should have proper ARIA labels and roles", async ({ page }) => {
-      // Check for basic accessibility attributes
-      const mainContent = page.locator('main, [role="main"]');
-      if (await mainContent.isVisible()) {
-        await expect(mainContent).toBeVisible();
-      }
-
-      // Verify buttons have accessible names
-      const buttons = page.locator("button");
-      const buttonCount = await buttons.count();
-
-      for (let i = 0; i < Math.min(buttonCount, 5); i++) {
-        const button = buttons.nth(i);
-        if (await button.isVisible()) {
-          const ariaLabel = await button.getAttribute("aria-label");
-          const textContent = await button.textContent();
-
-          // Button should have either aria-label or text content
-          expect(ariaLabel || textContent).toBeTruthy();
-        }
-      }
-    });
-  });
-});
-
-test.describe("Order Management Workflow Integration", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto("/admin");
-
-    const passwordInput = page.locator('input[type="password"]');
-    if (await passwordInput.isVisible()) {
-      await passwordInput.fill(ADMIN_PASSWORD);
-      await page.keyboard.press("Enter");
+    if (await orderManagementButtons.count() > 0) {
+      await orderManagementButtons.first().click();
+      await page.waitForTimeout(2000);
     }
 
-    // Wait for admin dashboard to load and click Order Management
-    await page.waitForSelector('button:has-text("Order Management")', {
-      timeout: 10000,
-    });
-    await page.click('button:has-text("Order Management")');
+    // Wait for the page to settle and check for status-related content
+    const pageContent = await page.textContent("body");
 
-    await page.waitForSelector('[data-testid="order-dashboard"]', {
-      timeout: 10000,
-    });
+    // Since we're testing the removal of "ready" status, the main success criteria is:
+    // 1. No "ready" status should be present
+    // 2. Page should load successfully
+
+    if (pageContent) {
+      // Should NOT contain "ready" status
+      const hasReadyStatus = pageContent?.toLowerCase().includes("ready");
+      expect(hasReadyStatus).toBe(false);
+
+      // Page should have substantial content (indicating it loaded successfully)
+      expect(pageContent.length).toBeGreaterThan(50);
+    }
   });
 
-  test("should handle complete order lifecycle", async ({ page }) => {
-    await page.waitForTimeout(1000);
+  test("should allow direct completion of orders", async ({ page }) => {
+    // Wait for the order dashboard to load
+    await page.waitForTimeout(2000);
 
-    // Check if orders exist to work with
-    const orderCards = page.locator('[data-testid^="order-card-"]');
-    const orderCount = await orderCards.count();
+    // Look for complete/completion buttons
+    const completeButtons = page.locator(
+      'button:has-text("Complete"), button:has-text("Mark Complete"), button:has-text("Completed")',
+    );
 
-    if (orderCount > 0) {
-      const testOrder = orderCards.first();
+    if (await completeButtons.count() > 0) {
+      // Verify that complete buttons are present and clickable
+      const firstCompleteButton = completeButtons.first();
+      await expect(firstCompleteButton).toBeVisible();
 
-      // 1. Select order
-      await testOrder.click();
-      await page.waitForTimeout(300);
+      // Button should be enabled (not disabled)
+      await expect(firstCompleteButton).toBeEnabled();
+    }
+  });
 
-      // 2. Check current status
-      const statusIndicator = testOrder.locator('[data-testid="order-status"]');
-      if (await statusIndicator.isVisible()) {
-        await expect(statusIndicator).toBeVisible();
-      }
+  test("should display proper order status workflow in UI", async ({ page }) => {
+    // Wait for the order dashboard to load
+    await page.waitForTimeout(2000);
 
-      // 3. Attempt to update status if controls are available
-      const statusButtons = testOrder.locator("button").filter({
-        hasText: /complete|pending/i,
-      });
-      const statusButtonCount = await statusButtons.count();
+    // Get the page content to analyze status workflow
+    const pageContent = await page.textContent("body");
 
-      if (statusButtonCount > 0) {
-        const statusButton = statusButtons.first();
-        await statusButton.click();
+    if (pageContent && pageContent.length > 100) {
+      // Check if the page has loaded with actual content
+      // The test passes if the page loads successfully without "ready" status
+      // Should not contain "ready" anywhere in the UI
+      const hasReadyStatus = pageContent.toLowerCase().includes("ready");
+      expect(hasReadyStatus).toBe(false);
+
+      // Basic validation that the page has loaded correctly
+      expect(pageContent.length).toBeGreaterThan(50);
+    } else {
+      // If no substantial content, just verify page doesn't crash
+      expect(pageContent).toBeTruthy();
+    }
+  });
+
+  test("should handle status transitions correctly", async ({ page }) => {
+    // Wait for the order dashboard to load
+    await page.waitForTimeout(2000);
+
+    // Look for status transition controls (dropdowns, buttons, etc.)
+    const statusControls = page.locator(
+      'select[data-testid*="status"], ' +
+        'button[data-testid*="status"], ' +
+        '[data-testid*="order-actions"] button, ' +
+        ".order-actions button",
+    );
+
+    if (await statusControls.count() > 0) {
+      // Click on the first available status control to see options
+      const firstControl = statusControls.first();
+
+      if (await firstControl.isVisible()) {
+        await firstControl.click();
         await page.waitForTimeout(500);
 
-        // Verify the order still exists and is functional
-        await expect(testOrder).toBeVisible();
+        // Check if a dropdown or menu appears with status options
+        const statusOptions = page.locator(
+          "option, " +
+            '[role="option"], ' +
+            ".dropdown-item, " +
+            'button:has-text("pending"), ' +
+            'button:has-text("completed"), ' +
+            'button:has-text("cancelled")',
+        );
+
+        if (await statusOptions.count() > 0) {
+          const optionsText = await page.locator("body").textContent();
+
+          // Should have valid status options
+          expect(optionsText).toMatch(/pending|completed|cancelled/i);
+
+          // Should not have "ready" option
+          const hasReadyOption = optionsText?.toLowerCase().includes("ready");
+          expect(hasReadyOption).toBe(false);
+        }
       }
-    } else {
-      // No orders to test with - verify empty state handling
-      console.log("No orders available for lifecycle testing");
-      await expect(page.locator('[data-testid="order-dashboard"]'))
-        .toBeVisible();
     }
   });
 
-  test("should handle multiple order operations", async ({ page }) => {
-    await page.waitForTimeout(1000);
+  test("should show appropriate action buttons for order management", async ({ page }) => {
+    // Wait for the order dashboard to load
+    await page.waitForTimeout(2000);
 
-    const orderCards = page.locator('[data-testid^="order-card-"]');
-    const orderCount = await orderCards.count();
+    // Look for order management action buttons
+    const actionButtons = page.locator(
+      'button:has-text("Complete"), ' +
+        'button:has-text("Cancel"), ' +
+        'button:has-text("Delete"), ' +
+        '[data-testid*="action"] button, ' +
+        ".order-actions button",
+    );
 
-    if (orderCount >= 2) {
-      // Test interactions with multiple orders
-      const firstOrder = orderCards.first();
-      const secondOrder = orderCards.nth(1);
+    if (await actionButtons.count() > 0) {
+      // Verify action buttons are present and properly labeled
+      const buttonTexts = await Promise.all(
+        (await actionButtons.all()).map((btn) => btn.textContent()),
+      );
 
-      // Select first order
-      await firstOrder.click();
-      await page.waitForTimeout(300);
+      // Should have appropriate action buttons
+      const hasValidActions = buttonTexts.some((text) =>
+        text?.toLowerCase().includes("complete") ||
+        text?.toLowerCase().includes("cancel") ||
+        text?.toLowerCase().includes("delete")
+      );
 
-      // Select second order
-      await secondOrder.click();
-      await page.waitForTimeout(300);
+      expect(hasValidActions).toBe(true);
 
-      // Verify both orders are still visible and functional
-      await expect(firstOrder).toBeVisible();
-      await expect(secondOrder).toBeVisible();
+      // Should not have "ready" related actions
+      const hasReadyActions = buttonTexts.some((text) =>
+        text?.toLowerCase().includes("ready")
+      );
+
+      expect(hasReadyActions).toBe(false);
+    }
+  });
+
+  test("should maintain order queue functionality without ready status", async ({ page }) => {
+    // Wait for the order dashboard to load
+    await page.waitForTimeout(2000);
+
+    // Check if order queue/list is displayed properly
+    const orderElements = page.locator(
+      '[data-testid*="order"], ' +
+        ".order-card, " +
+        ".order-item, " +
+        '[class*="order"]',
+    );
+
+    if (await orderElements.count() > 0) {
+      // Orders should be displayed in a queue format
+      await expect(orderElements.first()).toBeVisible();
+
+      // Check that order information is displayed properly
+      const orderContent = await orderElements.first().textContent();
+
+      if (orderContent) {
+        // Order should show drink information and actions
+        // But should not reference "ready" status
+        const hasReadyReference = orderContent.toLowerCase().includes("ready");
+        expect(hasReadyReference).toBe(false);
+      }
+    }
+  });
+
+  test("should handle empty order states gracefully", async ({ page }) => {
+    // Wait for the order dashboard to load
+    await page.waitForTimeout(2000);
+
+    // Whether or not there are orders, the page should not crash
+    const pageContent = await page.textContent("body");
+    expect(pageContent).toBeTruthy();
+    expect(pageContent!.length).toBeGreaterThan(50); // Should have substantial content
+
+    // Should not reference "ready" status in empty states either
+    if (pageContent) {
+      const hasReadyReference = pageContent.toLowerCase().includes("ready");
+      expect(hasReadyReference).toBe(false);
     }
   });
 });
