@@ -67,6 +67,7 @@ export const DrinkList: React.FC<DrinkListProps> = ({
       is_active: drink.is_active,
       display_order: drink.display_order,
       category_id: drink.category_id,
+      preparation_time_minutes: 'preparation_time_minutes' in drink ? drink.preparation_time_minutes : null,
       created_at: drink.created_at,
       updated_at: drink.updated_at
     }

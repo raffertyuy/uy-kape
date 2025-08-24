@@ -193,6 +193,62 @@ export const orderService = {
   },
 
   /**
+   * Get orders ahead in queue with their preparation times for dynamic wait calculation
+   */
+  getOrdersAheadInQueue: async (
+    orderId: string,
+  ): Promise<Array<{ preparation_time_minutes: number | null }>> => {
+    try {
+      // First get the target order's queue position
+      const { data: targetOrder, error: targetError } = await supabase
+        .from("orders")
+        .select("queue_number, status")
+        .eq("id", orderId)
+        .single();
+
+      if (targetError) handleSupabaseError(targetError);
+      if (!targetOrder) throw new Error("Order not found");
+
+      // If order is no longer pending, no orders are ahead
+      if (targetOrder.status !== "pending") {
+        return [];
+      }
+
+      // Get all pending orders ahead in queue with their drink preparation times
+      const { data: ordersAhead, error } = await supabase
+        .from("orders")
+        .select(`
+          queue_number,
+          drinks:drink_id (
+            preparation_time_minutes
+          )
+        `)
+        .eq("status", "pending")
+        .lt("queue_number", targetOrder.queue_number || 1)
+        .order("queue_number", { ascending: true });
+
+      if (error) handleSupabaseError(error);
+
+      // Extract preparation times
+      return (ordersAhead || []).map((order) => ({
+        preparation_time_minutes:
+          (order.drinks as any)?.preparation_time_minutes ?? null,
+      }));
+    } catch (error) {
+      if (error && typeof error === "object" && "type" in error) {
+        throw error;
+      }
+
+      const serviceError: OrderServiceError = {
+        type: "unknown",
+        message: "Failed to get orders ahead in queue",
+        details: error,
+      };
+      throw serviceError;
+    }
+  },
+
+  /**
    * Cancel an order
    */
   cancelOrder: async (orderId: string): Promise<void> => {
@@ -352,6 +408,7 @@ export const orderService = {
           *,
           drinks:drink_id (
             name,
+            preparation_time_minutes,
             drink_categories:category_id (
               name
             )
@@ -394,7 +451,7 @@ export const orderService = {
             "Unknown",
           option_value_id: option.option_value_id,
           option_value_name: (option as any).option_values?.name || "Unknown",
-        })
+        }),
       );
 
       return {
@@ -404,6 +461,8 @@ export const orderService = {
         drink_name: (order as any).drinks?.name || "Unknown",
         category_name: (order as any).drinks?.drink_categories?.name ||
           "Unknown",
+        drink_preparation_time_minutes:
+          (order as any).drinks?.preparation_time_minutes ?? null,
         special_request: order.special_request,
         status: order.status || "pending",
         queue_number: order.queue_number || 0,

@@ -192,9 +192,23 @@ The guest ordering process follows a 4-step wizard with progress indicator:
 - **Real-time Filtering**: Instant results as you type
 
 #### Queue Management
+
 - **Automatic Queue Positioning**: Orders automatically assigned queue numbers
 - **Queue Position Display**: Clear indication of each order's position
-- **Estimated Wait Times**: Calculated based on queue position and configured wait time per order
+- **Dynamic Wait Time Calculation**: Estimated wait times calculated based on preparation times of drinks in orders ahead in queue
+  - **Individual Drink Preparation Times**: Each drink has specific preparation time (e.g., Espresso: 3min, Ice-Blended Coffee: 15min, Milo: 0min)
+  - **Cumulative Wait Calculation**: Sum of preparation times for all orders ahead in queue
+  - **Fallback Support**: Uses configured wait time per order for drinks without specific preparation times
+  - **Real-time Updates**: Wait times automatically recalculate when orders are completed or cancelled
+
+#### Dynamic Wait Time Examples
+
+Consider a queue with the following orders ahead:
+
+1. **Espresso** (3 minutes preparation) → Guest sees: "3 min"
+2. **Ice-Blended Coffee** (15 minutes preparation) → Guest sees: "15 min"
+3. **Milo** (0 minutes preparation) → Guest sees: "15 min" (no additional wait)
+4. **Cappuccino** (no specific time) → Guest sees: "15 min + fallback time" (e.g., 20 min total)
 
 ### [Menu Management Module](#admin-menu-management)
 
@@ -217,11 +231,16 @@ The guest ordering process follows a 4-step wizard with progress indicator:
 - **Actions**: Edit, Delete, Add New Category
 
 #### Drinks Management
+
 - **Comprehensive Drink List**: All 17 drinks with:
   - Name and description
   - Category assignment
   - Active/Inactive status
   - Display order within category
+  - **Preparation Time**: Individual preparation times for dynamic wait calculation
+    - Optional field (drinks default to no specific preparation time)
+    - Displays as "Prep: Xmin" when set (e.g., "Prep: 3min", "Prep: 15min")
+    - Uses fallback wait time when no specific preparation time is set
 - **View Options**:
   - Grid view (default)
   - List view toggle
@@ -234,9 +253,9 @@ The guest ordering process follows a 4-step wizard with progress indicator:
   - Real-time filtering
 - **Actions Per Drink**:
   - Options: Manage drink-specific customization options
-  - Edit: Modify drink details
+  - Edit: Modify drink details and preparation time
   - Delete: Remove drink from menu
-- **Add New**: Create new drinks with category assignment
+- **Add New**: Create new drinks with category assignment and optional preparation time
 
 #### Option Categories Management
 - **Option Categories**: 5 categories managing customization:
@@ -269,8 +288,12 @@ The guest ordering process follows a 4-step wizard with progress indicator:
 3. **Menu Changes**: Admin Form → Validation → Supabase Update → Menu Refresh
 
 ### [Database Schema](#technical-database)
-- **drinks**: Menu items with options configuration
-- **orders**: Order records with status tracking
+
+- **drinks**: Menu items with options configuration and preparation times
+  - **preparation_time_minutes**: Optional INTEGER field for individual drink preparation times
+  - Enables dynamic wait time calculation based on actual preparation requirements
+  - NULL values indicate drinks use fallback wait time
+- **orders**: Order records with status tracking and queue positioning
 - **drink_categories**: Category organization
 - **option_categories**: Customization option definitions
 

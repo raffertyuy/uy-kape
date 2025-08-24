@@ -18,6 +18,7 @@ describe('DrinkCard', () => {
     is_active: true,
     display_order: 1,
     category_id: 'cat1',
+    preparation_time_minutes: 3,
     created_at: '2024-01-01T00:00:00Z',
     updated_at: '2024-01-01T00:00:00Z'
   }

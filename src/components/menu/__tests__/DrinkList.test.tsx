@@ -51,6 +51,7 @@ describe('DrinkList', () => {
       is_active: true,
       display_order: 1,
       category_id: 'premium-coffee',
+      preparation_time_minutes: 3,
       created_at: '2024-01-01T00:00:00Z',
       updated_at: '2024-01-01T00:00:00Z'
     },
@@ -61,6 +62,7 @@ describe('DrinkList', () => {
       is_active: true,
       display_order: 2,
       category_id: 'premium-coffee',
+      preparation_time_minutes: null,
       created_at: '2024-01-01T00:00:00Z',
       updated_at: '2024-01-01T00:00:00Z'
     },
@@ -71,6 +73,7 @@ describe('DrinkList', () => {
       is_active: true,
       display_order: 3,
       category_id: 'kids-drinks',
+      preparation_time_minutes: 0,
       created_at: '2024-01-01T00:00:00Z',
       updated_at: '2024-01-01T00:00:00Z'
     },
@@ -81,6 +84,7 @@ describe('DrinkList', () => {
       is_active: true,
       display_order: 4,
       category_id: 'kids-drinks',
+      preparation_time_minutes: 2,
       created_at: '2024-01-01T00:00:00Z',
       updated_at: '2024-01-01T00:00:00Z'
     },
@@ -91,6 +95,7 @@ describe('DrinkList', () => {
       is_active: true,
       display_order: 5,
       category_id: 'special-drinks',
+      preparation_time_minutes: 7,
       created_at: '2024-01-01T00:00:00Z',
       updated_at: '2024-01-01T00:00:00Z'
     }

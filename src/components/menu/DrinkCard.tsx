@@ -126,6 +126,9 @@ export const DrinkCard = React.memo<DrinkCardProps>(({
                 <div className="text-sm text-coffee-500 text-right">
                   <div>Category: {drink.category?.name || 'Unknown'}</div>
                   <div>Order: {drink.display_order}</div>
+                  {drink.preparation_time_minutes !== null && drink.preparation_time_minutes !== undefined && (
+                    <div>Prep: {drink.preparation_time_minutes}min</div>
+                  )}
                 </div>
               </div>
             </div>
@@ -223,7 +226,12 @@ export const DrinkCard = React.memo<DrinkCardProps>(({
         {/* Drink Metadata */}
         <div className="flex justify-between items-center text-sm text-coffee-500 mb-4">
           <span>Category: {drink.category?.name || 'Unknown'}</span>
-          <span>Order: {drink.display_order}</span>
+          <div className="text-right">
+            <div>Order: {drink.display_order}</div>
+            {drink.preparation_time_minutes !== null && drink.preparation_time_minutes !== undefined && (
+              <div>Prep: {drink.preparation_time_minutes}min</div>
+            )}
+          </div>
         </div>
 
         {/* Action Buttons */}

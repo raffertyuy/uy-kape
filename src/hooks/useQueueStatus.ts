@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { orderService } from "@/services/orderService";
-import { appConfig } from "@/config/app.config";
+import { calculateDynamicEstimatedTime } from "@/utils/queueUtils";
 import type { OrderServiceError } from "@/types/order.types";
 
 interface QueueStatusData {
@@ -57,12 +57,28 @@ export function useQueueStatus(orderId: string | null): UseQueueStatusReturn {
         const status = orderDetails.status as QueueStatusData["orderStatus"];
         const isReady = status === "completed";
 
-        // Calculate estimated wait time based on position
-        const estimatedWaitTime = position > 0
-          ? `${Math.max(1, position * appConfig.waitTimePerOrder)} minutes`
-          : isReady
-          ? "Order completed!"
-          : "Preparing your order...";
+        // Calculate estimated wait time using dynamic preparation times
+        let estimatedWaitTime: string;
+
+        if (position > 0) {
+          // Get orders ahead with their preparation times
+          const ordersAhead = await orderService.getOrdersAheadInQueue(
+            orderIdToFetch,
+          );
+
+          // Add current order's preparation time to the calculation
+          const currentOrderPrepTime =
+            orderDetails.drink_preparation_time_minutes ?? null;
+          const allOrdersInQueue = [...ordersAhead, {
+            preparation_time_minutes: currentOrderPrepTime,
+          }];
+
+          estimatedWaitTime = calculateDynamicEstimatedTime(allOrdersInQueue);
+        } else if (isReady) {
+          estimatedWaitTime = "Order completed!";
+        } else {
+          estimatedWaitTime = "Preparing your order...";
+        }
 
         setQueueStatus({
           position,

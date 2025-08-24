@@ -51,6 +51,66 @@ const validateOrderFilters = (filters: OrderFilters): void => {
   }
 };
 
+// Helper function to calculate dynamic estimated completion time for admin orders
+const calculateAdminEstimatedCompletionTime = async (
+  queueNumber: number,
+): Promise<string> => {
+  try {
+    // Get all pending orders ahead in queue with their drink preparation times
+    const { data: ordersAhead, error } = await supabase
+      .from("orders")
+      .select(`
+        queue_number,
+        drinks:drink_id (
+          preparation_time_minutes
+        )
+      `)
+      .eq("status", "pending")
+      .lt("queue_number", queueNumber)
+      .order("queue_number", { ascending: true });
+
+    if (error) {
+      console.warn(
+        "Failed to get dynamic preparation times for admin order, using fallback:",
+        error,
+      );
+      // Fallback to old calculation
+      const fallbackMinutes = Math.max(
+        1,
+        queueNumber * appConfig.waitTimePerOrder,
+      );
+      return new Date(Date.now() + fallbackMinutes * 60000).toISOString();
+    }
+
+    // Extract preparation times and calculate total wait
+    const ordersWithPrepTimes = (ordersAhead || []).map((order) => ({
+      preparation_time_minutes:
+        (order.drinks as any)?.preparation_time_minutes ?? null,
+    }));
+
+    // Calculate total minutes using dynamic calculation
+    const totalMinutes = ordersWithPrepTimes.reduce((total, order) => {
+      const prepTime = order.preparation_time_minutes ??
+        appConfig.waitTimePerOrder;
+      return total + prepTime;
+    }, 0);
+
+    return new Date(Date.now() + Math.max(1, totalMinutes) * 60000)
+      .toISOString();
+  } catch (error) {
+    console.warn(
+      "Error calculating dynamic completion time, using fallback:",
+      error,
+    );
+    // Fallback to old calculation
+    const fallbackMinutes = Math.max(
+      1,
+      queueNumber * appConfig.waitTimePerOrder,
+    );
+    return new Date(Date.now() + fallbackMinutes * 60000).toISOString();
+  }
+};
+
 // Build query filters for Supabase
 const buildQueryFilters = (query: any, filters: OrderFilters) => {
   if (filters.status && filters.status !== "all") {
@@ -115,14 +175,10 @@ const formatOrderForAdmin = async (order: any): Promise<AdminOrderListItem> => {
     option_value_name: (option as any).option_values?.name || "Unknown",
   }));
 
-  // Calculate estimated completion time based on queue position
-  const estimatedMinutes = Math.max(
-    1,
-    (order.queue_number || 0) * appConfig.waitTimePerOrder,
+  // Calculate estimated completion time based on dynamic preparation times
+  const estimatedCompletionTime = await calculateAdminEstimatedCompletionTime(
+    order.queue_number || 0,
   );
-  const estimatedCompletionTime = new Date(
-    Date.now() + estimatedMinutes * 60000,
-  ).toISOString();
 
   // Determine priority level based on order age and special requests
   const orderAge = Date.now() - new Date(order.created_at).getTime();
