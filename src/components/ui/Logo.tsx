@@ -1,3 +1,4 @@
+import React from 'react'
 import { type LogoProps, type LogoSizeMap } from '@/types/logo.types'
 import logo24 from '@/assets/logos/logo-24.png'
 import logo32 from '@/assets/logos/logo-32.png'
@@ -6,21 +7,22 @@ import logo64 from '@/assets/logos/logo-64.png'
 import logo96 from '@/assets/logos/logo-96.png'
 import logo256 from '@/assets/logos/logo-256.png'
 
-// Preload critical logo assets
-const preloadCriticalAssets = () => {
-  const criticalAssets = [logo32, logo64, logo96] // Most commonly used sizes
-  criticalAssets.forEach(src => {
-    const link = document.createElement('link')
-    link.rel = 'preload'
-    link.as = 'image'
-    link.href = src
-    document.head.appendChild(link)
-  })
-}
+// Track preloaded assets to avoid duplicates
+const preloadedAssets = new Set<string>()
 
-// Call preload function once
-if (typeof window !== 'undefined') {
-  preloadCriticalAssets()
+// Preload specific logo asset when needed
+const preloadLogoAsset = (src: string) => {
+  if (typeof window === 'undefined' || preloadedAssets.has(src)) {
+    return
+  }
+  
+  const link = document.createElement('link')
+  link.rel = 'preload'
+  link.as = 'image'
+  link.href = src
+  link.type = 'image/png'
+  document.head.appendChild(link)
+  preloadedAssets.add(src)
 }
 
 /**
@@ -86,6 +88,11 @@ export function Logo({
   clickable = false,
 }: LogoProps) {
   const config = logoSizeMap[size]
+  
+  // Preload the logo asset for this specific size when component renders
+  React.useEffect(() => {
+    preloadLogoAsset(config.src)
+  }, [config.src])
   
   // Combine base classes with responsive classes and custom className
   const logoClasses = [
