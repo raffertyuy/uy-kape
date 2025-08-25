@@ -20,7 +20,7 @@ Refer to these documents for exploratory functional testing testing
 
 ## Text and Fix Methodology
 
-When the app is properly running, use Playwright MCP to navigate to the specified module/requirement. Use playwright to go through every functionality and test if it is functioning correctly. In addition to testing the functionality, also observe the console for any errors.
+When the app is properly running, use Playwright MCP to navigate to the specified module/requirement. Use playwright to go through every functionality and test if it is functioning correctly. Watch out for any issues, functionally or in the browser console.
 
 Create and update a running regression test report in `tests/outputs/regression-tests/yyyyMMddHHmm-regressiontest-log.md`, where yyyyMMddHHmm is the current date and time (for example `202508241516-regressiontest-log.md` for if the current date/time is 2025/08/24 15:16).
 
