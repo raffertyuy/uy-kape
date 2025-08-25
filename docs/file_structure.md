@@ -10,32 +10,34 @@ uy-kape/
 ├── eslint.config.js       # ESLint configuration
 ├── index.html             # Vite HTML entry
 ├── LICENSE                # OSS license
-├── LOCAL_DEVELOPMENT.md   # Local development setup guide
 ├── package.json           # Dependencies & scripts
 ├── playwright.config.ts   # Playwright configuration
 ├── postcss.config.js      # PostCSS (Tailwind)
 ├── README.md              # Overview & onboarding
-├── scratch.local.md       # Local development notes
+├── scratch.md             # Local development notes
 ├── SECURITY.md            # Security policy
 ├── tailwind.config.js     # Tailwind theme/config
 ├── tsconfig.json          # TS config (app)
 ├── tsconfig.node.json     # TS config (node scripts)
 ├── vercel.json            # Vercel deployment configuration
+├── VIBE_CODING_GUIDE.md   # Development style and guidelines
 ├── vite.config.ts         # Vite build config
 ├── vitest.config.ts       # Vitest config (re-exports from tests/config/)
 ├── docs/                  # (Fully expanded below)
-│   ├── error-handling-system.md  # Global error handling system documentation
-│   ├── file_structure.md  # This document
-│   ├── testing.md         # Testing documentation and guidelines
-│   ├── plans/             # Implementation plans (excluded from documentation)
+│   ├── dual-strategy-testing.md    # Testing strategy documentation
+│   ├── error-handling-system.md   # Global error handling system documentation
+│   ├── file_structure.md          # This document
+│   ├── testing.md                 # Testing documentation and guidelines
+│   ├── plans/                     # Implementation plans (excluded from documentation)
 │   ├── screens/
-│   │   └── old_ordering_system.png  # Reference screenshot of old system
+│   │   ├── old_ordering_system.png           # Reference screenshot of old system
+│   │   └── orders-dashboard-checkboxes-demo.png  # Dashboard checkboxes demo screenshot
 │   └── specs/
-│       ├── application_overview.md   # High-level application overview
-│       ├── db_schema.md             # Database schema documentation
-│       ├── definition_of_done.md    # Development standards and completion criteria
-│       ├── global_error_handling_dod_compliance.md  # Error handling DoD compliance documentation
-│       └── technology_stack.md      # Technology stack decisions and versions
+│       ├── application_overview.md      # High-level application overview
+│       ├── db_schema.md                 # Database schema documentation
+│       ├── definition_of_done.md        # Development standards and completion criteria
+│       ├── functional_specifications.md # Functional requirements and specifications
+│       └── technology_stack.md          # Technology stack decisions and versions
 ├── public/                # Static assets (favicons, PWA icons)
 ├── scripts/               # Operational / helper scripts
 ├── src/                   # React + TS application source
@@ -94,7 +96,9 @@ When adding a feature (example: inventory tracking):
 
 ## Change Log (File Structure)
 
-- 2025-08-24: Updated file structure documentation to reflect current workspace state: added missing root-level files (`LOCAL_DEVELOPMENT.md`, `scratch.local.md`, `.env.ci`), removed references to system-generated and gitignored files (`package-lock.json`, `log.local.txt`, `.env`), removed non-existent `database/` directory reference, expanded supabase structure to show `migrations/` subdirectory, ensuring documentation accurately matches actual workspace organization while complying with file structure update rules.
+- 2025-08-25: Updated file structure documentation to reflect current workspace state: corrected root-level file names (`scratch.md` instead of `scratch.local.md`), added missing `VIBE_CODING_GUIDE.md` to root documentation, added `dual-strategy-testing.md` to docs root, updated docs/screens to include `orders-dashboard-checkboxes-demo.png`, updated docs/specs to include `functional_specifications.md` and removed non-existent `global_error_handling_dod_compliance.md`, ensuring documentation accurately matches actual workspace organization.
+
+- 2025-08-24: Updated file structure documentation to reflect current workspace state: added missing root-level files (`scratch.local.md`, `.env.ci`), removed references to system-generated and gitignored files (`package-lock.json`, `log.local.txt`, `.env`), removed non-existent `database/` directory reference, expanded supabase structure to show `migrations/` subdirectory, ensuring documentation accurately matches actual workspace organization while complying with file structure update rules.
 
 - 2025-08-23: Updated ESLint configuration to include `src/lib/**/*.ts` files in the utility files override rules, resolving lint warnings for library files like Supabase client configuration. Removed system-generated files (`.env`, `log.local.txt`) from file structure documentation per exclusion rules while maintaining focus on major project files and directories.
 

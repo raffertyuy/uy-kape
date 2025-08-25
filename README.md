@@ -12,7 +12,7 @@ This app is **100% vibe coded!** using [GitHub Copilot](https://copilot.github.c
 
 This starts with writing a task objective in [scratch.md](/scratch.md) and then running `/1-plan #file:scratch.md` in GitHub Copilot Chat.
 
-Explore the files in the `.github` and `docs/` folder that made this possible.
+For more details, read the [VIBE CODING GUIDE](./VIBE_CODING_GUIDE.md).
 
 ## Features
 
@@ -92,8 +92,6 @@ _For detailed version information, architectural decisions, and configuration de
 
 5. **Open your browser:**
    - Navigate to `http://localhost:5173` (or the port shown in the terminal)
-
-📋 **[View Complete Local Development Documentation →](LOCAL_DEVELOPMENT.md)**
 
 ### Accessing Features
 
