@@ -1,32 +1,26 @@
 import { expect, test } from "@playwright/test";
+import {
+  getConfigDescription,
+  handleGuestAuthentication,
+  shouldSkipPasswordTest,
+  verifyGuestPasswordProtection,
+} from "../../config/password-test-utils";
 
 /**
  * E2E Tests for Guest Authentication and Order Access
  *
  * Tests the guest password protection and basic order flow access
+ * Dynamically adapts to VITE_GUEST_BYPASS_PASSWORD environment variable
  */
 
-// Guest password from environment
-const GUEST_PASSWORD = "guest123";
-
 test.describe("Guest Order Authentication", () => {
-  test("guest can access order page with correct password", async ({ page }) => {
-    // Navigate to the guest ordering page
-    await page.goto("/order");
+  test(`guest can access order page with authentication${getConfigDescription()}`, async ({ page }) => {
+    // Use the dynamic authentication handler that adapts to bypass configuration
+    await handleGuestAuthentication(page);
 
-    // Should see password prompt
+    // After authentication (or bypass), verify we can access the order interface
+    // The page should no longer show password input
     const passwordInput = page.locator('input[type="password"]');
-    await expect(passwordInput).toBeVisible();
-
-    // Enter correct password
-    await passwordInput.fill(GUEST_PASSWORD);
-    await page.keyboard.press("Enter");
-
-    // Should be redirected to the actual order interface
-    // Wait for either drink selection or an error/loading state
-    await page.waitForTimeout(2000);
-
-    // The page should no longer show the password input
     await expect(passwordInput).not.toBeVisible();
 
     // Should see some form of order interface (even if drinks don't load)
@@ -43,10 +37,16 @@ test.describe("Guest Order Authentication", () => {
   });
 
   test("guest cannot access order page with incorrect password", async ({ page }) => {
+    // Skip this test if bypass is enabled (no password required)
+    test.skip(
+      shouldSkipPasswordTest("password"),
+      "Skipping password test - bypass is enabled",
+    );
+
     // Navigate to the guest ordering page
     await page.goto("/order");
 
-    // Should see password prompt
+    // Should see password prompt when bypass is disabled
     const passwordInput = page.locator('input[type="password"]');
     await expect(passwordInput).toBeVisible();
 
@@ -66,16 +66,8 @@ test.describe("Guest Order Authentication", () => {
     expect(stillHasPasswordInput || hasErrorMessage).toBe(true);
   });
 
-  test("guest order page requires password protection", async ({ page }) => {
-    // Navigate to the guest ordering page
-    await page.goto("/order");
-
-    // Should immediately see password protection
-    const passwordInput = page.locator('input[type="password"]');
-    await expect(passwordInput).toBeVisible();
-
-    // Should not see order interface without authentication
-    const orderInterface = page.locator('[data-testid="drink-selection"]');
-    expect(await orderInterface.count()).toBe(0);
+  test(`guest order page respects password protection configuration${getConfigDescription()}`, async ({ page }) => {
+    // Use the dynamic verification that adapts to bypass configuration
+    await verifyGuestPasswordProtection(page);
   });
 });

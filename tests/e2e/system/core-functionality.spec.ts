@@ -1,13 +1,16 @@
 import { expect, test } from "@playwright/test";
+import {
+  getConfigDescription,
+  handleAdminAuthentication,
+  verifyGuestPasswordProtection,
+} from "../../config/password-test-utils";
 
 /**
  * E2E Tests for Core Application Functionality
  *
  * Tests essential features that work without database dependencies
+ * Dynamically adapts to password bypass configuration
  */
-
-const GUEST_PASSWORD = "guest123";
-const ADMIN_PASSWORD = "admin456";
 
 test.describe("Core Application Functionality", () => {
   test("homepage loads successfully", async ({ page }) => {
@@ -26,56 +29,14 @@ test.describe("Core Application Functionality", () => {
     expect(hasNavigation).toBe(true);
   });
 
-  test("guest password protection works", async ({ page }) => {
-    await page.goto("/order");
-
-    // Should require password
-    const passwordInput = page.locator('input[type="password"]');
-    await expect(passwordInput).toBeVisible();
-
-    // Wrong password should not work
-    await passwordInput.fill("wrong");
-    await page.keyboard.press("Enter");
-    await page.waitForTimeout(1000);
-
-    // Should still be on password screen
-    const stillProtected = await passwordInput.isVisible();
-    expect(stillProtected).toBe(true);
-
-    // Correct password should work
-    await passwordInput.fill(GUEST_PASSWORD);
-    await page.keyboard.press("Enter");
-    await page.waitForTimeout(2000);
-
-    // Should be past password protection
-    const passwordGone = !(await passwordInput.isVisible());
-    expect(passwordGone).toBe(true);
+  test(`guest password protection works${getConfigDescription()}`, async ({ page }) => {
+    // Use the dynamic verification that adapts to bypass configuration
+    await verifyGuestPasswordProtection(page);
   });
 
   test("admin password protection works", async ({ page }) => {
-    await page.goto("/admin");
-
-    // Should require password
-    const passwordInput = page.locator('input[type="password"]');
-    await expect(passwordInput).toBeVisible();
-
-    // Wrong password should not work
-    await passwordInput.fill("wrong");
-    await page.keyboard.press("Enter");
-    await page.waitForTimeout(1000);
-
-    // Should still be on password screen
-    const stillProtected = await passwordInput.isVisible();
-    expect(stillProtected).toBe(true);
-
-    // Correct password should work
-    await passwordInput.fill(ADMIN_PASSWORD);
-    await page.keyboard.press("Enter");
-    await page.waitForTimeout(2000);
-
-    // Should be past password protection
-    const passwordGone = !(await passwordInput.isVisible());
-    expect(passwordGone).toBe(true);
+    // Admin authentication flow (always requires password - no bypass)
+    await handleAdminAuthentication(page);
   });
 
   test("application has proper error boundaries", async ({ page }) => {
