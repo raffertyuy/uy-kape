@@ -88,9 +88,9 @@ test.describe("MenuTabs Mobile Responsiveness", () => {
     // Set tablet viewport
     await page.setViewportSize({ width: 768, height: 1024 });
 
-    // All tabs should be visible with more spacing
+    // All tabs should be visible with responsive spacing (includes lg:space-x-8)
     const tablist = page.getByRole("tablist");
-    await expect(tablist).toHaveClass(/sm:space-x-8/);
+    await expect(tablist).toHaveClass(/lg:space-x-8/);
 
     // Tabs should still be functional
     await page.getByRole("tab", { name: /drinks/i }).click();
@@ -101,9 +101,9 @@ test.describe("MenuTabs Mobile Responsiveness", () => {
     // Set desktop viewport
     await page.setViewportSize({ width: 1280, height: 720 });
 
-    // All tabs should be visible with desktop spacing
+    // All tabs should be visible with desktop spacing (includes lg:space-x-8)
     const tablist = page.getByRole("tablist");
-    await expect(tablist).toHaveClass(/sm:space-x-8/);
+    await expect(tablist).toHaveClass(/lg:space-x-8/);
 
     // Navigation should still work
     await page.getByRole("tab", { name: /option categories/i }).click();

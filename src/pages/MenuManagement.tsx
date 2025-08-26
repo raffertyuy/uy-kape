@@ -63,22 +63,22 @@ export const MenuManagement: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <Logo size="md" className="mr-4" alt="Uy, Kape!" />
-              <div>
-                <h1 className="text-3xl font-bold text-coffee-900">Menu Management</h1>
-                <p className="text-coffee-600 mt-2">
+        <div className="mb-6 sm:mb-8">
+          <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
+            <div className="flex items-start sm:items-center">
+              <Logo size="md" className="mr-3 sm:mr-4 flex-shrink-0" alt="Uy, Kape!" />
+              <div className="min-w-0 flex-1">
+                <h1 className="text-2xl sm:text-3xl font-bold text-coffee-900 truncate">Menu Management</h1>
+                <p className="text-coffee-600 mt-1 sm:mt-2 text-sm sm:text-base">
                   Manage your coffee shop menu categories, drinks, and customization options.
                 </p>
               </div>
             </div>
             <RealtimeIndicator 
               connectionStatus={connectionStatus}
-              className="bg-white rounded-lg border border-gray-200 px-3 py-2 shadow-sm"
+              className="bg-white rounded-lg border border-gray-200 px-3 py-2 shadow-sm flex-shrink-0 self-start sm:self-auto"
             />
           </div>
         </div>
@@ -97,7 +97,7 @@ export const MenuManagement: React.FC = () => {
           </div>
 
           {/* Search and Filters */}
-          <div className="px-6 py-4 border-b border-gray-200">
+          <div className="px-3 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
             <MenuSearch
               searchQuery={searchQuery}
               activeFilters={filters}
@@ -110,7 +110,7 @@ export const MenuManagement: React.FC = () => {
           </div>
 
           {/* Tab Content */}
-          <div className="p-6" role="tabpanel" aria-labelledby={`${activeTab}-tab`} id={`${activeTab}-panel`}>
+          <div className="p-3 sm:p-6" role="tabpanel" aria-labelledby={`${activeTab}-tab`} id={`${activeTab}-panel`}>
             {isLoading ? (
               <div className="flex items-center justify-center py-12" data-testid="loading-spinner">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-coffee-600" />

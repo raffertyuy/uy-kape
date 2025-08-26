@@ -58,7 +58,7 @@ describe('WelcomePage', () => {
     expect(screen.getByText('Uy, Kape! ☕')).toBeInTheDocument()
     
     // Check for the description
-    expect(screen.getByText('Your friend\'s coffee ordering system')).toBeInTheDocument()
+    expect(screen.getByText('Brewing fellowship, one cup at a time')).toBeInTheDocument()
   })
 
   it('displays order and admin navigation links', () => {

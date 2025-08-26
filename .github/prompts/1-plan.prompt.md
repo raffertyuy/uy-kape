@@ -59,6 +59,7 @@ PLAN HERE
   - **Additional Instructions**:
     - Before proceeding with this step, check the conversation history and see if you already completed this step.
     - You do not need to follow this step strictly, consider the output of the previous step and adjust this step as needed.
+    - If you are fixing issues that arise from automated tests, ALWAYS take a step back before fixing things, consider that the test script itself might be wrong and that's the one that you should fix. Sometimes the best way to fix a script is to understand the intent of the test script and simplify it.
     - If you are running the app, follow [npm-run-instructions](/.github/prompt-snippets/npm-run-instructions.md)
     - If you are running any CLI command, follow [cli-execution-instructions](/.github/prompt-snippets/cli-execution-instructions.md)
     - If you are using Supabase CLI, follow [supabase-cli-instructions](/.github/prompt-snippets/supabase-cli-instructions.md)
@@ -71,8 +72,7 @@ PLAN HERE
 
 - After the steps to implement the objective, add a step to run the app and test it against the original objective specified in the plan. Use the right tool to test this (playwright MCP, CLI, or something else).
 - Add a step to write unit tests for what has been implemented. **IMPORTANT**: Take note of the [dual-testing-strategy](/docs/dual-strategy-testing.md). After testing, set the environment variable back to not using mocks.
-- Add a step to write playwright UI tests for the feature, keep the test simple and focused on the intent of the objective.
-- Add a step to run all unit and UI tests as last step. **IMPORTANT**: Take note of the [dual-testing-strategy](/docs/dual-strategy-testing.md). After testing, set the environment variable back to not using mocks.
+- Add a step to write playwright UI tests for the feature, keep the test simple and focused on the intent of the objective. Avoid hardcoding dynamic data that comes from the database, REMEMBER that the data are dynamic and changing.
 - Add a step to make sure it complies with our [definition_of_done](/docs/specs/definition_of_done.md)
 
 ### 3. NEXT:

@@ -42,6 +42,7 @@ This will begin the implementation process based on the plan.
 
 > [!TIP]
 > If you are able, it is useful to actively read and check what the agent is doing. If you see that it is going the wrong direction, press the **STOP** button in the Copilot Chat panel and correct its course. Here are frequent interruption messages used while implementing this:
+>
 > - `supabase cli is not globally installed, see #file:supabase_cli_instructions.md`
 > - `don't forget to take into account our #file:dual_testing_strategy.md`
 > - `since you made db schema changes, update #file:schema.md and #file:db_schema.md`

@@ -164,7 +164,7 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
     <div className={className} data-testid="order-dashboard">
       <div className="space-y-6 p-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0" data-testid="dashboard-controls">
+        <div className="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0" data-testid="dashboard-controls">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
               Order Dashboard
@@ -179,62 +179,69 @@ export const OrderDashboard = ({ className }: OrderDashboardProps) => {
             </p>
           </div>
 
-          <div className="flex items-center space-x-4">
-            {/* Connection Status */}
-            <div className="flex items-center space-x-2" data-testid="connection-status">
-              <div className="w-2 h-2 bg-green-500 rounded-full" />
-              <span className="text-sm text-gray-600">Connected</span>
-            </div>
+          {/* Controls - Better mobile layout with stacking */}
+          <div className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
+            {/* Row 1: Connection Status and Toggle */}
+            <div className="flex items-center justify-between sm:justify-start space-x-4">
+              {/* Connection Status */}
+              <div className="flex items-center space-x-2" data-testid="connection-status">
+                <div className="w-2 h-2 bg-green-500 rounded-full" />
+                <span className="text-sm text-gray-600">Connected</span>
+              </div>
 
-            {/* Show Completed Toggle */}
-            <div className="flex items-center space-x-2">
-              <label 
-                htmlFor="show-completed-toggle" 
-                className="text-sm font-medium text-gray-700"
-              >
-                Show Completed
-              </label>
-              <button
-                id="show-completed-toggle"
-                onClick={() => setShowCompleted(!showCompleted)}
-                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:ring-offset-2 ${
-                  showCompleted ? 'bg-coffee-600' : 'bg-gray-200'
-                }`}
-                role="switch"
-                aria-checked={showCompleted}
-                aria-label="Toggle show completed orders"
-              >
-                <span
-                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                    showCompleted ? 'translate-x-5' : 'translate-x-0'
+              {/* Show Completed Toggle */}
+              <div className="flex items-center space-x-2">
+                <label 
+                  htmlFor="show-completed-toggle" 
+                  className="text-sm font-medium text-gray-700 whitespace-nowrap"
+                >
+                  Show Completed
+                </label>
+                <button
+                  id="show-completed-toggle"
+                  onClick={() => setShowCompleted(!showCompleted)}
+                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:ring-offset-2 ${
+                    showCompleted ? 'bg-coffee-600' : 'bg-gray-200'
                   }`}
-                />
-              </button>
+                  role="switch"
+                  aria-checked={showCompleted}
+                  aria-label="Toggle show completed orders"
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                      showCompleted ? 'translate-x-5' : 'translate-x-0'
+                    }`}
+                  />
+                </button>
+              </div>
             </div>
 
-            {/* Clear All Pending Orders Button */}
-            {stats.pending > 0 && (
+            {/* Row 2: Action Buttons */}
+            <div className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-3">
+              {/* Clear All Pending Orders Button */}
+              {stats.pending > 0 && (
+                <button
+                  onClick={handleClearAllPending}
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-3 py-2 border border-red-300 shadow-sm text-sm leading-4 font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                >
+                  <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  <span className="whitespace-nowrap">Clear All Pending</span>
+                </button>
+              )}
+
+              {/* Refresh Button */}
               <button
-                onClick={handleClearAllPending}
-                className="inline-flex items-center px-3 py-2 border border-red-300 shadow-sm text-sm leading-4 font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                onClick={refetch}
+                className="w-full sm:w-auto inline-flex items-center justify-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-coffee-500"
               >
                 <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
-                Clear All Pending
+                <span className="whitespace-nowrap">Refresh</span>
               </button>
-            )}
-
-            {/* Refresh Button */}
-            <button
-              onClick={refetch}
-              className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-coffee-500"
-            >
-              <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              Refresh
-            </button>
+            </div>
           </div>
         </div>
 
