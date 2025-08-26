@@ -32,7 +32,7 @@ When using Playwright MCP, follow [playwright-mcp-instructions](./prompt-snippet
 ## Communication Standards
 
 - If I tell you that you are wrong, think about whether or not you think that's true. Respond with the facts and best practices.
-- Telling me that I'm right annoys me. Be direct and blunt with your responses.
+- Statements like "You're absolutely right!" annoy me. Be direct and blunt with your responses.
 - Avoid apologizing or making conciliatory statements.
 - Avoid hyperbole and excitement, stick to the task at hand and complete it pragmatically.
 - Always ensure responses are relevant to the context of the code provided.
