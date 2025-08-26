@@ -1,201 +1,225 @@
-import { describe, it, expect } from 'vitest'
-import type { 
-  DrinkOption, 
-  PasswordAuthState, 
-  AppConfig, 
-  OrderFormData, 
-  DrinkFormData 
-} from '../app.types'
+import { describe, expect, it } from "vitest";
+import type {
+  AppConfig,
+  DrinkFormData,
+  DrinkOption,
+  OrderFormData,
+  PasswordAuthState,
+} from "../app.types";
 
-describe('App Types', () => {
-  describe('DrinkOption interface', () => {
-    it('should have correct required properties', () => {
+describe("App Types", () => {
+  describe("DrinkOption interface", () => {
+    it("should have correct required properties", () => {
       const selectOption: DrinkOption = {
-        label: 'Test Label',
-        type: 'select',
-        options: ['Option 1', 'Option 2'],
+        label: "Test Label",
+        type: "select",
+        options: ["Option 1", "Option 2"],
         required: true,
-      }
+      };
 
-      expect(selectOption.label).toBe('Test Label')
-      expect(selectOption.type).toBe('select')
-      expect(selectOption.options).toEqual(['Option 1', 'Option 2'])
-      expect(selectOption.required).toBe(true)
-    })
+      expect(selectOption.label).toBe("Test Label");
+      expect(selectOption.type).toBe("select");
+      expect(selectOption.options).toEqual(["Option 1", "Option 2"]);
+      expect(selectOption.required).toBe(true);
+    });
 
-    it('should support all valid types', () => {
-      const selectOption: DrinkOption = { label: 'Select', type: 'select' }
-      const checkboxOption: DrinkOption = { label: 'Checkbox', type: 'checkbox' }
-      const textOption: DrinkOption = { label: 'Text', type: 'text' }
+    it("should support all valid types", () => {
+      const selectOption: DrinkOption = { label: "Select", type: "select" };
+      const checkboxOption: DrinkOption = {
+        label: "Checkbox",
+        type: "checkbox",
+      };
+      const textOption: DrinkOption = { label: "Text", type: "text" };
 
-      expect(selectOption.type).toBe('select')
-      expect(checkboxOption.type).toBe('checkbox')
-      expect(textOption.type).toBe('text')
-    })
+      expect(selectOption.type).toBe("select");
+      expect(checkboxOption.type).toBe("checkbox");
+      expect(textOption.type).toBe("text");
+    });
 
-    it('should allow optional properties', () => {
+    it("should allow optional properties", () => {
       const minimalOption: DrinkOption = {
-        label: 'Minimal',
-        type: 'text',
-      }
+        label: "Minimal",
+        type: "text",
+      };
 
       // These properties should be optional
-      expect(minimalOption.options).toBeUndefined()
-      expect(minimalOption.required).toBeUndefined()
-    })
-  })
+      expect(minimalOption.options).toBeUndefined();
+      expect(minimalOption.required).toBeUndefined();
+    });
+  });
 
-  describe('PasswordAuthState interface', () => {
-    it('should have correct authentication states', () => {
+  describe("PasswordAuthState interface", () => {
+    it("should have correct authentication states", () => {
       const unauthenticated: PasswordAuthState = {
         isAuthenticated: false,
-      }
+      };
 
       const guestAuthenticated: PasswordAuthState = {
         isAuthenticated: true,
-        role: 'guest',
-      }
+        role: "guest",
+      };
 
       const adminAuthenticated: PasswordAuthState = {
         isAuthenticated: true,
-        role: 'admin',
-      }
+        role: "admin",
+      };
 
-      expect(unauthenticated.isAuthenticated).toBe(false)
-      expect(unauthenticated.role).toBeUndefined()
+      expect(unauthenticated.isAuthenticated).toBe(false);
+      expect(unauthenticated.role).toBeUndefined();
 
-      expect(guestAuthenticated.isAuthenticated).toBe(true)
-      expect(guestAuthenticated.role).toBe('guest')
+      expect(guestAuthenticated.isAuthenticated).toBe(true);
+      expect(guestAuthenticated.role).toBe("guest");
 
-      expect(adminAuthenticated.isAuthenticated).toBe(true)
-      expect(adminAuthenticated.role).toBe('admin')
-    })
+      expect(adminAuthenticated.isAuthenticated).toBe(true);
+      expect(adminAuthenticated.role).toBe("admin");
+    });
 
-    it('should allow undefined role when unauthenticated', () => {
+    it("should allow undefined role when unauthenticated", () => {
       const authState: PasswordAuthState = {
         isAuthenticated: false,
         role: undefined,
-      }
+      };
 
-      expect(authState.isAuthenticated).toBe(false)
-      expect(authState.role).toBeUndefined()
-    })
-  })
+      expect(authState.isAuthenticated).toBe(false);
+      expect(authState.role).toBeUndefined();
+    });
+  });
 
-  describe('AppConfig interface', () => {
-    it('should have required password properties', () => {
+  describe("AppConfig interface", () => {
+    it("should have required password properties", () => {
       const config: AppConfig = {
-        guestPassword: 'guest123',
-        adminPassword: 'admin456',
+        guestPassword: "guest123",
+        adminPassword: "admin456",
         waitTimePerOrder: 4,
-      }
+        bypassGuestPassword: false,
+      };
 
-      expect(config.guestPassword).toBe('guest123')
-      expect(config.adminPassword).toBe('admin456')
-      expect(typeof config.guestPassword).toBe('string')
-      expect(typeof config.adminPassword).toBe('string')
-    })
-  })
+      expect(config.guestPassword).toBe("guest123");
+      expect(config.adminPassword).toBe("admin456");
+      expect(typeof config.guestPassword).toBe("string");
+      expect(typeof config.adminPassword).toBe("string");
+      expect(typeof config.bypassGuestPassword).toBe("boolean");
+    });
 
-  describe('OrderFormData interface', () => {
-    it('should have correct structure for order form', () => {
+    it("should support bypassGuestPassword configuration", () => {
+      const bypassEnabledConfig: AppConfig = {
+        guestPassword: "guest123",
+        adminPassword: "admin456",
+        waitTimePerOrder: 4,
+        bypassGuestPassword: true,
+      };
+
+      const bypassDisabledConfig: AppConfig = {
+        guestPassword: "guest123",
+        adminPassword: "admin456",
+        waitTimePerOrder: 4,
+        bypassGuestPassword: false,
+      };
+
+      expect(bypassEnabledConfig.bypassGuestPassword).toBe(true);
+      expect(bypassDisabledConfig.bypassGuestPassword).toBe(false);
+    });
+  });
+
+  describe("OrderFormData interface", () => {
+    it("should have correct structure for order form", () => {
       const orderData: OrderFormData = {
-        customerName: 'John Doe',
-        selectedDrink: 'espresso',
+        customerName: "John Doe",
+        selectedDrink: "espresso",
         options: {
-          size: 'Large',
-          milk: 'Oat',
+          size: "Large",
+          milk: "Oat",
           hot: true,
         },
-      }
+      };
 
-      expect(orderData.customerName).toBe('John Doe')
-      expect(orderData.selectedDrink).toBe('espresso')
-      expect(orderData.options.size).toBe('Large')
-      expect(orderData.options.milk).toBe('Oat')
-      expect(orderData.options.hot).toBe(true)
-    })
+      expect(orderData.customerName).toBe("John Doe");
+      expect(orderData.selectedDrink).toBe("espresso");
+      expect(orderData.options.size).toBe("Large");
+      expect(orderData.options.milk).toBe("Oat");
+      expect(orderData.options.hot).toBe(true);
+    });
 
-    it('should support various option types in options field', () => {
+    it("should support various option types in options field", () => {
       const orderData: OrderFormData = {
-        customerName: 'Jane Doe',
-        selectedDrink: 'latte',
+        customerName: "Jane Doe",
+        selectedDrink: "latte",
         options: {
-          stringOption: 'String value',
+          stringOption: "String value",
           booleanOption: false,
-          arrayOption: ['item1', 'item2'],
+          arrayOption: ["item1", "item2"],
         },
-      }
+      };
 
-      expect(typeof orderData.options.stringOption).toBe('string')
-      expect(typeof orderData.options.booleanOption).toBe('boolean')
-      expect(Array.isArray(orderData.options.arrayOption)).toBe(true)
-    })
-  })
+      expect(typeof orderData.options.stringOption).toBe("string");
+      expect(typeof orderData.options.booleanOption).toBe("boolean");
+      expect(Array.isArray(orderData.options.arrayOption)).toBe(true);
+    });
+  });
 
-  describe('DrinkFormData interface', () => {
-    it('should have correct structure for drink form', () => {
+  describe("DrinkFormData interface", () => {
+    it("should have correct structure for drink form", () => {
       const drinkData: DrinkFormData = {
-        name: 'Cappuccino',
+        name: "Cappuccino",
         options: {
           size: {
-            label: 'Size',
-            type: 'select',
-            options: ['Small', 'Medium', 'Large'],
+            label: "Size",
+            type: "select",
+            options: ["Small", "Medium", "Large"],
             required: true,
           },
           extra: {
-            label: 'Extra shot',
-            type: 'checkbox',
+            label: "Extra shot",
+            type: "checkbox",
             required: false,
           },
         },
-      }
+      };
 
-      expect(drinkData.name).toBe('Cappuccino')
-      expect(drinkData.options.size.label).toBe('Size')
-      expect(drinkData.options.size.type).toBe('select')
-      expect(drinkData.options.extra.type).toBe('checkbox')
-    })
+      expect(drinkData.name).toBe("Cappuccino");
+      expect(drinkData.options.size.label).toBe("Size");
+      expect(drinkData.options.size.type).toBe("select");
+      expect(drinkData.options.extra.type).toBe("checkbox");
+    });
 
-    it('should support empty options object', () => {
+    it("should support empty options object", () => {
       const simpleDrink: DrinkFormData = {
-        name: 'Black Coffee',
+        name: "Black Coffee",
         options: {},
-      }
+      };
 
-      expect(simpleDrink.name).toBe('Black Coffee')
-      expect(Object.keys(simpleDrink.options)).toHaveLength(0)
-    })
-  })
+      expect(simpleDrink.name).toBe("Black Coffee");
+      expect(Object.keys(simpleDrink.options)).toHaveLength(0);
+    });
+  });
 
-  describe('Type compatibility', () => {
-    it('should allow DrinkOption to be used in DrinkFormData', () => {
+  describe("Type compatibility", () => {
+    it("should allow DrinkOption to be used in DrinkFormData", () => {
       const sizeOption: DrinkOption = {
-        label: 'Size',
-        type: 'select',
-        options: ['Small', 'Large'],
+        label: "Size",
+        type: "select",
+        options: ["Small", "Large"],
         required: true,
-      }
+      };
 
       const drinkForm: DrinkFormData = {
-        name: 'Test Drink',
+        name: "Test Drink",
         options: {
           size: sizeOption,
         },
-      }
+      };
 
-      expect(drinkForm.options.size).toEqual(sizeOption)
-    })
+      expect(drinkForm.options.size).toEqual(sizeOption);
+    });
 
-    it('should maintain type safety for option types', () => {
+    it("should maintain type safety for option types", () => {
       // This test ensures that TypeScript enforces the correct types
       const validOption: DrinkOption = {
-        label: 'Valid',
-        type: 'select', // Only 'select', 'checkbox', 'text' are allowed
-      }
+        label: "Valid",
+        type: "select", // Only 'select', 'checkbox', 'text' are allowed
+      };
 
-      expect(['select', 'checkbox', 'text']).toContain(validOption.type)
-    })
-  })
-})
+      expect(["select", "checkbox", "text"]).toContain(validOption.type);
+    });
+  });
+});

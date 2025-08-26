@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import PasswordProtection from '@/components/PasswordProtection'
+import ConditionalPasswordProtection from '@/components/ConditionalPasswordProtection'
 import { appConfig } from '@/config/app.config'
 import { Logo } from '@/components/ui/Logo'
 import { useOrderForm } from '@/hooks/useOrderForm'
@@ -359,14 +359,15 @@ export { GuestModulePage }
 
 function ProtectedGuestModule() {
   return (
-    <PasswordProtection
+    <ConditionalPasswordProtection
       requiredPassword={appConfig.guestPassword}
       title="Guest Access"
       description="Enter the guest password to place your coffee order"
       role="guest" // eslint-disable-line jsx-a11y/aria-role
+      bypassPassword={appConfig.bypassGuestPassword}
     >
       <GuestModulePage />
-    </PasswordProtection>
+    </ConditionalPasswordProtection>
   )
 }
 
