@@ -232,8 +232,8 @@ describe('BaristaModule URL Parameter Handling', () => {
       // Start in menu view
       expect(screen.getByTestId('menu-management')).toBeInTheDocument()
       
-      // Click Dashboard button in navigation
-      const dashboardButton = screen.getByRole('button', { name: /dashboard/i })
+      // Click Dashboard button in navigation (the Uy, Kape! logo button)
+      const dashboardButton = screen.getByRole('button', { name: /uy, kape!/i })
       await user.click(dashboardButton)
       
       // Should now show dashboard content
@@ -314,7 +314,7 @@ describe('BaristaModule URL Parameter Handling', () => {
       expect(navigation).toBeInTheDocument()
       
       // Buttons should be accessible
-      const dashboardButton = screen.getByRole('button', { name: /dashboard/i })
+      const dashboardButton = screen.getByRole('button', { name: /uy, kape!/i })
       const menuButton = screen.getByRole('button', { name: /menu management/i })
       const ordersButton = screen.getByRole('button', { name: /orders/i })
       
@@ -340,7 +340,7 @@ describe('BaristaModule URL Parameter Handling', () => {
       })
       
       // Navigation buttons should still be accessible
-      const dashboardButton = screen.getByRole('button', { name: /dashboard/i })
+      const dashboardButton = screen.getByRole('button', { name: /uy, kape!/i })
       expect(dashboardButton).toBeVisible()
     })
   })
