@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { handleGuestAuthentication } from "../../config/password-test-utils";
 
 /**
  * E2E Tests for Guest Order Cancellation Feature
@@ -7,29 +8,22 @@ import { expect, test } from "@playwright/test";
  * rather than complex order flows that may be dependent on data/state.
  */
 
-const GUEST_PASSWORD = "guest123";
-
 test.describe("Guest Order Cancellation - Basic Functionality", () => {
   test("can access guest ordering interface", async ({ page }) => {
-    // Navigate to order page
+    // Navigate to order page and handle authentication adaptively
     await page.goto("/order");
+    await page.waitForTimeout(1000);
 
-    // Should show password input
-    const passwordInput = page.locator('input[type="password"]');
-    await expect(passwordInput).toBeVisible();
-
-    // Enter password
-    await passwordInput.fill(GUEST_PASSWORD);
-    await page.keyboard.press("Enter");
+    // Handle authentication if needed
+    await handleGuestAuthentication(page);
 
     // Should reach ordering interface (wait for any loading)
     await page.waitForTimeout(2000);
 
     // Verify we're in the ordering interface (look for any ordering elements)
-    const hasOrderingElements =
-      await page.locator(
-        'h1, h2, [data-testid*="drink"], button:has-text("Continue")',
-      ).count() > 0;
+    const hasOrderingElements = await page.locator(
+      'h1, h2, [data-testid*="drink"], button:has-text("Continue")',
+    ).count() > 0;
     expect(hasOrderingElements).toBeTruthy();
   });
 
@@ -44,6 +38,10 @@ test.describe("Guest Order Cancellation - Basic Functionality", () => {
     });
 
     await page.goto("/order");
+    await page.waitForTimeout(1000);
+
+    // Handle authentication if needed
+    await handleGuestAuthentication(page);
 
     // Should still load the page structure even if API calls fail
     await expect(page.locator("body")).toBeVisible();
@@ -63,6 +61,10 @@ test.describe("Guest Order Cancellation - Basic Functionality", () => {
   test("page structure remains intact on various error conditions", async ({ page }) => {
     // Test that basic page structure survives different error scenarios
     await page.goto("/order");
+    await page.waitForTimeout(1000);
+
+    // Handle authentication if needed
+    await handleGuestAuthentication(page);
 
     // Basic structure should be present
     await expect(page.locator("html")).toBeVisible();

@@ -1,6 +1,6 @@
 ---
 description: 'Detailed functional specifications for the Uy, Kape! coffee ordering system'
-last-modified: 2025-08-24
+last-modified: 2025-08-26
 ---
 
 # ☕ Uy, Kape! Functional Specifications
@@ -30,9 +30,14 @@ Uy, Kape! is a dual-module coffee ordering system designed for home environments
 ### [Access Control](#guest-access-control)
 
 **Password Protection**
-- Password-protected entry point at `/order`
+- Configurable password protection at `/order` entry point
+- **Environment Variable Control**: `VITE_GUEST_BYPASS_PASSWORD`
+  - When `true`: Password screen is bypassed for direct access
+  - When `false` or undefined: Password protection is enforced (default behavior)
+- Password-protected entry when bypass is disabled
 - Session persistence using `sessionStorage`
 - Automatic redirect to ordering interface upon successful authentication
+- **Security Note**: Bypass feature intended for development, testing, and demo environments
 
 ### [Ordering Workflow](#guest-ordering-workflow)
 
@@ -319,6 +324,10 @@ Consider a queue with the following orders ahead:
 
 ### [Authentication](#security-auth)
 - **Password-based Access**: Separate passwords for guest and admin roles
+- **Configurable Guest Access**: Guest password protection can be bypassed via environment variable
+  - `VITE_GUEST_BYPASS_PASSWORD=true`: Bypasses guest password protection
+  - `VITE_GUEST_BYPASS_PASSWORD=false` or undefined: Enforces password protection (default)
+  - Admin password protection is always enforced regardless of bypass setting
 - **Session Management**: Secure session handling with automatic expiry
 - **Role Separation**: Clear separation between guest and admin capabilities
 
@@ -330,9 +339,13 @@ Consider a queue with the following orders ahead:
 
 ### [Configuration Security](#security-config)
 - **Environment Variables**: Sensitive configuration via environment variables
+- **Guest Password Bypass Configuration**:
+  - `VITE_GUEST_BYPASS_PASSWORD` environment variable for development and testing
+  - Default behavior maintains security (password protection enabled)
+  - Bypass feature documented with security considerations
 - **Default Fallbacks**: Secure defaults when environment variables not set
 - **Password Requirements**: Encouragement of strong passwords in documentation
 
 ---
 
-*This document reflects the current implementation as of August 24, 2025, updated following comprehensive application exploration. All features documented have been verified as working in the live application. For the latest updates, refer to the application overview and technical documentation.*
+*This document reflects the current implementation as of August 26, 2025, updated to include configurable guest password bypass functionality. All features documented have been verified as working in the live application. For the latest updates, refer to the application overview and technical documentation.*

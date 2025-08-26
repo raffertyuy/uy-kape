@@ -2,6 +2,26 @@ import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { GuestModulePage } from '@/pages/GuestModule'
+import ProtectedGuestModule from '@/pages/GuestModule'
+
+// Mock the app config
+vi.mock('@/config/app.config', () => ({
+  appConfig: {
+    guestPassword: 'test-password',
+    adminPassword: 'admin-password',
+    waitTimePerOrder: 4,
+    bypassGuestPassword: false, // Default to false for tests
+  },
+}))
+
+// Mock ConditionalPasswordProtection
+vi.mock('@/components/ConditionalPasswordProtection', () => ({
+  default: vi.fn(),
+}))
+
+// Get the mocked component
+import ConditionalPasswordProtection from '@/components/ConditionalPasswordProtection'
+const mockConditionalPasswordProtection = vi.mocked(ConditionalPasswordProtection)
 
 // Mock the useOrderForm hook
 vi.mock('@/hooks/useOrderForm', () => ({
@@ -74,71 +94,72 @@ import { useOrderForm } from '@/hooks/useOrderForm'
 
 const mockUseOrderForm = vi.mocked(useOrderForm)
 
-describe('GuestModule URL Parameter Handling', () => {
-  const mockOrderFormBase = {
-    currentStep: 'drink-selection' as const,
-    selectedDrink: null,
-    guestInfo: {
-      guestName: '',
-      specialRequest: '',
-      isGeneratedName: false,
-      userHasClearedName: false,
-      isValid: false,
-      error: null,
-      setGuestName: vi.fn(),
-      setSpecialRequest: vi.fn(),
-      generateNewFunnyName: vi.fn(),
-      clearGeneratedName: vi.fn(),
-      validateName: vi.fn(),
-      clearError: vi.fn(),
-      handleBlur: vi.fn(),
-      hasInput: false,
-      trimmedName: ''
-    },
-    optionSelection: {
-      optionCategories: [],
-      selectedOptions: {},
-      isLoading: false,
-      isValidating: false,
-      error: null,
-      validationErrors: [],
-      selectOption: vi.fn(),
-      clearSelection: vi.fn(),
-      resetToDefaults: vi.fn(),
-      validateSelection: vi.fn(),
-      isValid: true,
-      hasRequiredSelections: true,
-      selectedCount: 0
-    },
-    orderSubmission: {
-      isSubmitting: false,
-      isSuccess: false,
-      result: null,
-      error: null,
-      submitGuestOrder: vi.fn(),
-      resetSubmission: vi.fn(),
-      clearError: vi.fn(),
-      canSubmit: false,
-      lastSubmissionAt: null,
-      submitCount: 0,
-      shouldShowSuccess: false,
-      shouldShowError: false
-    },
-    goToStep: vi.fn(),
-    nextStep: vi.fn(),
-    previousStep: vi.fn(),
-    canGoNext: false,
-    canGoPrevious: false,
-    selectDrink: vi.fn(),
-    resetForm: vi.fn(),
-    submitOrder: vi.fn(),
-    startNewOrder: vi.fn(),
-    setOrderSuccessCallback: vi.fn(),
-    isFormValid: false,
-    orderData: null,
-    progress: 0
-  }
+// Shared mock data for both test suites
+const mockOrderFormBase = {
+  currentStep: 'drink-selection' as const,
+  selectedDrink: null,
+  guestInfo: {
+    guestName: '',
+    specialRequest: '',
+    isGeneratedName: false,
+    userHasClearedName: false,
+    isValid: false,
+    error: null,
+    setGuestName: vi.fn(),
+    setSpecialRequest: vi.fn(),
+    generateNewFunnyName: vi.fn(),
+    clearGeneratedName: vi.fn(),
+    validateName: vi.fn(),
+    clearError: vi.fn(),
+    handleBlur: vi.fn(),
+    hasInput: false,
+    trimmedName: ''
+  },
+  optionSelection: {
+    optionCategories: [],
+    selectedOptions: {},
+    isLoading: false,
+    isValidating: false,
+    error: null,
+    validationErrors: [],
+    selectOption: vi.fn(),
+    clearSelection: vi.fn(),
+    resetToDefaults: vi.fn(),
+    validateSelection: vi.fn(),
+    isValid: true,
+    hasRequiredSelections: true,
+    selectedCount: 0
+  },
+  orderSubmission: {
+    isSubmitting: false,
+    isSuccess: false,
+    result: null,
+    error: null,
+    submitGuestOrder: vi.fn(),
+    resetSubmission: vi.fn(),
+    clearError: vi.fn(),
+    canSubmit: false,
+    lastSubmissionAt: null,
+    submitCount: 0,
+    shouldShowSuccess: false,
+    shouldShowError: false
+  },
+  goToStep: vi.fn(),
+  nextStep: vi.fn(),
+  previousStep: vi.fn(),
+  canGoNext: false,
+  canGoPrevious: false,
+  selectDrink: vi.fn(),
+  resetForm: vi.fn(),
+  submitOrder: vi.fn(),
+  startNewOrder: vi.fn(),
+  setOrderSuccessCallback: vi.fn(),
+  isFormValid: false,
+  orderData: null,
+  progress: 0
+}
 
+describe('GuestModule URL Parameter Handling', () => {
   const renderWithRouter = (initialEntries: string[] = ['/']) => {
     return render(
       <MemoryRouter initialEntries={initialEntries}>
@@ -390,5 +411,117 @@ describe('GuestModule URL Parameter Handling', () => {
       expect(mockUseOrderForm).toHaveBeenCalledWith('test-order-123@special')
       expect(screen.getByTestId('drink-selection')).toBeInTheDocument()
     })
+  })
+})
+
+describe('ProtectedGuestModule Bypass Configuration', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockUseOrderForm.mockReturnValue(mockOrderFormBase)
+    
+    // Configure the mock to render test UI
+    mockConditionalPasswordProtection.mockImplementation(({ children, bypassPassword, ...props }) => {
+      if (bypassPassword) {
+        return <div data-testid="bypassed-content">{children}</div>
+      }
+      return (
+        <div data-testid="password-protected" data-props={JSON.stringify(props)}>
+          {children}
+        </div>
+      )
+    })
+  })
+
+  afterEach(() => {
+    vi.resetAllMocks()
+  })
+
+  it('should render ConditionalPasswordProtection with correct props when bypass is disabled', async () => {
+    // Mock appConfig with bypass disabled
+    const { appConfig } = await import('@/config/app.config')
+    vi.mocked(appConfig).bypassGuestPassword = false
+
+    render(
+      <MemoryRouter>
+        <ProtectedGuestModule />
+      </MemoryRouter>
+    )
+
+    expect(mockConditionalPasswordProtection).toHaveBeenCalledWith(
+      expect.objectContaining({
+        requiredPassword: 'test-password',
+        title: 'Guest Access',
+        description: 'Enter the guest password to place your coffee order',
+        role: 'guest',
+        bypassPassword: false,
+      }),
+      expect.any(Object)
+    )
+
+    expect(screen.getByTestId('password-protected')).toBeInTheDocument()
+  })
+
+  it('should render ConditionalPasswordProtection with bypass enabled', async () => {
+    // Mock appConfig with bypass enabled
+    const { appConfig } = await import('@/config/app.config')
+    vi.mocked(appConfig).bypassGuestPassword = true
+
+    render(
+      <MemoryRouter>
+        <ProtectedGuestModule />
+      </MemoryRouter>
+    )
+
+    expect(mockConditionalPasswordProtection).toHaveBeenCalledWith(
+      expect.objectContaining({
+        requiredPassword: 'test-password',
+        title: 'Guest Access',
+        description: 'Enter the guest password to place your coffee order',
+        role: 'guest',
+        bypassPassword: true,
+      }),
+      expect.any(Object)
+    )
+
+    expect(screen.getByTestId('bypassed-content')).toBeInTheDocument()
+  })
+
+  it('should pass the GuestModulePage as children to ConditionalPasswordProtection', () => {
+    render(
+      <MemoryRouter>
+        <ProtectedGuestModule />
+      </MemoryRouter>
+    )
+
+    expect(mockConditionalPasswordProtection).toHaveBeenCalledWith(
+      expect.objectContaining({
+        children: expect.anything(),
+      }),
+      expect.any(Object)
+    )
+
+    // Verify the children contain the GuestModulePage content
+    expect(screen.getByTestId('logo')).toBeInTheDocument()
+  })
+
+  it('should handle different app config values correctly', async () => {
+    // Test with different password
+    const { appConfig } = await import('@/config/app.config')
+    vi.mocked(appConfig).guestPassword = 'custom-password'
+    vi.mocked(appConfig).bypassGuestPassword = false
+
+    render(
+      <MemoryRouter>
+        <ProtectedGuestModule />
+      </MemoryRouter>
+    )
+
+    expect(mockConditionalPasswordProtection).toHaveBeenCalledWith(
+      expect.objectContaining({
+        requiredPassword: 'custom-password',
+        bypassPassword: false,
+      }),
+      expect.any(Object)
+    )
   })
 })

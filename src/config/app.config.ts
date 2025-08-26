@@ -4,6 +4,7 @@ export const appConfig: AppConfig = {
   guestPassword: import.meta.env.VITE_GUEST_PASSWORD || "guest123",
   adminPassword: import.meta.env.VITE_ADMIN_PASSWORD || "admin456",
   waitTimePerOrder: Number(import.meta.env.VITE_WAIT_TIME_PER_ORDER) || 4,
+  bypassGuestPassword: import.meta.env.VITE_GUEST_BYPASS_PASSWORD === "true",
 };
 
 // Application constants

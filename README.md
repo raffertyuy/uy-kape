@@ -39,10 +39,11 @@ For more details, read the [VIBE CODING GUIDE](./VIBE_CODING_GUIDE.md).
 
 ### Technical Features
 - **Real-time Synchronization**: Live updates across all connected devices
-- **Password Protection**: Secure access to admin features
+- **Password Protection**: Secure access to admin features with configurable bypass options
 - **Responsive Design**: Works seamlessly on desktop, tablet, and mobile
 - **Accessibility**: Full keyboard navigation and screen reader support
 - **Offline Support**: Basic functionality when internet is unavailable
+- **Configurable Authentication**: Optional guest password bypass for development and testing
 
 ## Technology Stack
 
@@ -83,6 +84,12 @@ _For detailed version information, architectural decisions, and configuration de
 
    - Create an `.env` file in the root directory
    - Copy and fill the values from `.env.example`
+   - **Optional**: Configure guest password bypass for development:
+
+     ```bash
+     # Set to 'true' to bypass guest password requirement
+     VITE_GUEST_BYPASS_PASSWORD=false
+     ```
 
 4. **Start the development server:**
 
@@ -98,7 +105,8 @@ _For detailed version information, architectural decisions, and configuration de
 **Guest Interface:**
 
 - Default landing page provides the guest ordering experience
-- No authentication required for browsing and ordering
+- Password protection can be bypassed for development by setting `VITE_GUEST_BYPASS_PASSWORD=true`
+- No authentication required for browsing and ordering when bypass is enabled
 
 **Barista Admin Interface:**
 
