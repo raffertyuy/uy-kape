@@ -123,10 +123,9 @@ export const MenuTabs: React.FC<MenuTabsProps> = ({
     <div className="border-b border-coffee-200">
       <nav 
         ref={scrollContainerRef}
-        className="-mb-px flex space-x-4 sm:space-x-8 overflow-x-auto scroll-smooth" 
+        className="-mb-px flex space-x-2 sm:space-x-4 lg:space-x-8 overflow-x-auto scroll-smooth scrollbar-hide px-4 sm:px-6" 
         aria-label="Menu management tabs" 
         role="tablist"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {tabs.map((tab) => (
           <button
@@ -134,7 +133,7 @@ export const MenuTabs: React.FC<MenuTabsProps> = ({
             ref={activeTab === tab.id ? activeTabRef : null}
             onClick={() => onTabChange(tab.id)}
             onKeyDown={(e) => handleKeyDown(e, tab.id)}
-            className={`py-4 px-1 flex items-center space-x-2 border-b-2 font-medium text-sm transition-colors duration-200 whitespace-nowrap flex-shrink-0 ${
+            className={`py-3 sm:py-4 px-2 sm:px-3 flex items-center space-x-1.5 sm:space-x-2 border-b-2 font-medium text-sm transition-colors duration-200 whitespace-nowrap flex-shrink-0 min-w-0 ${
               activeTab === tab.id
                 ? 'border-coffee-500 text-coffee-600'
                 : 'border-transparent text-coffee-500 hover:text-coffee-700 hover:border-coffee-300'
@@ -146,13 +145,13 @@ export const MenuTabs: React.FC<MenuTabsProps> = ({
             tabIndex={activeTab === tab.id ? 0 : -1}
             aria-current={activeTab === tab.id ? 'page' : undefined}
           >
-            <span className={activeTab === tab.id ? 'text-coffee-600' : 'text-coffee-400'}>
+            <span className={`flex-shrink-0 ${activeTab === tab.id ? 'text-coffee-600' : 'text-coffee-400'}`}>
               {tab.icon}
             </span>
-            <span>{tab.label}</span>
+            <span className="truncate">{tab.label}</span>
             {typeof tab.count === 'number' && (
               <span
-                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                className={`inline-flex items-center px-1.5 sm:px-2.5 py-0.5 rounded-full text-xs font-medium flex-shrink-0 ${
                   activeTab === tab.id
                     ? 'bg-coffee-100 text-coffee-800'
                     : 'bg-gray-100 text-gray-800'

@@ -1,6 +1,6 @@
 These are the instructions for using playwright mcp.
 
-Before attempting to run the app, check if it is already running.
+Before attempting to run the app, use `curl` on the terminal to check if the app is already running.
 
 - Use playwright to navigate to the default port.
 - If the app is not running, start the application and use playwright to navigate to the app again, check [npm-run-instructions](./npm-run-instructions.md).

@@ -208,7 +208,7 @@ describe('MenuTabs', () => {
       render(<MenuTabs {...defaultProps} />)
 
       const tablist = screen.getByRole('tablist')
-      expect(tablist).toHaveClass('space-x-4', 'sm:space-x-8')
+      expect(tablist).toHaveClass('space-x-2', 'sm:space-x-4', 'lg:space-x-8')
     })
 
     it('tabs have flex-shrink-0 to maintain size', () => {

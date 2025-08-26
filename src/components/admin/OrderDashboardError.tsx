@@ -225,7 +225,11 @@ export class OrderDashboardErrorBoundary extends React.Component<
     
     // Log error to console in development
     if (import.meta.env.VITE_IS_DEV === 'true') {
-      console.error('Order dashboard error:', error)
+      console.error('Order dashboard error:', {
+        error,
+        errorInfo,
+        componentStack: errorInfo.componentStack
+      })
     }
     
     // Call optional error handler

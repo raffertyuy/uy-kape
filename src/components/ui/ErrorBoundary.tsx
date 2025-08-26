@@ -126,7 +126,7 @@ interface ErrorFallbackProps {
 
 function DefaultErrorFallback({ 
   error, 
-  errorInfo: _errorInfo, 
+  errorInfo, 
   onRetry, 
   retryCount = 0, 
   maxRetries = 3 
@@ -204,9 +204,19 @@ function DefaultErrorFallback({
           )}
 
           {error && import.meta.env.VITE_IS_DEV === 'true' && (
-            <pre className="mt-2 text-xs text-red-200" aria-label="error-details">
-              {error.stack || error.message}
-            </pre>
+            <details className="mt-4 text-left">
+              <summary className="text-xs text-coffee-500 cursor-pointer hover:text-coffee-700">
+                Error Details (Development Only)
+              </summary>
+              <pre className="mt-2 text-xs text-red-600 bg-red-50 p-2 rounded border overflow-auto max-h-32" aria-label="error-details">
+                {error.stack || error.message}
+              </pre>
+              {errorInfo && (
+                <pre className="mt-2 text-xs text-orange-600 bg-orange-50 p-2 rounded border overflow-auto max-h-32" aria-label="error-info">
+                  {errorInfo.componentStack}
+                </pre>
+              )}
+            </details>
           )}
         </div>
         

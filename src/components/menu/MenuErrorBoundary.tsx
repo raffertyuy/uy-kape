@@ -80,9 +80,19 @@ export class MenuErrorBoundary extends Component<Props, State> {
             </div>
 
             {import.meta.env.VITE_IS_DEV === 'true' && this.state.error && (
-              <pre className="mt-2 text-xs text-red-200" aria-label="error-details">
-                {this.state.error.stack || this.state.error.message}
-              </pre>
+              <details className="mt-4 text-left">
+                <summary className="text-xs text-gray-600 cursor-pointer hover:text-gray-800">
+                  Error Details (Development Only)
+                </summary>
+                <pre className="mt-2 text-xs text-red-600 bg-red-50 p-2 rounded border overflow-auto max-h-32" aria-label="error-details">
+                  {this.state.error.stack || this.state.error.message}
+                </pre>
+                {this.state.errorInfo && (
+                  <pre className="mt-2 text-xs text-orange-600 bg-orange-50 p-2 rounded border overflow-auto max-h-32" aria-label="error-info">
+                    {this.state.errorInfo.componentStack}
+                  </pre>
+                )}
+              </details>
             )}
           </div>
         </div>
