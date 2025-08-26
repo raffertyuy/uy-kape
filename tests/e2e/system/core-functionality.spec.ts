@@ -1,6 +1,5 @@
 import { expect, test } from "@playwright/test";
 import {
-  getConfigDescription,
   handleAdminAuthentication,
   verifyGuestPasswordProtection,
 } from "../../config/password-test-utils";
@@ -29,7 +28,7 @@ test.describe("Core Application Functionality", () => {
     expect(hasNavigation).toBe(true);
   });
 
-  test(`guest password protection works${getConfigDescription()}`, async ({ page }) => {
+  test("guest password protection works adaptively", async ({ page }) => {
     // Use the dynamic verification that adapts to bypass configuration
     await verifyGuestPasswordProtection(page);
   });
