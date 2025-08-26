@@ -19,7 +19,7 @@ Refer to these documents for exploratory functional testing testing
 - [application_overview](/docs/specs/application_overview.md): high level description of the functional modules available, DO NOT include detailed features here.
 - [functional_specifications](/docs/specs/functional_specifications.md): documentation of all functional specifications, including detailed features.
 
-## Text and Fix Methodology
+## Test and Fix Methodology
 
 When the app is properly running, use Playwright MCP to navigate to the specified module/requirement. Use playwright to go through every functionality and test if it is functioning correctly.
 
@@ -33,7 +33,7 @@ Create and update a running regression test report in `tests/outputs/regression-
 
 Use this report so you can keep track of the issues to resolve.
 
-ALWAYS take a step back before fixing things, consider that the test script itself might be wrong and that's the one that you should fix. Sometimes the best way to fix a script is to understand the intent of the test script and simplify it.
+ALWAYS take a step back before fixing things, consider that the test script itself might be wrong and that's the one that you should fix. Sometimes the best way to fix a script is to understand the intent of the test script and simplify it. Avoid hardcoding dynamic data that comes from the database, REMEMBER that the data are dynamic and changing.
 
 Having said that, if you're done making changes, make sure to re-run all of the above tests and make sure you comply with the [definition_of_done](/docs/specs/definition_of_done.md). If you haven't, iterate again.
 

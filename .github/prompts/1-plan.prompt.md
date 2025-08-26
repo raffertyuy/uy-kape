@@ -72,7 +72,7 @@ PLAN HERE
 
 - After the steps to implement the objective, add a step to run the app and test it against the original objective specified in the plan. Use the right tool to test this (playwright MCP, CLI, or something else).
 - Add a step to write unit tests for what has been implemented. **IMPORTANT**: Take note of the [dual-testing-strategy](/docs/dual-strategy-testing.md). After testing, set the environment variable back to not using mocks.
-- Add a step to write playwright UI tests for the feature, keep the test simple and focused on the intent of the objective.
+- Add a step to write playwright UI tests for the feature, keep the test simple and focused on the intent of the objective. Avoid hardcoding dynamic data that comes from the database, REMEMBER that the data are dynamic and changing.
 - Add a step to make sure it complies with our [definition_of_done](/docs/specs/definition_of_done.md)
 
 ### 3. NEXT:
