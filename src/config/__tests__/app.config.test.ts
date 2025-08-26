@@ -49,7 +49,7 @@ describe("App Configuration", () => {
     });
 
     it("should export correct APP_DESCRIPTION", () => {
-      expect(APP_DESCRIPTION).toBe("Your friend's coffee ordering system");
+      expect(APP_DESCRIPTION).toBe("Brewing fellowship, one cup at a time");
       expect(typeof APP_DESCRIPTION).toBe("string");
     });
 

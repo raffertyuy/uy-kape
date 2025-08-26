@@ -8,7 +8,7 @@ export const appConfig: AppConfig = {
 
 // Application constants
 export const APP_NAME = "Uy, Kape!";
-export const APP_DESCRIPTION = "Your friend's coffee ordering system";
+export const APP_DESCRIPTION = "Brewing fellowship, one cup at a time";
 
 // Order status display names
 export const ORDER_STATUS_LABELS = {

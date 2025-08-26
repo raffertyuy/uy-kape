@@ -1,7 +1,7 @@
 {
   "name": "Uy, Kape! Coffee Ordering System",
   "short_name": "Uy, Kape!",
-  "description": "Your friend's coffee ordering system",
+  "description": "Brewing fellowship, one cup at a time",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#f9f7f4",

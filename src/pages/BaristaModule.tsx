@@ -53,7 +53,7 @@ function AdminDashboard({ onNavigate }: { onNavigate: (_view: AdminView) => void
         <div className="flex items-center mb-6">
           <Logo size="md" className="mr-3" alt="Uy, Kape! Logo" />
           <h2 className="text-3xl font-bold text-coffee-800">
-            Barista Administration Dashboard
+            Barista Administration
           </h2>
         </div>
         

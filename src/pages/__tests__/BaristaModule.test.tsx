@@ -54,7 +54,7 @@ describe('BaristaModule URL Parameter Handling', () => {
       })
       
       // Should show the main dashboard content
-      expect(screen.getByText('Barista Administration Dashboard')).toBeInTheDocument()
+      expect(screen.getByText('Barista Administration')).toBeInTheDocument()
       expect(screen.getByText('Order Management')).toBeInTheDocument()
       expect(screen.getByText('Menu Management')).toBeInTheDocument()
       expect(screen.getByText('System Status:')).toBeInTheDocument()
@@ -73,7 +73,7 @@ describe('BaristaModule URL Parameter Handling', () => {
       })
       
       // Should show the main dashboard content
-      expect(screen.getByText('Barista Administration Dashboard')).toBeInTheDocument()
+      expect(screen.getByText('Barista Administration')).toBeInTheDocument()
       expect(screen.queryByTestId('menu-management')).not.toBeInTheDocument()
       expect(screen.queryByTestId('order-dashboard')).not.toBeInTheDocument()
     })
@@ -93,7 +93,7 @@ describe('BaristaModule URL Parameter Handling', () => {
       expect(screen.getByRole('navigation')).toBeInTheDocument()
       
       // Should NOT show dashboard or order dashboard content
-      expect(screen.queryByText('Barista Administration Dashboard')).not.toBeInTheDocument()
+      expect(screen.queryByText('Barista Administration')).not.toBeInTheDocument()
       expect(screen.queryByTestId('order-dashboard')).not.toBeInTheDocument()
     })
 
@@ -124,7 +124,7 @@ describe('BaristaModule URL Parameter Handling', () => {
       expect(screen.getByRole('navigation')).toBeInTheDocument()
       
       // Should NOT show dashboard or menu management content
-      expect(screen.queryByText('Barista Administration Dashboard')).not.toBeInTheDocument()
+      expect(screen.queryByText('Barista Administration')).not.toBeInTheDocument()
       expect(screen.queryByTestId('menu-management')).not.toBeInTheDocument()
     })
 
@@ -148,7 +148,7 @@ describe('BaristaModule URL Parameter Handling', () => {
       })
       
       // Should default to dashboard view
-      expect(screen.getByText('Barista Administration Dashboard')).toBeInTheDocument()
+      expect(screen.getByText('Barista Administration')).toBeInTheDocument()
       expect(screen.queryByTestId('menu-management')).not.toBeInTheDocument()
       expect(screen.queryByTestId('order-dashboard')).not.toBeInTheDocument()
       
@@ -162,7 +162,7 @@ describe('BaristaModule URL Parameter Handling', () => {
       })
       
       // Should default to dashboard view
-      expect(screen.getByText('Barista Administration Dashboard')).toBeInTheDocument()
+      expect(screen.getByText('Barista Administration')).toBeInTheDocument()
     })
 
     it('defaults to dashboard for unknown view parameter', () => {
@@ -171,7 +171,7 @@ describe('BaristaModule URL Parameter Handling', () => {
       })
       
       // Should default to dashboard view
-      expect(screen.getByText('Barista Administration Dashboard')).toBeInTheDocument()
+      expect(screen.getByText('Barista Administration')).toBeInTheDocument()
     })
   })
 
@@ -184,7 +184,7 @@ describe('BaristaModule URL Parameter Handling', () => {
       })
       
       // Start in dashboard
-      expect(screen.getByText('Barista Administration Dashboard')).toBeInTheDocument()
+      expect(screen.getByText('Barista Administration')).toBeInTheDocument()
       
       // Click Menu Management button
       const menuButton = screen.getByRole('button', { name: /menu management/i })
@@ -207,7 +207,7 @@ describe('BaristaModule URL Parameter Handling', () => {
       })
       
       // Start in dashboard
-      expect(screen.getByText('Barista Administration Dashboard')).toBeInTheDocument()
+      expect(screen.getByText('Barista Administration')).toBeInTheDocument()
       
       // Click Order Management button
       const orderButton = screen.getByRole('button', { name: /order management/i })
@@ -238,7 +238,7 @@ describe('BaristaModule URL Parameter Handling', () => {
       
       // Should now show dashboard content
       await waitFor(() => {
-        expect(screen.getByText('Barista Administration Dashboard')).toBeInTheDocument()
+        expect(screen.getByText('Barista Administration')).toBeInTheDocument()
       })
       
       // Should NOT show navigation bar anymore
@@ -283,7 +283,7 @@ describe('BaristaModule URL Parameter Handling', () => {
       
       // Should still show menu content
       expect(screen.getByTestId('menu-management')).toBeInTheDocument()
-      expect(screen.queryByText('Barista Administration Dashboard')).not.toBeInTheDocument()
+      expect(screen.queryByText('Barista Administration')).not.toBeInTheDocument()
     })
 
     it('maintains orders view across component re-renders', () => {
@@ -299,7 +299,7 @@ describe('BaristaModule URL Parameter Handling', () => {
       
       // Should still show orders content
       expect(screen.getByTestId('order-dashboard')).toBeInTheDocument()
-      expect(screen.queryByText('Barista Administration Dashboard')).not.toBeInTheDocument()
+      expect(screen.queryByText('Barista Administration')).not.toBeInTheDocument()
     })
   })
 
