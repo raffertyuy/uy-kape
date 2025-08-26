@@ -52,50 +52,52 @@ export const DrinkCategoryTabs = memo<DrinkCategoryTabsProps>(
           Choose a Category
         </h3>
         
-        <div className="flex flex-wrap gap-2" role="tablist" aria-label="Drink categories">
-          {/* All drinks option */}
-          <button
-            type="button"
-            role="tab"
-            aria-selected={!selectedCategoryId}
-            aria-controls="drinks-panel"
-            className={`
-              px-4 py-2 rounded-lg font-medium transition-all duration-200
-              focus:outline-none focus:ring-2 focus:ring-coffee-400 focus:ring-offset-2
-              ${!selectedCategoryId
-                ? 'bg-coffee-600 text-white shadow-md'
-                : 'bg-coffee-100 text-coffee-700 hover:bg-coffee-200'
-              }
-            `}
-            onClick={() => handleCategoryClick(undefined)}
-            onKeyDown={(e) => handleKeyDown(e, undefined)}
-          >
-            All Drinks
-          </button>
+        <div className="w-full overflow-x-auto scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <div className="flex space-x-2 min-w-max pb-2" role="tablist" aria-label="Drink categories">
+            {/* All drinks option */}
+            <button
+              type="button"
+              role="tab"
+              aria-selected={!selectedCategoryId}
+              aria-controls="drinks-panel"
+              className={`
+                flex-shrink-0 px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-all duration-200
+                focus:outline-none focus:ring-2 focus:ring-coffee-400 focus:ring-offset-2
+                ${!selectedCategoryId
+                  ? 'bg-coffee-600 text-white shadow-md'
+                  : 'bg-coffee-100 text-coffee-700 hover:bg-coffee-200'
+                }
+              `}
+              onClick={() => handleCategoryClick(undefined)}
+              onKeyDown={(e) => handleKeyDown(e, undefined)}
+            >
+              All Drinks
+            </button>
 
-          {categories
-            .filter(category => category.is_active)
-            .map((category: DrinkCategory) => (
-              <button
-                key={category.id}
-                type="button"
-                role="tab"
-                aria-selected={selectedCategoryId === category.id}
-                aria-controls="drinks-panel"
-                className={`
-                  px-4 py-2 rounded-lg font-medium transition-all duration-200
-                  focus:outline-none focus:ring-2 focus:ring-coffee-400 focus:ring-offset-2
-                  ${selectedCategoryId === category.id
-                    ? 'bg-coffee-600 text-white shadow-md'
-                    : 'bg-coffee-100 text-coffee-700 hover:bg-coffee-200'
-                  }
-                `}
-                onClick={() => handleCategoryClick(category.id)}
-                onKeyDown={(e) => handleKeyDown(e, category.id)}
-              >
-                {category.name}
-              </button>
-            ))}
+            {categories
+              .filter(category => category.is_active)
+              .map((category: DrinkCategory) => (
+                <button
+                  key={category.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={selectedCategoryId === category.id}
+                  aria-controls="drinks-panel"
+                  className={`
+                    flex-shrink-0 px-4 py-2 rounded-lg font-medium whitespace-nowrap transition-all duration-200
+                    focus:outline-none focus:ring-2 focus:ring-coffee-400 focus:ring-offset-2
+                    ${selectedCategoryId === category.id
+                      ? 'bg-coffee-600 text-white shadow-md'
+                      : 'bg-coffee-100 text-coffee-700 hover:bg-coffee-200'
+                    }
+                  `}
+                  onClick={() => handleCategoryClick(category.id)}
+                  onKeyDown={(e) => handleKeyDown(e, category.id)}
+                >
+                  {category.name}
+                </button>
+              ))}
+          </div>
         </div>
       </div>
     )

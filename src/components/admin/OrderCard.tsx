@@ -76,26 +76,26 @@ export const OrderCard = ({
     >
       {/* Header with selection and status */}
       <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3 min-w-0 flex-1">
           {onSelect && order.status === 'pending' && (
             <input
               type="checkbox"
               checked={isSelected}
               onChange={handleSelectionChange}
-              className="rounded border-gray-300 text-coffee-600 focus:ring-coffee-500"
+              className="rounded border-gray-300 text-coffee-600 focus:ring-coffee-500 flex-shrink-0"
               aria-label={`Select order for ${order.guest_name}`}
             />
           )}
-          <div>
-            <h3 className="font-semibold text-gray-900 ">
+          <div className="min-w-0 flex-1">
+            <h3 className="font-semibold text-gray-900 truncate">
               {order.guest_name}
             </h3>
-            <p className="text-sm text-gray-500 ">
+            <p className="text-sm text-gray-500 truncate">
               Order #{order.id.slice(-8)}
             </p>
           </div>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 flex-shrink-0">
           {order.priority_level && (
             <QueuePriorityIndicator priority={order.priority_level} />
           )}
@@ -120,7 +120,7 @@ export const OrderCard = ({
             <p className="text-sm font-medium text-gray-700 ">
               Options:
             </p>
-            <div className="flex flex-wrap gap-1">
+            <div className="flex flex-wrap gap-2">
               {order.selected_options.map((option, index) => (
                 <span
                   key={index}
@@ -148,7 +148,7 @@ export const OrderCard = ({
 
       {/* Footer with queue info and timing */}
       <div className="mt-4 pt-3 border-t border-gray-200 ">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
           <div className="flex items-center space-x-3">
             {order.status === 'pending' && order.queue_number && (
               <QueuePosition 
@@ -170,17 +170,17 @@ export const OrderCard = ({
 
           {/* Quick action buttons */}
           {showActions && order.status === 'pending' && (
-            <div className="flex space-x-2">
+            <div className="flex space-x-2 sm:ml-3">
               <button
                 onClick={() => handleStatusUpdate('completed')}
-                className="px-3 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors"
+                className="flex-1 sm:flex-none px-3 py-1 text-xs font-medium text-blue-700 bg-blue-100 rounded-md hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-colors"
                 aria-label="Mark order as completed"
               >
                 Complete
               </button>
               <button
                 onClick={() => handleStatusUpdate('cancelled')}
-                className="px-3 py-1 text-xs font-medium text-red-700 bg-red-100 rounded-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 transition-colors"
+                className="flex-1 sm:flex-none px-3 py-1 text-xs font-medium text-red-700 bg-red-100 rounded-md hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 transition-colors"
                 aria-label="Cancel order"
               >
                 Cancel

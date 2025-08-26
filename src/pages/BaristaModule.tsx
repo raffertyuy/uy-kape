@@ -155,7 +155,7 @@ function MobileNavigationButton({ activeView, view, onNavigate, children, onMenu
   return (
     <button
       onClick={handleClick}
-      className={`flex items-center w-full text-left px-3 py-2 rounded-md text-base font-medium transition-colors ${
+      className={`flex items-center w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-colors ${
         activeView === view
           ? 'bg-coffee-100 text-coffee-900'
           : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50'
@@ -188,25 +188,25 @@ function AdminNavigation({ activeView, onNavigate }: {
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Left side - Logo/Dashboard + Mobile menu button */}
-          <div className="flex items-center">
+          <div className="flex items-center min-w-0 flex-1">
             <button
               onClick={() => onNavigate('dashboard')}
-              className="flex items-center px-2 sm:px-4 text-coffee-700 hover:text-coffee-900 font-medium transition-colors rounded-md focus:outline-none focus:ring-2 focus:ring-coffee-500"
+              className="flex items-center px-1 sm:px-3 py-2 text-coffee-700 hover:text-coffee-900 font-medium transition-colors rounded-md focus:outline-none focus:ring-2 focus:ring-coffee-500"
             >
               <Logo 
                 size="xs" 
-                className="h-5 w-5 mr-2" 
+                className="h-5 w-5 mr-1 sm:mr-2 flex-shrink-0" 
                 alt="Uy, Kape!"
               />
-              <span className="hidden sm:inline">Dashboard</span>
+              <span className="hidden sm:inline truncate">Uy, Kape!</span>
             </button>
             
             {/* Mobile menu button */}
             <button
-              className="ml-2 sm:hidden p-2 rounded-md text-coffee-700 hover:text-coffee-900 hover:bg-coffee-50 focus:outline-none focus:ring-2 focus:ring-coffee-500 transition-colors"
+              className="ml-1 sm:hidden p-2 rounded-md text-coffee-700 hover:text-coffee-900 hover:bg-coffee-50 focus:outline-none focus:ring-2 focus:ring-coffee-500 transition-colors"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-expanded={isMobileMenuOpen}
               aria-label="Toggle navigation menu"
@@ -215,7 +215,7 @@ function AdminNavigation({ activeView, onNavigate }: {
             </button>
             
             {/* Desktop navigation items */}
-            <div className="hidden sm:flex sm:space-x-8 sm:ml-6">
+            <div className="hidden sm:flex sm:space-x-4 lg:space-x-8 sm:ml-4 lg:ml-6">
               <NavigationButton activeView={activeView} view="orders" onNavigate={onNavigate}>
                 Orders
                 <span className="ml-2 bg-green-100 text-green-600 px-2 py-0.5 rounded-full text-xs">
@@ -229,15 +229,15 @@ function AdminNavigation({ activeView, onNavigate }: {
           </div>
           
           {/* Right side - Admin indicator */}
-          <div className="flex items-center">
-            <span className="text-xs sm:text-sm text-gray-500">Barista Admin</span>
+          <div className="flex items-center flex-shrink-0">
+            <span className="text-xs sm:text-sm text-gray-500 whitespace-nowrap">Barista Admin</span>
           </div>
         </div>
         
         {/* Mobile menu dropdown */}
         {isMobileMenuOpen && (
           <div className="sm:hidden border-t border-gray-200 bg-white">
-            <div className="px-2 pt-2 pb-3 space-y-1">
+            <div className="px-3 pt-3 pb-4 space-y-2">
               <MobileNavigationButton 
                 activeView={activeView} 
                 view="orders" 

@@ -7,7 +7,8 @@ Run these tests and fix every issue that arise.
 - [ ] Run all unit tests, including e2e testing (**IMPORTANT**: Take note of the [dual-testing-strategy](/docs/dual-strategy-testing.md). After testing, set the environment variable back to not using mocks)
 - [ ] Run all linting checks
 - [ ] Run all playwright tests
-- [ ] Do a full exploratory functional testing using playwright MCP (reference: [playwright-mcp-instructions.md](./playwright-mcp-instructions.md)).
+- [ ] Do a full exploratory functional testing using playwright MCP (reference: [playwright-mcp-instructions.md](./playwright-mcp-instructions.md)) using desktop resolution (1920x1080)
+- [ ] Do a full exploratory functional testing using playwright MCP (reference: [playwright-mcp-instructions.md](./playwright-mcp-instructions.md)) using a mobile viewport (375px width)
 
 ## References
 
@@ -20,7 +21,10 @@ Refer to these documents for exploratory functional testing testing
 
 ## Text and Fix Methodology
 
-When the app is properly running, use Playwright MCP to navigate to the specified module/requirement. Use playwright to go through every functionality and test if it is functioning correctly. Watch out for any issues, functionally or in the browser console.
+When the app is properly running, use Playwright MCP to navigate to the specified module/requirement. Use playwright to go through every functionality and test if it is functioning correctly.
+
+- Watch out for any visual issues, layout problems, misalignments, etc. (especially due to mobile responsiveness).
+- Watch out for any issues, functionally or in the browser console.
 
 Create and update a running regression test report in `tests/outputs/regression-tests/yyyyMMddHHmm-regressiontest-log.md`, where yyyyMMddHHmm is the current date and time (for example `202508241516-regressiontest-log.md` for if the current date/time is 2025/08/24 15:16).
 
