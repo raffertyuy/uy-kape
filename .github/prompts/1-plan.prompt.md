@@ -74,7 +74,6 @@ PLAN HERE
 - Add a step to write unit tests for what has been implemented. **IMPORTANT**: Take note of the [dual-testing-strategy](/docs/dual-strategy-testing.md). After testing, set the environment variable back to not using mocks.
 - Add a step to write playwright UI tests for the feature, keep the test simple and focused on the intent of the objective.
 - Add a step to make sure it complies with our [definition_of_done](/docs/specs/definition_of_done.md)
-- Add a final step to perform a [regression-test](/.github/prompt-snippets/regression-test.md)
 
 ### 3. NEXT:
 
