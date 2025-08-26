@@ -36,18 +36,18 @@
     "test:e2e:debug": "playwright test --debug"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.55.0",
+    "@supabase/supabase-js": "^2.56.0",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.540.0",
+    "lucide-react": "^0.541.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.1",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
-    "@eslint/js": "^9.33.0",
+    "@eslint/js": "^9.34.0",
     "@playwright/test": "^1.55.0",
-    "@testing-library/jest-dom": "^6.7.0",
+    "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/react": "^18.2.43",

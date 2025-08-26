@@ -42,17 +42,16 @@ This will begin the implementation process based on the plan.
 
 > [!TIP]
 > If you are able, it is useful to actively read and check what the agent is doing. If you see that it is going the wrong direction, press the **STOP** button in the Copilot Chat panel and correct its course. Here are frequent interruption messages used while implementing this:
-> `supabase cli is not globally installed, see #file:supabase_cli_instructions.md`
-> `don't forget to take into account our #file:dual_testing_strategy.md`
-> `since you made db schema changes, update #file:schema.md and #file:db_schema.md`
-> `The app is running again, try again`
+>
+> - `supabase cli is not globally installed, see #file:supabase_cli_instructions.md`
+> - `don't forget to take into account our #file:dual_testing_strategy.md`
+> - `since you made db schema changes, update #file:schema.md and #file:db_schema.md`
+> - `The app is running again, try again`
 
 **The agent will stop implementation at some point, ask it to continue**
 As the agent goes through the implementation plan, it will occassionally _"summarize the conversation history"_. This means that the agent's context window is full and it will try to summarize everything in the previous chat history.
 
-**UNFORTUNATELY** this also means that some of the clear instructions in our `/2-implement` prompt was summarized, causing it to stop instead of continuing.
-
-If this happens, run:
+**UNFORTUNATELY** this also means that some of the clear instructions in our `/2-implement` prompt was summarized, causing it to stop instead of continuing (that's my theory at least). If this happens, run:
 
 ```text
 /continue-implementation-plan
