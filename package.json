@@ -36,7 +36,7 @@
     "test:e2e:debug": "playwright test --debug"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.55.0",
+    "@supabase/supabase-js": "^2.56.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.541.0",
     "react": "^18.2.0",
