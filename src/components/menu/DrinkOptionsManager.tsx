@@ -81,9 +81,13 @@ export const DrinkOptionsManager: React.FC<DrinkOptionsManagerProps> = ({
         }
         const result = await createDrinkOption(createData)
         
-        // Update with the new ID
-        updatedStates[stateIndex] = { ...newState, drinkOptionId: result.id }
-        setOptionStates(updatedStates)
+        // Update with the new ID if result is valid
+        if (result && result.id) {
+          updatedStates[stateIndex] = { ...newState, drinkOptionId: result.id }
+          setOptionStates(updatedStates)
+        } else {
+          throw new Error('Failed to create drink option: No ID returned')
+        }
       } else {
         // Unlink the option category from the drink
         if (currentState.drinkOptionId) {

@@ -9,9 +9,19 @@ describe('DrinkOptionsManager', () => {
   // Mock functions
   const mockOnClose = vi.fn()
   const mockRefetchDrink = vi.fn()
-  const mockCreateDrinkOption = vi.fn()
-  const mockUpdateDrinkOption = vi.fn()
-  const mockDeleteDrinkOption = vi.fn()
+  const mockCreateDrinkOption = vi.fn().mockResolvedValue({ 
+    id: 'new-option-id',
+    drink_id: 'drink-1',
+    option_category_id: 'temperature',
+    default_option_value_id: null
+  })
+  const mockUpdateDrinkOption = vi.fn().mockResolvedValue({ 
+    id: 'updated-option-id',
+    drink_id: 'drink-1',
+    option_category_id: 'temperature',
+    default_option_value_id: 'hot'
+  })
+  const mockDeleteDrinkOption = vi.fn().mockResolvedValue(undefined)
 
   // Mock data
   const mockDrinkWithOptions: DrinkWithOptionsAndCategory = {
@@ -168,6 +178,21 @@ describe('DrinkOptionsManager', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    
+    // Reset mock implementations after clearAllMocks
+    mockCreateDrinkOption.mockResolvedValue({ 
+      id: 'new-option-id',
+      drink_id: 'drink-1',
+      option_category_id: 'temperature',
+      default_option_value_id: null
+    })
+    mockUpdateDrinkOption.mockResolvedValue({ 
+      id: 'updated-option-id',
+      drink_id: 'drink-1',
+      option_category_id: 'temperature',
+      default_option_value_id: 'hot'
+    })
+    mockDeleteDrinkOption.mockResolvedValue(undefined)
   })
 
   describe('Basic Rendering', () => {

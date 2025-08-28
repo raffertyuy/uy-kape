@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { MenuTabs, type MenuTab } from '@/components/menu/MenuTabs'
 import { MenuSearch, type MenuFilters } from '@/components/menu/MenuSearch'
 import { RealtimeIndicator } from '@/components/menu/RealtimeIndicator'
@@ -15,9 +16,50 @@ import {
 import { useMenuSubscriptions } from '@/hooks/useMenuSubscriptions'
 
 export const MenuManagement: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<MenuTab>('categories')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [filters, setFilters] = useState<MenuFilters>({})
+  const [searchParams, setSearchParams] = useSearchParams()
+  
+  // Get tab from URL parameters with validation
+  const tabParam = searchParams.get('tab') as MenuTab | null
+  const activeTab: MenuTab = tabParam && ['categories', 'drinks', 'options'].includes(tabParam) ? tabParam : 'categories'
+  
+  // URL parameter-based filters state with validation
+  const categoryParam = searchParams.get('category')
+  const isActiveParam = searchParams.get('isActive')
+  const sortByParam = searchParams.get('sortBy') as 'name' | 'created_at' | 'display_order' | null
+  const sortOrderParam = searchParams.get('sortOrder') as 'asc' | 'desc' | null
+  
+  const filters: MenuFilters = {
+    // Only include category filter if we're on the drinks tab
+    ...(categoryParam && activeTab === 'drinks' && { categoryName: decodeURIComponent(categoryParam) }),
+    ...(isActiveParam && { isActive: isActiveParam === 'true' }),
+    ...(sortByParam && ['name', 'created_at', 'display_order'].includes(sortByParam) && { sortBy: sortByParam }),
+    ...(sortOrderParam && ['asc', 'desc'].includes(sortOrderParam) && { sortOrder: sortOrderParam })
+  }
+  
+  // URL parameter-based search query state
+  const searchQuery = searchParams.get('search') || ''
+
+  // URL parameter-based tab setter with cleanup
+  const handleTabChange = (tab: MenuTab) => {
+    setSearchParams((prev) => {
+      const params = Object.fromEntries(prev.entries())
+      
+      // Set or clear tab parameter
+      if (tab === 'categories') {
+        delete params.tab // Default tab, no parameter needed
+      } else {
+        params.tab = tab
+      }
+      
+      // Clear tab-specific filters when switching tabs
+      if (tab !== 'drinks') {
+        // Category filter only applies to drinks tab
+        delete params.category
+      }
+      
+      return params
+    })
+  }
 
   // Data hooks
   const { data: categories, isLoading: loadingCategories, refetch: refetchCategories } = useDrinkCategories()
@@ -39,11 +81,43 @@ export const MenuManagement: React.FC = () => {
   } = useMenuSubscriptions()
 
   const handleSearch = (query: string) => {
-    setSearchQuery(query)
+    setSearchParams((prev) => {
+      const params = Object.fromEntries(prev.entries())
+      if (query.trim()) {
+        params.search = query.trim()
+      } else {
+        delete params.search // Remove parameter if search is empty
+      }
+      return params
+    })
   }
 
   const handleFilter = (newFilters: MenuFilters) => {
-    setFilters(newFilters)
+    setSearchParams((prev) => {
+      const params = Object.fromEntries(prev.entries())
+      
+      // Remove all filter parameters first
+      delete params.category
+      delete params.isActive
+      delete params.sortBy
+      delete params.sortOrder
+      
+      // Add new filter parameters if they exist and are valid for current tab
+      if (newFilters.categoryName && activeTab === 'drinks') {
+        params.category = encodeURIComponent(newFilters.categoryName)
+      }
+      if (newFilters.isActive !== undefined) {
+        params.isActive = newFilters.isActive.toString()
+      }
+      if (newFilters.sortBy && ['name', 'created_at', 'display_order'].includes(newFilters.sortBy)) {
+        params.sortBy = newFilters.sortBy
+      }
+      if (newFilters.sortOrder && ['asc', 'desc'].includes(newFilters.sortOrder)) {
+        params.sortOrder = newFilters.sortOrder
+      }
+      
+      return params
+    })
   }
 
   const getSearchPlaceholder = () => {
@@ -89,7 +163,7 @@ export const MenuManagement: React.FC = () => {
           <div className="px-6 pt-6">
             <MenuTabs
               activeTab={activeTab}
-              onTabChange={setActiveTab}
+              onTabChange={handleTabChange}
               categoriesCount={categories?.length}
               drinksCount={drinks?.length}
               optionCategoriesCount={optionCategories?.length}
@@ -123,7 +197,11 @@ export const MenuManagement: React.FC = () => {
                 )}
 
                 {activeTab === 'drinks' && (
-                  <DrinkManagement onDataChange={handleDataChange} />
+                  <DrinkManagement 
+                    onDataChange={handleDataChange} 
+                    filters={filters}
+                    onFilter={handleFilter}
+                  />
                 )}
 
                 {activeTab === 'options' && (

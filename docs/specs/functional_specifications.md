@@ -1,6 +1,6 @@
 ---
 description: 'Detailed functional specifications for the Uy, Kape! coffee ordering system'
-last-modified: 2025-08-26
+last-modified: 2025-08-28
 ---
 
 # ☕ Uy, Kape! Functional Specifications
@@ -280,12 +280,42 @@ Consider a queue with the following orders ahead:
   - Delete: Remove option category
   - Add New: Create new option categories
 
+#### URL Persistence and State Management
+
+- **Tab Persistence**: Menu Management tabs (Drink Categories, Drinks, Option Categories) persist in URL parameters
+  - Default tab (Drink Categories): `/admin?view=menu` (no tab parameter)
+  - Drinks tab: `/admin?view=menu&tab=drinks`
+  - Option Categories tab: `/admin?view=menu&tab=options`
+  - Browser refresh maintains current tab selection
+- **Filter Persistence**: Drinks tab filters persist across browser sessions
+  - Category filter: `/admin?view=menu&tab=drinks&categoryId=3e89158e-0319-42bc-8d01-7193ffd649a0`
+  - Active status filter: `/admin?view=menu&tab=drinks&isActive=true`
+  - Sort preferences: `/admin?view=menu&tab=drinks&sortBy=name&sortOrder=asc`
+- **Search Query Persistence**: Search queries persist in URL parameters
+  - Search example: `/admin?view=menu&tab=drinks&search=coffee`
+  - Search queries persist across tab switches and browser refresh
+- **Parameter Cleanup**: Tab-specific parameters are automatically cleaned when switching tabs
+  - Switching from Drinks tab removes category filter parameters
+  - Invalid parameters gracefully default to safe values
+- **Deep Linking**: Direct navigation to specific tab and filter combinations
+  - Shareable URLs for specific menu management views
+  - Bookmarkable states for frequently accessed filters
+- **User Experience Benefits**:
+  - No loss of navigation state on browser refresh
+  - Improved workflow efficiency for baristas
+  - Reduced frustration from losing applied filters
+  - Enhanced multi-tab browsing support
+
 ## Technical Implementation
 
 ### [State Management](#technical-state)
 - **Order Form State**: Multi-step form with persistent state
 - **Real-time Subscriptions**: Supabase real-time for order updates
 - **Session Management**: Browser sessionStorage for authentication persistence
+- **URL State Persistence**: React Router useSearchParams for navigation state
+  - Menu Management tab and filter state persisted in URL parameters
+  - Deep linking support for specific admin module views
+  - Automatic cleanup of tab-specific parameters during navigation
 
 ### [Data Flow](#technical-data-flow)
 1. **Guest Order**: Form → Validation → Supabase Insert → Real-time Update
@@ -348,4 +378,4 @@ Consider a queue with the following orders ahead:
 
 ---
 
-*This document reflects the current implementation as of August 26, 2025, updated to include configurable guest password bypass functionality. All features documented have been verified as working in the live application. For the latest updates, refer to the application overview and technical documentation.*
+*This document reflects the current implementation as of August 28, 2025, updated to include Menu Management URL persistence functionality and configurable guest password bypass. All features documented have been verified as working in the live application. For the latest updates, refer to the application overview and technical documentation.*

@@ -185,7 +185,9 @@ const originalConsole = {
 };
 
 // Enhanced console override to suppress noisy warnings in tests
-const createFilteredConsole = (originalFn: typeof console.warn | typeof console.error) => {
+const createFilteredConsole = (
+  originalFn: typeof console.warn | typeof console.error,
+) => {
   return (...args: any[]) => {
     const message = args[0];
 
@@ -205,7 +207,11 @@ const createFilteredConsole = (originalFn: typeof console.warn | typeof console.
       ) {
         return;
       }
-      if (message.includes("The current testing environment is not configured to support act")) {
+      if (
+        message.includes(
+          "The current testing environment is not configured to support act",
+        )
+      ) {
         return;
       }
       // Suppress expected Supabase service error messages in tests

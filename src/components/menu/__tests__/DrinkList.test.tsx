@@ -170,17 +170,17 @@ describe('DrinkList', () => {
       const categoryFilter = screen.getByRole('combobox', { name: /filter by category/i })
       
       // Select Kids Drinks category
-      await user.selectOptions(categoryFilter, 'kids-drinks')
+      await user.selectOptions(categoryFilter, 'Kids Drinks')
 
-      // Should call onCategoryFilter with the selected category ID
-      expect(defaultProps.onCategoryFilter).toHaveBeenCalledWith('kids-drinks')
+      // Should call onCategoryFilter with the selected category name
+      expect(defaultProps.onCategoryFilter).toHaveBeenCalledWith('Kids Drinks')
     })
 
-    it('shows only drinks from selected category when selectedCategoryId prop is provided', () => {
+    it('shows only drinks from selected category when selectedCategoryName prop is provided', () => {
       render(
         <DrinkList 
           {...defaultProps} 
-          selectedCategoryId="kids-drinks"
+          selectedCategoryName="Kids Drinks"
         />
       )
 
@@ -199,7 +199,7 @@ describe('DrinkList', () => {
       render(
         <DrinkList 
           {...defaultProps} 
-          selectedCategoryId="kids-drinks"
+          selectedCategoryName="Kids Drinks"
         />
       )
 
@@ -216,7 +216,7 @@ describe('DrinkList', () => {
       render(
         <DrinkList 
           {...defaultProps} 
-          selectedCategoryId="kids-drinks"
+          selectedCategoryName="Kids Drinks"
         />
       )
 
@@ -229,7 +229,7 @@ describe('DrinkList', () => {
       render(
         <DrinkList 
           {...defaultProps} 
-          selectedCategoryId="kids-drinks"
+          selectedCategoryName="Kids Drinks"
         />
       )
 
@@ -352,7 +352,7 @@ describe('DrinkList', () => {
       render(
         <DrinkList 
           {...defaultProps} 
-          selectedCategoryId="premium-coffee"
+          selectedCategoryName="Premium Coffee"
         />
       )
 
@@ -371,7 +371,7 @@ describe('DrinkList', () => {
       render(
         <DrinkList 
           {...defaultProps} 
-          selectedCategoryId="premium-coffee"
+          selectedCategoryName="Premium Coffee"
         />
       )
 
@@ -411,7 +411,7 @@ describe('DrinkList', () => {
       render(
         <DrinkList 
           {...defaultProps} 
-          selectedCategoryId="kids-drinks"
+          selectedCategoryName="Kids Drinks"
         />
       )
 
@@ -492,7 +492,7 @@ describe('DrinkList', () => {
     it('handles category filter with no matching drinks', () => {
       const emptyCategoryProps = {
         ...defaultProps,
-        selectedCategoryId: 'empty-category'
+        selectedCategoryName: 'Empty Category'
       }
 
       render(<DrinkList {...emptyCategoryProps} />)
