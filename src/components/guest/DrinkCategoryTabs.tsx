@@ -1,6 +1,7 @@
 import { memo } from 'react'
 import type { DrinkCategory } from '@/types/menu.types'
 import { useDrinkCategories } from '@/hooks/useMenuData'
+import { trackCoffeeEvent } from '@/utils/analytics'
 
 interface DrinkCategoryTabsProps {
   selectedCategoryId?: string
@@ -36,6 +37,12 @@ export const DrinkCategoryTabs = memo<DrinkCategoryTabsProps>(
     }
 
     const handleCategoryClick = (categoryId?: string) => {
+      // Track category selection
+      const categoryName = categoryId ? 
+        categories?.find(cat => cat.id === categoryId)?.name || 'Unknown' : 
+        'All Drinks'
+      trackCoffeeEvent.menuCategoryChanged(categoryName)
+      
       onCategorySelect(categoryId)
     }
 

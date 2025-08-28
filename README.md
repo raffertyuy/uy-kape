@@ -83,7 +83,7 @@ _For detailed version information, architectural decisions, and configuration de
 3. **Environment Configuration:**
 
    - Create development environment: `cp .env.example .env`
-   - **Optional for testing**: `cp .env.test.example .env.test.local`
+   - **Optional for testing**: `cp .env.test.local.example .env.test.local`
    - **Optional**: Configure guest password bypass for development:
 
      ```bash

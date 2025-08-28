@@ -11,10 +11,12 @@ import { ErrorContextProvider } from './contexts/ErrorContext'
 import { GlobalErrorNotification } from './components/ui/GlobalErrorNotification'
 import { useErrorToast } from './hooks/useErrorToast'
 import { ErrorHandlingPanel } from './components/dev/ErrorHandlingPanel'
+import { usePageTracking } from './hooks/usePageTracking'
 
-// Component to handle error toast integration
+// Component to handle error toast integration and page tracking
 const ErrorToastIntegration: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   useErrorToast() // This hook automatically shows toasts for errors
+  usePageTracking() // This hook automatically tracks page views with Google Analytics
   return <>{children}</>
 }
 
@@ -24,13 +26,13 @@ function App() {
       <ErrorBoundary>
         <ErrorContextProvider>
           <ToastProvider>
-            <ErrorToastIntegration>
-              <GlobalErrorNotification />
-              <ErrorHandlingPanel />
-              <BrowserRouter future={{
-                v7_startTransition: true,
-                v7_relativeSplatPath: true
-              }}>
+            <GlobalErrorNotification />
+            <ErrorHandlingPanel />
+            <BrowserRouter future={{
+              v7_startTransition: true,
+              v7_relativeSplatPath: true
+            }}>
+              <ErrorToastIntegration>
                 <Layout>
                   <Routes>
                     <Route path="/" element={<WelcomePage />} />
@@ -40,8 +42,8 @@ function App() {
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </Layout>
-              </BrowserRouter>
-            </ErrorToastIntegration>
+              </ErrorToastIntegration>
+            </BrowserRouter>
           </ToastProvider>
         </ErrorContextProvider>
       </ErrorBoundary>

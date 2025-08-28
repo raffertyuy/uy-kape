@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
+import { useEffect } from 'react';
 import PasswordProtection from '@/components/PasswordProtection';
+import { trackCoffeeEvent } from '@/utils/analytics';
 
 interface ConditionalPasswordProtectionProps {
   children: ReactNode;
@@ -24,8 +26,16 @@ interface ConditionalPasswordProtectionProps {
 function ConditionalPasswordProtection({
   children,
   bypassPassword = false,
+  role,
   ...passwordProtectionProps
 }: ConditionalPasswordProtectionProps) {
+  // Track bypass access for analytics
+  useEffect(() => {
+    if (bypassPassword && role === 'guest') {
+      trackCoffeeEvent.guestAccess()
+    }
+  }, [bypassPassword, role])
+
   // If bypass is enabled, render children directly without password protection
   if (bypassPassword) {
     return <>{children}</>;
@@ -33,7 +43,7 @@ function ConditionalPasswordProtection({
 
   // Otherwise, apply full password protection
   return (
-    <PasswordProtection {...passwordProtectionProps}>
+    <PasswordProtection {...passwordProtectionProps} role={role}>
       {children}
     </PasswordProtection>
   );

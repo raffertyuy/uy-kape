@@ -39,6 +39,7 @@ The system consists of two main access points from a welcome landing page:
 - **Backend**: Supabase (PostgreSQL with real-time subscriptions)
 - **Authentication**: Password-based role separation
 - **Deployment**: Vercel hosting with CI/CD
+- **Analytics & Telemetry**: Google Analytics, Microsoft Clarity, Vercel Speed Insights, and Supabase telemetry
 
 See detailed [technology_stack](./technology_stack.md) for complete technical specifications.
 
@@ -93,10 +94,27 @@ See detailed [technology_stack](./technology_stack.md) for complete technical sp
 - Playwright for end-to-end testing
 
 **Development Features:**
+
 - ESLint for code quality
 - TypeScript for type safety
 - Real-time database subscriptions
 - Mobile-first responsive design
+
+### Analytics & Telemetry
+
+The application includes comprehensive analytics and telemetry for monitoring user behavior, performance, and system health:
+
+**Always Enabled (Hardcoded):**
+
+- **Google Analytics**: User behavior tracking, page views, and interaction analytics
+- **Microsoft Clarity**: Session recordings, heatmaps, and user experience insights
+
+**Configurable (Environment Variables):**
+
+- **Vercel Speed Insights**: Performance monitoring, Core Web Vitals, and deployment analytics
+- **Supabase Telemetry**: Database query logging, connection monitoring, and performance tracking
+
+*Note: Configurable telemetry can be disabled via environment variables (`VITE_VERCEL_TELEMETRY_ENABLED` and `VITE_SUPABASE_TELEMETRY_ENABLED`) and is disabled by default in test environments.*
 
 ## User Experience
 
