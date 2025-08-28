@@ -16,3 +16,19 @@ interface ImportMetaEnv {
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
+
+// Google Analytics Types
+type GtagCommand = "config" | "event" | "js" | "consent";
+
+// Microsoft Clarity Types
+type ClarityFunction = (..._args: unknown[]) => void;
+
+declare global {
+  interface Window {
+    dataLayer: unknown[];
+    gtag: (_command: GtagCommand, ..._args: unknown[]) => void;
+    clarity: ClarityFunction;
+  }
+}
+
+export {};

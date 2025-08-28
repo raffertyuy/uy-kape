@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react'
+import { trackCoffeeEvent } from '@/utils/analytics'
 
 export type MenuTab = 'categories' | 'drinks' | 'options'
 
@@ -20,6 +21,13 @@ export const MenuTabs: React.FC<MenuTabsProps> = ({
   const scrollContainerRef = useRef<HTMLElement>(null)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const activeTabRef = useRef<any>(null)
+
+  // Helper function to handle tab changes with analytics tracking
+  const handleTabChange = (tab: MenuTab) => {
+    // Track menu category navigation
+    trackCoffeeEvent.menuCategoryChanged(tab)
+    onTabChange(tab)
+  }
 
   // Scroll active tab into view when it changes
   useEffect(() => {
@@ -82,7 +90,7 @@ export const MenuTabs: React.FC<MenuTabsProps> = ({
     
     if (nextTab) {
       event.preventDefault()
-      onTabChange(nextTab)
+      handleTabChange(nextTab)
     }
   }
 
@@ -131,7 +139,7 @@ export const MenuTabs: React.FC<MenuTabsProps> = ({
           <button
             key={tab.id}
             ref={activeTab === tab.id ? activeTabRef : null}
-            onClick={() => onTabChange(tab.id)}
+            onClick={() => handleTabChange(tab.id)}
             onKeyDown={(e) => handleKeyDown(e, tab.id)}
             className={`py-3 sm:py-4 px-2 sm:px-3 flex items-center space-x-1.5 sm:space-x-2 border-b-2 font-medium text-sm transition-colors duration-200 whitespace-nowrap flex-shrink-0 min-w-0 ${
               activeTab === tab.id

@@ -7,6 +7,7 @@ import type {
 import { useGuestInfo } from "./useGuestInfo";
 import { useOptionSelection } from "./useOptionSelection";
 import { useOrderSubmission } from "./useOrderSubmission";
+import { trackCoffeeEvent } from "@/utils/analytics";
 
 export type OrderFormStep =
   | "drink-selection"
@@ -191,6 +192,10 @@ export function useOrderForm(
   // Actions
   const selectDrink = useCallback((drink: DrinkWithOptionsAndCategory) => {
     setSelectedDrink(drink);
+
+    // Track drink selection
+    trackCoffeeEvent.drinkViewed(drink.name, drink.category?.name || "Unknown");
+
     // Auto-advance to next step based on drink's options
     const hasOptions = drink.drink_options && drink.drink_options.length > 0;
     if (hasOptions) {
@@ -236,6 +241,13 @@ export function useOrderForm(
 
     // Handle success - call callback only (let parent component handle URL)
     if (submissionResult.success && submissionResult.result) {
+      // Track successful order placement
+      trackCoffeeEvent.orderPlaced(
+        selectedDrink.name,
+        1, // quantity is always 1 in current implementation
+        trimmedRequest || undefined,
+      );
+
       // Call external callback if provided - parent component will handle URL
       if (orderSuccessCallbackRef.current) {
         orderSuccessCallbackRef.current(submissionResult.result);
