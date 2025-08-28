@@ -1,4 +1,6 @@
 import type { ErrorCategory, ErrorDetails } from "../hooks/useErrorHandling";
+import { telemetryHelpers } from "./telemetryLogger";
+import { isTelemetryEnabled } from "../config/telemetryConfig";
 
 export interface GlobalErrorConfig {
   enableLogging: boolean;
@@ -218,6 +220,36 @@ export const handleGlobalError = (
     timestamp: new Date(),
     ...(context && { action: context }),
   };
+
+  // Log error to telemetry if enabled (optional feature)
+  if (isTelemetryEnabled()) {
+    try {
+      telemetryHelpers.logError(
+        error instanceof Error
+          ? error
+          : new Error(error?.message || "Unknown error"),
+        {
+          category,
+          userMessage,
+          originalCode: error?.code,
+          originalStatus: error?.status,
+          handlerContext: context,
+          ...(globalConfig.enableDevDetails && {
+            url: typeof window !== "undefined"
+              ? window.location.href
+              : "unknown",
+            userAgent: getUserAgent(),
+          }),
+        },
+      );
+    } catch (telemetryError) {
+      // Telemetry logging should never affect error handling
+      if (import.meta.env.DEV) {
+        // eslint-disable-next-line no-console
+        console.warn("Failed to log error to telemetry:", telemetryError);
+      }
+    }
+  }
 
   // Log error based on configuration
   if (globalConfig.enableLogging) {

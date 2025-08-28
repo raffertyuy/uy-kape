@@ -82,8 +82,8 @@ _For detailed version information, architectural decisions, and configuration de
 
 3. **Environment Configuration:**
 
-   - Create an `.env` file in the root directory
-   - Copy and fill the values from `.env.example`
+   - Create development environment: `cp .env.example .env`
+   - **Optional for testing**: `cp .env.test.example .env.test.local`
    - **Optional**: Configure guest password bypass for development:
 
      ```bash

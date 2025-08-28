@@ -180,16 +180,25 @@ jobs:
         run: |
           echo "🔍 Validating environment variable patterns..."
 
-          # Check for proper environment variable usage
-          if grep -r --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
-            -E "process\.env\.[A-Z_]+" src/ | grep -v "VITE_"; then
-            echo "⚠️  Non-Vite environment variables found - ensure they're available at build time"
+          # Check for proper environment variable usage in process.env
+          # Allow common CI/Node.js environment variables but warn about others
+          PROCESS_ENV_RESULTS=$(grep -r --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
+            -E "process\.env\.[A-Z_]+" src/ | grep -v "VITE_" | grep -v "CI" | grep -v "GITHUB_ACTIONS" | grep -v "NODE_ENV" || true)
+          
+          if [ -n "$PROCESS_ENV_RESULTS" ]; then
+            echo "⚠️  Non-standard environment variables found:"
+            echo "$PROCESS_ENV_RESULTS"
+            echo "Ensure they're available at build time"
           fi
 
           # Check for missing VITE_ prefix on client-side env vars
-          if grep -r --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
-            -E "import\.meta\.env\.[A-Z_]+" src/ | grep -v "VITE_"; then
-            echo "❌ Environment variables must have VITE_ prefix for client-side access!"
+          # Allow built-in Vite environment variables (DEV, PROD, MODE, BASE_URL, SSR)
+          INVALID_ENV_RESULTS=$(grep -r --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
+            -E "import\.meta\.env\.[A-Z_]+" src/ | grep -v "VITE_" | grep -v "\.DEV" | grep -v "\.PROD" | grep -v "\.MODE" | grep -v "\.BASE_URL" | grep -v "\.SSR" || true)
+          
+          if [ -n "$INVALID_ENV_RESULTS" ]; then
+            echo "❌ Environment variables must have VITE_ prefix for client-side access:"
+            echo "$INVALID_ENV_RESULTS"
             exit 1
           fi
 
