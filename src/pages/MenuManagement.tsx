@@ -30,7 +30,7 @@ export const MenuManagement: React.FC = () => {
   
   const filters: MenuFilters = {
     // Only include category filter if we're on the drinks tab
-    ...(categoryParam && activeTab === 'drinks' && { categoryName: decodeURIComponent(categoryParam) }),
+    ...(categoryParam && activeTab === 'drinks' && { categoryName: categoryParam }),
     ...(isActiveParam && { isActive: isActiveParam === 'true' }),
     ...(sortByParam && ['name', 'created_at', 'display_order'].includes(sortByParam) && { sortBy: sortByParam }),
     ...(sortOrderParam && ['asc', 'desc'].includes(sortOrderParam) && { sortOrder: sortOrderParam })
@@ -104,7 +104,7 @@ export const MenuManagement: React.FC = () => {
       
       // Add new filter parameters if they exist and are valid for current tab
       if (newFilters.categoryName && activeTab === 'drinks') {
-        params.category = encodeURIComponent(newFilters.categoryName)
+        params.category = newFilters.categoryName
       }
       if (newFilters.isActive !== undefined) {
         params.isActive = newFilters.isActive.toString()

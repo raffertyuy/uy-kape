@@ -60,6 +60,7 @@ export const MenuSearch: React.FC<MenuSearchProps> = ({
             </svg>
           </div>
           <input
+            id="search"
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}

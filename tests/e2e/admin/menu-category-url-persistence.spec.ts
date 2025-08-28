@@ -45,9 +45,9 @@ test.describe("Menu Management - Category Name URL Persistence", () => {
     await page.getByLabel("Filter by Category").selectOption("Special Coffee");
     await page.waitForTimeout(500);
 
-    // Check that URL contains URL-encoded category name
+    // Check that URL contains URL-encoded category name (either %20 or + for spaces)
     const url = page.url();
-    expect(url).toContain("category=Special%20Coffee");
+    expect(url).toMatch(/category=Special(?:%20|\+)Coffee/);
   });
 
   test("should restore category filter from URL on page load", async ({ page }) => {
@@ -64,7 +64,12 @@ test.describe("Menu Management - Category Name URL Persistence", () => {
 
     // Check that filtered drinks are displayed
     await expect(page.getByText("Active filters:")).toBeVisible();
-    await expect(page.getByText("Category: Coffee")).toBeVisible();
+    // Target the active filters section specifically
+    await expect(
+      page.locator('text="Active filters:"').locator("..").getByText(
+        "Category: Coffee",
+      ),
+    ).toBeVisible();
   });
 
   test("should restore URL-encoded category name from URL", async ({ page }) => {
@@ -80,7 +85,11 @@ test.describe("Menu Management - Category Name URL Persistence", () => {
     await expect(categoryFilter).toHaveValue("Special Coffee");
 
     // Check that active filter shows the decoded name
-    await expect(page.getByText("Category: Special Coffee")).toBeVisible();
+    await expect(
+      page.locator('text="Active filters:"').locator("..").getByText(
+        "Category: Special Coffee",
+      ),
+    ).toBeVisible();
   });
 
   test("should clear category parameter when filter is cleared", async ({ page }) => {
@@ -210,7 +219,11 @@ test.describe("Menu Management - Category Name URL Persistence", () => {
 
     // Check that active filters section shows the category name
     await expect(page.getByText("Active filters:")).toBeVisible();
-    await expect(page.getByText("Category: Coffee")).toBeVisible();
+    await expect(
+      page.locator('text="Active filters:"').locator("..").getByText(
+        "Category: Coffee",
+      ),
+    ).toBeVisible();
 
     // Remove filter button should be present
     await expect(page.getByLabel("Remove category filter")).toBeVisible();
@@ -249,7 +262,11 @@ test.describe("Menu Management - Category Name URL Persistence", () => {
     const categoryFilter = page.getByLabel("Filter by Category");
     await expect(categoryFilter).toHaveValue("Tea");
 
-    await expect(page.getByText("Category: Tea")).toBeVisible();
+    await expect(
+      page.locator('text="Active filters:"').locator("..").getByText(
+        "Category: Tea",
+      ),
+    ).toBeVisible();
 
     // URL should still contain the parameter
     const url = page.url();
