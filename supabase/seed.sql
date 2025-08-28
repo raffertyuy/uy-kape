@@ -53,13 +53,15 @@ INSERT INTO option_values (option_category_id, name, description, display_order,
 INSERT INTO drinks (name, description, category_id, preparation_time_minutes, display_order, is_active) VALUES
 ('Espresso', 'Pure espresso shot', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 3, 1, true),
 ('Espresso Macchiato', 'Espresso with a dollop of foamed milk', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 3, 2, true),
-('Piccolo Latte', 'Small latte with equal parts espresso and steamed milk', (SELECT id FROM drink_categories WHERE name = 'Coffee'), NULL, 3, true),
+('Americano', 'Espresso with hot water', (SELECT id FROM drink_categories WHERE name = 'Coffee'), NULL, 3, true),
 ('Caffe Latte', 'Espresso with steamed milk and light foam', (SELECT id FROM drink_categories WHERE name = 'Coffee'), NULL, 4, true),
 ('Cappuccino', 'Equal parts espresso, steamed milk, and milk foam', (SELECT id FROM drink_categories WHERE name = 'Coffee'), NULL, 5, true),
-('Americano', 'Espresso with hot water', (SELECT id FROM drink_categories WHERE name = 'Coffee'), NULL, 6, true),
-('Black Coffee (Moka Pot)', 'Coffee brewed in a moka pot', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 10, 7, true),
-('Black Coffee (V60)', 'Pour-over coffee using V60 dripper', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 10, 8, true),
-('Black Coffee (Aeropress)', 'Black coffee using an Aeropress', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 10, 9, true);
+('Piccolo Latte', '1 shot of espresso with 2 parts of milk', (SELECT id FROM drink_categories WHERE name = 'Coffee'), NULL, 6, true),
+('Cortado', '1 or 2 shots of espresso with an equal part of milk', (SELECT id FROM drink_categories WHERE name = 'Coffee'), NULL, 7, true),
+('Melbourne Magic', '1 or 2 shots of espresso with 3 parts of milk', (SELECT id FROM drink_categories WHERE name = 'Coffee'), NULL, 8, true),
+('Black Coffee (Moka Pot)', 'Coffee brewed in a moka pot', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 10, 9, true),
+('Black Coffee (V60)', 'Pour-over coffee using V60 dripper', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 10, 10, true),
+('Black Coffee (Aeropress)', 'Black coffee using an Aeropress', (SELECT id FROM drink_categories WHERE name = 'Coffee'), 10, 11, true);
 
 -- Special Coffee category drinks
 INSERT INTO drinks (name, description, category_id, preparation_time_minutes, display_order, is_active) VALUES
@@ -94,37 +96,6 @@ INSERT INTO drink_options (drink_id, option_category_id, default_option_value_id
  (SELECT id FROM option_categories WHERE name = 'Milk Type'),
  (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Low Fat Milk' AND oc.name = 'Milk Type')),
 
--- Milk-based drinks: shots + required milk (excluding "None") + temperature
-((SELECT id FROM drinks WHERE name = 'Piccolo Latte'),
- (SELECT id FROM option_categories WHERE name = 'Number of Shots'),
- (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Single' AND oc.name = 'Number of Shots')),
-((SELECT id FROM drinks WHERE name = 'Piccolo Latte'),
- (SELECT id FROM option_categories WHERE name = 'Milk Type'),
- (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Low Fat Milk' AND oc.name = 'Milk Type')),
-((SELECT id FROM drinks WHERE name = 'Piccolo Latte'),
- (SELECT id FROM option_categories WHERE name = 'Temperature'),
- (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Hot' AND oc.name = 'Temperature')),
-
-((SELECT id FROM drinks WHERE name = 'Caffe Latte'),
- (SELECT id FROM option_categories WHERE name = 'Number of Shots'),
- (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Single' AND oc.name = 'Number of Shots')),
-((SELECT id FROM drinks WHERE name = 'Caffe Latte'),
- (SELECT id FROM option_categories WHERE name = 'Milk Type'),
- (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Low Fat Milk' AND oc.name = 'Milk Type')),
-((SELECT id FROM drinks WHERE name = 'Caffe Latte'),
- (SELECT id FROM option_categories WHERE name = 'Temperature'),
- (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Hot' AND oc.name = 'Temperature')),
-
-((SELECT id FROM drinks WHERE name = 'Cappuccino'),
- (SELECT id FROM option_categories WHERE name = 'Number of Shots'),
- (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Single' AND oc.name = 'Number of Shots')),
-((SELECT id FROM drinks WHERE name = 'Cappuccino'),
- (SELECT id FROM option_categories WHERE name = 'Milk Type'),
- (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Low Fat Milk' AND oc.name = 'Milk Type')),
-((SELECT id FROM drinks WHERE name = 'Cappuccino'),
- (SELECT id FROM option_categories WHERE name = 'Temperature'),
- (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Hot' AND oc.name = 'Temperature')),
-
 -- Americano: shots + temperature
 ((SELECT id FROM drinks WHERE name = 'Americano'),
  (SELECT id FROM option_categories WHERE name = 'Number of Shots'),
@@ -132,6 +103,49 @@ INSERT INTO drink_options (drink_id, option_category_id, default_option_value_id
 ((SELECT id FROM drinks WHERE name = 'Americano'),
  (SELECT id FROM option_categories WHERE name = 'Temperature'),
  (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Hot' AND oc.name = 'Temperature')),
+
+-- Caffe Latte: shots + required milk (excluding "None") + temperature
+((SELECT id FROM drinks WHERE name = 'Caffe Latte'),
+ (SELECT id FROM option_categories WHERE name = 'Number of Shots'),
+ (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Single' AND oc.name = 'Number of Shots')),
+((SELECT id FROM drinks WHERE name = 'Caffe Latte'),
+ (SELECT id FROM option_categories WHERE name = 'Milk Type'),
+ (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Low Fat Milk' AND oc.name = 'Milk Type')),
+((SELECT id FROM drinks WHERE name = 'Caffe Latte'),
+ (SELECT id FROM option_categories WHERE name = 'Temperature'),
+ (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Hot' AND oc.name = 'Temperature')),
+
+-- Cappuccino: shots + required milk (excluding "None") + temperature
+((SELECT id FROM drinks WHERE name = 'Cappuccino'),
+ (SELECT id FROM option_categories WHERE name = 'Number of Shots'),
+ (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Single' AND oc.name = 'Number of Shots')),
+((SELECT id FROM drinks WHERE name = 'Cappuccino'),
+ (SELECT id FROM option_categories WHERE name = 'Milk Type'),
+ (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Low Fat Milk' AND oc.name = 'Milk Type')),
+((SELECT id FROM drinks WHERE name = 'Cappuccino'),
+ (SELECT id FROM option_categories WHERE name = 'Temperature'),
+ (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Hot' AND oc.name = 'Temperature')),
+
+-- Piccolo Latte: required milk (excluding "None")
+((SELECT id FROM drinks WHERE name = 'Piccolo Latte'),
+ (SELECT id FROM option_categories WHERE name = 'Milk Type'),
+ (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Low Fat Milk' AND oc.name = 'Milk Type')),
+
+-- Cortado: shots + required milk (excluding "None")
+((SELECT id FROM drinks WHERE name = 'Cortado'),
+ (SELECT id FROM option_categories WHERE name = 'Number of Shots'),
+ (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Single' AND oc.name = 'Number of Shots')),
+((SELECT id FROM drinks WHERE name = 'Cortado'),
+ (SELECT id FROM option_categories WHERE name = 'Milk Type'),
+ (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Low Fat Milk' AND oc.name = 'Milk Type')),
+
+-- Melbourne Magic: shots + required milk (excluding "None")
+((SELECT id FROM drinks WHERE name = 'Melbourne Magic'),
+ (SELECT id FROM option_categories WHERE name = 'Number of Shots'),
+ (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Single' AND oc.name = 'Number of Shots')),
+((SELECT id FROM drinks WHERE name = 'Melbourne Magic'),
+ (SELECT id FROM option_categories WHERE name = 'Milk Type'),
+ (SELECT ov.id FROM option_values ov JOIN option_categories oc ON ov.option_category_id = oc.id WHERE ov.name = 'Low Fat Milk' AND oc.name = 'Milk Type')),
 
 -- Black coffee drinks: temperature only
 ((SELECT id FROM drinks WHERE name = 'Black Coffee (Moka Pot)'),
