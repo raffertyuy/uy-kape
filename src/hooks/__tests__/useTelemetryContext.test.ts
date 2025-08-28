@@ -134,15 +134,29 @@ describe("useTelemetryContext with telemetry disabled", () => {
       act(() => {
         result.current.logEvent({
           type: "error",
-          data: { message: "Test error" },
+          data: {
+            name: "TestError",
+            message: "Test error",
+            timestamp: Date.now(),
+          },
         });
         result.current.logEvent({
           type: "performance",
-          data: { duration: 200 },
+          data: {
+            name: "test-operation",
+            startTime: Date.now() - 200,
+            duration: 200,
+            endTime: Date.now(),
+          },
         });
         result.current.logEvent({
           type: "component",
-          data: { name: "TestComponent" },
+          data: {
+            componentName: "TestComponent",
+            type: "render",
+            duration: 50,
+            timestamp: Date.now(),
+          },
         });
       });
       // Should not log anything since telemetry is disabled
