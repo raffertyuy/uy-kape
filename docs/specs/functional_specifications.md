@@ -1,6 +1,6 @@
 ---
 description: 'Detailed functional specifications for the Uy, Kape! coffee ordering system'
-last-modified: 2025-08-26
+last-modified: 2025-08-28
 ---
 
 # ☕ Uy, Kape! Functional Specifications
@@ -222,6 +222,36 @@ Consider a queue with the following orders ahead:
 2. **Drinks** (17 total)  
 3. **Option Categories** (5 total)
 
+#### Unified Search and Filter System
+
+##### Centralized Search Architecture
+
+- **Single Search Interface**: Unified search box works across all three tabs
+- **Real-time Filtering**: Instant search results with debounced input (300ms delay)
+- **URL Persistence**: Search queries persist in URL parameters and browser refresh
+- **Cross-tab Consistency**: Search terms maintain across tab navigation
+- **Clear Functionality**: One-click search clearing with visual feedback
+
+##### Search Capabilities by Tab
+
+- **Drink Categories**: Search by category name and description
+  - Example: "coffee" matches both "Coffee" and "Special Coffee" categories
+  - Filters: Active/Inactive status, Sort by name/display order/creation date
+- **Drinks**: Search by drink name and description  
+  - Example: "espresso" matches "Espresso", "Espresso Macchiato", and drinks with espresso in description
+  - Additional Filters: Category selection, Active/Inactive status, Sort options
+- **Option Categories**: Search by option name and description
+  - Example: "shot" matches "Number of Shots" category
+  - Filters: Required/Optional status, Sort by name/display order/creation date
+
+##### Enhanced User Experience
+
+- **Active Filter Indicators**: Visual chips showing applied search terms
+- **Empty State Messaging**: Contextual messages for no results vs. no data
+- **Mobile Optimization**: Touch-friendly interface with proper input sizing
+- **Accessibility**: Full keyboard navigation and screen reader support
+- **Performance**: Optimized filtering using React useMemo for large datasets
+
 #### Drink Categories Management
 - **Category Display**: Shows all 4 categories:
   - Coffee: "Espresso-based and black coffee drinks"
@@ -254,8 +284,8 @@ Consider a queue with the following orders ahead:
     - Displays drink-specific defaults like "Tea Type: Jasmine Green Tea", "Ice Cream Flavor: Chocolate"
 - **Filtering and Search**:
   - Category filter dropdown
-  - Text search by drink name
-  - Real-time filtering
+  - **Unified Search Interface**: Single search box for text-based filtering
+  - Real-time filtering with instant results
 - **Actions Per Drink**:
   - Options: Manage drink-specific customization options
   - Edit: Modify drink details and preparation time
@@ -280,12 +310,42 @@ Consider a queue with the following orders ahead:
   - Delete: Remove option category
   - Add New: Create new option categories
 
+#### URL Persistence and State Management
+
+- **Tab Persistence**: Menu Management tabs (Drink Categories, Drinks, Option Categories) persist in URL parameters
+  - Default tab (Drink Categories): `/admin?view=menu` (no tab parameter)
+  - Drinks tab: `/admin?view=menu&tab=drinks`
+  - Option Categories tab: `/admin?view=menu&tab=options`
+  - Browser refresh maintains current tab selection
+- **Filter Persistence**: Drinks tab filters persist across browser sessions
+  - Category filter: `/admin?view=menu&tab=drinks&categoryId=3e89158e-0319-42bc-8d01-7193ffd649a0`
+  - Active status filter: `/admin?view=menu&tab=drinks&isActive=true`
+  - Sort preferences: `/admin?view=menu&tab=drinks&sortBy=name&sortOrder=asc`
+- **Search Query Persistence**: Search queries persist in URL parameters
+  - Search example: `/admin?view=menu&tab=drinks&search=coffee`
+  - Search queries persist across tab switches and browser refresh
+- **Parameter Cleanup**: Tab-specific parameters are automatically cleaned when switching tabs
+  - Switching from Drinks tab removes category filter parameters
+  - Invalid parameters gracefully default to safe values
+- **Deep Linking**: Direct navigation to specific tab and filter combinations
+  - Shareable URLs for specific menu management views
+  - Bookmarkable states for frequently accessed filters
+- **User Experience Benefits**:
+  - No loss of navigation state on browser refresh
+  - Improved workflow efficiency for baristas
+  - Reduced frustration from losing applied filters
+  - Enhanced multi-tab browsing support
+
 ## Technical Implementation
 
 ### [State Management](#technical-state)
 - **Order Form State**: Multi-step form with persistent state
 - **Real-time Subscriptions**: Supabase real-time for order updates
 - **Session Management**: Browser sessionStorage for authentication persistence
+- **URL State Persistence**: React Router useSearchParams for navigation state
+  - Menu Management tab and filter state persisted in URL parameters
+  - Deep linking support for specific admin module views
+  - Automatic cleanup of tab-specific parameters during navigation
 
 ### [Data Flow](#technical-data-flow)
 1. **Guest Order**: Form → Validation → Supabase Insert → Real-time Update
@@ -348,4 +408,4 @@ Consider a queue with the following orders ahead:
 
 ---
 
-*This document reflects the current implementation as of August 26, 2025, updated to include configurable guest password bypass functionality. All features documented have been verified as working in the live application. For the latest updates, refer to the application overview and technical documentation.*
+*This document reflects the current implementation as of August 28, 2025, updated to include Menu Management URL persistence functionality and configurable guest password bypass. All features documented have been verified as working in the live application. For the latest updates, refer to the application overview and technical documentation.*

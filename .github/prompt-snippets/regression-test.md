@@ -1,4 +1,4 @@
-# Regression Test Methodology
+# Regression Testing
 
 Your task is to do a regression test of this application and ensure compliance with our [definition_of_done](/docs/specs/definition_of_done.md).
 
@@ -19,7 +19,7 @@ Refer to these documents for exploratory functional testing testing
 - [application_overview](/docs/specs/application_overview.md): high level description of the functional modules available, DO NOT include detailed features here.
 - [functional_specifications](/docs/specs/functional_specifications.md): documentation of all functional specifications, including detailed features.
 
-## Test and Fix Methodology
+## Regression Test Methodology
 
 When the app is properly running, use Playwright MCP to navigate to the specified module/requirement. Use playwright to go through every functionality and test if it is functioning correctly.
 
@@ -31,14 +31,10 @@ Create and update a running regression test report in `tests/outputs/regression-
 - Use the CLI if you need to know the current date and time.
 - See the latest report in `tests/outputs/regression-tests/*-regressiontest-log.md` and use it as a guide for your report format. You DO NOT have to follow this strictly, you are free to add/change/remove content depending on what you need to test.
 
-Use this report so you can keep track of the issues to resolve.
+Use this report so you can keep track of the issues to resolve. In fixing things, follow the [test-and-fix-methodology](./test-and-fix-methodology.md)
 
 - DO NOT assume that you can do everything first and only update this document in the end.
-- Update the report document everytime you make a change. 
-
-ALWAYS take a step back before fixing things, consider that the test script itself might be wrong and that's the one that you should fix. Sometimes the best way to fix a script is to understand the intent of the test script and simplify it. Avoid hardcoding dynamic data that comes from the database, REMEMBER that the data are dynamic and changing.
-
-Having said that, if you're done making changes, make sure to re-run all of the above tests and make sure you comply with the [definition_of_done](/docs/specs/definition_of_done.md). If you haven't, iterate again.
+- Update the report document everytime you make a change.
 
 After fixing everything, review the `yyyyMMddHHmm-regressiontest-log.md` report.
 

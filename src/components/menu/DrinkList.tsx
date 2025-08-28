@@ -9,11 +9,12 @@ interface DrinkListProps {
   onEdit: (_drink: Drink) => void
   onDelete: (_id: string) => void
   onManageOptions: (_drinkId: string) => void
-  selectedCategoryId?: string
-  onCategoryFilter: (_categoryId: string | undefined) => void
+  selectedCategoryName?: string
+  onCategoryFilter: (_categoryName: string | undefined) => void
   showOptionsPreview?: boolean
   isLoading?: boolean
   onDataChange?: () => void
+  searchQuery?: string
 }
 
 export const DrinkList: React.FC<DrinkListProps> = ({
@@ -22,36 +23,41 @@ export const DrinkList: React.FC<DrinkListProps> = ({
   onEdit: _onEdit,
   onDelete,
   onManageOptions,
-  selectedCategoryId,
+  selectedCategoryName,
   onCategoryFilter,
   showOptionsPreview = false,
   isLoading = false,
-  onDataChange
+  onDataChange,
+  searchQuery = ''
 }) => {
   const [showForm, setShowForm] = useState(false)
   const [editingDrink, setEditingDrink] = useState<Drink | null>(null)
-  const [searchQuery, setSearchQuery] = useState('')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
 
   // Filter drinks based on search query and category
   const filteredDrinks = useMemo(() => {
     let filtered = drinks
 
-    // Filter by category if selectedCategoryId is provided
-    if (selectedCategoryId) {
-      filtered = filtered.filter(drink => drink.category_id === selectedCategoryId)
+    // Filter by category if selectedCategoryName is provided
+    if (selectedCategoryName) {
+      filtered = filtered.filter(drink => {
+        // Find the category for this drink and compare names
+        const category = categories.find(cat => cat.id === drink.category_id)
+        return category?.name === selectedCategoryName
+      })
     }
 
     // Filter by search query
     if (searchQuery.trim()) {
+      const trimmedQuery = searchQuery.trim().toLowerCase()
       filtered = filtered.filter(drink =>
-        drink.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (drink.description && drink.description.toLowerCase().includes(searchQuery.toLowerCase()))
+        drink.name.toLowerCase().includes(trimmedQuery) ||
+        (drink.description && drink.description.toLowerCase().includes(trimmedQuery))
       )
     }
 
     return filtered
-  }, [drinks, searchQuery, selectedCategoryId])
+  }, [drinks, searchQuery, selectedCategoryName, categories])
 
   const handleAdd = () => {
     setEditingDrink(null)
@@ -96,16 +102,8 @@ export const DrinkList: React.FC<DrinkListProps> = ({
     }
   }
 
-  const handleClearSearchKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault()
-      setSearchQuery('')
-    }
-  }
-
   const handleClearAllFilters = () => {
     onCategoryFilter(undefined)
-    setSearchQuery('')
   }
 
   if (isLoading) {
@@ -161,19 +159,19 @@ export const DrinkList: React.FC<DrinkListProps> = ({
           <div className="flex gap-2">
             <select
               id="category-filter"
-              value={selectedCategoryId || ''}
+              value={selectedCategoryName || ''}
               onChange={(e) => onCategoryFilter(e.target.value || undefined)}
               className="flex-1 px-3 py-2 border border-coffee-300 rounded-md shadow-sm 
                        focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:border-coffee-500"
             >
               <option value="">All Categories</option>
               {categories.map((category) => (
-                <option key={category.id} value={category.id}>
+                <option key={category.id} value={category.name}>
                   {category.name}
                 </option>
               ))}
             </select>
-            {selectedCategoryId && (
+            {selectedCategoryName && (
               <button
                 onClick={handleClearFilter}
                 className="px-3 py-2 text-coffee-600 hover:text-coffee-800 focus:outline-none 
@@ -184,22 +182,6 @@ export const DrinkList: React.FC<DrinkListProps> = ({
               </button>
             )}
           </div>
-        </div>
-
-        {/* Search */}
-        <div className="flex-1">
-          <label htmlFor="search" className="block text-sm font-medium text-coffee-700 mb-1">
-            Search Drinks
-          </label>
-          <input
-            type="text"
-            id="search"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by name or description..."
-            className="w-full px-3 py-2 border border-coffee-300 rounded-md shadow-sm 
-                     focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:border-coffee-500"
-          />
         </div>
 
         {/* View Mode Toggle */}
@@ -238,12 +220,12 @@ export const DrinkList: React.FC<DrinkListProps> = ({
       </div>
 
       {/* Active Filter Display */}
-      {(selectedCategoryId || searchQuery.trim()) && (
+      {(selectedCategoryName || searchQuery.trim()) && (
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-sm text-coffee-600">Active filters:</span>
-          {selectedCategoryId && (
+          {selectedCategoryName && (
             <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-coffee-100 text-coffee-800">
-              Category: {categories.find(cat => cat.id === selectedCategoryId)?.name}
+              Category: {selectedCategoryName}
               <button
                 onClick={() => onCategoryFilter(undefined)}
                 onKeyDown={handleClearFilterKeyDown}
@@ -254,20 +236,7 @@ export const DrinkList: React.FC<DrinkListProps> = ({
               </button>
             </span>
           )}
-          {searchQuery.trim() && (
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800">
-              Search: "{searchQuery}"
-              <button
-                onClick={() => setSearchQuery('')}
-                onKeyDown={handleClearSearchKeyDown}
-                className="ml-2 text-blue-600 hover:text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
-                aria-label="Clear search"
-              >
-                ✕
-              </button>
-            </span>
-          )}
-          {(selectedCategoryId && searchQuery.trim()) && (
+          {selectedCategoryName && (
             <button
               onClick={handleClearAllFilters}
               className="px-3 py-1 text-sm text-coffee-600 hover:text-coffee-800 underline focus:outline-none focus:ring-2 focus:ring-coffee-500 rounded"
@@ -298,15 +267,15 @@ export const DrinkList: React.FC<DrinkListProps> = ({
             </svg>
           </div>
           <h3 className="text-lg font-semibold text-coffee-800 mb-2">
-            {searchQuery || selectedCategoryId ? 'No drinks found' : 'No drinks yet'}
+            {searchQuery || selectedCategoryName ? 'No drinks found' : 'No drinks yet'}
           </h3>
           <p className="text-coffee-600 mb-4">
-            {searchQuery || selectedCategoryId 
+            {searchQuery || selectedCategoryName 
               ? 'Try adjusting your search criteria or filters'
               : 'Create your first drink to get started'
             }
           </p>
-          {!searchQuery && !selectedCategoryId && (
+          {!searchQuery && !selectedCategoryName && (
             <button
               onClick={handleAdd}
               className="px-6 py-3 bg-coffee-600 text-white rounded-lg hover:bg-coffee-700 

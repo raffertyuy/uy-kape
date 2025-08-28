@@ -1,13 +1,19 @@
 import React, { useState } from 'react'
 import { DrinkCategoryList } from './DrinkCategoryList'
 import { useDrinkCategories, useUpdateDrinkCategory, useDeleteDrinkCategory } from '@/hooks/useMenuData'
-import type { DrinkCategory } from '@/types/menu.types'
+import type { DrinkCategory, MenuFilters } from '@/types/menu.types'
 
 interface DrinkCategoryManagementProps {
   onDataChange?: () => void
+  searchQuery?: string
+  filters?: MenuFilters
 }
 
-export const DrinkCategoryManagement: React.FC<DrinkCategoryManagementProps> = ({ onDataChange }) => {
+export const DrinkCategoryManagement: React.FC<DrinkCategoryManagementProps> = ({ 
+  onDataChange,
+  searchQuery = '',
+  filters = {}
+}) => {
   const { data: categories = [], isLoading, refetch: refetchCategories } = useDrinkCategories()
   
   const handleDataChange = () => {
@@ -57,6 +63,8 @@ export const DrinkCategoryManagement: React.FC<DrinkCategoryManagementProps> = (
       onReorder={handleReorder}
       onDataChange={handleDataChange}
       isLoading={isLoading}
+      searchQuery={searchQuery}
+      filters={filters}
     />
   )
 }

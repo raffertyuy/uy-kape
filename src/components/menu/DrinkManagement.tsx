@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import type { Drink } from '@/types/menu.types'
+import type { MenuFilters } from '@/components/menu/MenuSearch'
 import { DrinkList } from './DrinkList'
 import { DrinkOptionsManager } from './DrinkOptionsManager'
 import { ToggleSwitch } from '@/components/ui/ToggleSwitch'
@@ -12,9 +13,17 @@ import {
 
 interface DrinkManagementProps {
   onDataChange?: () => void
+  filters?: MenuFilters
+  onFilter?: (_filters: MenuFilters) => void
+  searchQuery?: string
 }
 
-export const DrinkManagement: React.FC<DrinkManagementProps> = ({ onDataChange }) => {
+export const DrinkManagement: React.FC<DrinkManagementProps> = ({ 
+  onDataChange, 
+  filters,
+  onFilter,
+  searchQuery = ''
+}) => {
   const [showOptionsPreview, setShowOptionsPreview] = useState(false)
   
   // Use different hooks based on preview preference
@@ -43,7 +52,9 @@ export const DrinkManagement: React.FC<DrinkManagementProps> = ({ onDataChange }
   const error = showOptionsPreview ? drinksWithOptionsError : regularDrinksError
   
   const [selectedDrink, setSelectedDrink] = useState<{ id: string; name: string } | null>(null)
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | undefined>(undefined)
+
+  // Use URL-based filters or fall back to empty state
+  const selectedCategoryName = filters?.categoryName
 
   // Create a data change handler that refreshes local data and calls parent callback
   const handleDataChange = React.useCallback(async () => {
@@ -88,8 +99,19 @@ export const DrinkManagement: React.FC<DrinkManagementProps> = ({ onDataChange }
     setSelectedDrink(null)
   }
 
-  const handleCategoryFilter = (categoryId: string | undefined) => {
-    setSelectedCategoryId(categoryId)
+  const handleCategoryFilter = (categoryName: string | undefined) => {
+    // Use URL-based filter handler if available
+    if (onFilter) {
+      const newFilters: MenuFilters = {
+        ...filters
+      }
+      if (categoryName) {
+        newFilters.categoryName = categoryName
+      } else {
+        delete newFilters.categoryName
+      }
+      onFilter(newFilters)
+    }
   }
 
   return (
@@ -145,7 +167,8 @@ export const DrinkManagement: React.FC<DrinkManagementProps> = ({ onDataChange }
         onDelete={handleDeleteDrink}
         onManageOptions={handleManageOptions}
         showOptionsPreview={showOptionsPreview}
-        {...(selectedCategoryId ? { selectedCategoryId } : {})}
+        searchQuery={searchQuery}
+        {...(selectedCategoryName ? { selectedCategoryName } : {})}
         onCategoryFilter={handleCategoryFilter}
         isLoading={isLoading}
         onDataChange={handleDataChange}

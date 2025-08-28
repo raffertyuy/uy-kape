@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 export interface MenuFilters {
   isActive?: boolean
-  categoryId?: string
+  categoryName?: string
   sortBy?: 'name' | 'created_at' | 'display_order'
   sortOrder?: 'asc' | 'desc'
 }
@@ -60,6 +60,7 @@ export const MenuSearch: React.FC<MenuSearchProps> = ({
             </svg>
           </div>
           <input
+            id="search"
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -139,13 +140,13 @@ export const MenuSearch: React.FC<MenuSearchProps> = ({
                 </label>
                 <select
                   id="category-filter"
-                  value={activeFilters.categoryId || ''}
-                  onChange={(e) => handleFilterChange('categoryId', e.target.value || undefined)}
+                  value={activeFilters.categoryName || ''}
+                  onChange={(e) => handleFilterChange('categoryName', e.target.value || undefined)}
                   className="w-full px-3 py-2 border border-coffee-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-coffee-500 focus:border-coffee-500 text-sm"
                 >
                   <option value="">All Categories</option>
                   {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
+                    <option key={category.id} value={category.name}>
                       {category.name}
                     </option>
                   ))}

@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import type { DrinkCategory } from '@/types/menu.types'
+import React, { useState, useMemo } from 'react'
+import type { DrinkCategory, MenuFilters } from '@/types/menu.types'
 import { DrinkCategoryCard } from './DrinkCategoryCard'
 import { DrinkCategoryForm } from './DrinkCategoryForm'
 
@@ -10,6 +10,8 @@ interface DrinkCategoryListProps {
   onReorder: (_reorderedCategories: DrinkCategory[]) => void
   onDataChange?: () => void
   isLoading?: boolean
+  searchQuery?: string
+  filters?: MenuFilters
 }
 
 export const DrinkCategoryList: React.FC<DrinkCategoryListProps> = ({
@@ -18,10 +20,55 @@ export const DrinkCategoryList: React.FC<DrinkCategoryListProps> = ({
   onDelete,
   onReorder: _onReorder,
   onDataChange,
-  isLoading = false
+  isLoading = false,
+  searchQuery = '',
+  filters = {}
 }) => {
   const [showForm, setShowForm] = useState(false)
   const [editingCategory, setEditingCategory] = useState<DrinkCategory | null>(null)
+
+  // Filter categories based on search query and filters
+  const filteredCategories = useMemo(() => {
+    let filtered = categories
+
+    // Filter by search query
+    if (searchQuery.trim()) {
+      filtered = filtered.filter(category =>
+        category.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (category.description && category.description.toLowerCase().includes(searchQuery.toLowerCase()))
+      )
+    }
+
+    // Filter by active status
+    if (filters.isActive !== undefined) {
+      filtered = filtered.filter(category => category.is_active === filters.isActive)
+    }
+
+    // Sort categories
+    const sortBy = filters.sortBy || 'display_order'
+    const sortOrder = filters.sortOrder || 'asc'
+
+    filtered.sort((a, b) => {
+      let compareValue = 0
+      
+      switch (sortBy) {
+        case 'name':
+          compareValue = a.name.localeCompare(b.name)
+          break
+        case 'created_at':
+          compareValue = new Date(a.created_at || '').getTime() - new Date(b.created_at || '').getTime()
+          break
+        case 'display_order':
+        default:
+          compareValue = (a.display_order || 0) - (b.display_order || 0)
+          break
+      }
+
+      return sortOrder === 'desc' ? -compareValue : compareValue
+    })
+
+    return filtered
+  }, [categories, searchQuery, filters])
 
   const handleAdd = () => {
     setEditingCategory(null)
@@ -87,7 +134,7 @@ export const DrinkCategoryList: React.FC<DrinkCategoryListProps> = ({
       </div>
 
       {/* Categories Grid */}
-      {categories.length === 0 ? (
+      {filteredCategories.length === 0 ? (
         <div className="text-center py-12">
           <div className="w-16 h-16 mx-auto mb-4 bg-coffee-100 rounded-full flex items-center justify-center">
             <svg
@@ -105,20 +152,29 @@ export const DrinkCategoryList: React.FC<DrinkCategoryListProps> = ({
               />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-coffee-800 mb-2">No categories yet</h3>
-          <p className="text-coffee-600 mb-4">Create your first drink category to get started</p>
-          <button
-            onClick={handleAdd}
-            className="px-6 py-3 bg-coffee-600 text-white rounded-lg hover:bg-coffee-700 
-                     focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:ring-offset-2
-                     transition-colors duration-200"
-          >
-            Create First Category
-          </button>
+          <h3 className="text-lg font-semibold text-coffee-800 mb-2">
+            {categories.length === 0 ? 'No categories yet' : 'No categories match your search'}
+          </h3>
+          <p className="text-coffee-600 mb-4">
+            {categories.length === 0 
+              ? 'Create your first drink category to get started' 
+              : 'Try adjusting your search criteria or filters'
+            }
+          </p>
+          {categories.length === 0 && (
+            <button
+              onClick={handleAdd}
+              className="px-6 py-3 bg-coffee-600 text-white rounded-lg hover:bg-coffee-700 
+                       focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:ring-offset-2
+                       transition-colors duration-200"
+            >
+              Create First Category
+            </button>
+          )}
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {categories.map((category) => (
+          {filteredCategories.map((category) => (
             <DrinkCategoryCard
               key={category.id}
               category={category}

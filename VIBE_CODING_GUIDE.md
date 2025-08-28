@@ -4,7 +4,7 @@ This app is **100% vibe coded!** using [GitHub Copilot](https://copilot.github.c
 
 Most of the features were implemented using the [plan-implement-run pattern](#vibe-coding-walkthrough-plan-implement-run). This starts with writing a task objective in [scratch.md](/scratch.md) and then running `/1-plan #file:scratch.md` in GitHub Copilot Chat.
 
-If you want to go straight to the prompts, theck out the files in the [.github/](/.github/) folder.
+If you want to go straight to the prompts, check out the files in the [.github/](/.github/) folder.
 
 ## Vibe Coding Walkthrough: Plan-Implement-Run
 

@@ -69,10 +69,10 @@ test.describe("Menu Management - Category Filter", () => {
     await expect(page.getByRole("heading", { name: "Milo" })).not.toBeVisible();
 
     // Should show search filter indicator
-    await expect(page.getByText('Search: "espresso"')).toBeVisible();
+    await expect(page.getByText("Active filters:")).toBeVisible();
 
-    // Clear search using the clear button
-    await page.getByRole("button", { name: "Clear search" }).click();
+    // Clear search using the clear button (X button in search input)
+    await page.locator("#search").clear();
     await page.waitForTimeout(500);
 
     // Should show all drinks again
