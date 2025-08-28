@@ -40,6 +40,10 @@ export default defineConfig({
     env: {
       NODE_ENV: "test",
       VITE_IS_TEST: "true",
+      // Disable telemetry in tests by default
+      VITE_VERCEL_TELEMETRY_ENABLED: "false",
+      VITE_SUPABASE_TELEMETRY_ENABLED: "false",
+      VITE_SLOW_QUERY_THRESHOLD: "500",
     },
     // Better error handling
     dangerouslyIgnoreUnhandledErrors: false,

@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import { appConfig } from "@/config/app.config";
+import { supabasePerformanceLogger as _perfLogger } from "@/utils/supabasePerformanceLogger";
 import type { OrderStatus } from "@/types/order.types";
 import type {
   AdminOrderError,
