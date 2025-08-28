@@ -143,6 +143,9 @@ export const DrinkOptionsManager: React.FC<DrinkOptionsManagerProps> = ({
       // All updates are already handled individually
       // This is more for UI feedback
       await new Promise(resolve => setTimeout(resolve, 500))
+      
+      // Close the modal after successful save
+      onClose()
     } finally {
       setIsSaving(false)
     }
