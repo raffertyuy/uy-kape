@@ -193,7 +193,11 @@ export const MenuManagement: React.FC = () => {
             ) : (
               <>
                 {activeTab === 'categories' && (
-                  <DrinkCategoryManagement onDataChange={handleDataChange} />
+                  <DrinkCategoryManagement 
+                    onDataChange={handleDataChange} 
+                    searchQuery={searchQuery}
+                    filters={filters}
+                  />
                 )}
 
                 {activeTab === 'drinks' && (
@@ -201,11 +205,16 @@ export const MenuManagement: React.FC = () => {
                     onDataChange={handleDataChange} 
                     filters={filters}
                     onFilter={handleFilter}
+                    searchQuery={searchQuery}
                   />
                 )}
 
                 {activeTab === 'options' && (
-                  <OptionManagement onDataChange={handleDataChange} />
+                  <OptionManagement 
+                    onDataChange={handleDataChange} 
+                    searchQuery={searchQuery}
+                    filters={filters}
+                  />
                 )}
               </>
             )}

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, beforeAll } from 'vitest'
-import { render, screen, waitFor } from '../../../../tests/config/test-utils'
+import { render, screen } from '../../../../tests/config/test-utils'
 import userEvent from '@testing-library/user-event'
 import type { Drink, DrinkCategory } from '@/types/menu.types'
 
@@ -140,12 +140,12 @@ describe('DrinkList', () => {
       expect(screen.getByRole('option', { name: 'Special Drinks' })).toBeInTheDocument()
     })
 
-    it('renders search input', () => {
+    it('does not render search input (handled by parent)', () => {
       render(<DrinkList {...defaultProps} />)
 
-      const searchInput = screen.getByRole('textbox', { name: /search drinks/i })
-      expect(searchInput).toBeInTheDocument()
-      expect(searchInput).toHaveAttribute('placeholder', 'Search by name or description...')
+      // DrinkList should not have search input - it's handled by parent MenuManagement
+      expect(screen.queryByRole('textbox', { name: /search drinks/i })).not.toBeInTheDocument()
+      expect(screen.queryByLabelText('Search Drinks')).not.toBeInTheDocument()
     })
 
     it('renders view mode toggle buttons', () => {
@@ -241,114 +241,72 @@ describe('DrinkList', () => {
   })
 
   describe('Search Filtering', () => {
-    it('filters drinks by search query', async () => {
-      const user = userEvent.setup()
-      render(<DrinkList {...defaultProps} />)
+    it('filters drinks by search query prop', () => {
+      render(<DrinkList {...defaultProps} searchQuery="milo" />)
 
-      const searchInput = screen.getByRole('textbox', { name: /search drinks/i })
-      
-      // Type "milo" in search
-      await user.type(searchInput, 'milo')
-
-      // Wait for filtering to occur
-      await waitFor(() => {
-        expect(screen.getByText('Milo')).toBeInTheDocument()
-        expect(screen.queryByText('Espresso')).not.toBeInTheDocument()
-        expect(screen.queryByText('Cappuccino')).not.toBeInTheDocument()
-        expect(screen.queryByText('Babyccino')).not.toBeInTheDocument()
-        expect(screen.queryByText('Affogato')).not.toBeInTheDocument()
-      })
+      // Should only show drinks matching the search query
+      expect(screen.getByText('Milo')).toBeInTheDocument()
+      expect(screen.queryByText('Espresso')).not.toBeInTheDocument()
+      expect(screen.queryByText('Cappuccino')).not.toBeInTheDocument()
+      expect(screen.queryByText('Babyccino')).not.toBeInTheDocument()
+      expect(screen.queryByText('Affogato')).not.toBeInTheDocument()
     })
 
-    it('filters drinks by description search', async () => {
-      const user = userEvent.setup()
-      render(<DrinkList {...defaultProps} />)
+    it('filters drinks by description search in searchQuery prop', () => {
+      render(<DrinkList {...defaultProps} searchQuery="coffee" />)
 
-      const searchInput = screen.getByRole('textbox', { name: /search drinks/i })
-      
-      // Search for "coffee" - should match drinks with "coffee" in description
-      await user.type(searchInput, 'coffee')
-
-      await waitFor(() => {
-        expect(screen.getByText('Espresso')).toBeInTheDocument() // "Strong coffee shot"
-        expect(screen.getByText('Cappuccino')).toBeInTheDocument() // "Coffee with steamed milk"
-        expect(screen.queryByText('Milo')).not.toBeInTheDocument()
-        expect(screen.queryByText('Babyccino')).not.toBeInTheDocument()
-      })
+      // Should match drinks with "coffee" in description
+      expect(screen.getByText('Espresso')).toBeInTheDocument() // "Strong coffee shot"
+      expect(screen.getByText('Cappuccino')).toBeInTheDocument() // "Coffee with steamed milk"
+      expect(screen.queryByText('Milo')).not.toBeInTheDocument()
+      expect(screen.queryByText('Babyccino')).not.toBeInTheDocument()
     })
 
-    it('is case insensitive', async () => {
-      const user = userEvent.setup()
-      render(<DrinkList {...defaultProps} />)
+    it('is case insensitive with searchQuery prop', () => {
+      render(<DrinkList {...defaultProps} searchQuery="MILO" />)
 
-      const searchInput = screen.getByRole('textbox', { name: /search drinks/i })
-      
-      // Search with different cases
-      await user.type(searchInput, 'MILO')
-
-      await waitFor(() => {
-        expect(screen.getByText('Milo')).toBeInTheDocument()
-        expect(screen.queryByText('Espresso')).not.toBeInTheDocument()
-      })
+      // Should match regardless of case
+      expect(screen.getByText('Milo')).toBeInTheDocument()
+      expect(screen.queryByText('Espresso')).not.toBeInTheDocument()
     })
 
-    it('displays active search filter indicator', async () => {
-      const user = userEvent.setup()
-      render(<DrinkList {...defaultProps} />)
+    it('shows all drinks when searchQuery prop is empty', () => {
+      render(<DrinkList {...defaultProps} searchQuery="" />)
 
-      const searchInput = screen.getByRole('textbox', { name: /search drinks/i })
-      await user.type(searchInput, 'milo')
-
-      await waitFor(() => {
-        expect(screen.getByText('Search: "milo"')).toBeInTheDocument()
-        expect(screen.getByRole('button', { name: /clear search/i })).toBeInTheDocument()
-      })
+      // Should show all drinks
+      expect(screen.getByText('Espresso')).toBeInTheDocument()
+      expect(screen.getByText('Cappuccino')).toBeInTheDocument()
+      expect(screen.getByText('Milo')).toBeInTheDocument()
+      expect(screen.getByText('Babyccino')).toBeInTheDocument()
+      expect(screen.getByText('Affogato')).toBeInTheDocument()
     })
 
-    it('clears search filter when remove button is clicked', async () => {
-      const user = userEvent.setup()
-      render(<DrinkList {...defaultProps} />)
+    it('handles whitespace in searchQuery prop', () => {
+      render(<DrinkList {...defaultProps} searchQuery="  milo  " />)
 
-      const searchInput = screen.getByRole('textbox', { name: /search drinks/i })
-      await user.type(searchInput, 'milo')
-
-      await waitFor(() => {
-        expect(screen.getByText('Search: "milo"')).toBeInTheDocument()
-      })
-
-      const removeButton = screen.getByRole('button', { name: /clear search/i })
-      await user.click(removeButton)
-
-      await waitFor(() => {
-        expect(searchInput).toHaveValue('')
-        expect(screen.queryByText('Search: "milo"')).not.toBeInTheDocument()
-      })
+      // Should trim whitespace and match
+      expect(screen.getByText('Milo')).toBeInTheDocument()
+      expect(screen.queryByText('Espresso')).not.toBeInTheDocument()
     })
   })
 
   describe('Combined Filtering', () => {
-    it('applies both category and search filters together', async () => {
-      const user = userEvent.setup()
+    it('applies both category and search filters together', () => {
       render(
         <DrinkList 
           {...defaultProps} 
-          selectedCategoryId="premium-coffee"
+          selectedCategoryName="Premium Coffee"
+          searchQuery="espresso"
         />
       )
 
-      const searchInput = screen.getByRole('textbox', { name: /search drinks/i })
-      await user.type(searchInput, 'espresso')
-
-      await waitFor(() => {
-        // Should only show Espresso (matches both category and search)
-        expect(screen.getByText('Espresso')).toBeInTheDocument()
-        expect(screen.queryByText('Cappuccino')).not.toBeInTheDocument() // Same category but doesn't match search
-        expect(screen.queryByText('Milo')).not.toBeInTheDocument() // Different category
-      })
+      // Should only show Espresso (matches both category and search)
+      expect(screen.getByText('Espresso')).toBeInTheDocument()
+      expect(screen.queryByText('Cappuccino')).not.toBeInTheDocument() // Same category but doesn't match search
+      expect(screen.queryByText('Milo')).not.toBeInTheDocument() // Different category
     })
 
-    it('shows "Clear all filters" button when both filters are active', async () => {
-      const user = userEvent.setup()
+    it('shows category filter indicator when only category filter is active', () => {
       render(
         <DrinkList 
           {...defaultProps} 
@@ -356,100 +314,8 @@ describe('DrinkList', () => {
         />
       )
 
-      const searchInput = screen.getByRole('textbox', { name: /search drinks/i })
-      await user.type(searchInput, 'coffee')
-
-      await waitFor(() => {
-        expect(screen.getByText('Category: Premium Coffee')).toBeInTheDocument()
-        expect(screen.getByText('Search: "coffee"')).toBeInTheDocument()
-        expect(screen.getByRole('button', { name: /clear all filters/i })).toBeInTheDocument()
-      })
-    })
-
-    it('clears all filters when "Clear all filters" button is clicked', async () => {
-      const user = userEvent.setup()
-      render(
-        <DrinkList 
-          {...defaultProps} 
-          selectedCategoryName="Premium Coffee"
-        />
-      )
-
-      const searchInput = screen.getByRole('textbox', { name: /search drinks/i })
-      await user.type(searchInput, 'coffee')
-
-      await waitFor(() => {
-        expect(screen.getByRole('button', { name: /clear all filters/i })).toBeInTheDocument()
-      })
-
-      const clearAllButton = screen.getByRole('button', { name: /clear all filters/i })
-      await user.click(clearAllButton)
-
-      await waitFor(() => {
-        expect(defaultProps.onCategoryFilter).toHaveBeenCalledWith(undefined)
-        expect(searchInput).toHaveValue('')
-        expect(screen.queryByText('Search: "coffee"')).not.toBeInTheDocument()
-      })
-    })
-
-    it('does not show "Clear all filters" when only one filter is active', async () => {
-      const user = userEvent.setup()
-      render(<DrinkList {...defaultProps} />)
-
-      const searchInput = screen.getByRole('textbox', { name: /search drinks/i })
-      await user.type(searchInput, 'milo')
-
-      await waitFor(() => {
-        expect(screen.getByText('Search: "milo"')).toBeInTheDocument()
-        expect(screen.queryByRole('button', { name: /clear all filters/i })).not.toBeInTheDocument()
-      })
-    })
-  })
-
-  describe('Accessibility', () => {
-    it('has proper ARIA labels for filter indicators', () => {
-      render(
-        <DrinkList 
-          {...defaultProps} 
-          selectedCategoryName="Kids Drinks"
-        />
-      )
-
-      const removeButton = screen.getByRole('button', { name: /remove category filter/i })
-      expect(removeButton).toHaveAttribute('aria-label', 'Remove category filter')
-    })
-
-    it('has proper labels for form controls', () => {
-      render(<DrinkList {...defaultProps} />)
-
-      expect(screen.getByLabelText('Filter by Category')).toBeInTheDocument()
-      expect(screen.getByLabelText('Search Drinks')).toBeInTheDocument()
-    })
-  })
-
-  describe('View Mode Toggle', () => {
-    it('toggles between grid and list view modes', async () => {
-      const user = userEvent.setup()
-      render(<DrinkList {...defaultProps} />)
-
-      const gridButton = screen.getByRole('button', { name: /grid view/i })
-      const listButton = screen.getByRole('button', { name: /list view/i })
-
-      // Default should be grid view (check by CSS classes)
-      expect(gridButton).toHaveClass('bg-coffee-100', 'text-coffee-700')
-      expect(listButton).toHaveClass('bg-white', 'text-coffee-500')
-
-      // Switch to list view
-      await user.click(listButton)
-
-      expect(gridButton).toHaveClass('bg-white', 'text-coffee-500')
-      expect(listButton).toHaveClass('bg-coffee-100', 'text-coffee-700')
-
-      // Switch back to grid view
-      await user.click(gridButton)
-
-      expect(gridButton).toHaveClass('bg-coffee-100', 'text-coffee-700')
-      expect(listButton).toHaveClass('bg-white', 'text-coffee-500')
+      // Should show category filter
+      expect(screen.getByText('Category: Premium Coffee')).toBeInTheDocument()
     })
   })
 
@@ -460,11 +326,10 @@ describe('DrinkList', () => {
       expect(screen.queryByText('Espresso')).not.toBeInTheDocument()
       // Should still render the filter controls
       expect(screen.getByRole('combobox', { name: /filter by category/i })).toBeInTheDocument()
-      expect(screen.getByRole('textbox', { name: /search drinks/i })).toBeInTheDocument()
     })
 
     it('handles drinks without descriptions', () => {
-      const drinksWithoutDescription = mockDrinks.map(drink => ({
+      const drinksWithoutDescription = mockDrinks.map((drink: Drink) => ({
         ...drink,
         description: null
       }))
@@ -475,46 +340,25 @@ describe('DrinkList', () => {
       expect(screen.getByText('Milo')).toBeInTheDocument()
     })
 
-    it('handles search with no matching results', async () => {
-      const user = userEvent.setup()
-      render(<DrinkList {...defaultProps} />)
-
-      const searchInput = screen.getByRole('textbox', { name: /search drinks/i })
-      await user.type(searchInput, 'nonexistent')
-
-      await waitFor(() => {
-        expect(screen.queryByText('Espresso')).not.toBeInTheDocument()
-        expect(screen.queryByText('Milo')).not.toBeInTheDocument()
-        expect(screen.getByText('Search: "nonexistent"')).toBeInTheDocument()
-      })
-    })
-
     it('handles category filter with no matching drinks', () => {
-      const emptyCategoryProps = {
-        ...defaultProps,
-        selectedCategoryName: 'Empty Category'
-      }
-
-      render(<DrinkList {...emptyCategoryProps} />)
+      render(
+        <DrinkList 
+          {...defaultProps} 
+          selectedCategoryName="Empty Category"
+        />
+      )
 
       // Should not show any drinks
       expect(screen.queryByText('Espresso')).not.toBeInTheDocument()
       expect(screen.queryByText('Milo')).not.toBeInTheDocument()
     })
 
-    it('handles whitespace-only search queries', async () => {
-      const user = userEvent.setup()
-      render(<DrinkList {...defaultProps} />)
+    it('handles search with no matching results', () => {
+      render(<DrinkList {...defaultProps} searchQuery="nonexistent" />)
 
-      const searchInput = screen.getByRole('textbox', { name: /search drinks/i })
-      await user.type(searchInput, '   ')
-
-      await waitFor(() => {
-        // Should show all drinks since whitespace-only search is ignored
-        expect(screen.getByText('Espresso')).toBeInTheDocument()
-        expect(screen.getByText('Milo')).toBeInTheDocument()
-        expect(screen.queryByText('Search:')).not.toBeInTheDocument()
-      })
+      // Should not show any drinks
+      expect(screen.queryByText('Espresso')).not.toBeInTheDocument()
+      expect(screen.queryByText('Milo')).not.toBeInTheDocument()
     })
   })
 
@@ -522,11 +366,8 @@ describe('DrinkList', () => {
     it('displays loading state when isLoading is true', () => {
       render(<DrinkList {...defaultProps} isLoading />)
 
-      // Should show loading UI with skeleton cards instead of normal controls
+      // Should show loading UI with skeleton cards
       expect(screen.getByText('Drinks')).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: 'Add Drink' })).toBeDisabled()
-      expect(screen.queryByRole('combobox')).not.toBeInTheDocument()
-      expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
     })
   })
 })

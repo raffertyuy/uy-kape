@@ -75,6 +75,9 @@ export interface MenuFilters {
   categoryName?: string;
   isActive?: boolean;
   search?: string;
+  sortBy?: "name" | "created_at" | "updated_at" | "display_order";
+  sortOrder?: "asc" | "desc";
+  status?: "all" | "active" | "inactive" | "required" | "optional";
 }
 
 // Validation result types

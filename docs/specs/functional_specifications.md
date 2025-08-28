@@ -222,6 +222,36 @@ Consider a queue with the following orders ahead:
 2. **Drinks** (17 total)  
 3. **Option Categories** (5 total)
 
+#### Unified Search and Filter System
+
+##### Centralized Search Architecture
+
+- **Single Search Interface**: Unified search box works across all three tabs
+- **Real-time Filtering**: Instant search results with debounced input (300ms delay)
+- **URL Persistence**: Search queries persist in URL parameters and browser refresh
+- **Cross-tab Consistency**: Search terms maintain across tab navigation
+- **Clear Functionality**: One-click search clearing with visual feedback
+
+##### Search Capabilities by Tab
+
+- **Drink Categories**: Search by category name and description
+  - Example: "coffee" matches both "Coffee" and "Special Coffee" categories
+  - Filters: Active/Inactive status, Sort by name/display order/creation date
+- **Drinks**: Search by drink name and description  
+  - Example: "espresso" matches "Espresso", "Espresso Macchiato", and drinks with espresso in description
+  - Additional Filters: Category selection, Active/Inactive status, Sort options
+- **Option Categories**: Search by option name and description
+  - Example: "shot" matches "Number of Shots" category
+  - Filters: Required/Optional status, Sort by name/display order/creation date
+
+##### Enhanced User Experience
+
+- **Active Filter Indicators**: Visual chips showing applied search terms
+- **Empty State Messaging**: Contextual messages for no results vs. no data
+- **Mobile Optimization**: Touch-friendly interface with proper input sizing
+- **Accessibility**: Full keyboard navigation and screen reader support
+- **Performance**: Optimized filtering using React useMemo for large datasets
+
 #### Drink Categories Management
 - **Category Display**: Shows all 4 categories:
   - Coffee: "Espresso-based and black coffee drinks"
@@ -254,8 +284,8 @@ Consider a queue with the following orders ahead:
     - Displays drink-specific defaults like "Tea Type: Jasmine Green Tea", "Ice Cream Flavor: Chocolate"
 - **Filtering and Search**:
   - Category filter dropdown
-  - Text search by drink name
-  - Real-time filtering
+  - **Unified Search Interface**: Single search box for text-based filtering
+  - Real-time filtering with instant results
 - **Actions Per Drink**:
   - Options: Manage drink-specific customization options
   - Edit: Modify drink details and preparation time

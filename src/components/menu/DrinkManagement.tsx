@@ -15,12 +15,14 @@ interface DrinkManagementProps {
   onDataChange?: () => void
   filters?: MenuFilters
   onFilter?: (_filters: MenuFilters) => void
+  searchQuery?: string
 }
 
 export const DrinkManagement: React.FC<DrinkManagementProps> = ({ 
   onDataChange, 
   filters,
-  onFilter 
+  onFilter,
+  searchQuery = ''
 }) => {
   const [showOptionsPreview, setShowOptionsPreview] = useState(false)
   
@@ -165,6 +167,7 @@ export const DrinkManagement: React.FC<DrinkManagementProps> = ({
         onDelete={handleDeleteDrink}
         onManageOptions={handleManageOptions}
         showOptionsPreview={showOptionsPreview}
+        searchQuery={searchQuery}
         {...(selectedCategoryName ? { selectedCategoryName } : {})}
         onCategoryFilter={handleCategoryFilter}
         isLoading={isLoading}

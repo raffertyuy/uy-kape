@@ -233,16 +233,9 @@ describe('DrinkList - Category Name Filter', () => {
       <DrinkList 
         {...defaultProps} 
         selectedCategoryName="Coffee"
+        searchQuery="Latte"
       />
     )
-
-    // Should show Coffee category drinks initially
-    expect(screen.getByText('Espresso')).toBeInTheDocument()
-    expect(screen.getByText('Latte')).toBeInTheDocument()
-
-    // Search for "Latte"
-    const searchInput = screen.getByLabelText('Search Drinks')
-    fireEvent.change(searchInput, { target: { value: 'Latte' } })
 
     // Should show only Latte (from Coffee category matching search)
     expect(screen.getByText('Latte')).toBeInTheDocument()
