@@ -6,6 +6,8 @@
 
 **Uy, Kape!** is a coffee-ordering system for _coffee prosumers_ who want to give **visitors** to their **home** a fancy online ordering system with professional branding. All menu items are free, the intent is to give the coffee barista a way to track guest orders based on what is available at home for the day.
 
+[![Watch the video](https://img.youtube.com/vi/cu0khFS9cM0/hqdefault.jpg)](https://www.youtube.com/embed/cu0khFS9cM0)
+
 ## Vibe Coding
 
 This app is **100% vibe coded!** using [GitHub Copilot](https://copilot.github.com). We do this mostly by following the [plan-implement-run pattern](https://raffertyuy.com/raztype/vibe-coding-plan-implement-run/).

@@ -27,6 +27,8 @@ We started with project by building the foundations for the plan-implement-run p
 
 This will generate a new plan in [/docs/plans/](/docs/plans/). Review the generated plan and  keep iterating with the agent on what needs to be revised.
 
+[![Watch the video](https://img.youtube.com/vi/X8VQU6adcj0/hqdefault.jpg)](https://www.youtube.com/embed/X8VQU6adcj0)
+
 > [!TIP]
 > To see previously generated plans, check out the [/docs/plans/](/docs/plans/) folder.
 
@@ -39,6 +41,8 @@ At this point, you may want to commit the generated plan in a new branch. `/util
 ```
 
 This will begin the implementation process based on the plan.
+
+[![Watch the video](https://img.youtube.com/vi/Kd6PL9QnrCY/hqdefault.jpg)](https://www.youtube.com/embed/Kd6PL9QnrCY)
 
 > [!TIP]
 > If you are able, it is useful to actively read and check what the agent is doing. If you see that it is going the wrong direction, press the **STOP** button in the Copilot Chat panel and correct its course. Here are frequent interruption messages used while implementing this:
@@ -57,6 +61,8 @@ As the agent goes through the implementation plan, it will occassionally _"summa
 /continue-implementation-plan
 ```
 
+[![Watch the video](https://img.youtube.com/vi/UXekqsU5HLE/hqdefault.jpg)](https://www.youtube.com/embed/UXekqsU5HLE)
+
 > [!NOTE]
 > This is the reason why we have repeated **"Additional Instructions"** on every step of the [plan](/.github/prompts/1-plan.prompt.md). We are assuming that the agent might summarize certain general instructions (Not sure, but I'm assuming that it might also summarize the instructions in [copilot-instructions](/.github/copilot-instructions.md)).
 
@@ -67,6 +73,8 @@ Once implementation is done, do a final check and run using this prompt:
 ```text
 /3-run
 ```
+
+[![Watch the video](https://img.youtube.com/vi/heAnUYVfZU0/hqdefault.jpg)](https://www.youtube.com/embed/heAnUYVfZU0)
 
 This runs the app according to the [regression testing methodology](/.github/prompt-snippets/regression-test.md), and fixes any issues that it encounters. This includes validating if implementation complies with this project's [definition of done](/docs/specs/definition_of_done.md).
 
@@ -95,6 +103,8 @@ Once the functional documents are updated, you can try running a full regression
 ```text
 /regression-test
 ```
+
+[![Watch the video](https://img.youtube.com/vi/BumeF0M-7Eo/hqdefault.jpg)](https://www.youtube.com/embed/BumeF0M-7Eo)
 
 > [!WARNING]
 > The agent end with a response saying that your app is _"PRODUCTION READY"_. I do not agree with this as there are still many considerations to truly make an app production ready.
