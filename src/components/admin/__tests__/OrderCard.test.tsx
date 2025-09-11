@@ -38,6 +38,12 @@ describe('OrderCard', () => {
       )
     }))
 
+    vi.doMock('../GuestNameDisplay', () => ({
+      GuestNameDisplay: ({ guestName }: { guestName: string }) => (
+        <div data-testid="guest-name-display">{guestName}</div>
+      )
+    }))
+
     // Import component after mocking
     const orderCardModule = await import('../OrderCard')
     OrderCard = orderCardModule.OrderCard
@@ -48,6 +54,7 @@ describe('OrderCard', () => {
     vi.doUnmock('@/utils/queueUtils')
     vi.doUnmock('../OrderStatusBadge')
     vi.doUnmock('../QueuePosition')
+    vi.doUnmock('../GuestNameDisplay')
   })
 
   const mockOrder: AdminOrderListItem = {
@@ -87,6 +94,20 @@ describe('OrderCard', () => {
   })
 
   describe('Rendering', () => {
+    it('should use GuestNameDisplay component for guest name', () => {
+      render(
+        <OrderCard
+          order={mockOrder}
+          onStatusUpdate={mockOnStatusUpdate}
+          onSelect={mockOnSelect}
+          isSelected={false}
+        />
+      )
+
+      expect(screen.getByTestId('guest-name-display')).toBeInTheDocument()
+      expect(screen.getByTestId('guest-name-display')).toHaveTextContent('John Doe')
+    })
+
     it('should render order information correctly', () => {
       render(
         <OrderCard

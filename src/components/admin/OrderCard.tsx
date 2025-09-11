@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils'
 import { OrderStatusBadge } from './OrderStatusBadge'
 import { QueuePosition, QueuePriorityIndicator } from './QueuePosition'
+import { GuestNameDisplay } from './GuestNameDisplay'
 import { calculateEstimatedTime } from '@/utils/queueUtils'
 import type { AdminOrderListItem } from '@/types/admin.types'
 import type { OrderStatus } from '@/types/order.types'
@@ -87,9 +88,11 @@ export const OrderCard = ({
             />
           )}
           <div className="min-w-0 flex-1">
-            <h3 className="font-semibold text-gray-900 truncate">
-              {order.guest_name}
-            </h3>
+            <GuestNameDisplay 
+              guestName={order.guest_name} 
+              textClassName="font-semibold text-gray-900"
+              maxWidth="100%"
+            />
             <p className="text-sm text-gray-500 truncate">
               Order #{order.id.slice(-8)}
             </p>
