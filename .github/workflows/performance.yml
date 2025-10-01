@@ -62,7 +62,7 @@ jobs:
           echo "DYNAMIC_IMPORTS=$DYNAMIC_IMPORTS" >> $GITHUB_ENV
 
       - name: Update or create performance comment
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const { BUILD_SIZE, JS_COUNT, CSS_COUNT, LARGE_FILES, LAZY_COUNT, DYNAMIC_IMPORTS } = process.env;
