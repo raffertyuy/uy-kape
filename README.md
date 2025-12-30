@@ -128,3 +128,33 @@ _For detailed version information, architectural decisions, and configuration de
 - `npm run build` - Build the project for production
 - `npm run preview` - Preview the production build locally
 - `npm run lint` - Run ESLint to check code quality
+- `npm run ping-database` - Manually ping the database to keep it active
+
+## Database Maintenance
+
+This project uses a Supabase database on a free plan, which automatically disables after 7 days of inactivity. To prevent this, a GitHub Actions workflow runs daily to keep the database active by executing simple SELECT queries on the drinks and orders tables.
+
+### GitHub Secrets Required
+
+The automated workflow requires the following secrets to be configured in your GitHub repository (Settings → Secrets and variables → Actions):
+
+- `SUPABASE_URL`: Your Supabase project URL
+- `SUPABASE_ANON_KEY`: Your Supabase anonymous key (safe for read-only operations)
+
+### Manual Testing
+
+You can manually trigger the workflow from the GitHub Actions tab, or run the script locally:
+
+```bash
+# Option 1: Use environment variables directly
+export SUPABASE_URL=your_url
+export SUPABASE_ANON_KEY=your_key
+npm run ping-database
+
+# Option 2: Create a .env file in the scripts directory
+cp scripts/.env.example scripts/.env
+# Edit scripts/.env with your credentials
+npm run ping-database
+```
+
+The workflow also supports manual triggering via the GitHub Actions "workflow_dispatch" event for testing purposes.
