@@ -186,6 +186,7 @@ export default [
       'node_modules/',
       '.vite/',
       'supabase/.temp/',
+      'scripts/',
       '*.d.ts',
     ],
   },
