@@ -24,7 +24,7 @@ jobs:
           cache: "npm"
 
       - name: Cache Vite build for performance analysis
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.npm
