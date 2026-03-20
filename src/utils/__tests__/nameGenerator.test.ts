@@ -1,166 +1,244 @@
-import { describe, it, expect } from 'vitest'
-import { generateFunnyGuestName, isGeneratedFunnyName } from '../nameGenerator'
+import { describe, expect, it } from "vitest";
+import {
+  generateFunnyGuestName,
+  generateGuestName,
+  generateHackerGuestName,
+  isGeneratedFunnyName,
+} from "../nameGenerator";
 
-describe('nameGenerator', () => {
-  describe('generateFunnyGuestName', () => {
-    it('should generate a non-empty string', () => {
-      const name = generateFunnyGuestName()
-      expect(name).toBeDefined()
-      expect(typeof name).toBe('string')
-      expect(name.length).toBeGreaterThan(0)
-    })
+describe("nameGenerator", () => {
+  describe("generateFunnyGuestName", () => {
+    it("should generate a non-empty string", () => {
+      const name = generateFunnyGuestName();
+      expect(name).toBeDefined();
+      expect(typeof name).toBe("string");
+      expect(name.length).toBeGreaterThan(0);
+    });
 
-    it('should generate different names on multiple calls', () => {
-      const names = Array.from({ length: 10 }, () => generateFunnyGuestName())
-      const uniqueNames = new Set(names)
-      
+    it("should generate different names on multiple calls", () => {
+      const names = Array.from({ length: 10 }, () => generateFunnyGuestName());
+      const uniqueNames = new Set(names);
+
       // Should have some variety (not all identical)
       // With random generation, we expect some uniqueness
-      expect(uniqueNames.size).toBeGreaterThan(1)
-    })
+      expect(uniqueNames.size).toBeGreaterThan(1);
+    });
 
-    it('should generate names with coffee-themed superhero elements', () => {
+    it("should generate names with coffee-themed superhero elements", () => {
       // Generate multiple names to test different patterns
-      const names = Array.from({ length: 20 }, () => generateFunnyGuestName())
-      
+      const names = Array.from({ length: 20 }, () => generateFunnyGuestName());
+
       // Superhero titles that should appear in generated names
-      const superheroTitlesRegex = /\b(the|captain|professor|doctor|master|super|ultra|mega|supreme)\b/i
-      
+      const superheroTitlesRegex =
+        /\b(the|captain|professor|doctor|master|super|ultra|mega|supreme)\b/i;
+
       // Coffee-themed terms that should appear in generated names
-      const coffeeTermsRegex = /\b(bean|brew|roast|grind|steam|crema|froth|drip|blend|shot|sip|cup|mug|filter|press|latte|mocha|macchiato|americano|cortado|espresso|caffeine|coffee|milk|sugar|foam|aroma|barista)\b/i
-      
+      const coffeeTermsRegex =
+        /\b(bean|brew|roast|grind|steam|crema|froth|drip|blend|shot|sip|cup|mug|filter|press|latte|mocha|macchiato|americano|cortado|espresso|caffeine|coffee|milk|sugar|foam|aroma|barista)\b/i;
+
       // Superhero actions that should appear in generated names
-      const superheroActionsRegex = /\b(roaster|brewer|grinder|steamer|burner|monster|master|guardian|defender|warrior|fighter|hunter|crusher|blaster|slayer|bringer|keeper|wielder|commander|destroyer)\b/i
-      
+      const superheroActionsRegex =
+        /\b(roaster|brewer|grinder|steamer|burner|monster|master|guardian|defender|warrior|fighter|hunter|crusher|blaster|slayer|bringer|keeper|wielder|commander|destroyer)\b/i;
+
       // Most names should contain superhero titles and coffee/action terms
-      const superheroNameCount = names.filter(name => 
-        superheroTitlesRegex.test(name) && (coffeeTermsRegex.test(name) || superheroActionsRegex.test(name))
-      ).length
-      
-      expect(superheroNameCount).toBeGreaterThan(names.length * 0.8) // At least 80% should follow superhero pattern
-    })
+      const superheroNameCount =
+        names.filter((name) =>
+          superheroTitlesRegex.test(name) &&
+          (coffeeTermsRegex.test(name) || superheroActionsRegex.test(name))
+        ).length;
 
-    it('should generate names with proper formatting', () => {
-      const names = Array.from({ length: 10 }, () => generateFunnyGuestName())
-      
-      names.forEach(name => {
+      expect(superheroNameCount).toBeGreaterThan(names.length * 0.8); // At least 80% should follow superhero pattern
+    });
+
+    it("should generate names with proper formatting", () => {
+      const names = Array.from({ length: 10 }, () => generateFunnyGuestName());
+
+      names.forEach((name) => {
         // Should not start or end with spaces
-        expect(name.trim()).toBe(name)
-        
-        // Should contain at least one letter
-        expect(/[a-zA-Z]/.test(name)).toBe(true)
-        
-        // Should not be excessively long
-        expect(name.length).toBeLessThan(100)
-      })
-    })
+        expect(name.trim()).toBe(name);
 
-    it('should handle different superhero name formats', () => {
+        // Should contain at least one letter
+        expect(/[a-zA-Z]/.test(name)).toBe(true);
+
+        // Should not be excessively long
+        expect(name.length).toBeLessThan(100);
+      });
+    });
+
+    it("should handle different superhero name formats", () => {
       // Generate many names to see format variety
-      const names = Array.from({ length: 50 }, () => generateFunnyGuestName())
-      
+      const names = Array.from({ length: 50 }, () => generateFunnyGuestName());
+
       // Count different superhero patterns
       const patterns = {
-        thePattern: names.filter(name => name.toLowerCase().startsWith('the ')).length,
-        titlePattern: names.filter(name => /^(captain|professor|doctor|master|super|ultra|mega|supreme)\s/i.test(name)).length,
-        threeWords: names.filter(name => name.split(' ').length === 3).length,
-        twoWords: names.filter(name => name.split(' ').length === 2).length
-      }
-      
+        thePattern:
+          names.filter((name) => name.toLowerCase().startsWith("the ")).length,
+        titlePattern:
+          names.filter((name) =>
+            /^(captain|professor|doctor|master|super|ultra|mega|supreme)\s/i
+              .test(name)
+          ).length,
+        threeWords: names.filter((name) => name.split(" ").length === 3).length,
+        twoWords: names.filter((name) => name.split(" ").length === 2).length,
+      };
+
       // Should have variety in superhero name formats
-      expect(patterns.thePattern).toBeGreaterThan(0) // Should have some "The [Descriptor] [Action]" names
-      expect(patterns.titlePattern).toBeGreaterThan(0) // Should have some "[Title] [Descriptor/Action]" names
-      expect(patterns.twoWords).toBeGreaterThan(0) // Should have some 2-word names
-      expect(patterns.threeWords).toBeGreaterThan(0) // Should have some 3-word names
-    })
-  })
+      expect(patterns.thePattern).toBeGreaterThan(0); // Should have some "The [Descriptor] [Action]" names
+      expect(patterns.titlePattern).toBeGreaterThan(0); // Should have some "[Title] [Descriptor/Action]" names
+      expect(patterns.twoWords).toBeGreaterThan(0); // Should have some 2-word names
+      expect(patterns.threeWords).toBeGreaterThan(0); // Should have some 3-word names
+    });
+  });
 
-  describe('isGeneratedFunnyName', () => {
-    it('should return false for empty or invalid input', () => {
-      expect(isGeneratedFunnyName('')).toBe(false)
-      expect(isGeneratedFunnyName(null as any)).toBe(false)
-      expect(isGeneratedFunnyName(undefined as any)).toBe(false)
-      expect(isGeneratedFunnyName(123 as any)).toBe(false)
-    })
+  describe("isGeneratedFunnyName", () => {
+    it("should return false for empty or invalid input", () => {
+      expect(isGeneratedFunnyName("")).toBe(false);
+      expect(isGeneratedFunnyName(null as any)).toBe(false);
+      expect(isGeneratedFunnyName(undefined as any)).toBe(false);
+      expect(isGeneratedFunnyName(123 as any)).toBe(false);
+    });
 
-    it('should return false for regular human names', () => {
+    it("should return false for regular human names", () => {
       const regularNames = [
-        'John Doe',
-        'Mary Smith',
-        'David Johnson',
-        'Sarah Wilson',
-        'Michael Brown',
-        'Jessica Davis'
-      ]
+        "John Doe",
+        "Mary Smith",
+        "David Johnson",
+        "Sarah Wilson",
+        "Michael Brown",
+        "Jessica Davis",
+      ];
 
-      regularNames.forEach(name => {
-        expect(isGeneratedFunnyName(name)).toBe(false)
-      })
-    })
+      regularNames.forEach((name) => {
+        expect(isGeneratedFunnyName(name)).toBe(false);
+      });
+    });
 
-    it('should return true for superhero coffee names', () => {
+    it("should return true for superhero coffee names", () => {
       const superheroNames = [
-        'The Bean Roaster',
-        'Captain Caffeine Monster',
-        'Professor Milk Steamer',
-        'Doctor Coffee Crusher',
-        'Master Espresso Guardian',
-        'The Latte Defender',
-        'Super Brew Monster'
-      ]
+        "The Bean Roaster",
+        "Captain Caffeine Monster",
+        "Professor Milk Steamer",
+        "Doctor Coffee Crusher",
+        "Master Espresso Guardian",
+        "The Latte Defender",
+        "Super Brew Monster",
+      ];
 
-      superheroNames.forEach(name => {
-        expect(isGeneratedFunnyName(name)).toBe(true)
-      })
-    })
+      superheroNames.forEach((name) => {
+        expect(isGeneratedFunnyName(name)).toBe(true);
+      });
+    });
 
-    it('should return false for names with only one coffee/superhero element', () => {
+    it("should return false for names with only one coffee/superhero element", () => {
       const singleElementNames = [
-        'John Bean', // Only one coffee word
-        'Mary Captain', // Only one superhero word
-        'The Johnson', // The + regular surname
-        'Doctor Smith' // Title + regular surname
-      ]
+        "John Bean", // Only one coffee word
+        "Mary Captain", // Only one superhero word
+        "The Johnson", // The + regular surname
+        "Doctor Smith", // Title + regular surname
+      ];
 
-      singleElementNames.forEach(name => {
-        expect(isGeneratedFunnyName(name)).toBe(false)
-      })
-    })
+      singleElementNames.forEach((name) => {
+        expect(isGeneratedFunnyName(name)).toBe(false);
+      });
+    });
 
-    it('should be case insensitive', () => {
-      expect(isGeneratedFunnyName('THE BEAN ROASTER')).toBe(true)
-      expect(isGeneratedFunnyName('the bean roaster')).toBe(true)
-      expect(isGeneratedFunnyName('The Bean Roaster')).toBe(true)
-      expect(isGeneratedFunnyName('CAPTAIN CAFFEINE MONSTER')).toBe(true)
-    })
+    it("should be case insensitive", () => {
+      expect(isGeneratedFunnyName("THE BEAN ROASTER")).toBe(true);
+      expect(isGeneratedFunnyName("the bean roaster")).toBe(true);
+      expect(isGeneratedFunnyName("The Bean Roaster")).toBe(true);
+      expect(isGeneratedFunnyName("CAPTAIN CAFFEINE MONSTER")).toBe(true);
+    });
 
-    it('should work with generated superhero names', () => {
+    it("should work with generated superhero names", () => {
       // Test with actual generated names
-      const generatedNames = Array.from({ length: 20 }, () => generateFunnyGuestName())
-      
-      // Most generated superhero names should be detected as such
-      const detectedCount = generatedNames.filter(name => 
-        isGeneratedFunnyName(name)
-      ).length
-      
-      // Should detect most generated names as superhero names
-      expect(detectedCount).toBeGreaterThan(generatedNames.length * 0.8)
-    })
+      const generatedNames = Array.from(
+        { length: 20 },
+        () => generateFunnyGuestName(),
+      );
 
-    it('should handle partial matches correctly', () => {
+      // Most generated superhero names should be detected as such
+      const detectedCount =
+        generatedNames.filter((name) => isGeneratedFunnyName(name)).length;
+
+      // Should detect most generated names as superhero names
+      expect(detectedCount).toBeGreaterThan(generatedNames.length * 0.8);
+    });
+
+    it("should handle partial matches correctly", () => {
       // Names that might have coffee/superhero words but aren't actually generated superhero names
       const partialMatches = [
-        'Bean Smith', // Has coffee word but only one element
-        'Coffee Shop', // Has coffee reference but not superhero format
-        'John Brewster', // Contains 'brew' but as part of surname
-        'Captain America', // Has title but not coffee-themed
-        'The Beatles' // Has 'The' but not coffee/superhero themed
-      ]
+        "Bean Smith", // Has coffee word but only one element
+        "Coffee Shop", // Has coffee reference but not superhero format
+        "John Brewster", // Contains 'brew' but as part of surname
+        "Captain America", // Has title but not coffee-themed
+        "The Beatles", // Has 'The' but not coffee/superhero themed
+      ];
 
-      partialMatches.forEach(name => {
+      partialMatches.forEach((name) => {
         // These should not be considered generated superhero names
-        expect(isGeneratedFunnyName(name)).toBe(false)
-      })
-    })
-  })
-})
+        expect(isGeneratedFunnyName(name)).toBe(false);
+      });
+    });
+  });
+
+  describe("generateHackerGuestName", () => {
+    it("returns a non-empty string", () => {
+      const name = generateHackerGuestName();
+      expect(typeof name).toBe("string");
+      expect(name.length).toBeGreaterThan(0);
+    });
+
+    it("contains hacker-themed terms", () => {
+      const names = Array.from({ length: 20 }, () => generateHackerGuestName());
+      const hackerTerms =
+        /\b(shadow|phantom|ghost|null|void|cipher|binary|toxic|rogue|stealth|poisonous|corrupted|crashed|infected|malicious|broken|hacker|byte|exploit|daemon|bot|script|overflow|cache|loop|stack|register|bit|kernel|rootkit|payload|glitch)\b/i;
+      names.forEach((name) => {
+        expect(hackerTerms.test(name)).toBe(true);
+      });
+    });
+
+    it("produces varied names across multiple calls", () => {
+      const names = Array.from({ length: 20 }, () => generateHackerGuestName());
+      const unique = new Set(names);
+      expect(unique.size).toBeGreaterThan(1);
+    });
+
+    it("contains only letters and spaces (passes guest name validation)", () => {
+      const names = Array.from({ length: 20 }, () => generateHackerGuestName());
+      names.forEach((name) => {
+        expect(/^[a-zA-Z\s]+$/.test(name)).toBe(true);
+      });
+    });
+  });
+
+  describe("generateGuestName", () => {
+    it("calls generateFunnyGuestName logic when isHackedMode is false", () => {
+      const name = generateGuestName(false);
+      expect(typeof name).toBe("string");
+      expect(name.length).toBeGreaterThan(0);
+    });
+
+    it("calls generateHackerGuestName logic when isHackedMode is true", () => {
+      const hackerTerms =
+        /\b(shadow|phantom|ghost|null|void|cipher|binary|toxic|rogue|stealth|poisonous|corrupted|crashed|infected|malicious|broken|hacker|byte|exploit|daemon|bot|script|overflow|cache|loop|stack|register|bit|kernel|rootkit|payload|glitch)\b/i;
+      const names = Array.from({ length: 10 }, () => generateGuestName(true));
+      // Most results should contain hacker terms
+      const hackerNameCount = names.filter((n) => hackerTerms.test(n)).length;
+      expect(hackerNameCount).toBeGreaterThan(names.length * 0.8);
+    });
+
+    it("produces different name pools for false vs true", () => {
+      const normalNames = Array.from(
+        { length: 10 },
+        () => generateGuestName(false),
+      );
+      const hackerNames = Array.from(
+        { length: 10 },
+        () => generateGuestName(true),
+      );
+      // The two sets should be meaningfully different (not the same distributions)
+      const overlap = normalNames.filter((n) => hackerNames.includes(n));
+      expect(overlap.length).toBeLessThan(5);
+    });
+  });
+});

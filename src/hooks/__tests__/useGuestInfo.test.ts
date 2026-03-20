@@ -16,6 +16,7 @@ describe("useGuestInfo", () => {
     // Mock the nameGenerator utilities
     vi.doMock("@/utils/nameGenerator", () => ({
       generateFunnyGuestName: vi.fn(() => "The Bean Roaster"),
+      generateGuestName: vi.fn(() => "The Bean Roaster"),
       isGeneratedFunnyName: vi.fn((name: string) =>
         name.includes("The Bean Roaster") ||
         name.includes("Captain") ||

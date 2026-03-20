@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -44,9 +45,10 @@
   --radius-xl: 0.75rem;
 
   /* Shadows */
-  --shadow-coffee: 0 4px 6px -1px rgba(77, 44, 26, 0.1),
-    0 2px 4px -1px rgba(77, 44, 26, 0.06);
-  --shadow-coffee-lg: 0 10px 15px -3px rgba(77, 44, 26, 0.1),
+  --shadow-coffee:
+    0 4px 6px -1px rgba(77, 44, 26, 0.1), 0 2px 4px -1px rgba(77, 44, 26, 0.06);
+  --shadow-coffee-lg:
+    0 10px 15px -3px rgba(77, 44, 26, 0.1),
     0 4px 6px -2px rgba(77, 44, 26, 0.05);
 }
 
@@ -69,8 +71,18 @@ html {
 
 body {
   margin: 0;
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Roboto",
+    "Oxygen",
+    "Ubuntu",
+    "Cantarell",
+    "Fira Sans",
+    "Droid Sans",
+    "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -154,4 +166,165 @@ body {
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none; /* Safari and Chrome */
+}
+
+/* ======================================================
+   HACKED MODE: Global theme override (Easter Egg)
+   Applied via html.hacked-mode class toggled by HackedModeContext
+   Covers the entire site — guest flow AND admin module.
+   Approach: CSS class overrides on Tailwind utility patterns.
+   ====================================================== */
+
+/* Base — entire page */
+html.hacked-mode,
+html.hacked-mode body {
+  background-color: #0d0d0d !important;
+  color: #39d353 !important;
+  font-family: "Share Tech Mono", monospace !important;
+}
+
+/* Override dark-mode force rules under hacked mode */
+@media (prefers-color-scheme: dark) {
+  html.hacked-mode body {
+    background-color: #0d0d0d !important;
+    color: #39d353 !important;
+  }
+}
+
+/* Panels and nav bars — one step lighter than the page */
+html.hacked-mode [class*="bg-coffee"],
+html.hacked-mode [class*="bg-slate"] {
+  background-color: #111111 !important;
+  border-color: #1d4a29 !important;
+}
+
+/* Inner cards and content boxes — two steps lighter */
+html.hacked-mode .bg-white,
+html.hacked-mode [class*="bg-gray"],
+html.hacked-mode [class*="bg-zinc"] {
+  background-color: #161616 !important;
+  border-color: #1d4a29 !important;
+}
+
+/* Gradient backgrounds (e.g., WelcomePage) */
+html.hacked-mode [class*="from-coffee"],
+html.hacked-mode [class*="to-coffee"],
+html.hacked-mode [class*="via-coffee"] {
+  --tw-gradient-from: #0d0d0d !important;
+  --tw-gradient-to: #111111 !important;
+  background-image: none !important;
+  background-color: #0d0d0d !important;
+}
+
+/* Text — all themed colours to green */
+html.hacked-mode [class*="text-coffee"],
+html.hacked-mode [class*="text-gray"],
+html.hacked-mode [class*="text-slate"],
+html.hacked-mode [class*="text-black"],
+html.hacked-mode [class*="text-white"],
+html.hacked-mode [class*="text-zinc"] {
+  color: #39d353 !important;
+}
+
+/* Borders */
+html.hacked-mode [class*="border-coffee"],
+html.hacked-mode [class*="border-gray"],
+html.hacked-mode [class*="border-slate"],
+html.hacked-mode .border {
+  border-color: #1d4a29 !important;
+}
+
+/* Buttons and primary actions */
+html.hacked-mode button,
+html.hacked-mode [class*="bg-coffee-6"],
+html.hacked-mode [class*="bg-coffee-7"],
+html.hacked-mode [class*="bg-coffee-8"] {
+  background-color: #0e1f12 !important;
+  border: 1px solid #39d353 !important;
+  color: #39d353 !important;
+}
+
+html.hacked-mode button:hover {
+  background-color: #1a3320 !important;
+}
+
+/* Links styled as buttons (e.g., WelcomePage Link components) */
+html.hacked-mode a[class*="bg-coffee"],
+html.hacked-mode a[class*="bg-gray"] {
+  background-color: #0e1f12 !important;
+  border: 1px solid #39d353 !important;
+  color: #39d353 !important;
+}
+
+html.hacked-mode a[class*="bg-coffee"]:hover,
+html.hacked-mode a[class*="bg-gray"]:hover {
+  background-color: #1a3320 !important;
+}
+
+/* Form inputs — slightly elevated from the card background */
+html.hacked-mode input,
+html.hacked-mode textarea,
+html.hacked-mode select {
+  background-color: #1a1a1a !important;
+  color: #39d353 !important;
+  border-color: #1d4a29 !important;
+}
+
+html.hacked-mode input::placeholder,
+html.hacked-mode textarea::placeholder {
+  color: #2a6b38 !important;
+}
+
+/* Focus rings */
+html.hacked-mode *:focus {
+  outline-color: #39d353 !important;
+  box-shadow: 0 0 0 2px rgba(57, 211, 83, 0.3) !important;
+}
+
+/* Shadows — replace warm shadows with soft green glow */
+html.hacked-mode [class*="shadow"] {
+  box-shadow: 0 0 8px rgba(57, 211, 83, 0.12) !important;
+}
+
+/* Status badge colours (admin OrderDashboard) */
+html.hacked-mode [class*="bg-green"],
+html.hacked-mode [class*="bg-yellow"],
+html.hacked-mode [class*="bg-red"],
+html.hacked-mode [class*="bg-blue"],
+html.hacked-mode [class*="bg-orange"],
+html.hacked-mode [class*="bg-amber"] {
+  background-color: #0e1f12 !important;
+  color: #39d353 !important;
+  border: 1px solid #2d7a3f !important;
+}
+
+html.hacked-mode [class*="text-green"],
+html.hacked-mode [class*="text-yellow"],
+html.hacked-mode [class*="text-red"],
+html.hacked-mode [class*="text-blue"],
+html.hacked-mode [class*="text-orange"],
+html.hacked-mode [class*="text-amber"] {
+  color: #39d353 !important;
+}
+
+/* Dividers and horizontal rules */
+html.hacked-mode hr,
+html.hacked-mode [class*="divide"] > * + * {
+  border-color: #1d4a29 !important;
+}
+
+/* Scanline overlay — purely decorative, does not block interaction */
+html.hacked-mode body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(57, 211, 83, 0.02) 2px,
+    rgba(57, 211, 83, 0.02) 4px
+  );
+  z-index: 9999;
 }

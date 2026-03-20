@@ -1,6 +1,10 @@
 -- Seed data for Uy, Kape! coffee ordering system
 -- This file contains initial data for the normalized database schema
 
+-- App settings defaults
+INSERT INTO app_settings (key, value) VALUES ('hacked_mode', 'false')
+  ON CONFLICT (key) DO NOTHING;
+
 -- Insert drink categories
 INSERT INTO drink_categories (name, description, display_order, is_active) VALUES
 ('Coffee', 'Espresso-based and black coffee drinks', 1, true),

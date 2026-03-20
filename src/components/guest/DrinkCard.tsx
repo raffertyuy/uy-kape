@@ -1,5 +1,7 @@
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
 import type { DrinkWithOptionsPreview } from '@/types/menu.types'
+import { useHackedMode } from '@/contexts/HackedModeContext'
+import { getHackedDrinkName } from '@/utils/hackedModeUtils'
 
 interface DrinkCardProps {
   drink: DrinkWithOptionsPreview
@@ -10,6 +12,14 @@ interface DrinkCardProps {
 
 export const DrinkCard = memo<DrinkCardProps>(
   function DrinkCard({ drink, isSelected, onSelect, className = '' }) {
+    const { isHackedMode } = useHackedMode()
+    // Memoised so the prefix is stable for the lifetime of this card instance
+    const displayName = useMemo(
+      () => (isHackedMode ? getHackedDrinkName(drink.name) : drink.name),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [isHackedMode, drink.id]
+    )
+
     const handleClick = () => {
       onSelect(drink.id)
     }
@@ -29,6 +39,7 @@ export const DrinkCard = memo<DrinkCardProps>(
         role="button"
         tabIndex={0}
         aria-pressed={isSelected}
+        aria-label={displayName}
         aria-describedby={`drink-${drink.id}-description`}
         data-testid={`drink-card-${drink.id}`}
         className={`
@@ -63,7 +74,7 @@ export const DrinkCard = memo<DrinkCardProps>(
         {/* Drink information */}
         <div className="space-y-2">
           <h4 className="font-semibold text-coffee-800 text-lg leading-tight">
-            {drink.name}
+            {displayName}
           </h4>
           
           {drink.description && (

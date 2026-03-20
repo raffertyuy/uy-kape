@@ -5,155 +5,228 @@
 
 // Coffee-themed superhero titles
 const superheroTitles = [
-  'The',
-  'Captain',
-  'Professor',
-  'Doctor',
-  'Master',
-  'Super',
-  'Ultra',
-  'Mega',
-  'Supreme'
-] as const
+  "The",
+  "Captain",
+  "Professor",
+  "Doctor",
+  "Master",
+  "Super",
+  "Ultra",
+  "Mega",
+  "Supreme",
+] as const;
 
 // Coffee-related descriptive words for superhero names
 const coffeeDescriptors = [
-  'Bean',
-  'Brew',
-  'Roast',
-  'Grind',
-  'Steam',
-  'Crema',
-  'Froth',
-  'Drip',
-  'Blend',
-  'Shot',
-  'Sip',
-  'Cup',
-  'Mug',
-  'Filter',
-  'Press',
-  'Latte',
-  'Mocha',
-  'Macchiato',
-  'Americano',
-  'Cortado',
-  'Espresso',
-  'Caffeine',
-  'Coffee',
-  'Milk',
-  'Sugar',
-  'Foam',
-  'Aroma',
-  'Barista'
-] as const
+  "Bean",
+  "Brew",
+  "Roast",
+  "Grind",
+  "Steam",
+  "Crema",
+  "Froth",
+  "Drip",
+  "Blend",
+  "Shot",
+  "Sip",
+  "Cup",
+  "Mug",
+  "Filter",
+  "Press",
+  "Latte",
+  "Mocha",
+  "Macchiato",
+  "Americano",
+  "Cortado",
+  "Espresso",
+  "Caffeine",
+  "Coffee",
+  "Milk",
+  "Sugar",
+  "Foam",
+  "Aroma",
+  "Barista",
+] as const;
 
 // Superhero action words that work with coffee themes
 const superheroActions = [
-  'Roaster',
-  'Brewer',
-  'Grinder',
-  'Steamer',
-  'Burner',
-  'Monster',
-  'Master',
-  'Guardian',
-  'Defender',
-  'Warrior',
-  'Fighter',
-  'Hunter',
-  'Crusher',
-  'Blaster',
-  'Slayer',
-  'Bringer',
-  'Keeper',
-  'Wielder',
-  'Commander',
-  'Destroyer'
-] as const
+  "Roaster",
+  "Brewer",
+  "Grinder",
+  "Steamer",
+  "Burner",
+  "Monster",
+  "Master",
+  "Guardian",
+  "Defender",
+  "Warrior",
+  "Fighter",
+  "Hunter",
+  "Crusher",
+  "Blaster",
+  "Slayer",
+  "Bringer",
+  "Keeper",
+  "Wielder",
+  "Commander",
+  "Destroyer",
+] as const;
 
 /**
  * Generates a random funny coffee-themed superhero name for guests
  * Creates names like "The Bean Roaster", "Captain Caffeine Monster", or "Professor Milk Steamer"
- * 
+ *
  * @returns A randomly generated superhero-style coffee name
- * 
+ *
  * @example
  * generateFunnyGuestName() // "The Bean Roaster"
- * generateFunnyGuestName() // "Captain Caffeine Monster" 
+ * generateFunnyGuestName() // "Captain Caffeine Monster"
  * generateFunnyGuestName() // "Professor Milk Steamer"
  */
 export function generateFunnyGuestName(): string {
   // Get random elements from each array
-  const title = superheroTitles[Math.floor(Math.random() * superheroTitles.length)]
-  const descriptor = coffeeDescriptors[Math.floor(Math.random() * coffeeDescriptors.length)]
-  const action = superheroActions[Math.floor(Math.random() * superheroActions.length)]
-  
+  const title =
+    superheroTitles[Math.floor(Math.random() * superheroTitles.length)];
+  const descriptor =
+    coffeeDescriptors[Math.floor(Math.random() * coffeeDescriptors.length)];
+  const action =
+    superheroActions[Math.floor(Math.random() * superheroActions.length)];
+
   // Randomly choose between different superhero name formats
-  const formatChoice = Math.floor(Math.random() * 4)
-  
+  const formatChoice = Math.floor(Math.random() * 4);
+
   switch (formatChoice) {
     case 0:
       // "The [Descriptor] [Action]" - e.g., "The Bean Roaster"
-      return `The ${descriptor} ${action}`
+      return `The ${descriptor} ${action}`;
     case 1:
-      // "[Title] [Descriptor]" - e.g., "Captain Caffeine" 
-      return `${title === 'The' ? 'Captain' : title} ${descriptor}`
+      // "[Title] [Descriptor]" - e.g., "Captain Caffeine"
+      return `${title === "The" ? "Captain" : title} ${descriptor}`;
     case 2:
       // "[Title] [Action]" - e.g., "Professor Roaster"
-      return `${title === 'The' ? 'Doctor' : title} ${action}`
+      return `${title === "The" ? "Doctor" : title} ${action}`;
     case 3:
       // "[Title] [Descriptor] [Action]" - e.g., "Super Bean Crusher"
-      return `${title === 'The' ? 'Master' : title} ${descriptor} ${action}`
+      return `${title === "The" ? "Master" : title} ${descriptor} ${action}`;
     default:
-      return `The ${descriptor} ${action}`
+      return `The ${descriptor} ${action}`;
   }
 }
 
 /**
  * Checks if a given name appears to be a generated superhero coffee name
  * Used to track whether user has entered their own name or is using generated one
- * 
+ *
  * @param name - The name to check
  * @returns True if the name contains superhero coffee-themed elements in a pattern typical of generated names
  */
 export function isGeneratedFunnyName(name: string): boolean {
-  if (!name || typeof name !== 'string') {
-    return false
+  if (!name || typeof name !== "string") {
+    return false;
   }
-  
-  const normalizedName = name.toLowerCase()
-  
+
+  const normalizedName = name.toLowerCase();
+
   // Check for superhero titles
-  const hasSuperheroTitle = superheroTitles.some(title => 
+  const hasSuperheroTitle = superheroTitles.some((title) =>
     normalizedName.startsWith(`${title.toLowerCase()} `)
-  )
-  
+  );
+
   // Check for coffee descriptors
-  const hasCoffeeDescriptor = coffeeDescriptors.some(descriptor => 
+  const hasCoffeeDescriptor = coffeeDescriptors.some((descriptor) =>
     normalizedName.includes(descriptor.toLowerCase())
-  )
-  
+  );
+
   // Check for superhero actions
-  const hasSuperheroAction = superheroActions.some(action => 
+  const hasSuperheroAction = superheroActions.some((action) =>
     normalizedName.includes(action.toLowerCase())
-  )
-  
+  );
+
   // Generated superhero names typically have:
   // 1. A superhero title (The, Captain, etc.) + coffee elements, OR
   // 2. Multiple coffee/superhero elements combined
-  const hasSuperheroPattern = hasSuperheroTitle && (hasCoffeeDescriptor || hasSuperheroAction)
-  const hasMultipleElements = hasCoffeeDescriptor && hasSuperheroAction
-  
+  const hasSuperheroPattern = hasSuperheroTitle &&
+    (hasCoffeeDescriptor || hasSuperheroAction);
+  const hasMultipleElements = hasCoffeeDescriptor && hasSuperheroAction;
+
   // Additional check: exclude common name patterns
-  const commonNamePatterns = /^(john|jane|mary|david|sarah|michael|jessica|robert|lisa|william|jennifer|mike|bob|tom|amy|sue)\s+(bean|brew|roast|grind|steam|coffee|the|captain|doctor|professor|master|super)$/i
-  const reverseCommonPattern = /^(the|captain|doctor|professor|master|super|bean|brew|roast|grind|steam|coffee)\s+(johnson|smith|brown|davis|miller|wilson|moore|taylor|anderson|thomas|jackson|white|harris|martin|thompson|garcia|martinez|robinson|clark|rodriguez|lewis|lee|walker|hall|allen|young|hernandez|king|wright|lopez|hill|scott|green|adams|baker|gonzalez|nelson|carter|mitchell|perez|roberts|turner|phillips|campbell|parker|evans|edwards|collins|stewart|sanchez|morris|rogers|reed|cook|morgan|bell|murphy|bailey|rivera|cooper|richardson|cox|howard|ward|torres|peterson|gray|ramirez|james|watson|brooks|kelly|sanders|price|bennett|wood|barnes|ross|henderson|coleman|jenkins|perry|powell|long|patterson|hughes|flores|washington|butler|simmons|foster)$/i
-  
-  if (commonNamePatterns.test(normalizedName) || reverseCommonPattern.test(normalizedName)) {
-    return false
+  const commonNamePatterns =
+    /^(john|jane|mary|david|sarah|michael|jessica|robert|lisa|william|jennifer|mike|bob|tom|amy|sue)\s+(bean|brew|roast|grind|steam|coffee|the|captain|doctor|professor|master|super)$/i;
+  const reverseCommonPattern =
+    /^(the|captain|doctor|professor|master|super|bean|brew|roast|grind|steam|coffee)\s+(johnson|smith|brown|davis|miller|wilson|moore|taylor|anderson|thomas|jackson|white|harris|martin|thompson|garcia|martinez|robinson|clark|rodriguez|lewis|lee|walker|hall|allen|young|hernandez|king|wright|lopez|hill|scott|green|adams|baker|gonzalez|nelson|carter|mitchell|perez|roberts|turner|phillips|campbell|parker|evans|edwards|collins|stewart|sanchez|morris|rogers|reed|cook|morgan|bell|murphy|bailey|rivera|cooper|richardson|cox|howard|ward|torres|peterson|gray|ramirez|james|watson|brooks|kelly|sanders|price|bennett|wood|barnes|ross|henderson|coleman|jenkins|perry|powell|long|patterson|hughes|flores|washington|butler|simmons|foster)$/i;
+
+  if (
+    commonNamePatterns.test(normalizedName) ||
+    reverseCommonPattern.test(normalizedName)
+  ) {
+    return false;
   }
-  
-  return hasSuperheroPattern || hasMultipleElements
+
+  return hasSuperheroPattern || hasMultipleElements;
 }
 
-export default generateFunnyGuestName
+// Hacker-themed adjectives for guest names in Hacked Mode
+const hackerAdjectives = [
+  "Shadow",
+  "Phantom",
+  "Ghost",
+  "Null",
+  "Void",
+  "Cipher",
+  "Binary",
+  "Toxic",
+  "Rogue",
+  "Stealth",
+  "Poisonous",
+  "Corrupted",
+  "Crashed",
+  "Infected",
+  "Malicious",
+  "Broken",
+] as const;
+
+// Hacker-themed nouns for guest names in Hacked Mode
+const hackerNouns = [
+  "Hacker",
+  "Byte",
+  "Exploit",
+  "Daemon",
+  "Bot",
+  "Script",
+  "Overflow",
+  "Cache",
+  "Loop",
+  "Stack",
+  "Register",
+  "Bit",
+  "Kernel",
+  "Rootkit",
+  "Payload",
+  "Glitch",
+] as const;
+
+/**
+ * Generates a random hacker-themed guest name.
+ * Creates names like "Shadow Hacker", "Null Daemon", "Corrupted Stack"
+ *
+ * @returns A randomly generated hacker-style name
+ */
+export function generateHackerGuestName(): string {
+  const adjective =
+    hackerAdjectives[Math.floor(Math.random() * hackerAdjectives.length)];
+  const noun = hackerNouns[Math.floor(Math.random() * hackerNouns.length)];
+  return `${adjective} ${noun}`;
+}
+
+/**
+ * Facade that returns either a coffee superhero name or a hacker name
+ * depending on whether Hacked Mode is active.
+ *
+ * @param isHackedMode - Whether Hacked Mode is currently enabled
+ * @returns A randomly generated name appropriate to the current mode
+ */
+export function generateGuestName(isHackedMode: boolean): string {
+  return isHackedMode ? generateHackerGuestName() : generateFunnyGuestName();
+}
+
+export default generateFunnyGuestName;

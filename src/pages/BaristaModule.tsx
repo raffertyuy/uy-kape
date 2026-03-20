@@ -5,6 +5,8 @@ import { MenuManagement } from '@/pages/MenuManagement'
 import { OrderDashboard } from '@/components/admin/OrderDashboard'
 import { appConfig } from '@/config/app.config'
 import { Logo } from '@/components/ui/Logo'
+import { useHackedMode } from '@/contexts/HackedModeContext'
+import { useToast } from '@/hooks/useToastHook'
 
 type AdminView = 'dashboard' | 'menu' | 'orders'
 
@@ -47,6 +49,23 @@ function BaristaModulePage() {
 
 // Admin Dashboard (main landing page)
 function AdminDashboard({ onNavigate }: { onNavigate: (_view: AdminView) => void }) {
+  const { isHackedMode, toggleHackedMode } = useHackedMode()
+  const { showWarning, showInfo, showError } = useToast()
+
+  const handleHackedModeToggle = async () => {
+    const next = !isHackedMode
+    try {
+      await toggleHackedMode()
+      if (next) {
+        showWarning('☠️ SYSTEM COMPROMISED', 'Hacked Mode activated')
+      } else {
+        showInfo('☕ System Restored', 'Hacked Mode deactivated')
+      }
+    } catch {
+      showError('Save Failed', 'Failed to update Hacked Mode. Please try again.')
+    }
+  }
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="bg-white rounded-lg shadow-lg p-8">
@@ -111,6 +130,35 @@ function AdminDashboard({ onNavigate }: { onNavigate: (_view: AdminView) => void
               <div className="text-sm text-coffee-600">Real-time Updates</div>
               <div className="text-xs text-blue-600">Active</div>
             </div>
+          </div>
+        </div>
+
+        {/* Easter Egg section */}
+        <div className="mt-8 p-6 bg-coffee-50 rounded-lg border border-coffee-200">
+          <h4 className="font-semibold text-coffee-800 mb-4">🐣 Easter Egg</h4>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-coffee-700 font-medium">Hacked Mode</p>
+              <p className="text-coffee-600 text-sm">
+                Transform the entire site into a hacker aesthetic
+              </p>
+            </div>
+            <button
+              role="switch"
+              aria-checked={isHackedMode}
+              aria-label="Toggle Hacked Mode"
+              data-testid="hacked-mode-toggle"
+              onClick={handleHackedModeToggle}
+              className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:ring-offset-2 ${
+                isHackedMode ? 'bg-green-600' : 'bg-coffee-300'
+              }`}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                  isHackedMode ? 'translate-x-6' : 'translate-x-1'
+                }`}
+              />
+            </button>
           </div>
         </div>
       </div>

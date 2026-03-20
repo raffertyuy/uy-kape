@@ -49,6 +49,9 @@ uy-kape/
 │   ├── lib/               # Utility libraries
 │   ├── pages/             # Page components
 │   ├── services/          # API and business logic
+│   │   ├── appSettingsService.ts  # Global app settings (hacked mode) — reads/writes Supabase app_settings table
+│   │   ├── menuService.ts         # Menu CRUD (drink categories, drinks, option categories, option values)
+│   │   └── orderService.ts        # Order management
 │   ├── types/             # TypeScript definitions
 │   └── utils/             # Utility functions
 ├── supabase/              # Supabase project (config, migrations, seed)

@@ -8,6 +8,7 @@ import ServerError from './pages/ServerError'
 import { ToastProvider } from './hooks/useToast'
 import { ErrorBoundary } from './components/ui/ErrorBoundary'
 import { ErrorContextProvider } from './contexts/ErrorContext'
+import { HackedModeProvider } from './contexts/HackedModeContext'
 import { GlobalErrorNotification } from './components/ui/GlobalErrorNotification'
 import { useErrorToast } from './hooks/useErrorToast'
 import { ErrorHandlingPanel } from './components/dev/ErrorHandlingPanel'
@@ -24,7 +25,8 @@ function App() {
   return (
     <div data-testid="app-loaded">
       <ErrorBoundary>
-        <ErrorContextProvider>
+        <HackedModeProvider>
+          <ErrorContextProvider>
           <ToastProvider>
             <GlobalErrorNotification />
             <ErrorHandlingPanel />
@@ -45,7 +47,8 @@ function App() {
               </ErrorToastIntegration>
             </BrowserRouter>
           </ToastProvider>
-        </ErrorContextProvider>
+          </ErrorContextProvider>
+        </HackedModeProvider>
       </ErrorBoundary>
     </div>
   )

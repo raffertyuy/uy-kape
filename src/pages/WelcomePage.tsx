@@ -1,8 +1,13 @@
 import { Link } from 'react-router-dom'
 import { APP_DESCRIPTION } from '@/config/app.config'
 import { Logo } from '@/components/ui/Logo'
+import { useHackedMode } from '@/contexts/HackedModeContext'
 
 function WelcomePage() {
+  const { isHackedMode } = useHackedMode()
+  const tagline = isHackedMode ? "Order the world's worst drinks!" : APP_DESCRIPTION
+  const orderButtonLabel = isHackedMode ? '☠️ Get Poisoned Here' : '🛍️ Order Here'
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-coffee-50 to-coffee-100 flex items-center justify-center p-4">
       <div className="max-w-sm sm:max-w-md w-full bg-white rounded-lg shadow-lg p-6 sm:p-8 text-center">
@@ -18,7 +23,7 @@ function WelcomePage() {
             </h1>
           </div>
           <p className="text-coffee-600 text-base sm:text-lg">
-            {APP_DESCRIPTION}
+            {tagline}
           </p>
         </div>
         
@@ -27,7 +32,7 @@ function WelcomePage() {
             to="/order"
             className="block w-full bg-coffee-600 hover:bg-coffee-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
           >
-            🛍️ Order Here
+            {orderButtonLabel}
           </Link>
           
           <Link
