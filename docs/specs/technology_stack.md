@@ -213,15 +213,22 @@ This document provides a comprehensive overview of the technology stack used in 
 
 ### **Build Optimizations**
 
-- Code splitting by routes and vendors
+- Route-level code splitting with `React.lazy` — GuestModule, BaristaModule, NotFound, ServerError load on-demand
+- Vendor code splitting (React, Supabase, React Router in separate chunks)
 - Tree shaking for unused code elimination
 - Asset optimization and compression
+- Resource hints (`preconnect`, `dns-prefetch`) for Google Fonts, Google Analytics, Microsoft Clarity
 
 ### **Runtime Performance**
 
 - React.memo for component memoization
-- Efficient re-render patterns
-- Lazy loading where appropriate
+- Context value memoization (`useMemo`) on ErrorContext, HackedModeContext, ToastProvider to prevent unnecessary consumer re-renders
+- Stable callback identities via `useCallback` with refs for non-critical dependencies
+- Batch database queries — admin order options and completion times fetched in parallel (3 queries regardless of order count)
+- Bulk option category fetching (2 queries instead of 2N per-category)
+- Consolidated real-time subscriptions (single Supabase channel for menu change tracking)
+- Deferred HackedMode DB reconciliation — skips re-render when cached value matches DB
+- Explicit CSS class selectors for hacked-mode theme (replaces expensive `[class*="..."]` wildcards)
 
 ## **Browser Support**
 

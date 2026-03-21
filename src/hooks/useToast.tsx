@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import type { ToastData } from '@/components/ui/Toast'
 import { ToastContainer } from '@/components/ui/Toast'
 import { ToastContext, type ToastContextType } from './useToastHook'
@@ -85,15 +85,15 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
     setToasts([])
   }, [])
 
-  const contextValue: ToastContextType = {
+  const contextValue = useMemo<ToastContextType>(() => ({
     showToast,
     showSuccess,
     showError,
     showWarning,
     showInfo,
     dismissToast,
-    clearAllToasts
-  }
+    clearAllToasts,
+  }), [showToast, showSuccess, showError, showWarning, showInfo, dismissToast, clearAllToasts])
 
   return (
     <ToastContext.Provider value={contextValue}>

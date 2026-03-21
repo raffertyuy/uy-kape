@@ -1,4 +1,4 @@
-import React, { createContext, useState, useCallback, useEffect, useContext } from 'react'
+import React, { createContext, useState, useCallback, useEffect, useContext, useMemo } from 'react'
 import { getHackedMode, setHackedMode as persistHackedMode } from '@/services/appSettingsService'
 
 // localStorage is used as a session cache to provide an instant initial render value
@@ -27,11 +27,16 @@ export const HackedModeProvider: React.FC<HackedModeProviderProps> = ({ children
     document.documentElement.classList.toggle('hacked-mode', isHackedMode)
   }, [isHackedMode])
 
-  // One-time fetch on mount — reconcile with the authoritative DB value
+  // One-time fetch on mount — reconcile with the authoritative DB value.
+  // Only update state if the DB value differs from the localStorage cache
+  // to avoid an unnecessary full-tree re-render.
   useEffect(() => {
     getHackedMode().then((dbValue) => {
-      setHackedMode(dbValue)
-      localStorage.setItem(STORAGE_KEY, String(dbValue))
+      const cachedValue = localStorage.getItem(STORAGE_KEY) === 'true'
+      if (dbValue !== cachedValue) {
+        setHackedMode(dbValue)
+        localStorage.setItem(STORAGE_KEY, String(dbValue))
+      }
     })
     // getHackedMode never throws — errors already handled inside the service
   }, [])
@@ -52,8 +57,13 @@ export const HackedModeProvider: React.FC<HackedModeProviderProps> = ({ children
     }
   }, [isHackedMode])
 
+  const contextValue = useMemo(
+    () => ({ isHackedMode, toggleHackedMode }),
+    [isHackedMode, toggleHackedMode],
+  )
+
   return (
-    <HackedModeContext.Provider value={{ isHackedMode, toggleHackedMode }}>
+    <HackedModeContext.Provider value={contextValue}>
       {children}
     </HackedModeContext.Provider>
   )

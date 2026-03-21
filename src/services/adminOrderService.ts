@@ -52,13 +52,39 @@ const validateOrderFilters = (filters: OrderFilters): void => {
   }
 };
 
-// Helper function to calculate dynamic estimated completion time for admin orders
-const calculateAdminEstimatedCompletionTime = async (
+/** Pre-fetched pending order data used to compute completion times in memory */
+interface PendingOrderPrepData {
+  queue_number: number;
+  preparation_time_minutes: number | null;
+}
+
+/**
+ * Calculate estimated completion time from pre-fetched pending-orders data.
+ * Pure in-memory — no DB calls.
+ */
+const calculateCompletionTimeFromData = (
   queueNumber: number,
-): Promise<string> => {
+  pendingOrders: PendingOrderPrepData[],
+): string => {
+  const ordersAhead = pendingOrders.filter(
+    (o) => o.queue_number < queueNumber,
+  );
+
+  const totalMinutes = ordersAhead.reduce((total, order) => {
+    const prepTime = order.preparation_time_minutes ?? appConfig.waitTimePerOrder;
+    return total + prepTime;
+  }, 0);
+
+  return new Date(Date.now() + Math.max(1, totalMinutes) * 60000).toISOString();
+};
+
+/**
+ * Fetch all pending orders with their drink preparation times in a single query.
+ * The result is reused across all orders to avoid per-order DB calls.
+ */
+const fetchPendingOrderPrepData = async (): Promise<PendingOrderPrepData[]> => {
   try {
-    // Get all pending orders ahead in queue with their drink preparation times
-    const { data: ordersAhead, error } = await supabase
+    const { data, error } = await supabase
       .from("orders")
       .select(`
         queue_number,
@@ -67,48 +93,27 @@ const calculateAdminEstimatedCompletionTime = async (
         )
       `)
       .eq("status", "pending")
-      .lt("queue_number", queueNumber)
       .order("queue_number", { ascending: true });
 
     if (error) {
       console.warn(
-        "Failed to get dynamic preparation times for admin order, using fallback:",
+        "Failed to get pending order prep data, completion times will use fallback:",
         error,
       );
-      // Fallback to old calculation
-      const fallbackMinutes = Math.max(
-        1,
-        queueNumber * appConfig.waitTimePerOrder,
-      );
-      return new Date(Date.now() + fallbackMinutes * 60000).toISOString();
+      return [];
     }
 
-    // Extract preparation times and calculate total wait
-    const ordersWithPrepTimes = (ordersAhead || []).map((order) => ({
+    return (data || []).map((order) => ({
+      queue_number: order.queue_number ?? 0,
       preparation_time_minutes:
         (order.drinks as any)?.preparation_time_minutes ?? null,
     }));
-
-    // Calculate total minutes using dynamic calculation
-    const totalMinutes = ordersWithPrepTimes.reduce((total, order) => {
-      const prepTime = order.preparation_time_minutes ??
-        appConfig.waitTimePerOrder;
-      return total + prepTime;
-    }, 0);
-
-    return new Date(Date.now() + Math.max(1, totalMinutes) * 60000)
-      .toISOString();
   } catch (error) {
     console.warn(
-      "Error calculating dynamic completion time, using fallback:",
+      "Error fetching pending order prep data:",
       error,
     );
-    // Fallback to old calculation
-    const fallbackMinutes = Math.max(
-      1,
-      queueNumber * appConfig.waitTimePerOrder,
-    );
-    return new Date(Date.now() + fallbackMinutes * 60000).toISOString();
+    return [];
   }
 };
 
@@ -143,12 +148,23 @@ const buildQueryFilters = (query: any, filters: OrderFilters) => {
   return query;
 };
 
-// Format order with details for admin display
-const formatOrderForAdmin = async (order: any): Promise<AdminOrderListItem> => {
-  // Get order options for this order
-  const { data: options, error: optionsError } = await supabase
+/**
+ * Batch-fetch all order_options for a set of order IDs in a single query.
+ * Returns a Map keyed by order_id.
+ *
+ * NOTE: Supabase `.in()` has a practical limit of ~100 items. For this app's
+ * scale a single call is sufficient; chunk if the app grows beyond that.
+ */
+const fetchBatchOrderOptions = async (
+  orderIds: string[],
+): Promise<Map<string, any[]>> => {
+  const map = new Map<string, any[]>();
+  if (orderIds.length === 0) return map;
+
+  const { data, error } = await supabase
     .from("order_options")
     .select(`
+      order_id,
       option_category_id,
       option_value_id,
       option_categories:option_category_id (
@@ -158,27 +174,43 @@ const formatOrderForAdmin = async (order: any): Promise<AdminOrderListItem> => {
         name
       )
     `)
-    .eq("order_id", order.id);
+    .in("order_id", orderIds);
 
-  if (optionsError) {
-    console.warn(
-      "Failed to get order options for order:",
-      order.id,
-      optionsError,
-    );
+  if (error) {
+    console.warn("Failed to batch-fetch order options:", error);
+    return map;
   }
 
+  for (const row of data || []) {
+    const existing = map.get(row.order_id) || [];
+    existing.push(row);
+    map.set(row.order_id, existing);
+  }
+
+  return map;
+};
+
+/**
+ * Format a single order for admin display.
+ * Pure in-memory — all external data must be passed in.
+ */
+const formatOrderForAdmin = (
+  order: any,
+  orderOptions: any[],
+  pendingOrdersData: PendingOrderPrepData[],
+): AdminOrderListItem => {
   // Format option details
-  const selectedOptions = (options || []).map((option) => ({
+  const selectedOptions = orderOptions.map((option) => ({
     option_category_id: option.option_category_id,
     option_category_name: (option as any).option_categories?.name || "Unknown",
     option_value_id: option.option_value_id,
     option_value_name: (option as any).option_values?.name || "Unknown",
   }));
 
-  // Calculate estimated completion time based on dynamic preparation times
-  const estimatedCompletionTime = await calculateAdminEstimatedCompletionTime(
+  // Calculate estimated completion time from pre-fetched data
+  const estimatedCompletionTime = calculateCompletionTimeFromData(
     order.queue_number || 0,
+    pendingOrdersData,
   );
 
   // Determine priority level based on order age and special requests
@@ -258,9 +290,20 @@ export const adminOrderService = {
       if (error) handleAdminSupabaseError(error, "getAllOrders");
       if (!orders) return { orders: [], total: 0 };
 
-      // Format orders for admin display
-      const formattedOrders = await Promise.all(
-        orders.map((order) => formatOrderForAdmin(order)),
+      // Batch-fetch all supplementary data in parallel (2 queries total)
+      const orderIds = orders.map((o) => o.id);
+      const [optionsMap, pendingOrdersData] = await Promise.all([
+        fetchBatchOrderOptions(orderIds),
+        fetchPendingOrderPrepData(),
+      ]);
+
+      // Format orders in memory — no per-order DB calls
+      const formattedOrders = orders.map((order) =>
+        formatOrderForAdmin(
+          order,
+          optionsMap.get(order.id) ?? [],
+          pendingOrdersData,
+        ),
       );
 
       return {
@@ -304,9 +347,20 @@ export const adminOrderService = {
       if (error) handleAdminSupabaseError(error, "getPendingOrders");
       if (!orders) return [];
 
-      // Format orders for admin display
-      const formattedOrders = await Promise.all(
-        orders.map((order) => formatOrderForAdmin(order)),
+      // Batch-fetch all supplementary data in parallel (2 queries total)
+      const orderIds = orders.map((o) => o.id);
+      const [optionsMap, pendingOrdersData] = await Promise.all([
+        fetchBatchOrderOptions(orderIds),
+        fetchPendingOrderPrepData(),
+      ]);
+
+      // Format orders in memory — no per-order DB calls
+      const formattedOrders = orders.map((order) =>
+        formatOrderForAdmin(
+          order,
+          optionsMap.get(order.id) ?? [],
+          pendingOrdersData,
+        ),
       );
 
       return formattedOrders;

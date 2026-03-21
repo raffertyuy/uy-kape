@@ -191,25 +191,32 @@ html.hacked-mode body {
   }
 }
 
-/* Panels and nav bars — one step lighter than the page */
-html.hacked-mode [class*="bg-coffee"],
-html.hacked-mode [class*="bg-slate"] {
+/* Panels and nav bars — one step lighter than the page
+   Explicit class list replaces [class*="bg-coffee"] for faster selector matching */
+html.hacked-mode .bg-coffee-25,
+html.hacked-mode .bg-coffee-50,
+html.hacked-mode .bg-coffee-100,
+html.hacked-mode .bg-coffee-200,
+html.hacked-mode .bg-coffee-300 {
   background-color: #111111 !important;
   border-color: #1d4a29 !important;
 }
 
 /* Inner cards and content boxes — two steps lighter */
 html.hacked-mode .bg-white,
-html.hacked-mode [class*="bg-gray"],
-html.hacked-mode [class*="bg-zinc"] {
+html.hacked-mode .bg-gray-50,
+html.hacked-mode .bg-gray-100,
+html.hacked-mode .bg-gray-200,
+html.hacked-mode .bg-gray-300,
+html.hacked-mode .bg-gray-500,
+html.hacked-mode .bg-gray-600 {
   background-color: #161616 !important;
   border-color: #1d4a29 !important;
 }
 
 /* Gradient backgrounds (e.g., WelcomePage) */
-html.hacked-mode [class*="from-coffee"],
-html.hacked-mode [class*="to-coffee"],
-html.hacked-mode [class*="via-coffee"] {
+html.hacked-mode .from-coffee-50,
+html.hacked-mode .to-coffee-100 {
   --tw-gradient-from: #0d0d0d !important;
   --tw-gradient-to: #111111 !important;
   background-image: none !important;
@@ -217,28 +224,42 @@ html.hacked-mode [class*="via-coffee"] {
 }
 
 /* Text — all themed colours to green */
-html.hacked-mode [class*="text-coffee"],
-html.hacked-mode [class*="text-gray"],
-html.hacked-mode [class*="text-slate"],
-html.hacked-mode [class*="text-black"],
-html.hacked-mode [class*="text-white"],
-html.hacked-mode [class*="text-zinc"] {
+html.hacked-mode .text-coffee-25,
+html.hacked-mode .text-coffee-400,
+html.hacked-mode .text-coffee-500,
+html.hacked-mode .text-coffee-600,
+html.hacked-mode .text-coffee-700,
+html.hacked-mode .text-coffee-800,
+html.hacked-mode .text-coffee-900,
+html.hacked-mode .text-gray-50,
+html.hacked-mode .text-gray-100,
+html.hacked-mode .text-gray-500,
+html.hacked-mode .text-gray-600,
+html.hacked-mode .text-gray-700,
+html.hacked-mode .text-gray-800,
+html.hacked-mode .text-gray-900,
+html.hacked-mode .text-white {
   color: #39d353 !important;
 }
 
 /* Borders */
-html.hacked-mode [class*="border-coffee"],
-html.hacked-mode [class*="border-gray"],
-html.hacked-mode [class*="border-slate"],
+html.hacked-mode .border-coffee-25,
+html.hacked-mode .border-coffee-100,
+html.hacked-mode .border-coffee-200,
+html.hacked-mode .border-coffee-300,
+html.hacked-mode .border-coffee-400,
+html.hacked-mode .border-coffee-500,
+html.hacked-mode .border-coffee-600,
+html.hacked-mode .border-gray-200,
+html.hacked-mode .border-gray-300,
 html.hacked-mode .border {
   border-color: #1d4a29 !important;
 }
 
 /* Buttons and primary actions */
 html.hacked-mode button,
-html.hacked-mode [class*="bg-coffee-6"],
-html.hacked-mode [class*="bg-coffee-7"],
-html.hacked-mode [class*="bg-coffee-8"] {
+html.hacked-mode .bg-coffee-600,
+html.hacked-mode .bg-coffee-700 {
   background-color: #0e1f12 !important;
   border: 1px solid #39d353 !important;
   color: #39d353 !important;
@@ -249,15 +270,17 @@ html.hacked-mode button:hover {
 }
 
 /* Links styled as buttons (e.g., WelcomePage Link components) */
-html.hacked-mode a[class*="bg-coffee"],
-html.hacked-mode a[class*="bg-gray"] {
+html.hacked-mode a.bg-coffee-600,
+html.hacked-mode a.bg-coffee-700,
+html.hacked-mode a.bg-gray-600 {
   background-color: #0e1f12 !important;
   border: 1px solid #39d353 !important;
   color: #39d353 !important;
 }
 
-html.hacked-mode a[class*="bg-coffee"]:hover,
-html.hacked-mode a[class*="bg-gray"]:hover {
+html.hacked-mode a.bg-coffee-600:hover,
+html.hacked-mode a.bg-coffee-700:hover,
+html.hacked-mode a.bg-gray-600:hover {
   background-color: #1a3320 !important;
 }
 
@@ -282,34 +305,49 @@ html.hacked-mode *:focus {
 }
 
 /* Shadows — replace warm shadows with soft green glow */
-html.hacked-mode [class*="shadow"] {
+html.hacked-mode .shadow-sm,
+html.hacked-mode .shadow-md,
+html.hacked-mode .shadow-lg,
+html.hacked-mode .shadow-xl,
+html.hacked-mode .shadow-coffee,
+html.hacked-mode .shadow-coffee-lg {
   box-shadow: 0 0 8px rgba(57, 211, 83, 0.12) !important;
 }
 
 /* Status badge colours (admin OrderDashboard) */
-html.hacked-mode [class*="bg-green"],
-html.hacked-mode [class*="bg-yellow"],
-html.hacked-mode [class*="bg-red"],
-html.hacked-mode [class*="bg-blue"],
-html.hacked-mode [class*="bg-orange"],
-html.hacked-mode [class*="bg-amber"] {
+html.hacked-mode .bg-green-100,
+html.hacked-mode .bg-green-600,
+html.hacked-mode .bg-red-50,
+html.hacked-mode .bg-red-500,
+html.hacked-mode .bg-red-600,
+html.hacked-mode .bg-yellow-500,
+html.hacked-mode .bg-yellow-600,
+html.hacked-mode .bg-blue-500,
+html.hacked-mode .bg-blue-600,
+html.hacked-mode .bg-orange-50,
+html.hacked-mode .bg-orange-500,
+html.hacked-mode .bg-orange-600,
+html.hacked-mode .bg-amber-50 {
   background-color: #0e1f12 !important;
   color: #39d353 !important;
   border: 1px solid #2d7a3f !important;
 }
 
-html.hacked-mode [class*="text-green"],
-html.hacked-mode [class*="text-yellow"],
-html.hacked-mode [class*="text-red"],
-html.hacked-mode [class*="text-blue"],
-html.hacked-mode [class*="text-orange"],
-html.hacked-mode [class*="text-amber"] {
+html.hacked-mode .text-green-600,
+html.hacked-mode .text-green-800,
+html.hacked-mode .text-red-700,
+html.hacked-mode .text-red-800,
+html.hacked-mode .text-yellow-800,
+html.hacked-mode .text-blue-600,
+html.hacked-mode .text-orange-800,
+html.hacked-mode .text-amber-200 {
   color: #39d353 !important;
 }
 
 /* Dividers and horizontal rules */
 html.hacked-mode hr,
-html.hacked-mode [class*="divide"] > * + * {
+html.hacked-mode .divide-y > * + *,
+html.hacked-mode .divide-x > * + * {
   border-color: #1d4a29 !important;
 }
 

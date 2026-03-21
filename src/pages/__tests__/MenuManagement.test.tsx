@@ -1,9 +1,10 @@
 import { describe, it, expect, vi, beforeEach, beforeAll, afterAll } from 'vitest'
 import { render, screen, waitFor, act } from '../../../tests/config/test-utils'
-import { MenuManagement } from '@/pages/MenuManagement'
+
+let MenuManagement: any
 
 describe('MenuManagement - Basic Rendering', () => {
-  beforeAll(() => {
+  beforeAll(async () => {
     // Mock Logo component for asset loading
     vi.doMock('@/components/ui/Logo', () => ({
       Logo: ({ className, alt, ...props }: any) => (
@@ -124,6 +125,10 @@ describe('MenuManagement - Basic Rendering', () => {
     vi.doMock('@/components/menu/DrinkForm', () => ({
       DrinkForm: () => <div data-testid="drink-form" />
     }))
+
+    // Dynamic import after mocks are set up so mocks are applied correctly
+    const module = await import('@/pages/MenuManagement')
+    MenuManagement = module.MenuManagement
   })
 
   afterAll(() => {
