@@ -1,6 +1,6 @@
 ---
 description: 'Overview of this application'
-last-modified: 2025-08-24
+last-modified: 2026-03-21
 ---
 
 # ☕ Uy, Kape! Coffee Ordering System
@@ -55,7 +55,7 @@ See detailed [technology_stack](./technology_stack.md) for complete technical sp
 - 17 drinks across 4 categories (Coffee: 9, Special Coffee: 3, Tea: 1, Kids Drinks: 4)
 - Category-based browsing with tabbed interface
 - Dynamic drink customization with required and optional options
-- Funny auto-generated names (e.g., "Mega Mug Steamer") with override capability
+- Funny auto-generated names (e.g., "Mega Mug Steamer") with override capability; switches to hacker-themed names (e.g., "Shadow Hacker") when Hacked Mode is active
 - Special request field for dietary requirements and preferences
 - Comprehensive order confirmation with Order ID, queue position, estimated wait time, and barista quotes
 
@@ -74,6 +74,7 @@ See detailed [technology_stack](./technology_stack.md) for complete technical sp
 - Comprehensive menu management across 3 tabs (Categories, Drinks, Option Categories)
 - Advanced view options (Grid/List view, Show Options Preview, Show Completed toggle)
 - System status monitoring (Menu System ✓, Order System ✓, Real-time Updates 🔄)
+- **Hacked Mode Easter Egg**: Admin toggle that applies a hacker aesthetic (black background, green terminal font) site-wide and alters select UI copy and behaviors for guests
 
 **Administrative Areas:**
 - **Order Management**: Real-time order tracking with detailed order cards and statistics
@@ -151,4 +152,4 @@ This document includes:
 
 ---
 
-*Last updated: August 24, 2025 - This overview provides a high-level view of the Uy, Kape! system updated following comprehensive application exploration via Playwright MCP. All features documented have been verified as working. For detailed functional specifications, implementation guides, and user workflows, refer to the linked functional specifications document.*
+*Last updated: March 21, 2026 - Updated to include Hacked Mode Easter Egg (admin toggle, global CSS theme, hacker name generation, drink name prefixes, Supabase `app_settings` persistence). All features documented have been verified as working. For detailed functional specifications, implementation guides, and user workflows, refer to the linked functional specifications document.*

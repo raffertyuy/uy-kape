@@ -13,12 +13,16 @@ describe("useGuestInfo", () => {
   let useGuestInfo: any;
 
   beforeAll(async () => {
-    // Mock the nameGenerator utilities
+    // Mock the nameGenerator utilities — mode-aware so handleBlur tests can
+    // verify that hacked mode produces hacker-themed names
     vi.doMock("@/utils/nameGenerator", () => ({
       generateFunnyGuestName: vi.fn(() => "The Bean Roaster"),
-      generateGuestName: vi.fn(() => "The Bean Roaster"),
+      generateGuestName: vi.fn((isHackedMode: boolean) =>
+        isHackedMode ? "Shadow Hacker" : "The Bean Roaster"
+      ),
       isGeneratedFunnyName: vi.fn((name: string) =>
         name.includes("The Bean Roaster") ||
+        name.includes("Shadow Hacker") ||
         name.includes("Captain") ||
         name.includes("Professor") ||
         /\b(the|captain|professor|doctor|master|super)\s+\w+\s+(roaster|monster|crusher|defender|warrior)/i
@@ -381,6 +385,43 @@ describe("useGuestInfo", () => {
     });
   });
 
+  describe("handleBlur", () => {
+    it("should regenerate a normal name on blur when field is empty", () => {
+      const { result } = renderHook(() => useGuestInfo());
+
+      // Simulate user interaction: generate name, clear it, then blur
+      act(() => {
+        result.current.generateNewFunnyName();
+      });
+      act(() => {
+        result.current.clearGeneratedName();
+      });
+      expect(result.current.guestName).toBe("");
+
+      // Blur should regenerate a name (normal mode — default is false)
+      act(() => {
+        result.current.handleBlur();
+      });
+      expect(result.current.guestName).toBe("The Bean Roaster");
+      expect(result.current.isGeneratedName).toBe(true);
+    });
+
+    it("should not regenerate on blur if user typed a name", () => {
+      const { result } = renderHook(() => useGuestInfo());
+
+      // User types their own name then clears part of it but keeps some text
+      act(() => {
+        result.current.setGuestName("John");
+      });
+
+      // Blur should not overwrite non-empty name
+      act(() => {
+        result.current.handleBlur();
+      });
+      expect(result.current.guestName).toBe("John");
+    });
+  });
+
   describe("integration scenarios", () => {
     it("should handle complete user flow with generated name", () => {
       const { result } = renderHook(() => useGuestInfo());
@@ -441,5 +482,78 @@ describe("useGuestInfo", () => {
       expect(result.current.guestName).toBe("The Bean Roaster");
       expect(result.current.isGeneratedName).toBe(true);
     });
+  });
+});
+
+describe("useGuestInfo with hacked mode ON", () => {
+  let useGuestInfoHacked: any;
+
+  beforeAll(async () => {
+    // Mock useHackedMode to return isHackedMode: true
+    vi.doMock("@/contexts/HackedModeContext", () => ({
+      useHackedMode: vi.fn(() => ({
+        isHackedMode: true,
+        toggleHackedMode: vi.fn(),
+      })),
+      HackedModeProvider: ({ children }: { children: unknown }) => children,
+    }));
+
+    // Mock nameGenerator with mode-aware generateGuestName
+    vi.doMock("@/utils/nameGenerator", () => ({
+      generateFunnyGuestName: vi.fn(() => "The Bean Roaster"),
+      generateGuestName: vi.fn((isHacked: boolean) =>
+        isHacked ? "Shadow Hacker" : "The Bean Roaster"
+      ),
+      isGeneratedFunnyName: vi.fn((name: string) =>
+        name.includes("The Bean Roaster") || name.includes("Shadow Hacker")
+      ),
+    }));
+
+    // Re-import useGuestInfo so it picks up the mocked context
+    const mod = await import("../useGuestInfo");
+    useGuestInfoHacked = mod.useGuestInfo;
+  });
+
+  afterAll(() => {
+    vi.doUnmock("@/contexts/HackedModeContext");
+    vi.doUnmock("@/utils/nameGenerator");
+  });
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("should generate a hacker name via generateNewFunnyName", () => {
+    const { result } = renderHook(() => useGuestInfoHacked());
+
+    act(() => {
+      result.current.generateNewFunnyName();
+    });
+
+    expect(result.current.guestName).toBe("Shadow Hacker");
+    expect(result.current.isGeneratedName).toBe(true);
+  });
+
+  it("should regenerate a hacker name on blur when field is empty", () => {
+    const { result } = renderHook(() => useGuestInfoHacked());
+
+    // Generate name, clear it, then blur
+    act(() => {
+      result.current.generateNewFunnyName();
+    });
+    expect(result.current.guestName).toBe("Shadow Hacker");
+
+    act(() => {
+      result.current.clearGeneratedName();
+    });
+    expect(result.current.guestName).toBe("");
+
+    act(() => {
+      result.current.handleBlur();
+    });
+
+    // handleBlur should use generateGuestName(true) → "Shadow Hacker"
+    expect(result.current.guestName).toBe("Shadow Hacker");
+    expect(result.current.isGeneratedName).toBe(true);
   });
 });

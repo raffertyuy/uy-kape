@@ -164,6 +164,36 @@ describe("nameGenerator", () => {
       expect(detectedCount).toBeGreaterThan(generatedNames.length * 0.8);
     });
 
+    it("should return true for hacker-themed generated names", () => {
+      const hackerNames = [
+        "Shadow Hacker",
+        "Null Daemon",
+        "Corrupted Stack",
+        "Infected Bot",
+        "Malicious Script",
+        "Phantom Exploit",
+        "Toxic Overflow",
+        "Rogue Kernel",
+      ];
+
+      hackerNames.forEach((name) => {
+        expect(isGeneratedFunnyName(name)).toBe(true);
+      });
+    });
+
+    it("should work with actual generated hacker names", () => {
+      const generatedNames = Array.from(
+        { length: 20 },
+        () => generateHackerGuestName(),
+      );
+
+      const detectedCount =
+        generatedNames.filter((name) => isGeneratedFunnyName(name)).length;
+
+      // All hacker names should be detected as generated
+      expect(detectedCount).toBe(generatedNames.length);
+    });
+
     it("should handle partial matches correctly", () => {
       // Names that might have coffee/superhero words but aren't actually generated superhero names
       const partialMatches = [

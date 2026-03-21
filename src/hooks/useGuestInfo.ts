@@ -1,6 +1,5 @@
 import { useCallback, useState } from "react";
 import {
-  generateFunnyGuestName,
   generateGuestName,
   isGeneratedFunnyName,
 } from "@/utils/nameGenerator";
@@ -130,16 +129,16 @@ export function useGuestInfo(): UseGuestInfoReturn {
     }
   }, [error, userHasInteracted]);
 
-  // Handle when user leaves empty field - revert to funny name
+  // Handle when user leaves empty field - revert to funny name (mode-aware)
   const handleBlur = useCallback(() => {
     if (guestName.trim() === "" && userHasInteracted) {
-      const funnyName = generateFunnyGuestName();
+      const funnyName = generateGuestName(isHackedMode);
       setGuestNameState(funnyName);
       setIsGeneratedName(true);
       setUserHasInteracted(false);
       setUserHasClearedName(false); // Reset the flag when regenerating on blur
     }
-  }, [guestName, userHasInteracted]);
+  }, [guestName, userHasInteracted, isHackedMode]);
 
   const setSpecialRequest = useCallback((request: string) => {
     // Limit to 500 characters

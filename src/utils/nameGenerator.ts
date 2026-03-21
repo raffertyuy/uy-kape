@@ -162,7 +162,16 @@ export function isGeneratedFunnyName(name: string): boolean {
     return false;
   }
 
-  return hasSuperheroPattern || hasMultipleElements;
+  // Check for hacker-themed names (adjective + noun pattern)
+  const hasHackerAdjective = hackerAdjectives.some((adj) =>
+    normalizedName.startsWith(`${adj.toLowerCase()} `)
+  );
+  const hasHackerNoun = hackerNouns.some((noun) =>
+    normalizedName.includes(noun.toLowerCase())
+  );
+  const hasHackerPattern = hasHackerAdjective && hasHackerNoun;
+
+  return hasSuperheroPattern || hasMultipleElements || hasHackerPattern;
 }
 
 // Hacker-themed adjectives for guest names in Hacked Mode

@@ -1,6 +1,6 @@
 ---
 description: 'Detailed functional specifications for the Uy, Kape! coffee ordering system'
-last-modified: 2025-08-28
+last-modified: 2026-03-21
 ---
 
 # ☕ Uy, Kape! Functional Specifications
@@ -10,6 +10,7 @@ last-modified: 2025-08-28
 - [System Overview](#system-overview)
 - [Guest Module Specifications](#guest-module-specifications)
 - [Barista Admin Module Specifications](#barista-admin-module-specifications)
+- [Hacked Mode Easter Egg](#hacked-mode-easter-egg)
 - [Technical Implementation](#technical-implementation)
 - [User Experience Features](#user-experience-features)
 - [Security and Access Control](#security-and-access-control)
@@ -76,8 +77,10 @@ The guest ordering process follows a 4-step wizard with progress indicator:
 
 #### Step 3: Guest Information (75% progress)
 - **Name Input**:
-  - Auto-generates funny coffee-themed names by default
-  - Examples: "Mega Mug Steamer", "Professor Mocha Burner", "The Cup Steamer"
+  - **Auto-generates funny coffee-themed names by default**
+  - Normal mode: coffee superhero names (e.g., "Mega Mug Steamer", "Professor Mocha Burner")
+  - Hacked Mode active: hacker-themed names (e.g., "Shadow Hacker", "Malicious Script")
+  - When the name field is cleared and focus leaves it (blur), a new name is auto-generated using the active pool
   - Users can override by typing their own name
   - Character limit: 50 characters with counter
   - Required field with validation
@@ -117,8 +120,9 @@ The guest ordering process follows a 4-step wizard with progress indicator:
 ### [User Experience Enhancements](#guest-ux-features)
 
 **Funny Name Generation**
-- Automatic generation of coffee-themed names
-- Pattern: [Title] [Coffee-term] [Action/Object]
+- Normal mode: coffee-themed names using pattern [Title] [Coffee-term] [Action/Object]
+- Hacked Mode: hacker-themed names using adjective + noun pattern (e.g., "Shadow Hacker", "Malicious Script")
+- On blur (name field cleared then loses focus), a new name is generated using the active name pool
 - Encourages engagement while maintaining anonymity option
 
 **Progress Tracking**
@@ -336,6 +340,47 @@ Consider a queue with the following orders ahead:
   - Reduced frustration from losing applied filters
   - Enhanced multi-tab browsing support
 
+## Hacked Mode Easter Egg
+
+### [Overview](#hacked-mode-overview)
+
+Hacked Mode is a hidden admin-controlled Easter egg that transforms the site's visual theme and select UI copy site-wide. It is toggled from the admin dashboard and persisted in the Supabase `app_settings` table so that all users see the effect on their next page load.
+
+### [Toggle and Persistence](#hacked-mode-toggle)
+
+- **Location**: Toggle in the Barista Admin Dashboard (bottom of page)
+- **Persistence**: State stored in `app_settings` Supabase table (key: `hacked_mode`, value: `'true'`/`'false'`)
+- **Session Cache**: `localStorage` caches the value to avoid flash-of-unstyled-content on navigation within a session
+- **Scope**: Global — affects all users on next full page load
+- **Toggle failure**: If the Supabase write fails, the optimistic local update is reverted and an error toast is shown
+
+### [Visual Theme (Global)](#hacked-mode-theme)
+
+When active, a `hacked-mode` class is added to `<html>`, triggering a CSS override that covers both guest and admin views:
+
+- **Background**: Dark (`#0d0d0d` page / `#111111` panels / `#161616` cards)
+- **Text**: Green monospace (`#39d353`, Share Tech Mono font)
+- **Borders / inputs**: Dark green (`#1d4a29`)
+- **Buttons**: Dark green-tinted background with hover state
+- **Subtle scanline overlay**: `pointer-events: none` so interactivity is unaffected
+
+### [Guest-Side Behavior Changes](#hacked-mode-guest)
+
+| Element | Normal | Hacked Mode |
+| --- | --- | --- |
+| Welcome page tagline | *(default tagline)* | "Order the world's worst drinks!" |
+| "Order Here" button | "Order Here" | "Get Poisoned Here" |
+| Drink names on drink cards | Original names (e.g., "Espresso") | Randomly prefixed (e.g., "The Worst Espresso") |
+| Auto-generated guest names | Coffee superhero pool | Hacker-themed pool (e.g., "Shadow Hacker") |
+
+- **Drink name prefixes** are assigned randomly on each page load and memoized per drink for stability within a session. Admin views (MenuManagement, OrderDashboard) always show original drink names — prefixes appear only in the guest `DrinkCard` component.
+- **Hacker name generation** uses `generateGuestName(isHackedMode)` — a facade that selects either the coffee superhero pool or the hacker pool. On blur (name field cleared then loses focus) the correct pool is used.
+
+### [Admin-Side Behavior](#hacked-mode-admin)
+
+- Admin views are visually styled by the global CSS (dark theme) but **never show prefixed drink names**.
+- The toggle itself is the only admin-specific functional change.
+
 ## Technical Implementation
 
 ### [State Management](#technical-state)
@@ -408,4 +453,4 @@ Consider a queue with the following orders ahead:
 
 ---
 
-*This document reflects the current implementation as of August 28, 2025, updated to include Menu Management URL persistence functionality and configurable guest password bypass. All features documented have been verified as working in the live application. For the latest updates, refer to the application overview and technical documentation.*
+*This document reflects the current implementation as of March 21, 2026, updated to include the Hacked Mode Easter Egg (admin toggle, global CSS theme, hacker name generation, drink name prefixes, Supabase `app_settings` persistence). All features documented have been verified as working in the live application. For the latest updates, refer to the application overview and technical documentation.*

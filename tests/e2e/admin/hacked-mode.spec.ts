@@ -80,6 +80,59 @@ test.describe("Hacked Mode — DB Persistence", () => {
     );
   });
 
+  test("blur on empty name field regenerates a hacker name when hacked mode is on", async ({ page }) => {
+    // beforeEach already navigated to /admin and ensured hacked mode is off
+    // The toggle should already be visible (we're logged in)
+    const toggle = page.getByTestId("hacked-mode-toggle");
+    await expect(toggle).toBeVisible({ timeout: 5000 });
+
+    // Enable hacked mode via admin toggle (persists to DB)
+    await toggle.click();
+    await expect(toggle).toHaveAttribute("aria-checked", "true");
+
+    // Navigate to guest order page
+    await page.goto("/order");
+    await page.waitForLoadState("networkidle");
+
+    // Handle potential guest password protection
+    const passwordInput = page.locator('input[type="password"]');
+    if (await passwordInput.isVisible({ timeout: 2000 }).catch(() => false)) {
+      await passwordInput.fill(GUEST_PASSWORD);
+      await page.keyboard.press("Enter");
+      await page.waitForLoadState("networkidle");
+    }
+
+    // Select the first drink
+    const firstDrink = page.locator('[data-testid^="drink-card-"]').first();
+    await firstDrink.click();
+
+    // Advance through options to the name step
+    const continueBtn = page.getByRole("button", { name: /Continue/i });
+    await expect(continueBtn).toBeVisible({ timeout: 5000 });
+    await continueBtn.click();
+
+    // Should now be on the "Your Information" step with a generated name
+    const nameInput = page.getByRole("textbox", { name: /Your Name/i });
+    await expect(nameInput).toBeVisible({ timeout: 5000 });
+
+    // Wait for the auto-generated name to be populated (happens via useEffect)
+    await expect(nameInput).not.toHaveValue("", { timeout: 5000 });
+
+    // Click the name field to clear the generated name
+    await nameInput.click();
+    await expect(nameInput).toHaveValue("");
+
+    // Tab away to trigger blur (should regenerate a hacker name)
+    await page.keyboard.press("Tab");
+
+    // The regenerated name should be a hacker-themed name (adjective + noun)
+    const hackerTerms =
+      /\b(Shadow|Phantom|Ghost|Null|Void|Cipher|Binary|Toxic|Rogue|Stealth|Poisonous|Corrupted|Crashed|Infected|Malicious|Broken|Hacker|Byte|Exploit|Daemon|Bot|Script|Overflow|Cache|Loop|Stack|Register|Bit|Kernel|Rootkit|Payload|Glitch)\b/;
+    const regeneratedName = await nameInput.inputValue();
+    expect(regeneratedName.length).toBeGreaterThan(0);
+    expect(hackerTerms.test(regeneratedName)).toBe(true);
+  });
+
   test("toggle OFF persists to DB — deactivated state survives page refresh", async ({ page }) => {
     await loginToAdmin(page);
 
