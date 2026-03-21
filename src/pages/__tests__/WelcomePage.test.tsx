@@ -102,13 +102,13 @@ describe('WelcomePage', () => {
     expect(logo).toHaveClass('w-16', 'h-16', 'sm:w-20', 'sm:h-20', 'md:w-24', 'md:h-24')
   })
 
-  it('displays technology stack badges', () => {
+  it('does not display technology stack badges', () => {
     render(<WelcomePage />)
-    
-    // Check for technology badges
-    expect(screen.getByText('React + TypeScript')).toBeInTheDocument()
-    expect(screen.getByText('Tailwind CSS')).toBeInTheDocument()
-    expect(screen.getByText('Supabase')).toBeInTheDocument()
+
+    // Tech badges were removed from the welcome page
+    expect(screen.queryByText('React + TypeScript')).not.toBeInTheDocument()
+    expect(screen.queryByText('Tailwind CSS')).not.toBeInTheDocument()
+    expect(screen.queryByText('Supabase')).not.toBeInTheDocument()
   })
 
   it('has proper semantic structure', () => {

@@ -42,23 +42,6 @@ function WelcomePage() {
             ⚙️ Barista Administration
           </Link>
         </div>
-        
-        <div className="mt-8 text-sm text-coffee-500">
-          <p>
-            A simple, password-protected coffee ordering system for your workspace
-          </p>
-          <div className="mt-4 flex justify-center space-x-4 text-xs">
-            <span className="bg-coffee-100 text-coffee-700 px-2 py-1 rounded">
-              React + TypeScript
-            </span>
-            <span className="bg-coffee-100 text-coffee-700 px-2 py-1 rounded">
-              Tailwind CSS
-            </span>
-            <span className="bg-coffee-100 text-coffee-700 px-2 py-1 rounded">
-              Supabase
-            </span>
-          </div>
-        </div>
       </div>
     </div>
   )

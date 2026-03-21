@@ -69,11 +69,32 @@ function AdminDashboard({ onNavigate }: { onNavigate: (_view: AdminView) => void
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="bg-white rounded-lg shadow-lg p-8">
-        <div className="flex items-center mb-6">
-          <Logo size="md" className="mr-3" alt="Uy, Kape! Logo" />
-          <h2 className="text-3xl font-bold text-coffee-800">
-            Barista Administration
-          </h2>
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+          <div className="flex items-center">
+            <Logo size="md" className="mr-3" alt="Uy, Kape! Logo" />
+            <h2 className="text-3xl font-bold text-coffee-800">
+              Barista Administration
+            </h2>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-coffee-600">🐣 Hacked Mode</span>
+            <button
+              role="switch"
+              aria-checked={isHackedMode}
+              aria-label="Toggle Hacked Mode"
+              data-testid="hacked-mode-toggle"
+              onClick={handleHackedModeToggle}
+              className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:ring-offset-2 ${
+                isHackedMode ? 'bg-green-600' : 'bg-coffee-300'
+              }`}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                  isHackedMode ? 'translate-x-6' : 'translate-x-1'
+                }`}
+              />
+            </button>
+          </div>
         </div>
         
         <div className="grid md:grid-cols-2 gap-8">
@@ -108,58 +129,6 @@ function AdminDashboard({ onNavigate }: { onNavigate: (_view: AdminView) => void
               Available Now
             </div>
           </button>
-        </div>
-        
-        <div className="mt-8 p-6 bg-coffee-50 rounded-lg">
-          <h4 className="font-semibold text-coffee-800 mb-2">
-            System Status:
-          </h4>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">✓</div>
-              <div className="text-sm text-coffee-600">Menu System</div>
-              <div className="text-xs text-green-600">Active</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">✓</div>
-              <div className="text-sm text-coffee-600">Order System</div>
-              <div className="text-xs text-green-600">Active</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">🔄</div>
-              <div className="text-sm text-coffee-600">Real-time Updates</div>
-              <div className="text-xs text-blue-600">Active</div>
-            </div>
-          </div>
-        </div>
-
-        {/* Easter Egg section */}
-        <div className="mt-8 p-6 bg-coffee-50 rounded-lg border border-coffee-200">
-          <h4 className="font-semibold text-coffee-800 mb-4">🐣 Easter Egg</h4>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-coffee-700 font-medium">Hacked Mode</p>
-              <p className="text-coffee-600 text-sm">
-                Transform the entire site into a hacker aesthetic
-              </p>
-            </div>
-            <button
-              role="switch"
-              aria-checked={isHackedMode}
-              aria-label="Toggle Hacked Mode"
-              data-testid="hacked-mode-toggle"
-              onClick={handleHackedModeToggle}
-              className={`relative inline-flex h-6 w-11 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-coffee-500 focus:ring-offset-2 ${
-                isHackedMode ? 'bg-green-600' : 'bg-coffee-300'
-              }`}
-            >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
-                  isHackedMode ? 'translate-x-6' : 'translate-x-1'
-                }`}
-              />
-            </button>
-          </div>
         </div>
       </div>
     </div>
