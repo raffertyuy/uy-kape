@@ -1,5 +1,5 @@
 ---
-mode: "run-agent"
+name: regression-test
 description: "Run through every functionality of the application to test and fix."
 ---
 

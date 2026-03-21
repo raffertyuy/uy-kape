@@ -1,3 +1,8 @@
+---
+name: exploratory-test
+description: "Do a full exploratory functional testing on the application using Playwright MCP."
+---
+
 Do a full exploratory functional testing on my application using playwright MCP.
 
 Refer to these documents for exploratory functional testing testing

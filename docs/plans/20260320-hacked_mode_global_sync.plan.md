@@ -71,7 +71,7 @@ making it apply to **all users** when the admin enables it.
     - `supabase/seed.sql`: Add the `app_settings` seed INSERT (for local `supabase db reset`).
   - **Dependencies**: None
   - **Migration execution — local**:
-    - Follow `/.github/prompt-snippets/supabase-cli-instructions.md` (CLI is `npx supabase`).
+    - Follow `/.claude/prompt-snippets/supabase-cli-instructions.md` (CLI is `npx supabase`).
     - Ensure local Supabase is running: `npx supabase start`
     - Apply to local: `npx supabase migration up`
     - Verify the table exists locally before continuing.
@@ -213,8 +213,8 @@ making it apply to **all users** when the admin enables it.
   - **Files**: None (validation only).
   - **Dependencies**: Steps 1–4
   - **Additional Instructions**:
-    - Follow `/.github/prompt-snippets/npm-run-instructions.md` for starting the dev server.
-    - Follow `/.github/prompt-snippets/playwright-mcp-instructions.md` for Playwright MCP usage.
+    - Follow `/.claude/prompt-snippets/npm-run-instructions.md` for starting the dev server.
+    - Follow `/.claude/prompt-snippets/playwright-mcp-instructions.md` for Playwright MCP usage.
     - Local Supabase must be running (`supabase start`) for the DB write to work locally.
     - Before proceeding with this step, check the conversation history and see if you already
       completed this step.
@@ -262,7 +262,7 @@ making it apply to **all users** when the admin enables it.
   - **Dependencies**: Step 6
   - **Additional Instructions**:
     - The test environment needs a running local Supabase instance. Follow
-      `/.github/prompt-snippets/playwright-mcp-instructions.md`.
+      `/.claude/prompt-snippets/playwright-mcp-instructions.md`.
     - Avoid asserting specific DB row values — assert visible UI behaviour (CSS class, text
       content, toggle state).
     - Before proceeding with this step, check the conversation history and see if you already

@@ -2,7 +2,14 @@
 
 ```text
 uy-kape/
-├── .github/               # GitHub configs, workflows, AI instructions
+├── .claude/               # Claude Code & Copilot shared AI config
+│   ├── prompt-snippets/   # Reusable prompt text snippets
+│   ├── rules/             # Path-based rules (wrappers for .github/instructions/)
+│   ├── skills/            # Slash-command skills (plan, implement, run, etc.)
+│   └── settings.json      # Claude Code project settings
+├── .github/               # GitHub configs, workflows, path-based instructions
+├── .mcp.json              # Claude Code MCP server configuration
+├── CLAUDE.md              # Shared AI assistant instructions (Claude Code + Copilot)
 ├── .env.ci                # CI environment variables
 ├── .env.example           # Template env vars
 ├── CODE_OF_CONDUCT.md     # Community guidelines
@@ -77,7 +84,7 @@ uy-kape/
 6. Real‑Time Features: Supabase channels & presence are encapsulated in hooks (`useMenuSubscriptions`) and service abstractions; UI surfaces connection via components like `RealtimeIndicator`.
 7. Logo Integration: The reusable Logo component (`src/components/ui/Logo.tsx`) provides consistent branding across the application with responsive sizing variants (xs, sm, md, lg, xl, hero) and accessibility features.
 8. E2E Testing: End-to-end tests are organized in `tests/e2e/` with domain-specific subdirectories (admin/, guest/, system/) for better organization and maintainability. Centralized test configurations are located in `tests/config/` with shared Vitest and Playwright setup files. All test execution outputs, reports, and artifacts are consolidated in `tests/outputs/`. Test scripts are available in `package.json` (`test:e2e`, `test:e2e:headed`, `test:e2e:debug`).
-9. AI Assistant Context: The `.github/instructions/` directory contains augmentation rules leveraged by automated agents—keep these synchronized with code changes that alter public contracts.
+9. AI Assistant Context: Shared AI instructions live in `CLAUDE.md` (root). Path-based rules are in `.github/instructions/` (source of truth) with thin wrappers in `.claude/rules/`. Skills (slash commands) are in `.claude/skills/` and prompt snippets in `.claude/prompt-snippets/`. MCP servers are configured in both `.mcp.json` (Claude Code) and `.vscode/mcp.json` (Copilot).
 10. Build Artifacts: `dist/` is disposable; never commit manual edits there.
 11. Scripts: Keep cross‑platform operational scripts idempotent. For new scripts, provide Windows (`.ps1`) and POSIX (`.sh`) variants when feasible.
 12. Documentation Hygiene: Update this file when (a) adding/removing a top‑level folder, (b) materially restructuring `docs/`, or (c) introducing a new architectural layer.

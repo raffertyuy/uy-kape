@@ -1,5 +1,5 @@
 ---
-mode: "agent"
+name: continue-implementation-plan
 description: "Continue working on the step by step plan"
 ---
 

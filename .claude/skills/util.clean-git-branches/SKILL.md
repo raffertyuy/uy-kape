@@ -1,5 +1,5 @@
 ---
-mode: "agent"
+name: util.clean-git-branches
 description: "Update local git and clean up branches"
 ---
 

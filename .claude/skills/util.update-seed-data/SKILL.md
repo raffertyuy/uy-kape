@@ -1,5 +1,5 @@
 ---
-mode: "agent"
+name: util.update-seed-data
 description: "Updates `database/seed.sql` based on what's in supabase"
 ---
 

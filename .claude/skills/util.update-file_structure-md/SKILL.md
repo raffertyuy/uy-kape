@@ -1,5 +1,5 @@
 ---
-mode: "agent"
+name: util.update-file_structure-md
 description: "Updates `docs/file_structure.md` according to the latest."
 ---
 

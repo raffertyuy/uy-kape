@@ -1,5 +1,5 @@
 ---
-mode: "run-agent"
+name: 3-run
 description: "Run the application locally and fix any errors encountered."
 ---
 

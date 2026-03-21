@@ -435,9 +435,9 @@ immediately (auto-save, no save button needed).
 
   - **Files**: No code changes — validation only.
   - **Additional Instructions**:
-    - Run the app following [npm-run-instructions](/.github/prompt-snippets/npm-run-instructions.md).
+    - Run the app following [npm-run-instructions](/.claude/prompt-snippets/npm-run-instructions.md).
     - If using Playwright MCP, follow
-      [playwright-mcp-instructions](/.github/prompt-snippets/playwright-mcp-instructions.md).
+      [playwright-mcp-instructions](/.claude/prompt-snippets/playwright-mcp-instructions.md).
     - When done, mark this step as complete and summarize any issues found.
 
 - [ ] Step 11: Write unit tests

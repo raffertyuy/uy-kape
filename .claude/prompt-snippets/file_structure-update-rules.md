@@ -18,7 +18,8 @@ When generating the tree, add a comment on the right to describe the folder or f
 
 ```text
 uy-kape/
-├── .github/               # GitHub configs, workflows, AI instructions
+├── .claude/               # Claude Code & Copilot shared AI config
+├── .github/               # GitHub configs, workflows, path-based instructions
 └── package.json           # Dependencies & scripts
 ```
 

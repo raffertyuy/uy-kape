@@ -1,5 +1,5 @@
 ---
-mode: "run-agent"
+name: util.update-functional_specs-md
 description: "Updates the functional documents using playwright mcp."
 ---
 
@@ -15,7 +15,7 @@ See `docs/specs/application_overview.md` to know the different functions of this
 
 ## Rules for Running the App
 
-[playwright-mcp-instructions.md](./playwright-mcp-instructions.md)
+[playwright-mcp-instructions.md](../prompt-snippets/playwright-mcp-instructions.md)
 
 ## Final Touches
 

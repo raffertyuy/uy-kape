@@ -136,7 +136,7 @@ Create a GitHub Actions workflow that runs daily SELECT queries on the Supabase 
     ```
   - **Additional Instructions**:
     - Before proceeding with this step, check the conversation history and see if you already completed this step.
-    - If you are running any CLI command, follow [cli-execution-instructions](/.github/prompt-snippets/cli-execution-instructions.md)
+    - If you are running any CLI command, follow [cli-execution-instructions](/.claude/prompt-snippets/cli-execution-instructions.md)
     - The workflow should be simple and focused on the objective
     - When you are done with this step, mark this step as complete and add a note/summary of what you did (in the plan document) before proceeding to the next step.
   - **Completion Note**: Created .github/workflows/keep-database-active.yml with daily cron schedule (midnight UTC), manual trigger capability, and proper Node.js setup including npm cache. The workflow uses the ping-database.js script from Step 2.
@@ -192,7 +192,7 @@ Create a GitHub Actions workflow that runs daily SELECT queries on the Supabase 
     - Before proceeding with this step, check the conversation history and see if you already completed this step.
     - User intervention required: User must push changes to GitHub and trigger workflow
     - If there are errors, review the logs and fix any issues
-    - If you are running any CLI command, follow [cli-execution-instructions](/.github/prompt-snippets/cli-execution-instructions.md)
+    - If you are running any CLI command, follow [cli-execution-instructions](/.claude/prompt-snippets/cli-execution-instructions.md)
     - When you are done with this step, mark this step as complete and add a note/summary of what you did (in the plan document) before proceeding to the next step.
   - **Completion Note**: Validated all created files. Fixed linting issues by adding scripts/ to ESLint ignore list. All files pass linting. User action required: 1) Add SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY secrets to GitHub repository, 2) Push changes to GitHub, 3) Manually trigger workflow via GitHub Actions tab to test.
 

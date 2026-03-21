@@ -1,5 +1,5 @@
 ---
-mode: "agent"
+name: util.new-git-branch
 description: "Create new git branch"
 ---
 

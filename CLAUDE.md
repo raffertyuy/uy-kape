@@ -14,7 +14,9 @@ You are an AI coding assistant that help me with everything software engineering
 
 ### File and Folder Instructions and References
 
-To know what each file and folder does, or to look for any project documentation information, refer to [file_structure](/docs/file_structure.md)
+To know what each file and folder does, or to look for any project documentation information, refer to:
+@docs/file_structure.md
+[file_structure](/docs/file_structure.md)
 
 Check the files in `/.github/instructions/*.instructions.md` for any additional instructions based on the file you are working on. This **INCLUDES _NEW_** files that you are creating.
 
@@ -27,7 +29,9 @@ When creating/updating markdown `*.md` files, write in a way that will not cause
 
 ### Coding Standards
 
-All code changes must follow our [coding-standards](/.github/prompt-snippets/coding-standards.md).
+All code changes must follow our coding standards:
+@.claude/prompt-snippets/coding-standards.md
+[coding-standards](/.claude/prompt-snippets/coding-standards.md)
 
 **NEVER** Commit Without:
 
@@ -43,14 +47,26 @@ All code changes must follow our [coding-standards](/.github/prompt-snippets/cod
 
 ## CLI Instructions
 
-General instructions: [cli-execution-instructions](./prompt-snippets/cli-execution-instructions.md)
-Supabase CLI instructions: [supabase-cli-instructions](./prompt-snippets/supabase-cli-instructions.md)
-Running the app (npm run) instructions: [npm-run-instructions](./prompt-snippets/npm-run-instructions.md)
+General instructions:
+@.claude/prompt-snippets/cli-execution-instructions.md
+[cli-execution-instructions](./.claude/prompt-snippets/cli-execution-instructions.md)
+
+Supabase CLI instructions:
+@.claude/prompt-snippets/supabase-cli-instructions.md
+[supabase-cli-instructions](./.claude/prompt-snippets/supabase-cli-instructions.md)
+
+Running the app (npm run) instructions:
+@.claude/prompt-snippets/npm-run-instructions.md
+[npm-run-instructions](./.claude/prompt-snippets/npm-run-instructions.md)
 
 ## MCP Instructions:
 
-When using Playwright MCP, follow [playwright-mcp-instructions](./prompt-snippets/playwright-mcp-instructions.md)
+When using Playwright MCP, follow:
+@.claude/prompt-snippets/playwright-mcp-instructions.md
+[playwright-mcp-instructions](./.claude/prompt-snippets/playwright-mcp-instructions.md)
 
 ## Definition of Done
 
-All changes must comply with our [definition_of_done](/docs/specs/definition_of_done.md).
+All changes must comply with our definition of done:
+@docs/specs/definition_of_done.md
+[definition_of_done](/docs/specs/definition_of_done.md)

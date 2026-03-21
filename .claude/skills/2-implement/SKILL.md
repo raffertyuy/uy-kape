@@ -1,5 +1,5 @@
 ---
-mode: "agent"
+name: 2-implement
 description: "Implement a plan step by step"
 ---
 

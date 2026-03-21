@@ -4,7 +4,7 @@ This app is **100% vibe coded!** using [GitHub Copilot](https://copilot.github.c
 
 Most of the features were implemented using the [plan-implement-run pattern](#vibe-coding-walkthrough-plan-implement-run). This starts with writing a task objective in [scratch.md](/scratch.md) and then running `/1-plan #file:scratch.md` in GitHub Copilot Chat.
 
-If you want to go straight to the prompts, check out the files in the [.github/](/.github/) folder.
+If you want to go straight to the prompts, check out the files in the [.claude/](/.claude/) folder.
 
 ## Vibe Coding Walkthrough: Plan-Implement-Run
 
@@ -64,7 +64,7 @@ As the agent goes through the implementation plan, it will occassionally _"summa
 [![Watch the video](https://img.youtube.com/vi/UXekqsU5HLE/hqdefault.jpg)](https://www.youtube.com/embed/UXekqsU5HLE)
 
 > [!NOTE]
-> This is the reason why we have repeated **"Additional Instructions"** on every step of the [plan](/.github/prompts/1-plan.prompt.md). We are assuming that the agent might summarize certain general instructions (Not sure, but I'm assuming that it might also summarize the instructions in [copilot-instructions](/.github/copilot-instructions.md)).
+> This is the reason why we have repeated **"Additional Instructions"** on every step of the [plan](/.claude/skills/1-plan/SKILLS.md). We are assuming that the agent might summarize certain general instructions (Not sure, but I'm assuming that it might also summarize the instructions in [CLAUDE.md](/CLAUDE.md)).
 
 ### Step 3: Run
 
@@ -76,7 +76,7 @@ Once implementation is done, do a final check and run using this prompt:
 
 [![Watch the video](https://img.youtube.com/vi/heAnUYVfZU0/hqdefault.jpg)](https://www.youtube.com/embed/heAnUYVfZU0)
 
-This runs the app according to the [regression testing methodology](/.github/prompt-snippets/regression-test.md), and fixes any issues that it encounters. This includes validating if implementation complies with this project's [definition of done](/docs/specs/definition_of_done.md).
+This runs the app according to the [regression testing methodology](/.claude/prompt-snippets/regression-test.md), and fixes any issues that it encounters. This includes validating if implementation complies with this project's [definition of done](/docs/specs/definition_of_done.md).
 
 ### (OPTIONAL) Step 4: Update Documents
 
@@ -143,6 +143,6 @@ To clean up your local git, run:
 
 ## Additional Utility Prompts, and more
 
-There are other prompts found in the [.github/](/.github/) folder that are not mentioned in this guide. Explore this folder to see what they are.
+There are other prompts found in the [.claude/](/.claude/) folder that are not mentioned in this guide. Explore this folder to see what they are.
 
-Many of these are the _utility prompts_ (with the file format `util.*.prompt.md`). These are handy prompts that are useful for various regular tasks.
+Many of these are the _utility skills_ (with the file format `util.*.md` in `.claude/skills/`). These are handy prompts that are useful for various regular tasks.

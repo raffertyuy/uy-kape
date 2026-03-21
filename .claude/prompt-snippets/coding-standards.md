@@ -5,7 +5,7 @@
 ### ReactJS & TypeScript
 
 For comprehensive ReactJS, TypeScript, and frontend development standards, refer to:
-**[ReactJS Instructions](../.github/instructions/reactjs.instructions.md)**
+**[ReactJS Instructions](../../.github/instructions/reactjs.instructions.md)**
 
 Key areas covered:
 
@@ -19,7 +19,7 @@ Key areas covered:
 ### PostgreSQL & Database
 
 For comprehensive PostgreSQL and database development standards, refer to:
-**[SQL Instructions](../.github/instructions/sql.instructions.md)**
+**[SQL Instructions](../../.github/instructions/sql.instructions.md)**
 
 Key areas covered:
 
