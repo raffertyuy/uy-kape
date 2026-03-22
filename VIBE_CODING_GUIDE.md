@@ -1,8 +1,8 @@
 # Vibe Coding Guide
 
-This app is **100% vibe coded!** using [GitHub Copilot](https://copilot.github.com)! This document explains the prompts created to make this possible.
+This app is **100% vibe coded!** using [Claude Code](https://claude.com/claude-code) and [GitHub Copilot](https://copilot.github.com)! This document explains the prompts created to make this possible.
 
-Most of the features were implemented using the [plan-implement-run pattern](#vibe-coding-walkthrough-plan-implement-run). This starts with writing a task objective in [scratch.md](/scratch.md) and then running `/1-plan #file:scratch.md` in GitHub Copilot Chat.
+Most of the features were implemented using the [plan-implement-run pattern](#vibe-coding-walkthrough-plan-implement-run). This starts with writing a task objective in [scratch.md](/scratch.md) and then running `/1-plan` with the requirements in either Claude Code or GitHub Copilot agent.
 
 If you want to go straight to the prompts, check out the files in the [.claude/](/.claude/) folder.
 
@@ -10,10 +10,13 @@ If you want to go straight to the prompts, check out the files in the [.claude/]
 
 We started with project by building the foundations for the plan-implement-run pattern. Check out this [blog post](https://raffertyuy.com/raztype/vibe-coding-plan-implement-run/) to learn of its foundations.
 
+> [!NOTE]
+> While the blog post above is the foundation, this repo has since been updated to be cross-compatible with both **Claude Code** and **GitHub Copilot**. For details on how cross-compatibility works, see [Claude Code + Copilot Cross-Compatibility](https://raffertyuy.com/raztype/claude-copilot-xcompatibility/).
+
 ### Step 1: Plan
 
 1. Think about what feature or task you want the agent to implement. Edit [scratch.md](/scratch.md) if you think it will be a long requirement.
-2. Open up GitHub Copilot Chat and run one of the following:
+2. Open up Claude Code or GitHub Copilot agent and run one of the following:
 
   ```text
   /1-plan YOUR_REQUIREMENTS_HERE
@@ -45,7 +48,7 @@ This will begin the implementation process based on the plan.
 [![Watch the video](https://img.youtube.com/vi/Kd6PL9QnrCY/hqdefault.jpg)](https://www.youtube.com/embed/Kd6PL9QnrCY)
 
 > [!TIP]
-> If you are able, it is useful to actively read and check what the agent is doing. If you see that it is going the wrong direction, press the **STOP** button in the Copilot Chat panel and correct its course. Here are frequent interruption messages used while implementing this:
+> If you are able, it is useful to actively read and check what the agent is doing. If you see that it is going the wrong direction, press the **STOP** button in the agent panel and correct its course. Here are frequent interruption messages used while implementing this:
 >
 > - `supabase cli is not globally installed, see #file:supabase_cli_instructions.md`
 > - `don't forget to take into account our #file:dual_testing_strategy.md`
@@ -112,13 +115,13 @@ Once the functional documents are updated, you can try running a full regression
 
 ### Step 6: Submit a Pull Request and fix CI errors
 
-At this point, you are ready to submit a pull request. Head to [github.com](https://github.com) to do so. There is **no prompt file** for this - as it's easier to take advantage of GitHub Copilot's PR summary feature.
+At this point, you are ready to submit a pull request. Head to [github.com](https://github.com) to do so, or use Claude Code to create the PR directly from the terminal. There is **no prompt file** for this - as it's easier to take advantage of GitHub Copilot's PR summary feature or Claude Code's built-in git capabilities.
 
 Wait for the CI workflows to run. In the event of errors:
 
 1. Download the raw log of the CI that failed, and then head back to VS Code
 2. Copy the log into a new `dump.log` file.
-3. Prompt copilot with something like `Fix the CI workflow failures, see #file:dump.log`.
+3. Prompt Claude Code or Copilot with something like `Fix the CI workflow failures, see #file:dump.log`.
 
 Once everything is fixed, merge and close the PR.
 
