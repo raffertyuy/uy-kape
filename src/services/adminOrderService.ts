@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import { createChannelTopic } from "@/utils/realtimeChannel";
 import { appConfig } from "@/config/app.config";
 import { supabasePerformanceLogger as _perfLogger } from "@/utils/supabasePerformanceLogger";
 import type { OrderStatus } from "@/types/order.types";
@@ -625,7 +626,7 @@ export const adminOrderService = {
    */
   subscribeToOrderUpdates: (callback: (_payload: any) => void) => {
     const subscription = supabase
-      .channel("admin-orders")
+      .channel(createChannelTopic("admin-orders"))
       .on(
         "postgres_changes",
         {

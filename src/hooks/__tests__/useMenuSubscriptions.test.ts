@@ -66,9 +66,9 @@ describe('useMenuSubscriptions', () => {
     const channelCallCount = (supabase.channel as any).mock.calls.length
     expect(channelCallCount).toBeGreaterThanOrEqual(1)
 
-    // Verify the consolidated channel name
+    // Verify the consolidated channel name (unique suffix per subscriber, see createChannelTopic)
     const channelNames = (supabase.channel as any).mock.calls.map((call: any) => call[0])
-    expect(channelNames).toContain('menu_realtime_consolidated')
+    expect(channelNames).toContainEqual(expect.stringMatching(/^menu_realtime_consolidated:\d+$/))
 
     // Verify .on() was called for all 5 tables on the channel
     const channelInstance = (supabase.channel as any).mock.results[0].value

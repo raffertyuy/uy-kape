@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react'
 import { supabase } from '@/lib/supabase'
+import { createChannelTopic } from '@/utils/realtimeChannel'
 import {
   drinkCategoriesService,
   drinksService,
@@ -79,7 +80,7 @@ export const useDrinkCategories = () => {
 
     // Set up real-time subscription
     const subscription = supabase
-      .channel('drink_categories_changes')
+      .channel(createChannelTopic('drink_categories_changes'))
       .on('postgres_changes', {
         event: '*',
         schema: 'public',
@@ -129,7 +130,7 @@ export const useDrinks = (categoryId?: string) => {
 
     // Set up real-time subscription
     const subscription = supabase
-      .channel('drinks_changes')
+      .channel(createChannelTopic('drinks_changes'))
       .on('postgres_changes', {
         event: '*',
         schema: 'public',
@@ -202,7 +203,7 @@ export const useDrinksWithOptionsPreview = (categoryId?: string | null) => {
 
     // Set up real-time subscriptions for drinks and related tables
     const drinksSubscription = supabase
-      .channel('drinks_with_options_changes')
+      .channel(createChannelTopic('drinks_with_options_changes'))
       .on('postgres_changes', {
         event: '*',
         schema: 'public',
@@ -211,7 +212,7 @@ export const useDrinksWithOptionsPreview = (categoryId?: string | null) => {
       .subscribe()
 
     const optionsSubscription = supabase
-      .channel('drink_options_changes')
+      .channel(createChannelTopic('drink_options_changes'))
       .on('postgres_changes', {
         event: '*',
         schema: 'public',
@@ -267,7 +268,7 @@ export const useDrinkWithOptions = (drinkId?: string) => {
 
     // Set up real-time subscriptions for drink and its options
     const drinkSubscription = supabase
-      .channel('drink_changes')
+      .channel(createChannelTopic('drink_changes'))
       .on('postgres_changes', {
         event: '*',
         schema: 'public',
@@ -279,7 +280,7 @@ export const useDrinkWithOptions = (drinkId?: string) => {
       .subscribe()
 
     const optionsSubscription = supabase
-      .channel('drink_options_changes')
+      .channel(createChannelTopic('drink_options_changes'))
       .on('postgres_changes', {
         event: '*',
         schema: 'public',
@@ -329,7 +330,7 @@ export const useOptionCategories = () => {
 
     // Set up real-time subscription
     const subscription = supabase
-      .channel('option_categories_changes')
+      .channel(createChannelTopic('option_categories_changes'))
       .on('postgres_changes', {
         event: '*',
         schema: 'public',
@@ -377,7 +378,7 @@ export const useOptionCategoriesWithValues = () => {
 
     // Set up real-time subscriptions
     const categoriesSubscription = supabase
-      .channel('option_categories_with_values_changes')
+      .channel(createChannelTopic('option_categories_with_values_changes'))
       .on('postgres_changes', {
         event: '*',
         schema: 'public',
@@ -388,7 +389,7 @@ export const useOptionCategoriesWithValues = () => {
       .subscribe()
 
     const valuesSubscription = supabase
-      .channel('option_values_changes')
+      .channel(createChannelTopic('option_values_changes'))
       .on('postgres_changes', {
         event: '*',
         schema: 'public',
@@ -445,7 +446,7 @@ export const useOptionValues = (categoryId?: string) => {
 
     // Set up real-time subscription
     const subscription = supabase
-      .channel('option_values_by_category_changes')
+      .channel(createChannelTopic('option_values_by_category_changes'))
       .on('postgres_changes', {
         event: '*',
         schema: 'public',
