@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { createChannelTopic } from "@/utils/realtimeChannel";
 import { telemetryHelpers } from "@/utils/telemetryLogger";
 import { telemetryConfig } from "@/config/telemetryConfig";
 
@@ -58,7 +59,7 @@ export const useMenuSubscriptions = () => {
   // The useMenuData hooks already create per-table channels for data refetching;
   // this channel is only for UI tracking (connection status, change history).
   useEffect(() => {
-    let channel = supabase.channel("menu_realtime_consolidated");
+    let channel = supabase.channel(createChannelTopic("menu_realtime_consolidated"));
 
     for (const table of MENU_TABLES) {
       channel = channel.on(

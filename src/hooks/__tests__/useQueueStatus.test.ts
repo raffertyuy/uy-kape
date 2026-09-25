@@ -348,8 +348,24 @@ describe("useQueueStatus", () => {
     it("should setup real-time subscriptions when orderId is provided", () => {
       renderHook(() => useQueueStatus(mockOrderId));
 
-      expect(mockSupabase.channel).toHaveBeenCalledWith(`order-${mockOrderId}`);
-      expect(mockSupabase.channel).toHaveBeenCalledWith("queue-updates");
+      // Topics get a unique suffix per subscriber (see createChannelTopic)
+      expect(mockSupabase.channel).toHaveBeenCalledWith(
+        expect.stringMatching(new RegExp(`^order-${mockOrderId}:\\d+$`)),
+      );
+      expect(mockSupabase.channel).toHaveBeenCalledWith(
+        expect.stringMatching(/^queue-updates:\d+$/),
+      );
+    });
+
+    it("should use a distinct channel topic for each hook instance", () => {
+      renderHook(() => useQueueStatus(mockOrderId));
+      renderHook(() => useQueueStatus(mockOrderId));
+
+      const queueTopics = mockSupabase.channel.mock.calls
+        .map(([topic]) => topic)
+        .filter((topic) => topic.startsWith("queue-updates:"));
+      expect(new Set(queueTopics).size).toBe(queueTopics.length);
+      expect(queueTopics.length).toBeGreaterThanOrEqual(2);
     });
 
     it("should not setup subscriptions when orderId is null", () => {

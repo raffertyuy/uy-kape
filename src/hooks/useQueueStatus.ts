@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { createChannelTopic } from "@/utils/realtimeChannel";
 import { orderService } from "@/services/orderService";
 import { calculateDynamicEstimatedTime } from "@/utils/queueUtils";
 import type { OrderServiceError } from "@/types/order.types";
@@ -139,7 +140,7 @@ export function useQueueStatus(orderId: string | null): UseQueueStatusReturn {
 
     // Subscribe to order changes
     const orderSubscription = supabase
-      .channel(`order-${orderId}`)
+      .channel(createChannelTopic(`order-${orderId}`))
       .on(
         "postgres_changes",
         {
@@ -163,7 +164,7 @@ export function useQueueStatus(orderId: string | null): UseQueueStatusReturn {
 
     // Subscribe to queue position changes (when other orders are updated)
     const queueSubscription = supabase
-      .channel("queue-updates")
+      .channel(createChannelTopic("queue-updates"))
       .on(
         "postgres_changes",
         {
