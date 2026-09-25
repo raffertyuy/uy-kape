@@ -54,10 +54,14 @@ This document provides a comprehensive overview of the technology stack used in 
 
 ### **Database**
 
-- **Supabase**: v2.34.3 (CLI)
+- **Supabase**: v2.76.5 (CLI)
   - PostgreSQL database with real-time subscriptions
   - Row Level Security (RLS) policies
   - Real-time multiplayer features
+- **Podman**: v6.1+ (container runtime for local Supabase)
+  - Rootful machine with at least 4 GB memory
+  - Replaces Docker Desktop; Supabase CLI connects through Podman's Docker-compatible API
+  - v6.0.x is not supported on Windows/WSL (container ports are not forwarded to the host)
 
 ### **Database Client**
 
@@ -270,6 +274,7 @@ This document provides a comprehensive overview of the technology stack used in 
   - React Router DOM upgraded to v7 (removed v6 `future` flags, now default behavior)
   - Updated Supabase JS, Tailwind CSS, Testing Library, and transitive dependencies
   - Added explicit `@types/node` (previously only available transitively)
+- **2026-09-25**: Switched local container runtime from Docker Desktop to Podman 6.1+
 
 ---
 

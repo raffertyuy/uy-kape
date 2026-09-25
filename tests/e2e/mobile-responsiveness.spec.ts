@@ -42,14 +42,18 @@ test.describe("Mobile Responsiveness - User Experience", () => {
       await page.getByRole("tab", { name: "All Drinks" }).click();
       await expect(page.getByRole("tabpanel")).toBeVisible();
 
-      // Verify drink selection works
-      const firstDrink = page.getByRole("button", { name: /Tap to select/ })
-        .first();
+      // Verify drink selection works (card accessible name is the drink name,
+      // so select by test id rather than the "Tap to select" hint text)
+      const firstDrink = page.locator('[data-testid^="drink-card-"]').first();
       await expect(firstDrink).toBeVisible();
       await firstDrink.click();
 
-      // Should navigate to drink customization or next step
-      await page.waitForLoadState("networkidle");
+      // Selecting a card advances to customization (or straight to guest info
+      // for drinks without options)
+      await expect(
+        page.getByRole("heading", { name: /Customize Your|Your Information/i })
+          .first(),
+      ).toBeVisible();
     });
 
     test("should work on very narrow mobile screens", async ({ page }) => {

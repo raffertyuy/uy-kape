@@ -66,6 +66,9 @@ _For detailed version information, architectural decisions, and configuration de
 
 - **Node.js** (version 20 or higher)
 - **npm** (comes with Node.js)
+- **Podman** (version 6.1 or higher) with [Podman Desktop](https://podman-desktop.io/) (optional GUI) — container runtime for the local Supabase database
+
+> **Windows note:** Podman 6.0.x on WSL cannot forward container ports to Windows, so `supabase start` fails with `connection refused` on port 54322. Upgrade to 6.1+ (`winget upgrade Podman.CLI`) and recreate the machine, because the fix only applies to newly created machines.
 
 ### Installation and Setup
 
@@ -93,13 +96,34 @@ _For detailed version information, architectural decisions, and configuration de
      VITE_GUEST_BYPASS_PASSWORD=false
      ```
 
-4. **Start the development server:**
+4. **Start the local Supabase database:**
+
+   Create and start a rootful Podman machine (first time only). The Supabase stack runs about 12 containers, so give it at least 4 GB of memory:
+
+   ```bash
+   podman machine init --rootful --memory 4096 --now
+   ```
+
+   Start Supabase and apply migrations and seed data (first time, or whenever you want a clean database):
+
+   ```bash
+   npm run db:setup
+   ```
+
+   On later runs, start the machine with `podman machine start` and then Supabase with `npm run supabase:start` (keeps existing data).
+
+   Run `npx supabase status` and copy the API URL and anon key into `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in `.env`. Stop the stack with `npm run supabase:stop`.
+
+   - **Windows:** Podman serves the Docker API on `npipe:////./pipe/docker_engine`, so the Supabase CLI finds it without extra configuration. Quit Docker Desktop, if installed, before starting the machine so it doesn't take that pipe.
+   - **macOS/Linux:** if the Supabase CLI can't find the container runtime, set `DOCKER_HOST` to the Podman socket path shown by `podman machine inspect` (macOS) or `/run/podman/podman.sock` (Linux, rootful).
+
+5. **Start the development server:**
 
    ```bash
    npm run dev
    ```
 
-5. **Open your browser:**
+6. **Open your browser:**
    - Navigate to `http://localhost:5173` (or the port shown in the terminal)
 
 ### Accessing Features
