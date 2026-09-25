@@ -36,7 +36,7 @@ This document provides a comprehensive overview of the technology stack used in 
 
 ### **Styling & UI**
 
-- **Tailwind CSS**: v3.3.6
+- **Tailwind CSS**: v3.4.19
   - Utility-first CSS framework
   - Custom coffee-themed design system
   - Responsive design patterns
@@ -46,7 +46,7 @@ This document provides a comprehensive overview of the technology stack used in 
 
 ### **Routing**
 
-- **React Router DOM**: v6.20.1
+- **React Router DOM**: v7.18.4
   - Client-side routing
   - Nested routes and protected routes
 
@@ -61,7 +61,7 @@ This document provides a comprehensive overview of the technology stack used in 
 
 ### **Database Client**
 
-- **@supabase/supabase-js**: v2.55.0
+- **@supabase/supabase-js**: v2.117.1
   - Official Supabase JavaScript client
   - Real-time subscriptions and presence
   - Authentication and authorization
@@ -92,7 +92,7 @@ This document provides a comprehensive overview of the technology stack used in 
 
 ### **React Testing**
 
-- **@testing-library/react**: v16.3.0
+- **@testing-library/react**: v16.3.3
 - **@testing-library/jest-dom**: v6.7.0
 - **@testing-library/user-event**: v14.6.1
 - **jsdom**: v26.1.0 (browser environment simulation)
@@ -111,7 +111,7 @@ This document provides a comprehensive overview of the technology stack used in 
 - **@typescript-eslint/parser**: v6.14.0
 - **eslint-plugin-react**: v7.37.5
 - **eslint-plugin-react-hooks**: v4.6.0
-- **eslint-plugin-react-refresh**: v0.4.5
+- **eslint-plugin-react-refresh**: v0.4.26 (v0.5+ requires ESLint 9)
 - **eslint-plugin-jsx-a11y**: v6.10.2 (accessibility)
 
 ### **Code Quality Rules**
@@ -158,6 +158,7 @@ This document provides a comprehensive overview of the technology stack used in 
 
 - **@types/react**: v18.2.43
 - **@types/react-dom**: v18.2.17
+- **@types/node**: v20.19.x (matches Node.js 20.x runtime)
 
 ### **Vite Plugins**
 
@@ -265,6 +266,10 @@ This document provides a comprehensive overview of the technology stack used in 
   - Node.js standardized to 20.x across all environments
   - Updated CI/CD pipeline configuration
   - Documented current package versions and architecture decisions
+- **2026-09-25**: Consolidated Dependabot updates
+  - React Router DOM upgraded to v7 (removed v6 `future` flags, now default behavior)
+  - Updated Supabase JS, Tailwind CSS, Testing Library, and transitive dependencies
+  - Added explicit `@types/node` (previously only available transitively)
 
 ---
 

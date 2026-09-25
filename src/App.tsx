@@ -47,10 +47,7 @@ function App() {
           <ToastProvider>
             <GlobalErrorNotification />
             <ErrorHandlingPanel />
-            <BrowserRouter future={{
-              v7_startTransition: true,
-              v7_relativeSplatPath: true
-            }}>
+            <BrowserRouter>
               <ErrorToastIntegration>
                 <Layout>
                   <Suspense fallback={<RouteLoadingFallback />}>
