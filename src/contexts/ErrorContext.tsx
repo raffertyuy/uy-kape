@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import { handleGlobalError } from '../utils/globalErrorHandler'
 import { telemetryLogger, telemetryHelpers } from '../utils/telemetryLogger'
 import { isTelemetryEnabled } from '../config/telemetryConfig'
@@ -10,15 +10,20 @@ interface ErrorContextProviderProps {
   maxErrors?: number
 }
 
-export const ErrorContextProvider: React.FC<ErrorContextProviderProps> = ({ 
-  children, 
-  maxErrors = 5 
+export const ErrorContextProvider: React.FC<ErrorContextProviderProps> = ({
+  children,
+  maxErrors = 5
 }) => {
   const [errors, setErrors] = useState<ErrorWithId[]>([])
 
+  // Track errors.length via ref so addError doesn't need it as a dependency.
+  // The telemetry count being slightly stale is acceptable for non-critical diagnostics.
+  const errorsLengthRef = useRef(errors.length)
+  useEffect(() => { errorsLengthRef.current = errors.length }, [errors.length])
+
   const addError = useCallback((error: unknown, context?: string) => {
     const errorDetails = handleGlobalError(error, context)
-    
+
     // Add a unique ID to the error for tracking
     const errorWithId: ErrorWithId = {
       ...errorDetails,
@@ -34,7 +39,7 @@ export const ErrorContextProvider: React.FC<ErrorContextProviderProps> = ({
             errorId: errorWithId.id,
             contextName: context,
             errorCategory: 'user-reported',
-            totalActiveErrors: errors.length + 1,
+            totalActiveErrors: errorsLengthRef.current + 1,
             handledBy: 'ErrorContext',
           }
         );
@@ -52,7 +57,7 @@ export const ErrorContextProvider: React.FC<ErrorContextProviderProps> = ({
       // Keep only the most recent errors
       return newErrors.slice(0, maxErrors)
     })
-  }, [maxErrors, errors.length])
+  }, [maxErrors])
 
   const clearError = useCallback((id: string) => {
     setErrors(prevErrors => prevErrors.filter(error => error.id !== id))
@@ -66,23 +71,23 @@ export const ErrorContextProvider: React.FC<ErrorContextProviderProps> = ({
     return errors.length > 0 ? errors[0] : null
   }, [errors])
 
-  // Determine if there's a global error that should affect the entire app
-  const isGlobalError = errors.some(error => {
+  // Memoize global error check — only recompute when errors array changes
+  const isGlobalError = useMemo(() => errors.some(error => {
     const message = error.message.toLowerCase()
-    return message.includes('server') || 
-           message.includes('network') || 
+    return message.includes('server') ||
+           message.includes('network') ||
            message.includes('offline') ||
            error.code?.includes('5') // 5xx server errors
-  })
+  }), [errors])
 
   // Auto-clear errors after a certain time (except server errors)
   useEffect(() => {
     if (errors.length === 0) return
 
     const timeouts = errors.map((error) => {
-      const isServerError = error.message.toLowerCase().includes('server') || 
+      const isServerError = error.message.toLowerCase().includes('server') ||
                            error.code?.includes('5')
-      
+
       // Don't auto-clear server errors, let user dismiss them
       if (isServerError) return null
 
@@ -105,7 +110,7 @@ export const ErrorContextProvider: React.FC<ErrorContextProviderProps> = ({
     try {
       // Log error metrics summary periodically
       const errorMetrics = telemetryLogger.getCategoryMetrics('errors');
-      const recentErrors = errors.filter(error => 
+      const recentErrors = errors.filter(error =>
         Date.now() - error.timestamp.getTime() < 60000 // Last minute
       );
 
@@ -136,15 +141,17 @@ export const ErrorContextProvider: React.FC<ErrorContextProviderProps> = ({
     }
   }, [errors, isGlobalError])
 
-  const contextValue: ErrorContextState = {
+  const hasErrors = errors.length > 0
+
+  const contextValue = useMemo<ErrorContextState>(() => ({
     errors,
     isGlobalError,
     addError,
     clearError,
     clearAllErrors,
     getLatestError,
-    hasErrors: errors.length > 0
-  }
+    hasErrors,
+  }), [errors, isGlobalError, addError, clearError, clearAllErrors, getLatestError, hasErrors])
 
   return (
     <ErrorContext.Provider value={contextValue}>

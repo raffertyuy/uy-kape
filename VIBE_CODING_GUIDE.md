@@ -1,19 +1,22 @@
 # Vibe Coding Guide
 
-This app is **100% vibe coded!** using [GitHub Copilot](https://copilot.github.com)! This document explains the prompts created to make this possible.
+This app is **100% vibe coded!** using [Claude Code](https://claude.com/claude-code) and [GitHub Copilot](https://copilot.github.com)! This document explains the prompts created to make this possible.
 
-Most of the features were implemented using the [plan-implement-run pattern](#vibe-coding-walkthrough-plan-implement-run). This starts with writing a task objective in [scratch.md](/scratch.md) and then running `/1-plan #file:scratch.md` in GitHub Copilot Chat.
+Most of the features were implemented using the [plan-implement-run pattern](#vibe-coding-walkthrough-plan-implement-run). This starts with writing a task objective in [scratch.md](/scratch.md) and then running `/1-plan` with the requirements in either Claude Code or GitHub Copilot agent.
 
-If you want to go straight to the prompts, check out the files in the [.github/](/.github/) folder.
+If you want to go straight to the prompts, check out the files in the [.claude/](/.claude/) folder.
 
 ## Vibe Coding Walkthrough: Plan-Implement-Run
 
 We started with project by building the foundations for the plan-implement-run pattern. Check out this [blog post](https://raffertyuy.com/raztype/vibe-coding-plan-implement-run/) to learn of its foundations.
 
+> [!NOTE]
+> While the blog post above is the foundation, this repo has since been updated to be cross-compatible with both **Claude Code** and **GitHub Copilot**. For details on how cross-compatibility works, see [Claude Code + Copilot Cross-Compatibility](https://raffertyuy.com/raztype/claude-copilot-xcompatibility/).
+
 ### Step 1: Plan
 
 1. Think about what feature or task you want the agent to implement. Edit [scratch.md](/scratch.md) if you think it will be a long requirement.
-2. Open up GitHub Copilot Chat and run one of the following:
+2. Open up Claude Code or GitHub Copilot agent and run one of the following:
 
   ```text
   /1-plan YOUR_REQUIREMENTS_HERE
@@ -45,7 +48,7 @@ This will begin the implementation process based on the plan.
 [![Watch the video](https://img.youtube.com/vi/Kd6PL9QnrCY/hqdefault.jpg)](https://www.youtube.com/embed/Kd6PL9QnrCY)
 
 > [!TIP]
-> If you are able, it is useful to actively read and check what the agent is doing. If you see that it is going the wrong direction, press the **STOP** button in the Copilot Chat panel and correct its course. Here are frequent interruption messages used while implementing this:
+> If you are able, it is useful to actively read and check what the agent is doing. If you see that it is going the wrong direction, press the **STOP** button in the agent panel and correct its course. Here are frequent interruption messages used while implementing this:
 >
 > - `supabase cli is not globally installed, see #file:supabase_cli_instructions.md`
 > - `don't forget to take into account our #file:dual_testing_strategy.md`
@@ -64,7 +67,7 @@ As the agent goes through the implementation plan, it will occassionally _"summa
 [![Watch the video](https://img.youtube.com/vi/UXekqsU5HLE/hqdefault.jpg)](https://www.youtube.com/embed/UXekqsU5HLE)
 
 > [!NOTE]
-> This is the reason why we have repeated **"Additional Instructions"** on every step of the [plan](/.github/prompts/1-plan.prompt.md). We are assuming that the agent might summarize certain general instructions (Not sure, but I'm assuming that it might also summarize the instructions in [copilot-instructions](/.github/copilot-instructions.md)).
+> This is the reason why we have repeated **"Additional Instructions"** on every step of the [plan](/.claude/skills/1-plan/SKILLS.md). We are assuming that the agent might summarize certain general instructions (Not sure, but I'm assuming that it might also summarize the instructions in [CLAUDE.md](/CLAUDE.md)).
 
 ### Step 3: Run
 
@@ -76,7 +79,7 @@ Once implementation is done, do a final check and run using this prompt:
 
 [![Watch the video](https://img.youtube.com/vi/heAnUYVfZU0/hqdefault.jpg)](https://www.youtube.com/embed/heAnUYVfZU0)
 
-This runs the app according to the [regression testing methodology](/.github/prompt-snippets/regression-test.md), and fixes any issues that it encounters. This includes validating if implementation complies with this project's [definition of done](/docs/specs/definition_of_done.md).
+This runs the app according to the [regression testing methodology](/.claude/prompt-snippets/regression-test.md), and fixes any issues that it encounters. This includes validating if implementation complies with this project's [definition of done](/docs/specs/definition_of_done.md).
 
 ### (OPTIONAL) Step 4: Update Documents
 
@@ -112,13 +115,13 @@ Once the functional documents are updated, you can try running a full regression
 
 ### Step 6: Submit a Pull Request and fix CI errors
 
-At this point, you are ready to submit a pull request. Head to [github.com](https://github.com) to do so. There is **no prompt file** for this - as it's easier to take advantage of GitHub Copilot's PR summary feature.
+At this point, you are ready to submit a pull request. Head to [github.com](https://github.com) to do so, or use Claude Code to create the PR directly from the terminal. There is **no prompt file** for this - as it's easier to take advantage of GitHub Copilot's PR summary feature or Claude Code's built-in git capabilities.
 
 Wait for the CI workflows to run. In the event of errors:
 
 1. Download the raw log of the CI that failed, and then head back to VS Code
 2. Copy the log into a new `dump.log` file.
-3. Prompt copilot with something like `Fix the CI workflow failures, see #file:dump.log`.
+3. Prompt Claude Code or Copilot with something like `Fix the CI workflow failures, see #file:dump.log`.
 
 Once everything is fixed, merge and close the PR.
 
@@ -143,6 +146,6 @@ To clean up your local git, run:
 
 ## Additional Utility Prompts, and more
 
-There are other prompts found in the [.github/](/.github/) folder that are not mentioned in this guide. Explore this folder to see what they are.
+There are other prompts found in the [.claude/](/.claude/) folder that are not mentioned in this guide. Explore this folder to see what they are.
 
-Many of these are the _utility prompts_ (with the file format `util.*.prompt.md`). These are handy prompts that are useful for various regular tasks.
+Many of these are the _utility skills_ (with the file format `util.*.md` in `.claude/skills/`). These are handy prompts that are useful for various regular tasks.
