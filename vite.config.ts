@@ -16,10 +16,16 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ["react", "react-dom"],
-          supabase: ["@supabase/supabase-js"],
-          router: ["react-router-dom"],
+        // Assign chunks by package path so shared deps (react, react-dom) stay in
+        // `vendor` instead of being pulled into `router` by react-router v7
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return undefined;
+          if (/[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/.test(id)) {
+            return "vendor";
+          }
+          if (/[\\/]node_modules[\\/]@supabase[\\/]/.test(id)) return "supabase";
+          if (/[\\/]node_modules[\\/]react-router(-dom)?[\\/]/.test(id)) return "router";
+          return undefined;
         },
         // Optimize asset file naming for better caching
         assetFileNames: (assetInfo) => {

@@ -27,13 +27,9 @@ const AllTheProviders = ({
     <HackedModeProvider>
       <ErrorContextProvider>
         <ToastProvider>
-          <MemoryRouter 
-            initialEntries={initialEntries} 
+          <MemoryRouter
+            initialEntries={initialEntries}
             initialIndex={initialIndex}
-            future={{
-              v7_startTransition: true,
-              v7_relativeSplatPath: true
-            }}
           >
             {children}
           </MemoryRouter>
