@@ -250,6 +250,30 @@ CREATE POLICY "Enable update for all users" ON drink_options
 CREATE POLICY "Enable delete for all users" ON drink_options
   FOR DELETE USING (true);
 
+-- ============================================================
+-- App Settings table (global application configuration)
+-- ============================================================
+CREATE TABLE app_settings (
+  key        TEXT        PRIMARY KEY
+, value      TEXT        NOT NULL
+, updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE app_settings ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "app_settings_select" ON app_settings
+  FOR SELECT USING (true);
+
+-- Any role (anon + authenticated) can update settings.
+-- Admin area is protected by client-side password; no Supabase auth is used.
+CREATE POLICY "app_settings_update" ON app_settings
+  FOR UPDATE USING (true) WITH CHECK (true);
+
+CREATE TRIGGER update_app_settings_updated_at
+  BEFORE UPDATE ON app_settings
+  FOR EACH ROW
+  EXECUTE FUNCTION update_updated_at_column();
+
 -- Note: In a production environment, you would want more restrictive policies
 -- For example, only authenticated admin users should be able to update order status
 -- and manage the drinks menu. This simplified approach is for development purposes.

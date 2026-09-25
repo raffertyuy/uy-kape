@@ -137,7 +137,7 @@ This document defines the criteria that all development work must meet before be
 ### **Final Validation**
 
 - [ ] **Feature Complete**: All planned functionality is implemented and working
-- [ ] **Documentation Updated**: All relevant documentation is current
+- [ ] **Documentation Updated**: All relevant documentation is current (README.md, docs/file_structure.md, docs/specs/application_overview.md, docs/specs/functional_specifications.md, docs/specs/db_schema.md, docs/specs/technology_stack.md, etc.)
 - [ ] **Migration Scripts**: Database migrations tested and documented (if applicable)
 - [ ] **Rollback Plan**: Plan for rollback exists for significant changes
 

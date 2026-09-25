@@ -14,17 +14,18 @@ describe('useMenuSubscriptions', () => {
         if (typeof callback === 'function') {
           setTimeout(() => callback('SUBSCRIBED'), 0)
         }
-        return { unsubscribe: mockUnsubscribe }
+        return undefined
       })
-      
+
       const mockChannelInstance = {
         on: vi.fn((_event: string, _config: any, _callback: any) => {
           // Return the channel instance for method chaining
           return mockChannelInstance
         }),
-        subscribe: mockSubscribe
+        subscribe: mockSubscribe,
+        unsubscribe: mockUnsubscribe,
       }
-      
+
       const mockChannel = vi.fn(() => mockChannelInstance)
 
       return {
@@ -56,23 +57,28 @@ describe('useMenuSubscriptions', () => {
     expect(result.current.conflictItems.size).toBe(0)
   })
 
-  it('should set up subscriptions for all menu tables', async () => {
+  it('should set up a single consolidated channel for all menu tables', async () => {
     const { supabase } = await import('@/lib/supabase')
-    
+
     renderHook(() => useMenuSubscriptions())
 
-    // Should create channels for the 5 menu tables
-    // Note: In React StrictMode, effects run twice, so we may see 10 calls (5 x 2)
+    // Should create 1 consolidated channel (may be doubled by StrictMode)
     const channelCallCount = (supabase.channel as any).mock.calls.length
-    expect(channelCallCount).toBeGreaterThanOrEqual(5)
-    
-    // Verify that all required channels are created
+    expect(channelCallCount).toBeGreaterThanOrEqual(1)
+
+    // Verify the consolidated channel name
     const channelNames = (supabase.channel as any).mock.calls.map((call: any) => call[0])
-    expect(channelNames).toContain('drink_categories_realtime')
-    expect(channelNames).toContain('drinks_realtime')
-    expect(channelNames).toContain('option_categories_realtime')
-    expect(channelNames).toContain('option_values_realtime')
-    expect(channelNames).toContain('drink_options_realtime')
+    expect(channelNames).toContain('menu_realtime_consolidated')
+
+    // Verify .on() was called for all 5 tables on the channel
+    const channelInstance = (supabase.channel as any).mock.results[0].value
+    const onCalls = channelInstance.on.mock.calls
+    const subscribedTables = onCalls.map((call: any) => call[1]?.table)
+    expect(subscribedTables).toContain('drink_categories')
+    expect(subscribedTables).toContain('drinks')
+    expect(subscribedTables).toContain('option_categories')
+    expect(subscribedTables).toContain('option_values')
+    expect(subscribedTables).toContain('drink_options')
   })
 
   it('should manage conflict items', () => {
@@ -112,7 +118,6 @@ describe('useMenuSubscriptions', () => {
     unmount()
 
     // Just verify that the hook cleanup doesn't throw errors
-    // We can't easily test the unsubscribe calls with this mocking approach
     expect(true).toBe(true)
   })
 })

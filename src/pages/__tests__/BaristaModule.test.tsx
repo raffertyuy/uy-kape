@@ -57,7 +57,6 @@ describe('BaristaModule URL Parameter Handling', () => {
       expect(screen.getByText('Barista Administration')).toBeInTheDocument()
       expect(screen.getByText('Order Management')).toBeInTheDocument()
       expect(screen.getByText('Menu Management')).toBeInTheDocument()
-      expect(screen.getByText('System Status:')).toBeInTheDocument()
       
       // Should NOT show navigation bar (only shown for non-dashboard views)
       expect(screen.queryByRole('navigation')).not.toBeInTheDocument()
@@ -300,6 +299,41 @@ describe('BaristaModule URL Parameter Handling', () => {
       // Should still show orders content
       expect(screen.getByTestId('order-dashboard')).toBeInTheDocument()
       expect(screen.queryByText('Barista Administration')).not.toBeInTheDocument()
+    })
+  })
+
+  describe('Dashboard Layout', () => {
+    it('shows hacked mode toggle in the dashboard header', () => {
+      render(<ProtectedBaristaModule />, {
+        initialEntries: ['/admin']
+      })
+
+      // Hacked mode toggle should be present in the dashboard view
+      const toggle = screen.getByTestId('hacked-mode-toggle')
+      expect(toggle).toBeInTheDocument()
+      expect(toggle).toHaveAttribute('role', 'switch')
+      expect(toggle).toHaveAttribute('aria-label', 'Toggle Hacked Mode')
+
+      // Label text should be visible
+      expect(screen.getByText(/Hacked Mode/)).toBeInTheDocument()
+    })
+
+    it('does not show system status section', () => {
+      render(<ProtectedBaristaModule />, {
+        initialEntries: ['/admin']
+      })
+
+      // System status was removed (hardcoded, no real health checks)
+      expect(screen.queryByText('System Status:')).not.toBeInTheDocument()
+    })
+
+    it('does not have a separate Easter Egg section', () => {
+      render(<ProtectedBaristaModule />, {
+        initialEntries: ['/admin']
+      })
+
+      // The separate Easter Egg card was removed
+      expect(screen.queryByText('Easter Egg')).not.toBeInTheDocument()
     })
   })
 

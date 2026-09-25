@@ -1,10 +1,12 @@
 import type { ReactElement } from 'react';
 import React from 'react'
 import type { RenderOptions } from '@testing-library/react';
-import { render, act, screen } from '@testing-library/react'
+import { render, renderHook as rtlRenderHook, act, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import userEvent from '@testing-library/user-event'
 import { ErrorContextProvider } from '../../src/contexts/ErrorContext'
+import { HackedModeProvider } from '../../src/contexts/HackedModeContext'
+import { ToastProvider } from '../../src/hooks/useToast'
 
 /**
  * Enhanced provider wrapper for testing with React 19 features
@@ -22,18 +24,22 @@ const AllTheProviders = ({
   initialIndex = 0 
 }: AllTheProvidersProps) => {
   return (
-    <ErrorContextProvider>
-      <MemoryRouter 
-        initialEntries={initialEntries} 
-        initialIndex={initialIndex}
-        future={{
-          v7_startTransition: true,
-          v7_relativeSplatPath: true
-        }}
-      >
-        {children}
-      </MemoryRouter>
-    </ErrorContextProvider>
+    <HackedModeProvider>
+      <ErrorContextProvider>
+        <ToastProvider>
+          <MemoryRouter 
+            initialEntries={initialEntries} 
+            initialIndex={initialIndex}
+            future={{
+              v7_startTransition: true,
+              v7_relativeSplatPath: true
+            }}
+          >
+            {children}
+          </MemoryRouter>
+        </ToastProvider>
+      </ErrorContextProvider>
+    </HackedModeProvider>
   )
 }
 
@@ -123,5 +129,31 @@ export const clickButton = async (buttonText: string | RegExp) => {
 export * from '@testing-library/react'
 export { userEvent }
 
-// Override render method with our enhanced version
+// Override render with our enhanced version (wraps in AllTheProviders)
 export { customRender as render }
+
+// Override renderHook with our enhanced version (wraps in AllTheProviders)
+const customRenderHook = <Result, Props>(
+  callback: (_initialProps: Props) => Result,
+  options?: Parameters<typeof rtlRenderHook<Result, Props>>[1] & {
+    initialEntries?: string[]
+    initialIndex?: number
+  }
+) => {
+  const { initialEntries, initialIndex, wrapper: CustomWrapper, ...rtlOptions } = (options ?? {}) as {
+    initialEntries?: string[]
+    initialIndex?: number
+    wrapper?: React.ComponentType<{ children: React.ReactNode }>
+    [key: string]: unknown
+  }
+  const WrapperWithProviders = ({ children }: { children: React.ReactNode }) =>
+    CustomWrapper
+      ? React.createElement(CustomWrapper, null, children)
+      : React.createElement(AllTheProviders, {
+          ...(initialEntries !== undefined && { initialEntries }),
+          ...(initialIndex !== undefined && { initialIndex }),
+          children,
+        })
+  return rtlRenderHook(callback, { ...rtlOptions, wrapper: WrapperWithProviders })
+}
+export { customRenderHook as renderHook }
