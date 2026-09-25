@@ -10,9 +10,9 @@
 
 ## Vibe Coding
 
-This app is **100% vibe coded!** using [GitHub Copilot](https://copilot.github.com). We do this mostly by following the [plan-implement-run pattern](https://raffertyuy.com/raztype/vibe-coding-plan-implement-run/).
+This app is **100% vibe coded!** using [Claude Code](https://claude.com/claude-code) and [GitHub Copilot](https://copilot.github.com). We do this mostly by following the [plan-implement-run pattern](https://raffertyuy.com/raztype/vibe-coding-plan-implement-run/).
 
-This starts with writing a task objective in [scratch.md](/scratch.md) and then running `/1-plan #file:scratch.md` in GitHub Copilot Chat.
+The prompts and skills in this repo are designed to be cross-compatible with both Claude Code and GitHub Copilot. This starts with writing a task objective in [scratch.md](/scratch.md) and then running `/1-plan` with the requirements.
 
 For more details, read the [VIBE CODING GUIDE](./VIBE_CODING_GUIDE.md).
 

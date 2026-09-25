@@ -85,10 +85,10 @@ The feature is ready for production use. Remaining steps are:
     - Before proceeding with this step, check the conversation history and see if you already completed this step.
     - You do not need to follow this step strictly, consider the output of the previous step and adjust this step as needed.
     - If you are fixing issues that arise from automated tests, ALWAYS take a step back before fixing things, consider that the test script itself might be wrong and that's the one that you should fix. Sometimes the best way to fix a script is to understand the intent of the test script and simplify it.
-    - If you are running the app, follow [npm-run-instructions](/.github/prompt-snippets/npm-run-instructions.md)
-    - If you are running any CLI command, follow [cli-execution-instructions](/.github/prompt-snippets/cli-execution-instructions.md)
-    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.github/prompt-snippets/supabase-cli-instructions.md)
-    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.github/prompt-snippets/playwright-mcp-instructions.md)
+    - If you are running the app, follow [npm-run-instructions](/.claude/prompt-snippets/npm-run-instructions.md)
+    - If you are running any CLI command, follow [cli-execution-instructions](/.claude/prompt-snippets/cli-execution-instructions.md)
+    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.claude/prompt-snippets/supabase-cli-instructions.md)
+    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.claude/prompt-snippets/playwright-mcp-instructions.md)
     - When you are done with this step, mark this step as complete and add a note/summary of what you did (in the plan document) before proceeding to the next step.
     - If you decide to proceed to the next step even if there are remaining issues/errors/failed tests, make a note of the issues (by updating the plan document) and address them in subsequent steps.
 
@@ -132,10 +132,10 @@ The feature is ready for production use. Remaining steps are:
     - Before proceeding with this step, check the conversation history and see if you already completed this step.
     - You do not need to follow this step strictly, consider the output of the previous step and adjust this step as needed.
     - If you are fixing issues that arise from automated tests, ALWAYS take a step back before fixing things, consider that the test script itself might be wrong and that's the one that you should fix. Sometimes the best way to fix a script is to understand the intent of the test script and simplify it.
-    - If you are running the app, follow [npm-run-instructions](/.github/prompt-snippets/npm-run-instructions.md)
-    - If you are running any CLI command, follow [cli-execution-instructions](/.github/prompt-snippets/cli-execution-instructions.md)
-    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.github/prompt-snippets/supabase-cli-instructions.md)
-    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.github/prompt-snippets/playwright-mcp-instructions.md)
+    - If you are running the app, follow [npm-run-instructions](/.claude/prompt-snippets/npm-run-instructions.md)
+    - If you are running any CLI command, follow [cli-execution-instructions](/.claude/prompt-snippets/cli-execution-instructions.md)
+    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.claude/prompt-snippets/supabase-cli-instructions.md)
+    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.claude/prompt-snippets/playwright-mcp-instructions.md)
     - When you are done with this step, mark this step as complete and add a note/summary of what you did (in the plan document) before proceeding to the next step.
     - If you decide to proceed to the next step even if there are remaining issues/errors/failed tests, make a note of the issues (by updating the plan document) and address them in subsequent steps.
 
@@ -166,10 +166,10 @@ The feature is ready for production use. Remaining steps are:
     - Before proceeding with this step, check the conversation history and see if you already completed this step.
     - You do not need to follow this step strictly, consider the output of the previous step and adjust this step as needed.
     - If you are fixing issues that arise from automated tests, ALWAYS take a step back before fixing things, consider that the test script itself might be wrong and that's the one that you should fix. Sometimes the best way to fix a script is to understand the intent of the test script and simplify it.
-    - If you are running the app, follow [npm-run-instructions](/.github/prompt-snippets/npm-run-instructions.md)
-    - If you are running any CLI command, follow [cli-execution-instructions](/.github/prompt-snippets/cli-execution-instructions.md)
-    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.github/prompt-snippets/supabase-cli-instructions.md)
-    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.github/prompt-snippets/playwright-mcp-instructions.md)
+    - If you are running the app, follow [npm-run-instructions](/.claude/prompt-snippets/npm-run-instructions.md)
+    - If you are running any CLI command, follow [cli-execution-instructions](/.claude/prompt-snippets/cli-execution-instructions.md)
+    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.claude/prompt-snippets/supabase-cli-instructions.md)
+    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.claude/prompt-snippets/playwright-mcp-instructions.md)
     - When you are done with this step, mark this step as complete and add a note/summary of what you did (in the plan document) before proceeding to the next step.
     - If you decide to proceed to the next step even if there are remaining issues/errors/failed tests, make a note of the issues (by updating the plan document) and address them in subsequent steps.
 
@@ -193,10 +193,10 @@ The feature is ready for production use. Remaining steps are:
     - Before proceeding with this step, check the conversation history and see if you already completed this step.
     - You do not need to follow this step strictly, consider the output of the previous step and adjust this step as needed.
     - If you are fixing issues that arise from automated tests, ALWAYS take a step back before fixing things, consider that the test script itself might be wrong and that's the one that you should fix. Sometimes the best way to fix a script is to understand the intent of the test script and simplify it.
-    - If you are running the app, follow [npm-run-instructions](/.github/prompt-snippets/npm-run-instructions.md)
-    - If you are running any CLI command, follow [cli-execution-instructions](/.github/prompt-snippets/cli-execution-instructions.md)
-    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.github/prompt-snippets/supabase-cli-instructions.md)
-    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.github/prompt-snippets/playwright-mcp-instructions.md)
+    - If you are running the app, follow [npm-run-instructions](/.claude/prompt-snippets/npm-run-instructions.md)
+    - If you are running any CLI command, follow [cli-execution-instructions](/.claude/prompt-snippets/cli-execution-instructions.md)
+    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.claude/prompt-snippets/supabase-cli-instructions.md)
+    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.claude/prompt-snippets/playwright-mcp-instructions.md)
     - When you are done with this step, mark this step as complete and add a note/summary of what you did (in the plan document) before proceeding to the next step.
     - If you decide to proceed to the next step even if there are remaining issues/errors/failed tests, make a note of the issues (by updating the plan document) and address them in subsequent steps.
 
@@ -239,10 +239,10 @@ The feature is ready for production use. Remaining steps are:
     - Before proceeding with this step, check the conversation history and see if you already completed this step.
     - You do not need to follow this step strictly, consider the output of the previous step and adjust this step as needed.
     - If you are fixing issues that arise from automated tests, ALWAYS take a step back before fixing things, consider that the test script itself might be wrong and that's the one that you should fix. Sometimes the best way to fix a script is to understand the intent of the test script and simplify it.
-    - If you are running the app, follow [npm-run-instructions](/.github/prompt-snippets/npm-run-instructions.md)
-    - If you are running any CLI command, follow [cli-execution-instructions](/.github/prompt-snippets/cli-execution-instructions.md)
-    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.github/prompt-snippets/supabase-cli-instructions.md)
-    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.github/prompt-snippets/playwright-mcp-instructions.md)
+    - If you are running the app, follow [npm-run-instructions](/.claude/prompt-snippets/npm-run-instructions.md)
+    - If you are running any CLI command, follow [cli-execution-instructions](/.claude/prompt-snippets/cli-execution-instructions.md)
+    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.claude/prompt-snippets/supabase-cli-instructions.md)
+    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.claude/prompt-snippets/playwright-mcp-instructions.md)
     - When you are done with this step, mark this step as complete and add a note/summary of what you did (in the plan document) before proceeding to the next step.
     - If you decide to proceed to the next step even if there are remaining issues/errors/failed tests, make a note of the issues (by updating the plan document) and address them in subsequent steps.
 
@@ -267,10 +267,10 @@ The feature is ready for production use. Remaining steps are:
     - Before proceeding with this step, check the conversation history and see if you already completed this step.
     - You do not need to follow this step strictly, consider the output of the previous step and adjust this step as needed.
     - If you are fixing issues that arise from automated tests, ALWAYS take a step back before fixing things, consider that the test script itself might be wrong and that's the one that you should fix. Sometimes the best way to fix a script is to understand the intent of the test script and simplify it.
-    - If you are running the app, follow [npm-run-instructions](/.github/prompt-snippets/npm-run-instructions.md)
-    - If you are running any CLI command, follow [cli-execution-instructions](/.github/prompt-snippets/cli-execution-instructions.md)
-    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.github/prompt-snippets/supabase-cli-instructions.md)
-    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.github/prompt-snippets/playwright-mcp-instructions.md)
+    - If you are running the app, follow [npm-run-instructions](/.claude/prompt-snippets/npm-run-instructions.md)
+    - If you are running any CLI command, follow [cli-execution-instructions](/.claude/prompt-snippets/cli-execution-instructions.md)
+    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.claude/prompt-snippets/supabase-cli-instructions.md)
+    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.claude/prompt-snippets/playwright-mcp-instructions.md)
     - When you are done with this step, mark this step as complete and add a note/summary of what you did (in the plan document) before proceeding to the next step.
     - If you decide to proceed to the next step even if there are remaining issues/errors/failed tests, make a note of the issues (by updating the plan document) and address them in subsequent steps.
 
@@ -296,10 +296,10 @@ The feature is ready for production use. Remaining steps are:
     - Before proceeding with this step, check the conversation history and see if you already completed this step.
     - You do not need to follow this step strictly, consider the output of the previous step and adjust this step as needed.
     - If you are fixing issues that arise from automated tests, ALWAYS take a step back before fixing things, consider that the test script itself might be wrong and that's the one that you should fix. Sometimes the best way to fix a script is to understand the intent of the test script and simplify it.
-    - If you are running the app, follow [npm-run-instructions](/.github/prompt-snippets/npm-run-instructions.md)
-    - If you are running any CLI command, follow [cli-execution-instructions](/.github/prompt-snippets/cli-execution-instructions.md)
-    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.github/prompt-snippets/supabase-cli-instructions.md)
-    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.github/prompt-snippets/playwright-mcp-instructions.md)
+    - If you are running the app, follow [npm-run-instructions](/.claude/prompt-snippets/npm-run-instructions.md)
+    - If you are running any CLI command, follow [cli-execution-instructions](/.claude/prompt-snippets/cli-execution-instructions.md)
+    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.claude/prompt-snippets/supabase-cli-instructions.md)
+    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.claude/prompt-snippets/playwright-mcp-instructions.md)
     - When you are done with this step, mark this step as complete and add a note/summary of what you did (in the plan document) before proceeding to the next step.
     - If you decide to proceed to the next step even if there are remaining issues/errors/failed tests, make a note of the issues (by updating the plan document) and address them in subsequent steps.
 
@@ -358,10 +358,10 @@ The feature is ready for production use. Remaining steps are:
     - Before proceeding with this step, check the conversation history and see if you already completed this step.
     - You do not need to follow this step strictly, consider the output of the previous step and adjust this step as needed.
     - If you are fixing issues that arise from automated tests, ALWAYS take a step back before fixing things, consider that the test script itself might be wrong and that's the one that you should fix. Sometimes the best way to fix a script is to understand the intent of the test script and simplify it.
-    - If you are running the app, follow [npm-run-instructions](/.github/prompt-snippets/npm-run-instructions.md)
-    - If you are running any CLI command, follow [cli-execution-instructions](/.github/prompt-snippets/cli-execution-instructions.md)
-    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.github/prompt-snippets/supabase-cli-instructions.md)
-    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.github/prompt-snippets/playwright-mcp-instructions.md)
+    - If you are running the app, follow [npm-run-instructions](/.claude/prompt-snippets/npm-run-instructions.md)
+    - If you are running any CLI command, follow [cli-execution-instructions](/.claude/prompt-snippets/cli-execution-instructions.md)
+    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.claude/prompt-snippets/supabase-cli-instructions.md)
+    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.claude/prompt-snippets/playwright-mcp-instructions.md)
     - When you are done with this step, mark this step as complete and add a note/summary of what you did (in the plan document) before proceeding to the next step.
     - If you decide to proceed to the next step even if there are remaining issues/errors/failed tests, make a note of the issues (by updating the plan document) and address them in subsequent steps.
 
@@ -400,10 +400,10 @@ The feature is ready for production use. Remaining steps are:
     - Before proceeding with this step, check the conversation history and see if you already completed this step.
     - You do not need to follow this step strictly, consider the output of the previous step and adjust this step as needed.
     - If you are fixing issues that arise from automated tests, ALWAYS take a step back before fixing things, consider that the test script itself might be wrong and that's the one that you should fix. Sometimes the best way to fix a script is to understand the intent of the test script and simplify it.
-    - If you are running the app, follow [npm-run-instructions](/.github/prompt-snippets/npm-run-instructions.md)
-    - If you are running any CLI command, follow [cli-execution-instructions](/.github/prompt-snippets/cli-execution-instructions.md)
-    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.github/prompt-snippets/supabase-cli-instructions.md)
-    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.github/prompt-snippets/playwright-mcp-instructions.md)
+    - If you are running the app, follow [npm-run-instructions](/.claude/prompt-snippets/npm-run-instructions.md)
+    - If you are running any CLI command, follow [cli-execution-instructions](/.claude/prompt-snippets/cli-execution-instructions.md)
+    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.claude/prompt-snippets/supabase-cli-instructions.md)
+    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.claude/prompt-snippets/playwright-mcp-instructions.md)
     - When you are done with this step, mark this step as complete and add a note/summary of what you did (in the plan document) before proceeding to the next step.
     - If you decide to proceed to the next step even if there are remaining issues/errors/failed tests, make a note of the issues (by updating the plan document) and address them in subsequent steps.
 
@@ -431,10 +431,10 @@ The feature is ready for production use. Remaining steps are:
     - Before proceeding with this step, check the conversation history and see if you already completed this step.
     - You do not need to follow this step strictly, consider the output of the previous step and adjust this step as needed.
     - If you are fixing issues that arise from automated tests, ALWAYS take a step back before fixing things, consider that the test script itself might be wrong and that's the one that you should fix. Sometimes the best way to fix a script is to understand the intent of the test script and simplify it.
-    - If you are running the app, follow [npm-run-instructions](/.github/prompt-snippets/npm-run-instructions.md)
-    - If you are running any CLI command, follow [cli-execution-instructions](/.github/prompt-snippets/cli-execution-instructions.md)
-    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.github/prompt-snippets/supabase-cli-instructions.md)
-    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.github/prompt-snippets/playwright-mcp-instructions.md)
+    - If you are running the app, follow [npm-run-instructions](/.claude/prompt-snippets/npm-run-instructions.md)
+    - If you are running any CLI command, follow [cli-execution-instructions](/.claude/prompt-snippets/cli-execution-instructions.md)
+    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.claude/prompt-snippets/supabase-cli-instructions.md)
+    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.claude/prompt-snippets/playwright-mcp-instructions.md)
     - When you are done with this step, mark this step as complete and add a note/summary of what you did (in the plan document) before proceeding to the next step.
     - If you decide to proceed to the next step even if there are remaining issues/errors/failed tests, make a note of the issues (by updating the plan document) and address them in subsequent steps.
 
@@ -464,10 +464,10 @@ The feature is ready for production use. Remaining steps are:
     - Before proceeding with this step, check the conversation history and see if you already completed this step.
     - You do not need to follow this step strictly, consider the output of the previous step and adjust this step as needed.
     - If you are fixing issues that arise from automated tests, ALWAYS take a step back before fixing things, consider that the test script itself might be wrong and that's the one that you should fix. Sometimes the best way to fix a script is to understand the intent of the test script and simplify it.
-    - If you are running the app, follow [npm-run-instructions](/.github/prompt-snippets/npm-run-instructions.md)
-    - If you are running any CLI command, follow [cli-execution-instructions](/.github/prompt-snippets/cli-execution-instructions.md)
-    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.github/prompt-snippets/supabase-cli-instructions.md)
-    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.github/prompt-snippets/playwright-mcp-instructions.md)
+    - If you are running the app, follow [npm-run-instructions](/.claude/prompt-snippets/npm-run-instructions.md)
+    - If you are running any CLI command, follow [cli-execution-instructions](/.claude/prompt-snippets/cli-execution-instructions.md)
+    - If you are using Supabase CLI, follow [supabase-cli-instructions](/.claude/prompt-snippets/supabase-cli-instructions.md)
+    - If you are using Playwright MCP, follow [playwright-mcp-instructions](/.claude/prompt-snippets/playwright-mcp-instructions.md)
     - When you are done with this step, mark this step as complete and add a note/summary of what you did (in the plan document) before proceeding to the next step.
     - If you decide to proceed to the next step even if there are remaining issues/errors/failed tests, make a note of the issues (by updating the plan document) and address them in subsequent steps.
 
