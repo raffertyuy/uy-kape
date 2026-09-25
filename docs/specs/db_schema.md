@@ -76,6 +76,13 @@ erDiagram
         timestamptz created_at "creation timestamp"
     }
     
+    app_settings {
+        text key PK "unique setting key (e.g., hacked_mode)"
+        text value "setting value"
+        timestamptz created_at "creation timestamp"
+        timestamptz updated_at "last update timestamp"
+    }
+
     drink_categories ||--o{ drinks : contains
     drinks ||--o{ drink_options : has_available_options
     drinks ||--o{ orders : ordered_as
@@ -217,6 +224,29 @@ Stores all guest orders with status tracking and queue management.
 
 - Foreign key constraint on `drink_id` with RESTRICT on delete
 - Row Level Security enabled with policies for INSERT, SELECT, and UPDATE operations
+
+### `app_settings` Table
+
+A general-purpose key/value store for application-wide configuration settings.
+
+| Column     | Type        | Description                                          |
+|------------|-------------|------------------------------------------------------|
+| key        | TEXT        | Unique setting key; primary key (e.g., `hacked_mode`) |
+| value      | TEXT        | Setting value (e.g., `'true'` / `'false'`)           |
+| created_at | TIMESTAMPTZ | creation timestamp (default: now())                  |
+| updated_at | TIMESTAMPTZ | last update timestamp (auto-updated by trigger)     |
+
+**Constraints:**
+
+- Primary key on `key`
+- Row Level Security enabled:
+  - `SELECT` permitted for all roles (anon + authenticated)
+  - `UPDATE` permitted for all roles (no Supabase Auth — anon role used throughout)
+  - `INSERT` and `DELETE` not permitted via RLS; seed row is the only row
+
+**Seed data:** One row inserted on migration — `('hacked_mode', 'false')`
+
+**Usage:** Currently stores the `hacked_mode` flag read by `HackedModeContext` on app load and written when the admin toggles Hacked Mode in the dashboard.
 
 ### `order_options` Table
 
@@ -395,3 +425,4 @@ All tables have Row Level Security enabled with policies that:
 - **Security**: Row Level Security (RLS) enabled on all tables with appropriate policies
 - **Views**: Convenience views for common queries reduce application complexity
 - **ENUM Types**: Custom PostgreSQL ENUM for order status ensures data consistency
+- **App Settings**: `app_settings` key/value table stores global feature flags (e.g., Hacked Mode Easter Egg toggle)

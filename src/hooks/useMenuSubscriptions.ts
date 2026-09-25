@@ -17,6 +17,15 @@ export interface ConnectionStatus {
   error: string | null;
 }
 
+/** Menu tables monitored for real-time changes */
+const MENU_TABLES = [
+  "drink_categories",
+  "drinks",
+  "option_categories",
+  "option_values",
+  "drink_options",
+] as const;
+
 export const useMenuSubscriptions = () => {
   const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>({
     connected: false,
@@ -45,161 +54,38 @@ export const useMenuSubscriptions = () => {
     }
   }, []);
 
-  // Subscribe to drink categories changes
+  // Single consolidated channel for all menu tables (instead of 5 separate channels).
+  // The useMenuData hooks already create per-table channels for data refetching;
+  // this channel is only for UI tracking (connection status, change history).
   useEffect(() => {
-    const subscription = supabase
-      .channel("drink_categories_realtime")
-      .on("postgres_changes", {
-        event: "*",
-        schema: "public",
-        table: "drink_categories",
-      }, (payload) => {
-        const change: MenuChange = {
-          table: "drink_categories",
-          event: payload.eventType as any,
-          data: payload.new || payload.old,
-          timestamp: new Date(),
-        };
-        handleExternalChange(change);
-      })
-      .subscribe((status) => {
-        setConnectionStatus((prev) => ({
-          ...prev,
-          connected: status === "SUBSCRIBED",
-          error: status === "CLOSED"
-            ? "Failed to connect to drink categories"
-            : null,
-        }));
-      });
+    let channel = supabase.channel("menu_realtime_consolidated");
+
+    for (const table of MENU_TABLES) {
+      channel = channel.on(
+        "postgres_changes",
+        { event: "*", schema: "public", table },
+        (payload) => {
+          const change: MenuChange = {
+            table,
+            event: payload.eventType as MenuChange["event"],
+            data: payload.new || payload.old,
+            timestamp: new Date(),
+          };
+          handleExternalChange(change);
+        },
+      );
+    }
+
+    channel.subscribe((status) => {
+      setConnectionStatus((prev) => ({
+        ...prev,
+        connected: status === "SUBSCRIBED",
+        error: status === "CLOSED" ? "Failed to connect to menu updates" : null,
+      }));
+    });
 
     return () => {
-      subscription.unsubscribe();
-    };
-  }, [handleExternalChange]);
-
-  // Subscribe to drinks changes
-  useEffect(() => {
-    const subscription = supabase
-      .channel("drinks_realtime")
-      .on("postgres_changes", {
-        event: "*",
-        schema: "public",
-        table: "drinks",
-      }, (payload) => {
-        const change: MenuChange = {
-          table: "drinks",
-          event: payload.eventType as any,
-          data: payload.new || payload.old,
-          timestamp: new Date(),
-        };
-        handleExternalChange(change);
-      })
-      .subscribe((status) => {
-        setConnectionStatus((prev) => ({
-          ...prev,
-          connected: status === "SUBSCRIBED",
-          error: status === "CLOSED" ? "Failed to connect to drinks" : null,
-        }));
-      });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [handleExternalChange]);
-
-  // Subscribe to option categories changes
-  useEffect(() => {
-    const subscription = supabase
-      .channel("option_categories_realtime")
-      .on("postgres_changes", {
-        event: "*",
-        schema: "public",
-        table: "option_categories",
-      }, (payload) => {
-        const change: MenuChange = {
-          table: "option_categories",
-          event: payload.eventType as any,
-          data: payload.new || payload.old,
-          timestamp: new Date(),
-        };
-        handleExternalChange(change);
-      })
-      .subscribe((status) => {
-        setConnectionStatus((prev) => ({
-          ...prev,
-          connected: status === "SUBSCRIBED",
-          error: status === "CLOSED"
-            ? "Failed to connect to option categories"
-            : null,
-        }));
-      });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [handleExternalChange]);
-
-  // Subscribe to option values changes
-  useEffect(() => {
-    const subscription = supabase
-      .channel("option_values_realtime")
-      .on("postgres_changes", {
-        event: "*",
-        schema: "public",
-        table: "option_values",
-      }, (payload) => {
-        const change: MenuChange = {
-          table: "option_values",
-          event: payload.eventType as any,
-          data: payload.new || payload.old,
-          timestamp: new Date(),
-        };
-        handleExternalChange(change);
-      })
-      .subscribe((status) => {
-        setConnectionStatus((prev) => ({
-          ...prev,
-          connected: status === "SUBSCRIBED",
-          error: status === "CLOSED"
-            ? "Failed to connect to option values"
-            : null,
-        }));
-      });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [handleExternalChange]);
-
-  // Subscribe to drink options changes
-  useEffect(() => {
-    const subscription = supabase
-      .channel("drink_options_realtime")
-      .on("postgres_changes", {
-        event: "*",
-        schema: "public",
-        table: "drink_options",
-      }, (payload) => {
-        const change: MenuChange = {
-          table: "drink_options",
-          event: payload.eventType as any,
-          data: payload.new || payload.old,
-          timestamp: new Date(),
-        };
-        handleExternalChange(change);
-      })
-      .subscribe((status) => {
-        setConnectionStatus((prev) => ({
-          ...prev,
-          connected: status === "SUBSCRIBED",
-          error: status === "CLOSED"
-            ? "Failed to connect to drink options"
-            : null,
-        }));
-      });
-
-    return () => {
-      subscription.unsubscribe();
+      channel.unsubscribe();
     };
   }, [handleExternalChange]);
 
