@@ -6,9 +6,9 @@ param(
     [Parameter(Position=0)]
     [ValidateSet("setup", "start", "stop", "reset", "test", "status", "help")]
     [string]$Action = "help",
-    
-    [switch]$Force,
-    [switch]$Verbose
+
+    # -Verbose is provided automatically as a common parameter
+    [switch]$Force
 )
 
 # Script configuration
@@ -52,24 +52,46 @@ function Test-SupabaseInstalled {
     return $false
 }
 
-function Test-DockerRunning {
-    try {
-        $dockerInfo = docker info 2>$null
-        if ($dockerInfo) {
-            Write-Status "Docker is running"
-            return $true
+function Test-ContainerRuntimeRunning {
+    # Supabase CLI talks to any Docker-compatible API. Podman is the project default;
+    # Docker is accepted as a fallback.
+    if (Get-Command podman -ErrorAction SilentlyContinue) {
+        try {
+            podman info *> $null
+            if ($LASTEXITCODE -eq 0) {
+                Write-Status "Podman is running"
+                return $true
+            }
+        } catch {
+            # Fall through to the error below
         }
-    } catch {
-        Write-Status "Docker is not running or not installed" "Error"
-        Write-Status "Docker is required for Supabase local development" "Error"
+        Write-Status "Podman is installed but not running" "Error"
+        Write-Status "Start it with: podman machine start" "Error"
         return $false
     }
+
+    if (Get-Command docker -ErrorAction SilentlyContinue) {
+        try {
+            docker info *> $null
+            if ($LASTEXITCODE -eq 0) {
+                Write-Status "Docker is running"
+                return $true
+            }
+        } catch {
+            # Fall through to the error below
+        }
+        Write-Status "Docker is installed but not running" "Error"
+        return $false
+    }
+
+    Write-Status "No container runtime found. Install Podman 6.1+ (see README)" "Error"
     return $false
 }
 
 function Test-SupabaseRunning {
     try {
-        $response = Invoke-WebRequest -Uri "$SUPABASE_API_URL/health" -TimeoutSec 5 -UseBasicParsing
+        # The API gateway has no root /health route; auth's health endpoint needs no API key
+        $response = Invoke-WebRequest -Uri "$SUPABASE_API_URL/auth/v1/health" -TimeoutSec 5 -UseBasicParsing
         if ($response.StatusCode -eq 200) {
             Write-Status "Supabase local instance is running"
             return $true
@@ -84,7 +106,7 @@ function Start-SupabaseLocal {
     Write-Status "Starting Supabase local development environment..."
     
     if (-not (Test-SupabaseInstalled)) { return $false }
-    if (-not (Test-DockerRunning)) { return $false }
+    if (-not (Test-ContainerRuntimeRunning)) { return $false }
     
     if (Test-SupabaseRunning) {
         Write-Status "Supabase is already running" "Warning"
@@ -209,7 +231,7 @@ function Get-SupabaseStatus {
     
     $status = @{
         SupabaseCLI = Test-SupabaseInstalled
-        Docker = Test-DockerRunning
+        ContainerRuntime = Test-ContainerRuntimeRunning
         LocalInstance = Test-SupabaseRunning
         ProjectInitialized = Test-Path $SupabaseDir
     }
@@ -264,7 +286,8 @@ EXAMPLES:
     .\scripts\test-local-db.ps1 status         # Check current status
 
 PREREQUISITES:
-    - Docker Desktop installed and running
+    - Podman 6.1+ with a running rootful machine (podman machine start)
+      (Docker also works as a fallback)
     - Supabase CLI installed (see: https://supabase.com/docs/guides/cli)
     - Node.js and npm installed
 

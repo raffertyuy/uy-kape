@@ -18,6 +18,8 @@ cp .env.test.example .env.test.local
 
 ### 2. Local Database Testing
 
+Requires a running Podman 6.1+ machine (`podman machine start`). See [README: Running Locally](../README.md#running-locally) for first-time setup.
+
 ```bash
 # Start Supabase and run tests
 npm run db:setup

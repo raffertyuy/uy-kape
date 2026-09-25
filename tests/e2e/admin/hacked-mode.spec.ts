@@ -10,13 +10,31 @@ import { expect, type Page, test } from "@playwright/test";
 const ADMIN_PASSWORD = "admin456";
 const GUEST_PASSWORD = "guest123";
 
-/** Helper: log in to admin, returns to admin dashboard */
+// Hacked mode is a single global flag in the database (app_settings), so tests in
+// this file must not run concurrently with each other.
+test.describe.configure({ mode: "default" });
+
+/** Helper: open the admin dashboard, logging in only if the session is not already authenticated */
 async function loginToAdmin(page: Page) {
   await page.goto("/admin");
   const passwordInput = page.locator('input[type="password"]');
-  await passwordInput.fill(ADMIN_PASSWORD);
-  await page.keyboard.press("Enter");
+  if (await passwordInput.isVisible({ timeout: 2000 }).catch(() => false)) {
+    await passwordInput.fill(ADMIN_PASSWORD);
+    await page.keyboard.press("Enter");
+  }
   await expect(page.getByTestId("hacked-mode-toggle")).toBeVisible({
+    timeout: 5000,
+  });
+}
+
+/** Helper: turn hacked mode ON through the admin toggle (persists to DB, which overrides localStorage) */
+async function enableHackedModeViaAdmin(page: Page) {
+  await loginToAdmin(page);
+  const toggle = page.getByTestId("hacked-mode-toggle");
+  if ((await toggle.getAttribute("aria-checked")) !== "true") {
+    await toggle.click();
+  }
+  await expect(toggle).toHaveAttribute("aria-checked", "true", {
     timeout: 5000,
   });
 }
@@ -32,17 +50,8 @@ async function clearHackedMode(page: Page) {
 
 /** Helper: reset hacked mode in DB and localStorage via the toggle (if currently ON, click to turn OFF) */
 async function ensureHackedModeOff(page: Page) {
-  await page.goto("/admin");
-  const passwordInput = page.locator('input[type="password"]');
-  if (await passwordInput.isVisible({ timeout: 2000 }).catch(() => false)) {
-    await passwordInput.fill(ADMIN_PASSWORD);
-    await page.keyboard.press("Enter");
-    await expect(page.getByTestId("hacked-mode-toggle")).toBeVisible({
-      timeout: 5000,
-    });
-  }
+  await loginToAdmin(page);
   const toggle = page.getByTestId("hacked-mode-toggle");
-  await expect(toggle).toBeVisible({ timeout: 5000 });
   const isOn = (await toggle.getAttribute("aria-checked")) === "true";
   if (isOn) {
     await toggle.click();
@@ -160,13 +169,14 @@ test.describe("Hacked Mode — DB Persistence", () => {
 
 test.describe("Hacked Mode Easter Egg", () => {
   test.beforeEach(async ({ page }) => {
-    // Start each test with hacked mode off
-    await page.goto("/");
+    // Start each test with hacked mode off in the DB (the source of truth) and in the cache
+    await ensureHackedModeOff(page);
     await clearHackedMode(page);
   });
 
   test.afterEach(async ({ page }) => {
     // Leave state clean for next test
+    await ensureHackedModeOff(page);
     await clearHackedMode(page);
   });
 
@@ -238,12 +248,9 @@ test.describe("Hacked Mode Easter Egg", () => {
   });
 
   test("welcome page shows hacked copy when hacked mode is on", async ({ page }) => {
-    // Enable hacked mode via localStorage before navigation
+    // Enable hacked mode in the DB (a localStorage-only value is overridden by the DB on mount)
+    await enableHackedModeViaAdmin(page);
     await page.goto("/");
-    await page.evaluate(() =>
-      localStorage.setItem("uy-kape-hacked-mode", "true")
-    );
-    await page.reload();
 
     // Hacked tagline
     await expect(page.getByText("Order the world's worst drinks!"))
@@ -266,11 +273,8 @@ test.describe("Hacked Mode Easter Egg", () => {
   });
 
   test("guest drink cards show prefixed names when hacked mode is on", async ({ page }) => {
-    // Enable hacked mode
-    await page.goto("/");
-    await page.evaluate(() =>
-      localStorage.setItem("uy-kape-hacked-mode", "true")
-    );
+    // Enable hacked mode in the DB (a localStorage-only value is overridden by the DB on mount)
+    await enableHackedModeViaAdmin(page);
 
     // Navigate to guest order page (bypass the password if set)
     await page.goto("/order");
@@ -304,14 +308,7 @@ test.describe("Hacked Mode Easter Egg", () => {
   });
 
   test("admin menu management shows original drink names (no prefix) in hacked mode", async ({ page }) => {
-    await loginToAdmin(page);
-
-    // Turn on hacked mode
-    await page.getByTestId("hacked-mode-toggle").click();
-    await expect(page.getByTestId("hacked-mode-toggle")).toHaveAttribute(
-      "aria-checked",
-      "true",
-    );
+    await enableHackedModeViaAdmin(page);
 
     // Navigate to menu management → drinks tab
     await page.goto("/admin?view=menu&tab=drinks");
